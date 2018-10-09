@@ -1,1 +1,1 @@
-include ':example', ':mozo-sdk'
+include ':sample', ':mozo-sdk'
