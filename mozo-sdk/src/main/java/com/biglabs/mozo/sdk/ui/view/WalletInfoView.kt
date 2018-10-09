@@ -10,8 +10,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.auth.MozoAuth
+import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.services.WalletService
 import com.biglabs.mozo.sdk.trans.MozoTrans
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
@@ -20,8 +20,6 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import android.support.constraint.ConstraintSet
-
 
 class WalletInfoView : ConstraintLayout {
 
@@ -63,8 +61,6 @@ class WalletInfoView : ConstraintLayout {
         inflateLayout()
 
         if (!isInEditMode) {
-            fetchData()
-
             if (context is FragmentActivity) {
                 fragmentManager = context.supportFragmentManager
             } else if (context is Fragment) {
@@ -77,6 +73,8 @@ class WalletInfoView : ConstraintLayout {
         super.onAttachedToWindow()
         if (!isInEditMode) {
             EventBus.getDefault().register(this)
+
+            fetchData()
         }
     }
 

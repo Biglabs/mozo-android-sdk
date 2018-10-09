@@ -23,7 +23,12 @@ class LoginButton : BaseButton {
         if (isInEditMode) {
             super.setCompoundDrawablesWithIntrinsicBounds(icSignIn, null, null, null)
             super.setText(R.string.mozo_button_login)
-        } else updateUI()
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        updateUI()
     }
 
     override fun authorizeChanged(auth: MessageEvent.Auth) {
