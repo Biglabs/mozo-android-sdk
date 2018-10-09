@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:buttonBack="true"
+        app:buttonClose="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/mozo_address_add_title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mozo_address_add_input_name_label"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/input_contact_name"
+        app:layout_constraintStart_toStartOf="@id/input_contact_name" />
+
+    <EditText
+        android:id="@+id/input_contact_name"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:background="@android:color/transparent"
+        android:hint="@string/mozo_address_add_input_name_hint"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        android:textColor="@color/mozo_color_title"
+        android:textColorHint="@color/mozo_color_action_text"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:targetApi="o" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/mozo_color_primary"
+        app:layout_constraintBottom_toBottomOf="@id/input_contact_name"
+        app:layout_constraintEnd_toEndOf="@id/input_contact_name"
+        app:layout_constraintStart_toStartOf="@id/input_contact_name" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/mozo_address_add_label"
+        android:textColor="@color/mozo_color_action_text"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/text_contact_address"
+        app:layout_constraintStart_toStartOf="@id/input_contact_name" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/text_contact_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/input_contact_name"
+        tools:text="0x97309d360C015695cf50892f035E516ccA1898F0" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/mozo_color_un_active"
+        app:layout_constraintEnd_toEndOf="@id/input_contact_name"
+        app:layout_constraintStart_toStartOf="@id/input_contact_name"
+        app:layout_constraintTop_toBottomOf="@id/text_contact_address" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:enabled="false"
+        android:text="@string/mozo_button_save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_contact_address" />
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/loading_container"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="30dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_save" />
+
+    <TextView
+        android:id="@+id/text_msg_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/mozo_address_add_msg_error"
+        android:textColor="@color/mozo_color_error"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_save" />
+
+    <TextView
+        android:id="@+id/text_msg_saved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:drawableStart="@drawable/ic_check_green"
+        android:drawablePadding="9dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/mozo_address_add_msg_saved"
+        android:textColor="@color/mozo_color_correct"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_save"
+        tools:visibility="visible" />
+</android.support.constraint.ConstraintLayout>

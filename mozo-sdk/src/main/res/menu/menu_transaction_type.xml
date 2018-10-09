@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_type_all"
+            android:checked="true"
+            android:title="@string/mozo_view_text_tx_all" />
+        <item
+            android:id="@+id/action_type_received"
+            android:title="@string/mozo_view_text_tx_received" />
+        <item
+            android:id="@+id/action_type_send"
+            android:title="@string/mozo_view_text_tx_sent" />
+    </group>
+</menu>

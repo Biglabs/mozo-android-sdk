@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+        android:id="@+id/history_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:buttonClose="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/mozo_transaction_history_title" />
+
+    <View
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="7dp"
+        android:background="@drawable/ic_mozo_offchain"
+        app:layout_constraintBottom_toBottomOf="@android:id/title"
+        app:layout_constraintEnd_toStartOf="@android:id/title"
+        app:layout_constraintTop_toTopOf="@android:id/title" />
+
+    <TextView
+        android:id="@android:id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="51dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/mozo_transaction_history_offchain_text"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="@dimen/mozo_text_size"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/history_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/button_filter"
+        android:layout_width="110dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:background="@drawable/mozo_dr_btn_filter"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/history_toolbar">
+
+        <TextView
+            android:id="@+id/button_filter_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_arrow_down"
+            android:drawablePadding="2dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingStart="5dp"
+            android:paddingEnd="0dp"
+            android:text="@string/mozo_view_text_tx_all"
+            android:textColor="@color/mozo_color_action_text"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/list_history_refresh"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="68dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/history_toolbar">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="horizontal"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_history" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+</android.support.constraint.ConstraintLayout>

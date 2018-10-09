@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MozoTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorAccent">@color/mozo_color_primary</item>
+        <item name="android:colorPrimary">@color/mozo_color_primary</item>
+        <item name="android:colorPrimaryDark">@color/mozo_color_primary</item>
+
+        <item name="android:buttonStyle">@style/MozoButtonStyle</item>
+        <item name="popupMenuStyle">@style/MozoPopup</item>
+        <item name="android:popupMenuStyle">@style/MozoPopup</item>
+        <item name="android:textViewStyle">@style/MozoTextViewStyle</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:backgroundDimAmount">@dimen/mozo_background_dim_amount</item>
+    </style>
+
+    <style name="MozoTheme.Transparent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="MozoTheme.Transparent.Dim">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowActivityTransitions">false</item>
+    </style>
+
+    <style name="MozoTheme.SubTitle">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/mozo_color_primary</item>
+        <item name="android:textSize">@dimen/mozo_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MozoTheme.TextWaring">
+        <item name="android:textColor">@color/mozo_color_error</item>
+        <item name="android:textSize">@dimen/mozo_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MozoTheme.SeedWords">
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/mozo_color_primary</item>
+        <item name="android:textSize">@dimen/mozo_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--widget styles-->
+    <style name="MozoButtonStyle" parent="Base.Widget.AppCompat.Button">
+        <item name="android:background">@drawable/mozo_dr_btn</item>
+        <item name="android:textColor">@drawable/mozo_color_btn_text</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/mozo_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MozoPopup" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textColor">@color/mozo_color_title</item>
+        <item name="android:itemBackground">@drawable/mozo_bg_component</item>
+        <item name="android:backgroundDimAmount">@dimen/mozo_background_dim_amount</item>
+    </style>
+
+    <style name="MozoWalletInfoButton">
+        <item name="android:layout_height">37dp</item>
+        <item name="android:background">@drawable/mozo_bg_border_primary</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:gravity">center</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="MozoWalletInfoButtonText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/mozo_color_primary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="MozoTextViewStyle" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/mozo_text_size</item>
+        <item name="android:textColor">@color/mozo_color_content</item>
+    </style>
+</resources>

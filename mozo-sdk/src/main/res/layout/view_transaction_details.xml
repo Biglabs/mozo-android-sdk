@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+        android:id="@+id/tx_detail_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:buttonBack="true"
+        app:buttonClose="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/mozo_transaction_detail_title" />
+
+    <TextView
+        android:id="@+id/text_detail_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="30dp"
+        android:textAllCaps="true"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="@dimen/mozo_text_size"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tx_detail_toolbar"
+        tools:text="Sent" />
+
+    <TextView
+        android:id="@+id/text_detail_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_action_text"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="@id/text_detail_status"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_status"
+        tools:text="Jan 15, 2018 - 6:00 PM" />
+
+    <TextView
+        android:id="@+id/text_detail_balance_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="@string/mozo_transfer_from"
+        android:textColor="@color/mozo_color_content"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/text_detail_time"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_time"
+        tools:visibility="visible" />
+
+    <View
+        android:id="@+id/icon_balance"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_mozo_offchain"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/text_detail_time"
+        app:layout_constraintTop_toTopOf="@id/text_detail_balance_value"
+        tools:visibility="visible" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/text_detail_balance_value"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="51dp"
+        android:layout_marginTop="46dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="start|center_vertical"
+        android:hint="@string/mozo_view_text_hint"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="@dimen/mozo_text_size"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/text_detail_balance_rate_side"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_time"
+        app:layout_goneMarginEnd="0dp"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/text_detail_balance_rate_side"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_un_active"
+        android:textSize="@dimen/mozo_text_size"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_detail_balance_value"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/text_detail_balance_value"
+        tools:text="(₩102.230)"
+        tools:visibility="visible" />
+
+    <View
+        android:id="@+id/text_detail_balance_underline"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:background="@color/mozo_color_un_active"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_balance_value"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/text_detail_receiver_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:includeFontPadding="false"
+        android:text="@string/mozo_transfer_receiver_address"
+        android:textColor="@color/mozo_color_content"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/text_detail_time"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_balance_underline" />
+
+    <View
+        android:id="@+id/text_detail_receiver_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/ic_user"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/text_detail_receiver_user_name"
+        app:layout_constraintTop_toTopOf="@id/text_detail_receiver_user_name"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/text_detail_receiver_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="37dp"
+        android:layout_marginTop="37dp"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_balance_underline"
+        tools:text="An Tran"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/text_detail_receiver_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="12sp"
+        app:autoSizeMinTextSize="10sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_receiver_user_name"
+        app:layout_goneMarginTop="42dp"
+        tools:text="0x97309d360C015695cf50892f035E516ccA1898F0" />
+
+    <View
+        android:id="@+id/text_detail_address_underline"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:background="@color/mozo_color_un_active"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_receiver_address" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:includeFontPadding="false"
+        android:text="@string/mozo_transfer_amount"
+        android:textColor="@color/mozo_color_content"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/text_detail_address_underline"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_address_underline" />
+
+    <View
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_mozo_offchain"
+        app:layout_constraintStart_toStartOf="@id/text_detail_address_underline"
+        app:layout_constraintTop_toTopOf="@id/text_detail_amount_value" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/text_detail_amount_value"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="51dp"
+        android:layout_marginTop="46dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="start|center_vertical"
+        android:hint="@string/mozo_view_text_hint"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="@dimen/mozo_text_size"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toStartOf="@id/text_detail_amount_rate_side"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_address_underline"
+        app:layout_goneMarginEnd="0dp" />
+
+    <TextView
+        android:id="@+id/text_detail_amount_rate_side"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_un_active"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_detail_amount_value"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/text_detail_amount_value"
+        tools:text="(₩102.230)" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:background="@color/mozo_color_un_active"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_amount_value" />
+</android.support.constraint.ConstraintLayout>

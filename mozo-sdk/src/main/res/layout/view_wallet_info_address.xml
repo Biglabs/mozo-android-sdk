@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@drawable/mozo_bg_component"
+    tools:parentTag="android.support.constraint.ConstraintLayout">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:tag="@string/tag_show_always"
+        android:text="@string/mozo_view_address_title"
+        android:textColor="@color/mozo_color_action_text"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/mozo_wallet_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22sp"
+        android:ellipsize="end"
+        android:hint="@string/mozo_view_text_hint"
+        android:lines="1"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/mozo_wallet_btn_show_qr"
+        style="@style/MozoWalletInfoButton"
+        android:layout_width="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/mozo_wallet_btn_copy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mozo_wallet_address"
+        app:layout_goneMarginEnd="0dp"
+        tools:visibility="visible">
+
+        <TextView
+            style="@style/MozoWalletInfoButtonText"
+            android:drawableStart="@drawable/ic_action_qr_code"
+            android:text="@string/mozo_button_show_qr_code" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mozo_wallet_btn_copy"
+        style="@style/MozoWalletInfoButton"
+        android:layout_width="0dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/mozo_wallet_btn_show_qr"
+        app:layout_constraintTop_toBottomOf="@id/mozo_wallet_address"
+        tools:visibility="visible">
+
+        <TextView
+            style="@style/MozoWalletInfoButtonText"
+            android:drawableStart="@drawable/ic_action_copy"
+            android:text="@string/mozo_button_copy" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/mozo_wallet_login_require"
+        layout="@layout/view_wallet_info_login_require"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent" />
+</merge>

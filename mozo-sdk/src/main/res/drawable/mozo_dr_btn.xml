@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/mozo_color_ripple">
+    <item android:id="@android:id/mask">
+        <shape>
+            <corners android:radius="@dimen/mozo_btn_corner_radius" />
+            <solid android:color="@drawable/mozo_selector_btn_color" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="@dimen/mozo_btn_corner_radius" />
+            <solid android:color="@drawable/mozo_selector_btn_color" />
+        </shape>
+    </item>
+</ripple>

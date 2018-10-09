@@ -1,1 +1,2 @@
-# mozo-android-sdk
+# Mozo-Android-SDK
+Mozo SDK for Android

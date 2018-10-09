@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/mozo_color_primary" android:state_enabled="true" android:state_focused="false" android:state_pressed="false" />
+    <item android:color="@color/mozo_color_btn_focused" android:state_hovered="true" />
+    <item android:color="@color/mozo_color_btn_focused" android:state_focused="true" />
+    <item android:color="@color/mozo_color_btn_pressed" android:state_pressed="true" />
+    <item android:color="@color/mozo_color_disable" android:state_enabled="false" />
+</selector>

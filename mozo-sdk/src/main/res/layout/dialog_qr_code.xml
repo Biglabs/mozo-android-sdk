@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:background="#5ccc">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="27dp"
+        android:text="@string/mozo_dialog_qr_code"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="@dimen/mozo_text_size"
+        android:textStyle="bold" />
+
+    <ProgressBar
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <ImageView
+        android:id="@+id/image_qr_code"
+        android:layout_width="@dimen/mozo_qr_large_size"
+        android:layout_height="@dimen/mozo_qr_large_size"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/mozo_bg_border_qr_code"
+        android:contentDescription="@string/mozo_button_show_qr_code" />
+
+    <Button
+        android:id="@+id/button_close"
+        style="@style/MozoButtonStyle"
+        android:layout_width="@dimen/mozo_qr_large_size"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="35dp"
+        android:includeFontPadding="false"
+        android:text="@string/mozo_button_close"
+        android:textSize="@dimen/mozo_text_size" />
+</FrameLayout>

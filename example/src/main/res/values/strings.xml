@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Demo SDK Mobile</string>
+    <string name="activity_wallet_info_title">Wallet Info</string>
+</resources>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    tools:ignore="HardcodedText">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <com.biglabs.mozo.sdk.ui.widget.TransactionHistoryButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.biglabs.mozo.sdk.ui.widget.SendButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" />
+
+        <com.biglabs.mozo.sdk.ui.widget.LoginButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:text="Mozo Off-chain Balance"
+            android:textColor="#141a22"
+            android:textStyle="bold" />
+
+        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:viewMode="onlyBalance" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:text="Address &amp; QR Code"
+            android:textColor="#141a22"
+            android:textStyle="bold" />
+
+        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:viewMode="onlyAddress" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:text="Mozo Offchain Balance + Address &amp; QR Code"
+            android:textColor="#141a22"
+            android:textStyle="bold" />
+
+        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:text="Address &amp; QR Code already display"
+            android:textColor="#141a22"
+            android:textStyle="bold" />
+
+        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:viewMode="onlyAddress" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:text="Mozo Balance &amp; Address"
+            android:textColor="#141a22"
+            android:textStyle="bold" />
+
+        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:showCopyButton="false"
+            app:showQRCodeButton="false"
+            app:viewMode="addressAndBalance" />
+    </LinearLayout>
+</ScrollView>
