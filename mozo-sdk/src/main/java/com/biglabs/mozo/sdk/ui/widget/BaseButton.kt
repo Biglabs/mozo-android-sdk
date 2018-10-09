@@ -3,16 +3,16 @@ package com.biglabs.mozo.sdk.ui.widget
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.support.v7.widget.AppCompatButton
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import android.widget.Button
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
-open class BaseButton : Button {
+open class BaseButton : AppCompatButton {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributes: AttributeSet?) : this(context, attributes, R.attr.buttonStyle)
     constructor(context: Context, attributes: AttributeSet?, defStyle: Int) : super(context, attributes, defStyle) {
