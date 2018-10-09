@@ -292,6 +292,17 @@
                 app:layout_constraintTop_toBottomOf="@id/output_amount_label"
                 tools:targetApi="o" />
 
+            <TextView
+                android:id="@+id/output_amount_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:textColor="@color/mozo_color_un_active"
+                android:textSize="@dimen/mozo_text_size"
+                app:layout_constraintBaseline_toBaselineOf="@id/output_amount"
+                app:layout_constraintEnd_toEndOf="@id/output_amount"
+                tools:text="₩100" />
+
             <View
                 android:id="@+id/output_amount_underline"
                 android:layout_width="0dp"
@@ -368,9 +379,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:includeFontPadding="false"
-                    android:text="(₩0)"
                     android:textColor="@color/mozo_color_un_active"
-                    android:textSize="@dimen/mozo_text_size" />
+                    android:textSize="@dimen/mozo_text_size"
+                    tools:text="(₩100)" />
             </LinearLayout>
 
             <android.support.v4.widget.ContentLoadingProgressBar

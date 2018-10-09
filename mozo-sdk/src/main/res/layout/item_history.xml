@@ -72,7 +72,7 @@
         android:gravity="end|center_vertical"
         android:includeFontPadding="false"
         android:textColor="@color/mozo_color_action_text"
-        android:textSize="@dimen/mozo_text_size"
+        android:textSize="12sp"
         app:layout_constraintBaseline_toBaselineOf="@id/item_history_time"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="₩3,500" />

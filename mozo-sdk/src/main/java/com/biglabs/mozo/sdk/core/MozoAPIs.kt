@@ -4,7 +4,7 @@ import kotlinx.coroutines.experimental.Deferred
 import retrofit2.Response
 import retrofit2.http.*
 
-interface MozoApiService {
+interface MozoAPIs {
     @GET("contacts")
     fun getContacts(): Deferred<Response<List<Models.Contact>>>
 
@@ -34,4 +34,7 @@ interface MozoApiService {
 
     @GET("solo/contract/solo-token/txhistory/{address}")
     fun getTransactionHistory(@Path("address") address: String, @Query("page") page: Int, @Query("size") size: Int): Deferred<Response<List<Models.TransactionHistory>>>
+
+    @GET("exchange/rate")
+    fun getExchangeRate(@Query("currency") currency: String, @Query("symbol") symbol: String): Deferred<Response<Models.ExchangeRate>>
 }

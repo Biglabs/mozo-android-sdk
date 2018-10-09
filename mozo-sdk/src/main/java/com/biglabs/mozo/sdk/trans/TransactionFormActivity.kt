@@ -32,6 +32,7 @@ import java.util.*
 internal class TransactionFormActivity : AppCompatActivity() {
 
     private var currentBalance = BigDecimal.ZERO
+    private var currentRate = BigDecimal.ZERO
     private var selectedContact: Models.Contact? = null
     private val history = Models.TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
 
@@ -41,8 +42,6 @@ internal class TransactionFormActivity : AppCompatActivity() {
 
         initUI()
         showInputUI()
-
-        mozo_wallet_balance_rate_side.text = "₩102.230"
 
         AddressBookService.getInstance().fetchData(this)
     }
@@ -109,12 +108,13 @@ internal class TransactionFormActivity : AppCompatActivity() {
 
     private fun initUI() {
         launch {
-            val balance = MozoTrans.getInstance().getBalance().await() ?: "0"
-            currentBalance = BigDecimal(NumberFormat.getNumberInstance().parse(balance).toDouble())
+            currentBalance = MozoTrans.getInstance().getBalance().await()
+            currentRate = MozoTrans.getInstance().getExchangeRate().await().toBigDecimal()
             launch(UI) {
-                mozo_wallet_balance_value?.text = balance
+                mozo_wallet_balance_value?.text = currentBalance.displayString()
+                mozo_wallet_balance_rate_side.text = String.format(Locale.US, "₩%s", currentBalance.multiply(currentRate).displayString())
 
-                val str = SpannableString(getString(R.string.mozo_transfer_spendable, balance))
+                val str = SpannableString(getString(R.string.mozo_transfer_spendable, currentBalance.displayString()))
                 str.setSpan(
                         ForegroundColorSpan(color(R.color.mozo_color_title)),
                         0,
@@ -132,6 +132,25 @@ internal class TransactionFormActivity : AppCompatActivity() {
         output_amount.onTextChanged {
             hideErrorAmountUI()
             updateSubmitButton()
+
+            it?.toString()?.run {
+                if (this.isEmpty()) {
+                    output_amount_rate.text = ""
+                    text_preview_rate.text = ""
+                    return@run
+                }
+                if (this.startsWith(".")) {
+                    output_amount.setText("0$this")
+                    output_amount.setSelection(this.length + 1)
+                    return@run
+                }
+                launch(UI) {
+                    val amount = BigDecimal(this@run)
+                    val rate = String.format(Locale.US, "₩%s", amount.multiply(currentRate).displayString())
+                    output_amount_rate.text = rate
+                    text_preview_rate.text = String.format(Locale.US, "(%s)", rate)
+                }
+            }
         }
 
         val decimal = PreferenceUtils.getInstance(this).getDecimal()
@@ -165,6 +184,7 @@ internal class TransactionFormActivity : AppCompatActivity() {
                 button_address_book,
                 button_scan_qr,
                 output_amount,
+                output_amount_rate,
                 output_amount_underline
         ))
         gone(arrayOf(
@@ -212,6 +232,7 @@ internal class TransactionFormActivity : AppCompatActivity() {
                 button_address_book,
                 button_scan_qr,
                 output_amount,
+                output_amount_rate,
                 output_amount_underline,
                 text_spendable,
                 button_clear

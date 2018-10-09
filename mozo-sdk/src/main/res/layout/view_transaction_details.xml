@@ -92,6 +92,7 @@
         android:id="@+id/text_detail_balance_rate_side"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
         android:layout_marginEnd="@dimen/mozo_screen_margin"
         android:includeFontPadding="false"
         android:textColor="@color/mozo_color_un_active"

@@ -16,7 +16,10 @@ import kotlinx.android.synthetic.main.item_history.*
 import java.text.SimpleDateFormat
 import java.util.*
 import com.biglabs.mozo.sdk.common.OnLoadMoreListener
+import com.biglabs.mozo.sdk.utils.displayString
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import java.math.BigDecimal
 
 
 internal class TransactionHistoryRecyclerAdapter(
@@ -28,6 +31,7 @@ internal class TransactionHistoryRecyclerAdapter(
     var address: String? = null
     private var dataFilter: List<Models.TransactionHistory>? = null
     private val dateFormat = SimpleDateFormat(Constant.HISTORY_TIME_FORMAT, Locale.getDefault())
+    private var currencyRate = BigDecimal.ZERO
 
     private var totalItemCount = 0
     private var lastVisibleItem = 0
@@ -45,6 +49,12 @@ internal class TransactionHistoryRecyclerAdapter(
                 loadMoreListener?.onLoadMore()
                 loading = true
             }
+        }
+    }
+
+    init {
+        launch {
+            currencyRate = MozoTrans.getInstance().getExchangeRate().await().toBigDecimal()
         }
     }
 
@@ -79,7 +89,8 @@ internal class TransactionHistoryRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
             val history = getData()[position]
-            holder.bind(history, history.type(address), dateFormat.format(Date(history.time * 1000L)))
+            val rate = history.amountInDecimal().multiply(currencyRate)
+            holder.bind(history, history.type(address), dateFormat.format(Date(history.time * 1000L)), rate)
             holder.itemView.click { itemClick?.invoke(position) }
         }
     }
@@ -107,7 +118,7 @@ internal class TransactionHistoryRecyclerAdapter(
     }
 
     class ItemViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(history: Models.TransactionHistory, isSentType: Boolean, dateTime: String) {
+        fun bind(history: Models.TransactionHistory, isSentType: Boolean, dateTime: String, rate: BigDecimal) {
 
             val amountSign: String
             val amountColor: Int
@@ -125,7 +136,7 @@ internal class TransactionHistoryRecyclerAdapter(
             item_history_amount.text = itemView.resources.getString(R.string.mozo_transaction_history_amount_text, amountSign, history.amountDisplay())
             item_history_amount.setTextColor(amountColor)
 
-            item_history_amount_fiat.text = "₩0"
+            item_history_amount_fiat.text = String.format(Locale.US, "₩%s", rate.displayString())
 
             item_history_time.text = dateTime
         }

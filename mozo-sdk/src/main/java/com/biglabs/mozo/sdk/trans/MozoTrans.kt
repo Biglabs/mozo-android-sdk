@@ -1,8 +1,8 @@
 package com.biglabs.mozo.sdk.trans
 
 import com.biglabs.mozo.sdk.MozoSDK
+import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.core.Models
-import com.biglabs.mozo.sdk.core.MozoApiService
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.services.WalletService
 import com.biglabs.mozo.sdk.utils.CryptoUtils
@@ -17,8 +17,10 @@ import java.math.BigDecimal
 class MozoTrans private constructor() {
 
     private val mPreferenceUtils: PreferenceUtils by lazy { PreferenceUtils.getInstance(MozoSDK.context!!) }
+    private val mozoService: MozoService by lazy { MozoService.getInstance(MozoSDK.context!!) }
 
     private val decimalRate: Double
+    private var exchangeRate: Double = 0.0
 
     init {
         val decimal = mPreferenceUtils.getDecimal()
@@ -26,13 +28,19 @@ class MozoTrans private constructor() {
     }
 
     fun getBalance() = async {
-        val address = WalletService.getInstance().getAddress().await() ?: return@async null
-        val balanceInfo = MozoService
-                .getInstance(MozoSDK.context!!)
-                .getBalance(address)
-                .await()
-        mPreferenceUtils.setDecimal(balanceInfo?.decimals ?: -1)
-        return@async balanceInfo?.balanceDisplay()
+        val address = WalletService.getInstance().getAddress().await()
+        return@async if (address != null) {
+            val balanceInfo = mozoService.getBalance(address).await()
+            mPreferenceUtils.setDecimal(balanceInfo?.decimals ?: -1)
+            balanceInfo?.balanceInDecimal() ?: BigDecimal.ZERO
+        } else BigDecimal.ZERO
+    }
+
+    fun getExchangeRate() = async {
+        if (exchangeRate == 0.0) {
+            exchangeRate = mozoService.getExchangeRate(Constant.CURRENCY_KOREA).await()?.rate ?: 0.0
+        }
+        return@async exchangeRate
     }
 
     fun transfer() {
@@ -95,7 +103,9 @@ class MozoTrans private constructor() {
         )
     }
 
-    internal fun amountWithDecimal(amount: String) = amount.toBigDecimal().multiply(BigDecimal.valueOf(decimalRate))
+    internal fun amountWithDecimal(amount: String) = amountWithDecimal(amount.toBigDecimal())
+
+    internal fun amountWithDecimal(amount: BigDecimal) = amount.multiply(BigDecimal.valueOf(decimalRate))
 
     companion object {
         @Volatile

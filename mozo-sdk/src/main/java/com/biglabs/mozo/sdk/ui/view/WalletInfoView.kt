@@ -20,6 +20,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.util.*
 
 class WalletInfoView : ConstraintLayout {
 
@@ -30,9 +31,11 @@ class WalletInfoView : ConstraintLayout {
 
     private var mAddress: String? = null
     private var mBalance: String? = null
+    private var mBalanceRate: String? = null
 
     private var mWalletAddressView: TextView? = null
     private var mWalletBalanceView: TextView? = null
+    private var mWalletBalanceRateView: TextView? = null
     private var fragmentManager: FragmentManager? = null
 
     private val mTagShowAlways: String
@@ -101,9 +104,13 @@ class WalletInfoView : ConstraintLayout {
             }
 
             launch {
-                mBalance = MozoTrans.getInstance().getBalance().await()
+                val balance = MozoTrans.getInstance().getBalance().await()
+                val balanceRate = MozoTrans.getInstance().getExchangeRate().await().toBigDecimal()
+                mBalance = balance.displayString()
+                mBalanceRate = String.format(Locale.US, "₩%s", balance.multiply(balanceRate).displayString())
                 launch(UI) {
-                    mWalletBalanceView?.text = mBalance ?: "0"
+                    mWalletBalanceView?.text = mBalance
+                    mWalletBalanceRateView?.text = mBalanceRate
                 }
             }
 
@@ -125,16 +132,15 @@ class WalletInfoView : ConstraintLayout {
 
     private fun updateUI() {
         if (isInEditMode) return
-        val balanceRate: TextView?
 
         if (mViewMode == MODE_ONLY_BALANCE) {
-            balanceRate = find(R.id.mozo_wallet_balance_rate_side)
+            mWalletBalanceRateView = find(R.id.mozo_wallet_balance_rate_side)
 
         } else {
             mWalletAddressView = find(R.id.mozo_wallet_address)
             mAddress?.let { mWalletAddressView?.text = it }
 
-            balanceRate = find(R.id.mozo_wallet_balance_rate_bottom)
+            mWalletBalanceRateView = find(R.id.mozo_wallet_balance_rate_bottom)
             find<View>(R.id.mozo_wallet_btn_show_qr)?.apply {
                 if (mShowQRCodeButton) {
                     visible()
@@ -165,9 +171,9 @@ class WalletInfoView : ConstraintLayout {
 //            loginBtnConstraintSet.applyTo(this@WalletInfoView)
         }
 
-        balanceRate?.apply {
+        mWalletBalanceRateView?.apply {
             visible()
-            text = "₩000"
+            text = mBalanceRate
         }
     }
 

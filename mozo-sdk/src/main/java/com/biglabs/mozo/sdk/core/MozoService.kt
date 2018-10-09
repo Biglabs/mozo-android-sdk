@@ -2,16 +2,13 @@ package com.biglabs.mozo.sdk.core
 
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
-import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.utils.AuthStateManager
 import com.biglabs.mozo.sdk.utils.logAsError
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
-import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -19,7 +16,7 @@ import java.util.concurrent.TimeUnit
 class MozoService private constructor() {
     fun getContacts() = async {
         return@async try {
-            apiService?.getContacts()?.await()?.body()
+            mAPIs?.getContacts()?.await()?.body()
         } catch (e: Exception) {
             emptyList<Models.Contact>()
         }
@@ -27,7 +24,7 @@ class MozoService private constructor() {
 
     fun saveContact(contact: Models.Contact) = async {
         return@async try {
-            apiService?.saveContact(contact)?.await()?.body()
+            mAPIs?.saveContact(contact)?.await()?.body()
         } catch (ex: Exception) {
             null
         }
@@ -35,7 +32,7 @@ class MozoService private constructor() {
 
     fun fetchProfile() = async {
         return@async try {
-            apiService?.fetchProfile()?.await()?.body()
+            mAPIs?.fetchProfile()?.await()?.body()
         } catch (e: Exception) {
             "fetchProfile exception".logAsError()
             null
@@ -51,7 +48,7 @@ class MozoService private constructor() {
 
     fun saveWallet(walletInfo: Models.WalletInfo) = async {
         return@async try {
-            apiService?.saveWallet(walletInfo)?.await()?.body()
+            mAPIs?.saveWallet(walletInfo)?.await()?.body()
         } catch (ex: Exception) {
             null
         }
@@ -59,7 +56,7 @@ class MozoService private constructor() {
 
     fun getBalance(address: String) = async {
         return@async try {
-            apiService?.getBalance(address)?.await()?.body()
+            mAPIs?.getBalance(address)?.await()?.body()
         } catch (e: Exception) {
             null
         }
@@ -67,7 +64,7 @@ class MozoService private constructor() {
 
     fun createTransaction(request: Models.TransactionRequest) = async {
         return@async try {
-            apiService?.createTransaction(request)?.await()?.body()
+            mAPIs?.createTransaction(request)?.await()?.body()
         } catch (ex: Exception) {
             null
         }
@@ -75,7 +72,7 @@ class MozoService private constructor() {
 
     fun sendTransaction(request: Models.TransactionResponse) = async {
         return@async try {
-            apiService?.sendTransaction(request)?.await()?.body()
+            mAPIs?.sendTransaction(request)?.await()?.body()
         } catch (ex: Exception) {
             null
         }
@@ -83,28 +80,36 @@ class MozoService private constructor() {
 
     fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE) = async {
         return@async try {
-            apiService?.getTransactionHistory(address, page, size)?.await()?.body()
+            mAPIs?.getTransactionHistory(address, page, size)?.await()?.body()
         } catch (ex: Exception) {
             emptyList<Models.TransactionHistory>()
         }
     }
 
+    fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO) = async {
+        return@async try {
+            mAPIs?.getExchangeRate(currency, symbol)?.await()?.body()
+        } catch (ex: Exception) {
+            Models.ExchangeRate(0.0)
+        }
+    }
+
     companion object {
 
-        private var apiService: MozoApiService? = null
+        private var mAPIs: MozoAPIs? = null
 
         @Volatile
         private var instance: MozoService? = null
 
         fun getInstance(context: Context) = instance ?: synchronized(this) {
             if (instance == null) {
-                apiService = createService(context)
+                mAPIs = createService(context)
                 instance = MozoService()
             }
             instance
         }!!
 
-        private fun createService(context: Context): MozoApiService {
+        private fun createService(context: Context): MozoAPIs {
             val client = OkHttpClient.Builder()
                     .addInterceptor {
                         val accessToken = AuthStateManager.getInstance(context).current.accessToken
@@ -132,7 +137,7 @@ class MozoService private constructor() {
                     .addCallAdapterFactory(CoroutineCallAdapterFactory())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-                    .create(MozoApiService::class.java)
+                    .create(MozoAPIs::class.java)
         }
     }
 }

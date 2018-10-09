@@ -43,7 +43,6 @@ internal class TransactionHistoryActivity : AppCompatActivity(), OnLoadMoreListe
             val offset = resources.getDimensionPixelSize(R.dimen.mozo_refresh_progress_offset)
             setProgressViewOffset(true, progressViewStartOffset + offset, progressViewEndOffset + offset)
             setColorSchemeResources(R.color.mozo_color_primary)
-            isRefreshing = true
             setOnRefreshListener(this@TransactionHistoryActivity)
         }
 

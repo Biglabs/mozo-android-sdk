@@ -103,9 +103,7 @@ object Models {
             val decimals: Int,
             val contractAddress: String?
     ) {
-        fun balanceDisplay(): String =
-                balance.divide(Math.pow(10.0, decimals.toDouble()).toBigDecimal())
-                        .displayString(12)
+        fun balanceInDecimal(): BigDecimal = balance.divide(Math.pow(10.0, decimals.toDouble()).toBigDecimal())
     }
 
     class TransactionAddress(
@@ -177,9 +175,9 @@ object Models {
                 parcel.readLong(),
                 parcel.readString())
 
-        fun amountDisplay(): String =
-                amount.divide(Math.pow(10.0, decimal.toDouble()).toBigDecimal())
-                        .displayString(12)
+        fun amountInDecimal(): BigDecimal = amount.divide(Math.pow(10.0, decimal.toDouble()).toBigDecimal())
+
+        fun amountDisplay(): String = amountInDecimal().displayString(12)
 
         fun type(address: String?): Boolean = addressFrom.equals(MY_ADDRESS, ignoreCase = true) || addressFrom.equals(address, ignoreCase = true)
 
@@ -217,4 +215,8 @@ object Models {
             }
         }
     }
+
+    data class ExchangeRate(
+            val rate: Double
+    )
 }

@@ -2,7 +2,6 @@ package com.biglabs.mozo.sdk.services
 
 import android.content.Context
 import com.biglabs.mozo.sdk.core.Models
-import com.biglabs.mozo.sdk.core.MozoApiService
 import com.biglabs.mozo.sdk.core.MozoService
 import kotlinx.coroutines.experimental.async
 
