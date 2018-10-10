@@ -22,10 +22,10 @@ import kotlinx.android.synthetic.main.view_transaction_form.*
 import kotlinx.android.synthetic.main.view_transaction_sent.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
-import java.text.NumberFormat
 import java.util.*
 
 @Suppress("unused")
@@ -260,12 +260,48 @@ internal class TransactionFormActivity : AppCompatActivity() {
             }
 
             history.txHash = txResponse.tx.hash ?: ""
-            button_transaction_detail.click {
-                TransactionDetails.start(this@TransactionFormActivity, history)
+
+            button_transaction_detail?.apply {
+                gone()
+                click {
+                    TransactionDetails.start(this@TransactionFormActivity, history)
+                }
             }
+
+            updateTxStatus()
         } else {
             // TODO show send Tx failed UI
             "send Tx failed UI".logAsError()
+        }
+    }
+
+    private fun updateTxStatus() = async {
+        var pendingStatus = true
+        while (pendingStatus) {
+
+            val txStatus = MozoTrans.getInstance().getTransactionStatus(history.txHash).await()
+            launch(UI) {
+                when {
+                    txStatus != null && txStatus.isSuccess() -> {
+                        text_tx_status_icon.setImageResource(R.drawable.ic_check_green)
+                        text_tx_status_label.setText(R.string.mozo_view_text_tx_success)
+                        button_transaction_detail.visible()
+                        pendingStatus = false
+                    }
+                    txStatus != null && txStatus.isFailed() -> {
+                        text_tx_status_icon.setImageResource(R.drawable.ic_error)
+                        text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
+                        pendingStatus = false
+                    }
+                }
+
+                if (!pendingStatus) {
+                    text_tx_status_loading.gone()
+                    text_tx_status_icon.visible()
+                }
+            }
+
+            delay(1500)
         }
     }
 

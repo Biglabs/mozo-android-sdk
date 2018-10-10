@@ -7,6 +7,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.NonNull
+import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.utils.displayString
 import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
@@ -214,6 +215,14 @@ object Models {
                 return arrayOfNulls(size)
             }
         }
+    }
+
+    data class TransactionStatus(
+            val txHash: String,
+            val status: String
+    ) {
+        fun isSuccess() = Constant.STATUS_SUCCESS.equals(status, ignoreCase = true)
+        fun isFailed() = Constant.STATUS_FAILED.equals(status, ignoreCase = true)
     }
 
     data class ExchangeRate(

@@ -35,6 +35,9 @@ interface MozoAPIs {
     @GET("solo/contract/solo-token/txhistory/{address}")
     fun getTransactionHistory(@Path("address") address: String, @Query("page") page: Int, @Query("size") size: Int): Deferred<Response<List<Models.TransactionHistory>>>
 
+    @GET("eth/solo/txs/{hash}/status")
+    fun getTransactionStatus(@Path("hash") hash: String): Deferred<Response<Models.TransactionStatus>>
+
     @GET("exchange/rate")
     fun getExchangeRate(@Query("currency") currency: String, @Query("symbol") symbol: String): Deferred<Response<Models.ExchangeRate>>
 }

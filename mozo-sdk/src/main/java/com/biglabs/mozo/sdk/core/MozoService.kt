@@ -86,6 +86,14 @@ class MozoService private constructor() {
         }
     }
 
+    fun getTransactionStatus(txHash: String) = async {
+        return@async try {
+            mAPIs?.getTransactionStatus(txHash)?.await()?.body()
+        } catch (ex: Exception) {
+            null
+        }
+    }
+
     fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO) = async {
         return@async try {
             mAPIs?.getExchangeRate(currency, symbol)?.await()?.body()

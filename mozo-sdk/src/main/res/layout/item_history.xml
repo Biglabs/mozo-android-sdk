@@ -25,19 +25,6 @@
         tools:text="Received" />
 
     <TextView
-        android:id="@+id/item_history_msg_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:drawableStart="@drawable/ic_error"
-        android:text="@string/mozo_view_text_tx_failed"
-        android:textColor="@color/mozo_color_error"
-        android:visibility="gone"
-        app:layout_constraintBaseline_toBaselineOf="@id/item_history_type"
-        app:layout_constraintStart_toEndOf="@id/item_history_type"
-        tools:visibility="visible" />
-
-    <TextView
         android:id="@+id/item_history_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

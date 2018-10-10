@@ -14,5 +14,8 @@ class Constant {
 
         const val CURRENCY_KOREA = "KRW"
         const val CURRENCY_USA = "USD"
+
+        const val STATUS_SUCCESS = "SUCCESS"
+        const val STATUS_FAILED = "FAILED"
     }
 }

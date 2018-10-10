@@ -103,6 +103,8 @@ class MozoTrans private constructor() {
         )
     }
 
+    internal fun getTransactionStatus(txHash: String) = mozoService.getTransactionStatus(txHash)
+
     internal fun amountWithDecimal(amount: String) = amountWithDecimal(amount.toBigDecimal())
 
     internal fun amountWithDecimal(amount: BigDecimal) = amount.multiply(BigDecimal.valueOf(decimalRate))
