@@ -56,6 +56,7 @@ cd mozo-android-sdk
 **Note:** Make sure your Android SDK has the Android Support Repository installed, and that your `$ANDROID_HOME` environment variable is pointing at the SDK or add a `local.properties` file in the root project with a `sdk.dir=...` line.
 
 ## Give feedback
+To report a specific problem or feature request, [open a new issue on Github][6]. For questions, suggestions, or anything else, email to developer@mozocoin.io, or join our [Slack channel][7].
 
 ## License
 
@@ -64,3 +65,5 @@ cd mozo-android-sdk
 [3]: https://github.com/Biglabs/mozo-android-sdk/wiki/2.-Authentication
 [4]: https://github.com/Biglabs/mozo-android-sdk/wiki/3.-Send-Mozo
 [5]: https://github.com/Biglabs/mozo-android-sdk/wiki/4.-Transaction-History
+[6]: https://github.com/Biglabs/mozo-android-sdk/issues
+[7]: https://mozocoin.slack.com
