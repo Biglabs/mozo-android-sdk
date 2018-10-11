@@ -1,5 +1,5 @@
 # Mozo Android SDK
-[ ![Download](https://api.bintray.com/packages/biglabs-vietnam/MozoSDK/mozo-sdk/images/download.svg) ](https://bintray.com/biglabs-vietnam/MozoSDK/mozo-sdk/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/mozocoin/MozoSDK/mozo-sdk/images/download.svg) ](https://bintray.com/mozocoin/MozoSDK/mozo-sdk/_latestVersion)
 
 MozoSDK for Android by Big Labs Pte. Ltd.
 For more information please see [the website][1].
@@ -44,7 +44,7 @@ MozoSDK.initialize(this)
 * [UI Components][2]
 * [Authentication][3]
 * [Send Mozo][4]
-* [Transaction History][5]
+* [View Transaction History][5]
 
 ## Sample
 Build sample app with Gradle:
