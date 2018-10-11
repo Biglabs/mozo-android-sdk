@@ -28,7 +28,9 @@ class LoginButton : BaseButton {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        updateUI()
+        if (!isInEditMode) {
+            updateUI()
+        }
     }
 
     override fun authorizeChanged(auth: MessageEvent.Auth) {
