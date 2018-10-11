@@ -1,9 +1,9 @@
-apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'maven-publish'
 
 publish {
@@ -12,29 +12,27 @@ publish {
     def artifactProjectID = 'mozo-sdk'
     def publishVersionID = mozo_sdk_version_name
 
-    userOrg = 'biglabs-vietnam'
+    userOrg = 'mozocoin'
     repoName = 'MozoSDK'
     groupId = groupProjectID
     artifactId = artifactProjectID
     publishVersion = publishVersionID
     desc = 'Mozo SDK for Android'
     website = 'https://github.com/Biglabs/mozo-android-sdk'
+    bintrayUser = 'mozodeveloper'
+
+    dryRun = false
+    override = true
 
     publishing {
         publications {
-            MyPublication(MavenPublication) {
+            maven(MavenPublication) {
                 groupId groupProjectID
                 artifactId artifactProjectID
                 version publishVersionID
-
-                //don't forget to add bundleRelease
-//                artifact bundleRelease
-
             }
         }
     }
-
-    publications = ['MyPublication']
 }
 
 android {
