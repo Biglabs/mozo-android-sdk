@@ -3,38 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'com.novoda.bintray-release'
-apply plugin: 'maven-publish'
-
-publish {
-
-    def groupProjectID = 'com.biglabs'
-    def artifactProjectID = 'mozo-sdk'
-    def publishVersionID = mozo_sdk_version_name
-
-    userOrg = 'mozocoin'
-    repoName = 'MozoSDK'
-    groupId = groupProjectID
-    artifactId = artifactProjectID
-    publishVersion = publishVersionID
-    desc = 'Mozo SDK for Android'
-    website = 'https://github.com/Biglabs/mozo-android-sdk'
-    bintrayUser = 'mozodeveloper'
-
-    dryRun = false
-    override = true
-
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId groupProjectID
-                artifactId artifactProjectID
-                version publishVersionID
-            }
-        }
-    }
-}
-
 android {
     compileSdkVersion compile_sdk_version
     defaultConfig {
@@ -106,3 +74,4 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+apply from: 'publish.gradle'
