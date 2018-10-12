@@ -98,7 +98,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/auth_redirect_scheme" />
+                <data android:scheme="com.biglabs.mozosdk.${applicationId}" />
             </intent-filter>
         </activity>
 
