@@ -19,6 +19,7 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import net.openid.appauth.*
 import org.greenrobot.eventbus.EventBus
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
@@ -96,7 +97,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     private fun createAuthRequest() {
-        val redirectUrl = string(R.string.auth_redirect_uri, R.string.auth_redirect_scheme)
+        val redirectUrl = getString(R.string.auth_redirect_uri, String.format(Locale.US, "com.biglabs.mozosdk.%s", applicationInfo.packageName))
         val authRequestBuilder = AuthorizationRequest.Builder(
                 if (modeSignIn)
                     mAuthStateManager!!.current.authorizationServiceConfiguration!!
