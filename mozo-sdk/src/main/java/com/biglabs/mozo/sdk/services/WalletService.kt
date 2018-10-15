@@ -52,7 +52,7 @@ internal class WalletService private constructor() {
                 return@async SecurityActivity.KEY_CREATE_PIN
             } else {
                 if (PreferenceUtils.getInstance(MozoSDK.context!!).getFlag(PreferenceUtils.FLAG_SYNC_WALLET_INFO)) {
-                    syncWalletInfo(walletInfo!!, MozoSDK.context!!)
+                    syncWalletInfo(walletInfo!!, MozoSDK.context!!) {}
                 }
                 if (walletInfo?.privateKey.isNullOrEmpty()) {
                     /* Local wallet is existing but no private Key */
@@ -64,7 +64,7 @@ internal class WalletService private constructor() {
         return@async 0
     }
 
-    internal fun executeSaveWallet(pin: String, context: Context) = async {
+    internal fun executeSaveWallet(pin: String, context: Context, retry: () -> Unit) = async {
         getAddress().await()
         profile?.let {
             it.walletInfo = Models.WalletInfo(
@@ -74,7 +74,7 @@ internal class WalletService private constructor() {
             )
 
             /* save wallet info to server */
-            val isSuccess = syncWalletInfo(it.walletInfo!!, context).await()
+            val isSuccess = syncWalletInfo(it.walletInfo!!, context, retry).await()
 
             if (!isSuccess) {
                 return@async false
@@ -87,8 +87,8 @@ internal class WalletService private constructor() {
         return@async true
     }
 
-    private fun syncWalletInfo(walletInfo: Models.WalletInfo, context: Context) = async {
-        val response = MozoService.getInstance(context).saveWallet(walletInfo).await()
+    private fun syncWalletInfo(walletInfo: Models.WalletInfo, context: Context, retry: () -> Unit) = async {
+        val response = MozoService.getInstance(context).saveWallet(walletInfo, retry).await()
         val success = response != null
         PreferenceUtils.getInstance(context).setFlag(
                 PreferenceUtils.FLAG_SYNC_WALLET_INFO,

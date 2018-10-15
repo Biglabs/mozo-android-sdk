@@ -2,9 +2,10 @@ package com.biglabs.mozo.sdk
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.ConnectivityManager
 import com.biglabs.mozo.sdk.auth.MozoAuth
 import com.biglabs.mozo.sdk.services.WalletService
-import android.net.ConnectivityManager
+
 
 class MozoSDK private constructor() {
 
@@ -25,11 +26,17 @@ class MozoSDK private constructor() {
         @Volatile
         internal var context: Context? = null
 
+        @SuppressLint("StaticFieldLeak")
+        @Volatile
+        internal var internalContext: Context? = null
+
         @JvmStatic
         @Synchronized
         fun initialize(context: Context) {
+            checkNotNull(context)
+            this.context = context
+
             if (INSTANCE == null) {
-                this.context = context.applicationContext
                 INSTANCE = MozoSDK()
             }
         }
@@ -43,8 +50,10 @@ class MozoSDK private constructor() {
             return INSTANCE as MozoSDK
         }
 
-        fun isNetworkAvailable(): Boolean {
-            val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        internal fun currentContext() = internalContext ?: context
+
+        internal fun isNetworkAvailable(): Boolean {
+            val connectivityManager = currentContext()?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val activeNetworkInfo = connectivityManager.activeNetworkInfo
             return activeNetworkInfo != null && activeNetworkInfo.isConnected
         }

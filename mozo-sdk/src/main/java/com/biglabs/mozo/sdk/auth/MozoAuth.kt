@@ -38,18 +38,7 @@ class MozoAuth private constructor() {
                 anonymousUser.toString().logAsError()
                 // TODO authentication with anonymousUser
             } else {
-                val response = mozoService.fetchProfile().await()
-//                if (response.code() == 401) {
-//                    signOut()
-//                    return@launch
-//                } else {
-                response?.run {
-                    mozoDB.profile().save(this)
-                }
-                if (authStateManager.current.needsTokenRefresh) {
-                    doRefreshToken()
-                }
-//                }
+                fetchProfile()
             }
 
             launch(UI) {
@@ -118,8 +107,23 @@ class MozoAuth private constructor() {
         mAuthListener?.onChanged(auth.isSignedIn)
     }
 
-    internal fun syncProfile() = async {
-        val response = mozoService.fetchProfile().await()
+    private fun fetchProfile() = async {
+        val response = mozoService.fetchProfile { fetchProfile() }.await()
+//                if (response.code() == 401) {
+//                    signOut()
+//                    return@launch
+//                } else {
+        response?.run {
+            mozoDB.profile().save(this)
+        }
+        if (authStateManager.current.needsTokenRefresh) {
+            doRefreshToken()
+        }
+//                }
+    }
+
+    internal fun syncProfile(retryCallback: () -> Unit) = async {
+        val response = mozoService.fetchProfile(retryCallback).await()
         if (response != null) {
 
             /* save User info first */

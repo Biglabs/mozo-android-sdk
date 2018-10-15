@@ -2,7 +2,7 @@ package com.biglabs.mozo.sdk.common
 
 class Constant {
     companion object {
-        const val BASE_API_URL = "http://18.136.55.245:8080/solomon/api/"
+        const val BASE_API_URL = "https://dev.gateway.mozocoin.io/solomon/api/"
 
         const val PAGING_START_INDEX = 1
         const val PAGING_SIZE = 20

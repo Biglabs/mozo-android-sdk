@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -15,6 +14,7 @@ import com.biglabs.mozo.sdk.core.Models.TransactionHistory.CREATOR.MY_ADDRESS
 import com.biglabs.mozo.sdk.services.AddressBookService
 import com.biglabs.mozo.sdk.ui.AddressAddActivity
 import com.biglabs.mozo.sdk.ui.AddressBookActivity
+import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.utils.*
 import com.google.zxing.integration.android.IntentIntegrator
@@ -29,7 +29,7 @@ import java.math.BigDecimal
 import java.util.*
 
 @Suppress("unused")
-internal class TransactionFormActivity : AppCompatActivity() {
+internal class TransactionFormActivity : BaseActivity() {
 
     private var currentBalance = BigDecimal.ZERO
     private var currentRate = BigDecimal.ZERO
@@ -43,7 +43,7 @@ internal class TransactionFormActivity : AppCompatActivity() {
         initUI()
         showInputUI()
 
-        AddressBookService.getInstance().fetchData(this)
+        fetchAddressBook()
     }
 
     override fun onDestroy() {
@@ -82,13 +82,16 @@ internal class TransactionFormActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendTx(pin: String?) {
+    private fun sendTx(pin: String?, request: Models.TransactionResponse? = null) {
         if (pin == null) return
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         val amount = output_amount.text.toString()
         launch {
             showLoading()
-            val txResponse = MozoTrans.getInstance().createTransaction(address, amount, pin).await()
+            val txResponse = if (request == null)
+                MozoTrans.getInstance().createTransaction(address, amount, pin) { sendTx(pin, it) }.await()
+            else
+                MozoTrans.getInstance().sendTransaction(request) { sendTx(pin, request) }.await()
             history.addressTo = address
             history.amount = MozoTrans.getInstance().amountWithDecimal(amount)
             history.time = Calendar.getInstance().timeInMillis / 1000L
@@ -103,6 +106,12 @@ internal class TransactionFormActivity : AppCompatActivity() {
         } else {
             showInputUI()
             showContactInfoUI()
+        }
+    }
+
+    private fun fetchAddressBook() {
+        AddressBookService.getInstance().fetchData(this) {
+            fetchAddressBook()
         }
     }
 
@@ -279,7 +288,7 @@ internal class TransactionFormActivity : AppCompatActivity() {
         var pendingStatus = true
         while (pendingStatus) {
 
-            val txStatus = MozoTrans.getInstance().getTransactionStatus(history.txHash).await()
+            val txStatus = MozoTrans.getInstance().getTransactionStatus(history.txHash) { updateTxStatus() }.await()
             launch(UI) {
                 when {
                     txStatus != null && txStatus.isSuccess() -> {
