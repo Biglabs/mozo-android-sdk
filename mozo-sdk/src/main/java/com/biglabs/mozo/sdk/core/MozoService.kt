@@ -10,6 +10,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
@@ -86,12 +87,17 @@ internal class MozoService private constructor() {
     }
 
     fun sendTransaction(request: Models.TransactionResponse, onTryAgain: (() -> Unit)?) = async {
-        return@async try {
-            mAPIs?.sendTransaction(request)?.await()?.body()
+        var result: Response<Models.TransactionResponse>? = null
+        try {
+            result = mAPIs?.sendTransaction(request)?.await()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
-            null
+        } finally {
+            if (result == null || result.code() != 200) {
+                handleError(Exception(result?.message() ?: "no response"), onTryAgain)
+            }
         }
+        return@async result?.body()
     }
 
     fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, onTryAgain: (() -> Unit)?) = async {

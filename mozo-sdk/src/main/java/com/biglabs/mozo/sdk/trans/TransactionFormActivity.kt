@@ -20,6 +20,7 @@ import com.biglabs.mozo.sdk.utils.*
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.view_transaction_form.*
 import kotlinx.android.synthetic.main.view_transaction_sent.*
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.delay
@@ -35,6 +36,7 @@ internal class TransactionFormActivity : BaseActivity() {
     private var currentRate = BigDecimal.ZERO
     private var selectedContact: Models.Contact? = null
     private val history = Models.TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
+    private var updateTxStatusJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,7 @@ internal class TransactionFormActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         selectedContact = null
+        updateTxStatusJob?.cancel()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -277,7 +280,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
 
-            updateTxStatus()
+            updateTxStatusJob = updateTxStatus()
         } else {
             // TODO show send Tx failed UI
             "send Tx failed UI".logAsError()
@@ -296,11 +299,13 @@ internal class TransactionFormActivity : BaseActivity() {
                         text_tx_status_label.setText(R.string.mozo_view_text_tx_success)
                         button_transaction_detail.visible()
                         pendingStatus = false
+                        updateTxStatusJob = null
                     }
                     txStatus != null && txStatus.isFailed() -> {
                         text_tx_status_icon.setImageResource(R.drawable.ic_error)
                         text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
                         pendingStatus = false
+                        updateTxStatusJob = null
                     }
                 }
 

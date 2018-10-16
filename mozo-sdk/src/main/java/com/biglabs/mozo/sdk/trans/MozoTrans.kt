@@ -45,9 +45,6 @@ class MozoTrans private constructor() {
 
     fun transfer() {
         MozoSDK.context?.run {
-            //            if (!EventBus.getDefault().isRegistered(this@MozoTrans)) {
-//                EventBus.getDefault().register(this@MozoTrans)
-//            }
             TransactionFormActivity.start(this)
             return
         }
@@ -82,7 +79,6 @@ class MozoTrans private constructor() {
             pubKey.logAsError("pubKey")
             response.signatures = arrayListOf(signature)
             response.publicKeys = arrayListOf(pubKey)
-
             return@async sendTransaction(response) { retryCallback(response) }.await()
         } else {
             "create Tx failed".logAsError()
