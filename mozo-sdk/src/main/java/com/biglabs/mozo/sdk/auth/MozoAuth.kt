@@ -6,6 +6,7 @@ import com.biglabs.mozo.sdk.core.Models
 import com.biglabs.mozo.sdk.core.Models.AnonymousUserInfo
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
+import com.biglabs.mozo.sdk.services.MozoSocketClient
 import com.biglabs.mozo.sdk.services.WalletService
 import com.biglabs.mozo.sdk.utils.AuthStateManager
 import com.biglabs.mozo.sdk.utils.logAsError
@@ -42,7 +43,7 @@ class MozoAuth private constructor() {
             }
 
             launch(UI) {
-                mAuthListener?.onChanged(isSignedIn)
+                onAuthorizeChanged(MessageEvent.Auth(isSignedIn))
             }
         }
     }
@@ -67,7 +68,7 @@ class MozoAuth private constructor() {
         MozoSDK.context?.let {
             MozoAuthActivity.signOut(it) {
 
-                mAuthListener?.onChanged(false)
+                onAuthorizeChanged(MessageEvent.Auth(false))
 
                 launch {
                     mozoDB.userInfo().delete()
@@ -102,6 +103,12 @@ class MozoAuth private constructor() {
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
         EventBus.getDefault().unregister(this@MozoAuth)
+
+        if (auth.isSignedIn) {
+            MozoSocketClient.connect(MozoSDK.context!!)
+        } else {
+            MozoSocketClient.disconnect()
+        }
 
         /* notify for caller */
         mAuthListener?.onChanged(auth.isSignedIn)
