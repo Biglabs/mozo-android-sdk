@@ -4,5 +4,5 @@
     <item android:color="@color/mozo_color_btn_focused" android:state_hovered="true" />
     <item android:color="@color/mozo_color_btn_focused" android:state_focused="true" />
     <item android:color="@color/mozo_color_btn_pressed" android:state_pressed="true" />
-    <item android:color="@color/mozo_color_disable" android:state_enabled="false" />
+    <item android:color="@color/mozo_color_line" android:state_enabled="false" />
 </selector>

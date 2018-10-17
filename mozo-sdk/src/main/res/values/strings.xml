@@ -25,22 +25,23 @@
     <string name="mozo_button_withdraw">Withdraw</string>
 
     <string name="mozo_button_back">Back</string>
-    <string name="mozo_button_close">Close</string>
+    <string name="mozo_button_cancel">Cancel</string>
+    <string name="mozo_button_copy">Copy</string>
     <string name="mozo_button_continue">Continue</string>
+    <string name="mozo_button_close">Close</string>
+    <string name="mozo_button_clear">Clear</string>
     <string name="mozo_button_scan_qr_code">Scan QR Code</string>
     <string name="mozo_button_show_qr_code">Show QR Code</string>
-    <string name="mozo_button_copy">Copy</string>
-    <string name="mozo_button_clear">Clear</string>
     <string name="mozo_button_send">Send</string>
     <string name="mozo_button_save">Save</string>
     <string name="mozo_button_save_address">Save Address</string>
     <string name="mozo_button_retry">Retry</string>
     <string name="mozo_button_try_again">Try Again</string>
 
-    <string name="mozo_backup_title">Back up Wallet</string>
+    <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">Store Recovery Phrase</string>
     <string name="mozo_backup_content">Please write it down on a paper and keep it in a safe place as you would with paper money</string>
-    <string name="mozo_backup_warning">If you lose your recovery phase, your wallet cannot be recovered.</string>
+    <string name="mozo_backup_warning">*If you lose your recovery phase, your wallet cannot be recovered.</string>
     <string name="mozo_backup_confirm_msg">I have safely stored recovery phrase</string>
 
     <string name="mozo_pin_title">Create Security Pin</string>

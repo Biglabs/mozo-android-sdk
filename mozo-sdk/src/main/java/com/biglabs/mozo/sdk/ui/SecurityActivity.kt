@@ -12,8 +12,8 @@ import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.services.WalletService
 import com.biglabs.mozo.sdk.ui.widget.onBackPress
 import com.biglabs.mozo.sdk.utils.*
-import kotlinx.android.synthetic.main.view_backup.*
-import kotlinx.android.synthetic.main.view_pin_input.*
+import kotlinx.android.synthetic.main.view_wallet_backup.*
+import kotlinx.android.synthetic.main.view_wallet_security.*
 import kotlinx.android.synthetic.main.view_toolbar.view.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -58,7 +58,7 @@ internal class SecurityActivity : AppCompatActivity() {
 
     private fun showBackupUI() {
         "showBackupUI".logAsError(localClassName)
-        setContentView(R.layout.view_backup)
+        setContentView(R.layout.view_wallet_backup)
 
         val padding = resources.dp2Px(10f).toInt()
         WalletService.getInstance().getSeed()?.split(" ")?.map {
@@ -77,7 +77,7 @@ internal class SecurityActivity : AppCompatActivity() {
     }
 
     private fun showPinInputUI() {
-        setContentView(R.layout.view_pin_input)
+        setContentView(R.layout.view_wallet_security)
 
         pin_toolbar.screen_title.setText(R.string.mozo_pin_title)
         sub_title_pin.setText(R.string.mozo_pin_sub_title)

@@ -37,7 +37,7 @@
         android:includeFontPadding="true"
         android:inputType="textPersonName"
         android:lines="1"
-        android:textColor="@color/mozo_color_title"
+        android:textColor="@color/mozo_color_text_main"
         android:textColorHint="@color/mozo_color_un_active"
         android:textSize="@dimen/mozo_text_size"
         app:layout_constraintEnd_toEndOf="parent"

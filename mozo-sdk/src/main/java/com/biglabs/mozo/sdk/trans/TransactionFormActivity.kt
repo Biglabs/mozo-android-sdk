@@ -128,7 +128,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
                 val str = SpannableString(getString(R.string.mozo_transfer_spendable, currentBalance.displayString()))
                 str.setSpan(
-                        ForegroundColorSpan(color(R.color.mozo_color_title)),
+                        ForegroundColorSpan(color(R.color.mozo_color_text_main)),
                         0,
                         10,
                         SpannableString.SPAN_INCLUSIVE_EXCLUSIVE

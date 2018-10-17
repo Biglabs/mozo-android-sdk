@@ -7,12 +7,14 @@
         <item name="android:colorPrimaryDark">@color/mozo_color_primary</item>
 
         <item name="android:buttonStyle">@style/MozoButtonStyle</item>
+        <item name="android:backgroundDimAmount">@dimen/mozo_background_dim_amount</item>
         <item name="popupMenuStyle">@style/MozoPopup</item>
         <item name="android:popupMenuStyle">@style/MozoPopup</item>
         <item name="android:textViewStyle">@style/MozoTextViewStyle</item>
+        <item name="android:textColor">@color/mozo_color_text_main</item>
+        <item name="android:textSize">@dimen/mozo_text_size</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:backgroundDimAmount">@dimen/mozo_background_dim_amount</item>
     </style>
 
     <style name="MozoTheme.Transparent">
@@ -30,12 +32,6 @@
     <style name="MozoTheme.SubTitle">
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/mozo_color_primary</item>
-        <item name="android:textSize">@dimen/mozo_text_size</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="MozoTheme.TextWaring">
-        <item name="android:textColor">@color/mozo_color_error</item>
         <item name="android:textSize">@dimen/mozo_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -63,7 +59,7 @@
     </style>
 
     <style name="MozoPopup" parent="Widget.AppCompat.PopupMenu">
-        <item name="android:textColor">@color/mozo_color_title</item>
+        <item name="android:textColor">@color/mozo_color_text_main</item>
         <item name="android:itemBackground">@drawable/mozo_bg_component</item>
         <item name="android:backgroundDimAmount">@dimen/mozo_background_dim_amount</item>
     </style>

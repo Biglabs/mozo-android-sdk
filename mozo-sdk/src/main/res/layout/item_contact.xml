@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/mozo_color_title"
+        android:textColor="@color/mozo_color_text_main"
         android:textSize="@dimen/mozo_text_size"
         app:layout_constraintBottom_toTopOf="@id/item_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="@color/mozo_color_disable"
+        android:background="@color/mozo_color_line"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
