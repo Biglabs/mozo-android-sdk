@@ -44,9 +44,9 @@
     <string name="mozo_backup_warning">*If you lose your recovery phase, your wallet cannot be recovered.</string>
     <string name="mozo_backup_confirm_msg">I have safely stored recovery phrase</string>
 
-    <string name="mozo_pin_title">Create Security Pin</string>
-    <string name="mozo_pin_title_restore">Restore wallet</string>
-    <string name="mozo_pin_title_verify">Security pin confirm</string>
+    <string name="mozo_pin_title">Create Security PIN</string>
+    <string name="mozo_pin_title_restore">Restore Wallet</string>
+    <string name="mozo_pin_title_verify">Security PIN Confirm</string>
     <string name="mozo_pin_sub_title">Enter your security pin</string>
     <string name="mozo_pin_sub_title_restore">Enter your security pin\nto restore wallet</string>
     <string name="mozo_pin_content">Security PIN should be 6 di-git numbers</string>
@@ -57,7 +57,7 @@
     <string name="mozo_pin_msg_enter_incorrect">You entered an incorrect PIN</string>
     <string name="mozo_pin_msg_error">Create Wallet failed</string>
 
-    <string name="mozo_transfer_title">Send Mozo Offchain</string>
+    <string name="mozo_transfer_title">Send Mozo</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>
     <string name="mozo_transfer_from">From Mozo Offchain Wallet</string>
     <string name="mozo_transfer_receiver_address">Receiver Address</string>

@@ -89,27 +89,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <CheckBox
+    <LinearLayout
         android:id="@+id/button_stored_confirm"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="@dimen/mozo_screen_padding"
         android:layout_marginEnd="@dimen/mozo_screen_padding"
-        android:layout_marginBottom="21dp"
-        android:button="@drawable/mozo_dr_btn_check"
-        android:paddingStart="9dp"
-        android:paddingEnd="5dp"
-        android:text="@string/mozo_backup_confirm_msg"
-        android:textColor="@drawable/mozo_color_radio_text"
-        android:textSize="@dimen/mozo_text_size"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/mozo_dr_btn_border"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/button_continue"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/mozo_backup_confirm_msg"
+            android:duplicateParentState="true"
+            android:src="@drawable/mozo_dr_btn_check" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:includeFontPadding="false"
+            android:text="@string/mozo_backup_confirm_msg"
+            android:textColor="@drawable/mozo_color_radio_text"
+            android:textSize="12sp"
+            android:textStyle="italic" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/button_continue"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="@dimen/mozo_screen_padding"
         android:layout_marginEnd="@dimen/mozo_screen_padding"
         android:layout_marginBottom="30dp"

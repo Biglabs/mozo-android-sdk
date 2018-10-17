@@ -60,17 +60,19 @@ internal class SecurityActivity : AppCompatActivity() {
         "showBackupUI".logAsError(localClassName)
         setContentView(R.layout.view_wallet_backup)
 
-        val padding = resources.dp2Px(10f).toInt()
+        val paddingVertical = resources.dp2Px(10f).toInt()
+        val paddingHorizontal = resources.dp2Px(8f).toInt()
         WalletService.getInstance().getSeed()?.split(" ")?.map {
             val word = TextView(this@SecurityActivity)
-            word.setPaddingRelative(padding, padding, padding, padding)
+            word.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
             word.text = it
             TextViewCompat.setTextAppearance(word, R.style.MozoTheme_SeedWords)
             seed_view.addView(word)
         }
 
-        button_stored_confirm.setOnCheckedChangeListener { _, isChecked ->
-            button_continue.isEnabled = isChecked
+        button_stored_confirm.click {
+            it.isSelected = !it.isSelected
+            button_continue.isEnabled = it.isSelected
         }
 
         button_continue.click { showPinInputUI() }
@@ -135,7 +137,7 @@ internal class SecurityActivity : AppCompatActivity() {
                 text.clear()
             }
         }
-
+        text_content_pin.visible()
         hideLoadingUI()
     }
 
@@ -150,6 +152,7 @@ internal class SecurityActivity : AppCompatActivity() {
         text_content_pin.setText(R.string.mozo_pin_confirm_content)
 
         input_pin.setText("")
+        text_content_pin.visible()
         input_pin_checker_status.visible()
         input_pin_checker_status.isSelected = false
     }
@@ -160,6 +163,7 @@ internal class SecurityActivity : AppCompatActivity() {
         input_pin_checker_status.isSelected = true
         input_pin.visible()
         input_pin.isEnabled = false
+        text_content_pin.visible()
         hideLoadingUI()
     }
 
@@ -184,6 +188,7 @@ internal class SecurityActivity : AppCompatActivity() {
                 text_incorrect_pin,
                 input_pin,
                 input_pin_checker_status,
+                text_content_pin,
                 error_container
         ))
 
