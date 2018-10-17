@@ -201,7 +201,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun handleResult(exception: Exception? = null) = async {
         if (modeSignIn) {
             if (exception == null) {
-                MozoAuth.getInstance().syncProfile().await()
+                MozoAuth.getInstance().syncProfile { handleResult(null) }.await()
                 // TODO handle sync profile failed
                 val flag = WalletService.getInstance().initWallet().await()
                 SecurityActivity.start(this@MozoAuthActivity, flag, KEY_DO_ENTER_PIN)

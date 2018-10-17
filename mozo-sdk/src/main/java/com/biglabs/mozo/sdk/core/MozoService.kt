@@ -3,53 +3,67 @@ package com.biglabs.mozo.sdk.core
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.common.Constant
+import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
 import com.biglabs.mozo.sdk.utils.AuthStateManager
-import com.biglabs.mozo.sdk.utils.logAsError
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class MozoService private constructor() {
-    fun getContacts() = async {
+internal class MozoService private constructor() {
+
+    private fun handleError(ex: Exception, onTryAgain: (() -> Unit)? = null) = async(UI) {
+        if (ex is IOException) {
+            ErrorDialog.networkError(onTryAgain)
+        } else {
+            ErrorDialog.generalError(onTryAgain)
+        }
+    }
+
+    fun getContacts(onTryAgain: () -> Unit) = async {
         return@async try {
             mAPIs?.getContacts()?.await()?.body()
         } catch (e: Exception) {
+            handleError(e, onTryAgain)
             emptyList<Models.Contact>()
         }
     }
 
-    fun saveContact(contact: Models.Contact) = async {
+    fun saveContact(contact: Models.Contact, onTryAgain: () -> Unit) = async {
         return@async try {
             mAPIs?.saveContact(contact)?.await()?.body()
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
             null
         }
     }
 
-    fun fetchProfile() = async {
+    fun fetchProfile(onTryAgain: () -> Unit) = async {
         return@async try {
             mAPIs?.fetchProfile()?.await()?.body()
         } catch (e: Exception) {
-            "fetchProfile exception".logAsError()
+            handleError(e, onTryAgain)
             null
         }
     }
 
-    //
 //    fun saveExchangeInfo(exchangeInfo: Models.Profile): Deferred<Response<Models.Profile>> {
 //    }
 //
 //    fun saveSettings(notificationThreshold: Int): Deferred<Response<Models.Profile>> {
 //    }
 
-    fun saveWallet(walletInfo: Models.WalletInfo) = async {
+    fun saveWallet(walletInfo: Models.WalletInfo, onTryAgain: () -> Unit) = async {
         return@async try {
             mAPIs?.saveWallet(walletInfo)?.await()?.body()
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
             null
         }
     }
@@ -58,38 +72,48 @@ class MozoService private constructor() {
         return@async try {
             mAPIs?.getBalance(address)?.await()?.body()
         } catch (e: Exception) {
+            handleError(e)
             null
         }
     }
 
-    fun createTransaction(request: Models.TransactionRequest) = async {
+    fun createTransaction(request: Models.TransactionRequest, onTryAgain: (() -> Unit)?) = async {
         return@async try {
             mAPIs?.createTransaction(request)?.await()?.body()
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
             null
         }
     }
 
-    fun sendTransaction(request: Models.TransactionResponse) = async {
-        return@async try {
-            mAPIs?.sendTransaction(request)?.await()?.body()
-        } catch (ex: Exception) {
-            null
+    fun sendTransaction(request: Models.TransactionResponse, onTryAgain: (() -> Unit)?) = async {
+        var result: Response<Models.TransactionResponse>? = null
+        try {
+            result = mAPIs?.sendTransaction(request)?.await()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
+        } finally {
+            if (result == null || result.code() != 200) {
+                handleError(Exception(result?.message() ?: "no response"), onTryAgain)
+            }
         }
+        return@async result?.body()
     }
 
-    fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE) = async {
+    fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, onTryAgain: (() -> Unit)?) = async {
         return@async try {
             mAPIs?.getTransactionHistory(address, page, size)?.await()?.body()
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
             emptyList<Models.TransactionHistory>()
         }
     }
 
-    fun getTransactionStatus(txHash: String) = async {
+    fun getTransactionStatus(txHash: String, onTryAgain: (() -> Unit)?) = async {
         return@async try {
             mAPIs?.getTransactionStatus(txHash)?.await()?.body()
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
             null
         }
     }
@@ -97,7 +121,8 @@ class MozoService private constructor() {
     fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO) = async {
         return@async try {
             mAPIs?.getExchangeRate(currency, symbol)?.await()?.body()
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            handleError(e)
             Models.ExchangeRate(0.0)
         }
     }

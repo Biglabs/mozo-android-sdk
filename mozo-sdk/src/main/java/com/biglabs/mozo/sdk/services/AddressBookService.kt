@@ -9,8 +9,8 @@ internal class AddressBookService {
 
     val data = arrayListOf<Models.Contact>()
 
-    fun fetchData(context: Context) = async {
-        val response = MozoService.getInstance(context).getContacts().await()
+    fun fetchData(context: Context, tryAgain: () -> Unit) = async {
+        val response = MozoService.getInstance(context).getContacts(tryAgain).await()
         response?.let { contacts ->
             data.clear()
             data.addAll(contacts.sortedBy { it.name })

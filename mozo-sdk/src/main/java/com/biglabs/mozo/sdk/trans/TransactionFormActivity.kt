@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -15,11 +14,13 @@ import com.biglabs.mozo.sdk.core.Models.TransactionHistory.CREATOR.MY_ADDRESS
 import com.biglabs.mozo.sdk.services.AddressBookService
 import com.biglabs.mozo.sdk.ui.AddressAddActivity
 import com.biglabs.mozo.sdk.ui.AddressBookActivity
+import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.utils.*
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.view_transaction_form.*
 import kotlinx.android.synthetic.main.view_transaction_sent.*
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.delay
@@ -29,12 +30,13 @@ import java.math.BigDecimal
 import java.util.*
 
 @Suppress("unused")
-internal class TransactionFormActivity : AppCompatActivity() {
+internal class TransactionFormActivity : BaseActivity() {
 
     private var currentBalance = BigDecimal.ZERO
     private var currentRate = BigDecimal.ZERO
     private var selectedContact: Models.Contact? = null
     private val history = Models.TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
+    private var updateTxStatusJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +45,13 @@ internal class TransactionFormActivity : AppCompatActivity() {
         initUI()
         showInputUI()
 
-        AddressBookService.getInstance().fetchData(this)
+        fetchAddressBook()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         selectedContact = null
+        updateTxStatusJob?.cancel()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -82,13 +85,16 @@ internal class TransactionFormActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendTx(pin: String?) {
+    private fun sendTx(pin: String?, request: Models.TransactionResponse? = null) {
         if (pin == null) return
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         val amount = output_amount.text.toString()
         launch {
             showLoading()
-            val txResponse = MozoTrans.getInstance().createTransaction(address, amount, pin).await()
+            val txResponse = if (request == null)
+                MozoTrans.getInstance().createTransaction(address, amount, pin) { sendTx(pin, it) }.await()
+            else
+                MozoTrans.getInstance().sendTransaction(request) { sendTx(pin, request) }.await()
             history.addressTo = address
             history.amount = MozoTrans.getInstance().amountWithDecimal(amount)
             history.time = Calendar.getInstance().timeInMillis / 1000L
@@ -103,6 +109,12 @@ internal class TransactionFormActivity : AppCompatActivity() {
         } else {
             showInputUI()
             showContactInfoUI()
+        }
+    }
+
+    private fun fetchAddressBook() {
+        AddressBookService.getInstance().fetchData(this) {
+            fetchAddressBook()
         }
     }
 
@@ -268,7 +280,7 @@ internal class TransactionFormActivity : AppCompatActivity() {
                 }
             }
 
-            updateTxStatus()
+            updateTxStatusJob = updateTxStatus()
         } else {
             // TODO show send Tx failed UI
             "send Tx failed UI".logAsError()
@@ -279,7 +291,7 @@ internal class TransactionFormActivity : AppCompatActivity() {
         var pendingStatus = true
         while (pendingStatus) {
 
-            val txStatus = MozoTrans.getInstance().getTransactionStatus(history.txHash).await()
+            val txStatus = MozoTrans.getInstance().getTransactionStatus(history.txHash) { updateTxStatus() }.await()
             launch(UI) {
                 when {
                     txStatus != null && txStatus.isSuccess() -> {
@@ -287,11 +299,13 @@ internal class TransactionFormActivity : AppCompatActivity() {
                         text_tx_status_label.setText(R.string.mozo_view_text_tx_success)
                         button_transaction_detail.visible()
                         pendingStatus = false
+                        updateTxStatusJob = null
                     }
                     txStatus != null && txStatus.isFailed() -> {
                         text_tx_status_icon.setImageResource(R.drawable.ic_error)
                         text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
                         pendingStatus = false
+                        updateTxStatusJob = null
                     }
                 }
 

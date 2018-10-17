@@ -3,7 +3,6 @@ package com.biglabs.mozo.sdk.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.core.Models
 import com.biglabs.mozo.sdk.core.MozoService
@@ -14,7 +13,7 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
-class AddressAddActivity : AppCompatActivity() {
+internal class AddressAddActivity : BaseActivity() {
 
     private val mozoService by lazy { MozoService.getInstance(this) }
 
@@ -26,25 +25,28 @@ class AddressAddActivity : AppCompatActivity() {
 
         mShowMessageDuration = getInteger(R.integer.security_pin_show_msg_duration)
 
-        val address = intent.getStringExtra(FLAG_ADDRESS)
-        text_contact_address.text = address
+        text_contact_address.text = intent.getStringExtra(FLAG_ADDRESS)
 
         input_contact_name.onTextChanged {
             button_save.isEnabled = input_contact_name.length() > 0
         }
 
-        button_save.click {
-            showLoading()
+        button_save.click { executeSaveContact() }
+    }
 
-            val contact = Models.Contact(0, input_contact_name.text.toString().trim(), address)
-            launch {
-                val response = mozoService.saveContact(contact).await()
-                if (response != null) {
-                    showDoneMsg()
-                } else {
-                    hideLoading()
-                    showErrorMsg()
-                }
+    private fun executeSaveContact() {
+        showLoading()
+
+        val contact = Models.Contact(0, input_contact_name.text.toString().trim(), text_contact_address.text.toString())
+        launch {
+            val response = mozoService.saveContact(contact) {
+                executeSaveContact()
+            }.await()
+            if (response != null) {
+                showDoneMsg()
+            } else {
+                hideLoading()
+                showErrorMsg()
             }
         }
     }

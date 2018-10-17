@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ContextThemeWrapper
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.PopupMenu
@@ -15,13 +14,14 @@ import com.biglabs.mozo.sdk.common.OnLoadMoreListener
 import com.biglabs.mozo.sdk.core.Models
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.services.WalletService
+import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.click
 import kotlinx.android.synthetic.main.view_transaction_history.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 
-internal class TransactionHistoryActivity : AppCompatActivity(), OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     private val walletService: WalletService by lazy { WalletService.getInstance() }
 
@@ -78,7 +78,7 @@ internal class TransactionHistoryActivity : AppCompatActivity(), OnLoadMoreListe
             historyAdapter.address = currentAddress
         }
         val response = MozoService.getInstance(this@TransactionHistoryActivity)
-                .getTransactionHistory(currentAddress!!, page = currentPage)
+                .getTransactionHistory(currentAddress!!, page = currentPage) { fetchData() }
                 .await()
 
         if (response != null) {

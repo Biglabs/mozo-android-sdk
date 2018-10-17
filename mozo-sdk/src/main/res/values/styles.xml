@@ -56,6 +56,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="MozoButtonStyle.MozoRoundedButtonStyle">
+        <item name="android:background">@drawable/mozo_dr_btn_rounded</item>
+        <item name="android:minWidth">143dp</item>
+        <item name="android:layout_height">45dp</item>
+    </style>
+
     <style name="MozoPopup" parent="Widget.AppCompat.PopupMenu">
         <item name="android:textColor">@color/mozo_color_title</item>
         <item name="android:itemBackground">@drawable/mozo_bg_component</item>

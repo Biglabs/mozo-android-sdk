@@ -14,6 +14,9 @@
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
     <string name="mozo_dialog_copied_msg">Copied!</string>
 
+    <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
+    <string name="mozo_dialog_error_msg">There is an error occurred.</string>
+
     <string name="mozo_button_deposit">Deposit</string>
     <string name="mozo_button_login">Sign In to Mozo</string>
     <string name="mozo_button_logout">Log Out Mozo</string>
@@ -32,6 +35,7 @@
     <string name="mozo_button_save">Save</string>
     <string name="mozo_button_save_address">Save Address</string>
     <string name="mozo_button_retry">Retry</string>
+    <string name="mozo_button_try_again">Try Again</string>
 
     <string name="mozo_backup_title">Back up Wallet</string>
     <string name="mozo_backup_sub_title">Store Recovery Phrase</string>

@@ -214,7 +214,7 @@ internal class SecurityActivity : AppCompatActivity() {
         when (mRequestCode) {
             KEY_CREATE_PIN -> {
                 val isSuccess = WalletService.getInstance()
-                        .executeSaveWallet(mPIN, this@SecurityActivity)
+                        .executeSaveWallet(mPIN, this@SecurityActivity) { submitForResult() }
                         .await()
                 if (!isSuccess) {
                     showErrorAndRetryUI()

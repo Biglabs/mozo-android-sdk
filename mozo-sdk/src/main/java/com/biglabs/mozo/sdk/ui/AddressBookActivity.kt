@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.View
 import com.biglabs.mozo.sdk.R
@@ -20,7 +19,7 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
-class AddressBookActivity : AppCompatActivity() {
+internal class AddressBookActivity : BaseActivity() {
 
     private val contacts: ArrayList<Models.Contact> = arrayListOf()
     private val contactsBackup: ArrayList<Models.Contact> = arrayListOf()
@@ -80,7 +79,7 @@ class AddressBookActivity : AppCompatActivity() {
 
     private fun fetchData() = async {
         val addressBookService = AddressBookService.getInstance()
-        addressBookService.fetchData(this@AddressBookActivity).await()
+        addressBookService.fetchData(this@AddressBookActivity) { fetchData() }.await()
 
         contacts.clear()
         contacts.addAll(addressBookService.data)
