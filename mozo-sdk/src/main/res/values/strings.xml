@@ -67,7 +67,7 @@
     <string name="mozo_transfer_amount_offchain">Amount (Mozo Offchain)</string>
     <string name="mozo_transfer_amount_hint">Input value in decimal format</string>
     <string name="mozo_transfer_amount_error">Error: Please input value in decimal format.</string>
-    <string name="mozo_transfer_spendable">Spendable: %s Mozo (Offchain)</string>
+    <string name="mozo_transfer_spendable">Spendable: %s Mozo</string>
     <string name="mozo_transfer_send_complete">Your TX has been broadcast</string>
     <string name="mozo_transfer_send_complete_msg">TX Hash:</string>
 

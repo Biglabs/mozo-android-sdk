@@ -123,14 +123,11 @@ internal class TransactionFormActivity : BaseActivity() {
             currentBalance = MozoTrans.getInstance().getBalance().await()
             currentRate = MozoTrans.getInstance().getExchangeRate().await().toBigDecimal()
             launch(UI) {
-                mozo_wallet_balance_value?.text = currentBalance.displayString()
-                mozo_wallet_balance_rate_side.text = String.format(Locale.US, "₩%s", currentBalance.multiply(currentRate).displayString())
-
                 val str = SpannableString(getString(R.string.mozo_transfer_spendable, currentBalance.displayString()))
                 str.setSpan(
-                        ForegroundColorSpan(color(R.color.mozo_color_text_main)),
-                        0,
+                        ForegroundColorSpan(color(R.color.mozo_color_primary)),
                         10,
+                        str.length,
                         SpannableString.SPAN_INCLUSIVE_EXCLUSIVE
                 )
                 text_spendable.text = str
@@ -393,7 +390,6 @@ internal class TransactionFormActivity : BaseActivity() {
         fun start(context: Context) {
             Intent(context, TransactionFormActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 context.startActivity(this)
             }
         }
