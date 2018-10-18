@@ -20,7 +20,7 @@
         style="@style/MozoTheme.SubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="@string/mozo_pin_sub_title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,10 +32,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/mozo_screen_padding"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="@dimen/mozo_screen_padding"
         android:gravity="center"
         android:text="@string/mozo_pin_content"
+        android:textColor="@color/mozo_color_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sub_title_pin" />
@@ -56,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_content_pin"
-        app:layout_constraintVertical_bias="0.8"
+        app:layout_constraintVertical_bias="0.45"
         tools:visibility="visible" />
 
     <TextView
@@ -73,7 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_content_pin"
-        app:layout_constraintVertical_bias="0.8" />
+        app:layout_constraintVertical_bias="0.45" />
 
     <LinearLayout
         android:id="@+id/error_container"
@@ -123,7 +124,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.48"
+        app:layout_constraintVertical_bias="0.42"
         app:layout_constraintWidth_percent="0.6"
         app:pinAnimationType="fromBottom"
         app:pinLineColors="@drawable/mozo_dr_pin_input"
@@ -156,7 +157,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.47" />
+        app:layout_constraintVertical_bias="0.42" />
 
     <TextView
         android:id="@+id/input_loading_text"

@@ -126,7 +126,7 @@ internal class TransactionHistoryRecyclerAdapter(
             if (isSentType) {
                 item_history_type.setText(R.string.mozo_view_text_tx_sent)
                 amountSign = "-"
-                amountColor = ContextCompat.getColor(itemView.context, R.color.mozo_color_title)
+                amountColor = ContextCompat.getColor(itemView.context, R.color.mozo_color_text_main)
             } else {
                 item_history_type.setText(R.string.mozo_view_text_tx_received)
                 amountSign = "+"

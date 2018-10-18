@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/mozo_dialog_error_msg"
-        android:textColor="@color/mozo_color_title"
+        android:textColor="@color/mozo_color_text_main"
         android:textSize="@dimen/mozo_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
