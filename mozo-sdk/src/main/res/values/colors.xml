@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="mozo_color_primary">#5a9cf5</color>
-    <color name="mozo_color_pin">#5a9cf5</color>
+    <color name="mozo_color_primary">#4e94f3</color>
+    <color name="mozo_color_pin">#4e94f3</color>
 
     <color name="mozo_color_btn_focused">#006dff</color>
     <color name="mozo_color_btn_pressed">#0c56ba</color>
 
+    <color name="mozo_color_title">#333333</color>
+    <color name="mozo_color_text_main">#141a22</color>
     <color name="mozo_color_action_text">#969696</color>
     <color name="mozo_color_content">#747474</color>
     <color name="mozo_color_correct">#17b978</color>
-    <color name="mozo_color_disable">#d1d7dd</color>
+    <color name="mozo_color_disable">#cacaca</color>
     <color name="mozo_color_disable_text">#a8afb6</color>
     <color name="mozo_color_error">#f05454</color>
-    <color name="mozo_color_title">#141a22</color>
-    <color name="mozo_color_un_active">#c1c1c1</color>
+    <color name="mozo_color_line">#d1d7dd</color>
     <color name="mozo_color_ripple">#73ffffff</color>
+    <color name="mozo_color_un_active">#c1c1c1</color>
 
 </resources>

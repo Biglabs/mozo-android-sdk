@@ -11,7 +11,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="27dp"
         android:text="@string/mozo_dialog_qr_code"
-        android:textColor="@color/mozo_color_title"
+        android:textColor="@color/mozo_color_text_main"
         android:textSize="@dimen/mozo_text_size"
         android:textStyle="bold" />
 
