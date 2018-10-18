@@ -9,6 +9,7 @@ import android.os.Parcelable
 import android.support.annotation.NonNull
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.utils.displayString
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 import kotlin.collections.ArrayList
@@ -227,5 +228,26 @@ object Models {
 
     data class ExchangeRate(
             val rate: Double
+    )
+
+    data class BroadcastData(
+            val time: Long,
+            val content: String
+    ) {
+        fun getData() = try {
+            Gson().fromJson(content, BroadcastDataContent::class.java)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    data class BroadcastDataContent(
+            val event: String,
+            val from: String,
+            val to: String,
+            val amount: BigDecimal,
+            val decimal: Int,
+            val symbol: String,
+            val time: Long
     )
 }

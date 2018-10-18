@@ -77,7 +77,7 @@ internal fun Resources.dp2Px(value: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, displayMetrics)
 }
 
-internal fun String.logAsError(prefix: String? = null) {
+internal fun String?.logAsError(prefix: String? = null) {
     if (BuildConfig.DEBUG) {
         Log.e("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
     }

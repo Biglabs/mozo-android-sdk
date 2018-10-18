@@ -2,8 +2,10 @@ package com.biglabs.mozo.sdk.services
 
 import android.content.Context
 import com.biglabs.mozo.sdk.common.Constant
+import com.biglabs.mozo.sdk.core.Models
 import com.biglabs.mozo.sdk.utils.AuthStateManager
 import com.biglabs.mozo.sdk.utils.logAsError
+import com.google.gson.Gson
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
@@ -16,17 +18,28 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
     }
 
     override fun onMessage(s: String?) {
-        "message: $s".logAsError("web socket")
         s?.run {
             if (equals("1|X", ignoreCase = false)) {
                 sendPing()
+            } else {
+                val messages = split("|")
+                if (messages.size > 1) {
+                    val message = try {
+                        Gson().fromJson(messages[1], Models.BroadcastData::class.java)
+                    } catch (e: Exception) {
+                        null
+                    }
+
+                    message?.getData()?.run {
+                        event.logAsError("message event")
+                        amount.toString().logAsError("message amount")
+                        decimal.toString().logAsError("decimal")
+                        from.logAsError("from")
+                        to.logAsError("to")
+                    }
+                }
             }
         }
-    }
-
-    override fun onClosing(code: Int, reason: String?, remote: Boolean) {
-        super.onClosing(code, reason, remote)
-        "closing: $code, reason: $reason, remote: $remote".logAsError("web socket")
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
