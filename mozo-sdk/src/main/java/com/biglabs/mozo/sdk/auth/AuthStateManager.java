@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.biglabs.mozo.sdk.utils;
+package com.biglabs.mozo.sdk.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;

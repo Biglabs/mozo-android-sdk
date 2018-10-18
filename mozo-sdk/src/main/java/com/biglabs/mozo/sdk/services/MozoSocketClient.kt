@@ -1,9 +1,10 @@
 package com.biglabs.mozo.sdk.services
 
 import android.content.Context
+import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.core.Models
-import com.biglabs.mozo.sdk.utils.AuthStateManager
+import com.biglabs.mozo.sdk.auth.AuthStateManager
 import com.biglabs.mozo.sdk.utils.logAsError
 import com.google.gson.Gson
 import org.java_websocket.client.WebSocketClient
@@ -31,6 +32,9 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
                     }
 
                     message?.getData()?.run {
+                        if (event.equals(Constant.NOTIFY_EVENT_BALANCE_CHANGED, ignoreCase = true)) {
+                            MozoSDK.profileViewModel?.fetchData()
+                        }
                         event.logAsError("message event")
                         amount.toString().logAsError("message amount")
                         decimal.toString().logAsError("decimal")

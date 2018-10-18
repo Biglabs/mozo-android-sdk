@@ -10,7 +10,6 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.services.WalletService
 import com.biglabs.mozo.sdk.ui.SecurityActivity
-import com.biglabs.mozo.sdk.utils.AuthStateManager
 import com.biglabs.mozo.sdk.utils.logAsError
 import com.biglabs.mozo.sdk.utils.setMatchParent
 import com.biglabs.mozo.sdk.utils.string

@@ -1,5 +1,6 @@
 package com.biglabs.mozo.sdk.ui.view
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.support.annotation.IntDef
 import android.support.constraint.ConstraintLayout
@@ -9,18 +10,13 @@ import android.support.v4.app.FragmentManager
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
+import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.auth.MozoAuth
-import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.services.WalletService
-import com.biglabs.mozo.sdk.trans.MozoTrans
+import com.biglabs.mozo.sdk.core.Models
+import com.biglabs.mozo.sdk.core.ViewModels
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import java.util.*
 
 class WalletInfoView : ConstraintLayout {
 
@@ -62,61 +58,54 @@ class WalletInfoView : ConstraintLayout {
         mTagLoginRequire = resources.getString(R.string.tag_login_require)
 
         inflateLayout()
-
-        if (!isInEditMode) {
-            if (context is FragmentActivity) {
-                fragmentManager = context.supportFragmentManager
-            } else if (context is Fragment) {
-                fragmentManager = context.fragmentManager
-            }
-        }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (!isInEditMode) {
-            EventBus.getDefault().register(this)
+            showLoginRequireUI()
 
-            fetchData()
+            when (context) {
+                is FragmentActivity -> (context as FragmentActivity).run {
+                    this@WalletInfoView.fragmentManager = supportFragmentManager
+                }
+                is Fragment -> (context as Fragment).run {
+                    this@WalletInfoView.fragmentManager = fragmentManager
+                }
+            }
+
+            MozoSDK.profileViewModel?.run {
+                profileLiveData.observeForever(profileObserver)
+                balanceAndRateLiveData.observeForever(balanceAndRateObserver)
+            }
         }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (!isInEditMode) {
-            EventBus.getDefault().unregister(this)
+        MozoSDK.profileViewModel?.run {
+            profileLiveData.removeObserver(profileObserver)
+            balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
         }
     }
 
-    @Suppress("unused")
-    @Subscribe
-    internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
-        fetchData()
+    private val profileObserver = Observer<Models.Profile?> {
+        if (it?.walletInfo != null) {
+            mAddress = it.walletInfo!!.offchainAddress
+            mWalletAddressView?.text = mAddress
+            showDetailUI()
+        } else {
+            showLoginRequireUI()
+        }
     }
 
-    private fun fetchData() {
-        if (MozoAuth.getInstance().isSignUpCompleted()) {
-            launch {
-                mAddress = WalletService.getInstance().getAddress().await()
-                launch(UI) {
-                    mWalletAddressView?.text = mAddress
-                }
-            }
-
-            launch {
-                val balance = MozoTrans.getInstance().getBalance().await()
-                val balanceRate = MozoTrans.getInstance().getExchangeRate().await().toBigDecimal()
-                mBalance = balance.displayString()
-                mBalanceRate = String.format(Locale.US, "₩%s", balance.multiply(balanceRate).displayString())
-                launch(UI) {
-                    mWalletBalanceView?.text = mBalance
-                    mWalletBalanceRateView?.text = mBalanceRate
-                }
-            }
-
-            showDetailUI()
-        } else
-            showLoginRequireUI()
+    private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
+        it?.run {
+            mBalance = balanceInDecimal.displayString()
+            mBalanceRate = balanceInCurrencyDisplay
+            mWalletBalanceView?.text = mBalance
+            mWalletBalanceRateView?.text = mBalanceRate
+        }
     }
 
     private fun inflateLayout() {
@@ -222,7 +211,6 @@ class WalletInfoView : ConstraintLayout {
         if (mViewMode != mode) {
             mViewMode = mode
             inflateLayout()
-            fetchData()
         }
     }
 

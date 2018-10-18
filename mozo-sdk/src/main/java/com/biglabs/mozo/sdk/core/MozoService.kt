@@ -4,7 +4,7 @@ import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
-import com.biglabs.mozo.sdk.utils.AuthStateManager
+import com.biglabs.mozo.sdk.auth.AuthStateManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async

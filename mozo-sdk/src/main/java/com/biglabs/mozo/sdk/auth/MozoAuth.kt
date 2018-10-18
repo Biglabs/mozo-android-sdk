@@ -8,7 +8,6 @@ import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.services.MozoSocketClient
 import com.biglabs.mozo.sdk.services.WalletService
-import com.biglabs.mozo.sdk.utils.AuthStateManager
 import com.biglabs.mozo.sdk.utils.logAsError
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -105,8 +104,10 @@ class MozoAuth private constructor() {
         EventBus.getDefault().unregister(this@MozoAuth)
 
         if (auth.isSignedIn) {
+            MozoSDK.profileViewModel?.fetchData()
             MozoSocketClient.connect(MozoSDK.context!!)
         } else {
+            MozoSDK.profileViewModel?.clear()
             MozoSocketClient.disconnect()
         }
 

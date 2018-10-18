@@ -18,5 +18,7 @@ class Constant {
 
         const val STATUS_SUCCESS = "SUCCESS"
         const val STATUS_FAILED = "FAILED"
+
+        const val NOTIFY_EVENT_BALANCE_CHANGED = "balance_changed"
     }
 }
