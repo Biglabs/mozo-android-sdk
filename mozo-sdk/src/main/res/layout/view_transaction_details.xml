@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:includeFontPadding="false"
-        android:textColor="@color/mozo_color_action_text"
+        android:textColor="@color/mozo_color_section_text"
         android:textSize="12sp"
         android:textStyle="italic"
         app:layout_constraintStart_toStartOf="@id/text_detail_status"

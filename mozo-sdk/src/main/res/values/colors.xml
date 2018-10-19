@@ -8,7 +8,7 @@
 
     <color name="mozo_color_title">#333333</color>
     <color name="mozo_color_text_main">#141a22</color>
-    <color name="mozo_color_action_text">#969696</color>
+    <color name="mozo_color_section_text">#969696</color>
     <color name="mozo_color_content">#747474</color>
     <color name="mozo_color_correct">#17b978</color>
     <color name="mozo_color_disable">#cacaca</color>

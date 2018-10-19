@@ -1,9 +1,11 @@
 package com.biglabs.mozo.sdk.trans
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.core.Models
@@ -23,21 +25,25 @@ class TransactionDetails : AppCompatActivity() {
     private val dateFormat = SimpleDateFormat(Constant.HISTORY_TIME_FORMAT, Locale.getDefault())
     private var currencyRate = BigDecimal.ZERO
 
-    init {
-        launch {
-            currencyRate = MozoTrans.getInstance().getExchangeRate().await().toBigDecimal()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (intent == null) return
 
+        MozoSDK.profileViewModel?.run {
+            exchangeRateLiveData.observeForever(exchangeRateObserver)
+        }
+
         setContentView(R.layout.view_transaction_details)
 
         val history = intent.getParcelableExtra<Models.TransactionHistory>(KEY_DATA)
         bindData(history)
+    }
+
+    private val exchangeRateObserver = Observer<Models.ExchangeRate?> {
+        it?.let {
+            currencyRate = it.rate.toBigDecimal()
+        }
     }
 
     private fun bindData(history: Models.TransactionHistory) {
@@ -80,7 +86,7 @@ class TransactionDetails : AppCompatActivity() {
 
         text_detail_time.text = dateFormat.format(Date(history.time * 1000L))
 
-        val contact = AddressBookService.getInstance().findByAddress(history.addressTo)
+        val contact = AddressBookService.getInstance().findByAddress(history.addressTo ?: "")
         if (contact != null) {
             text_detail_receiver_user_name.text = contact.name
             visible(arrayOf(

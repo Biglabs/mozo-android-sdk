@@ -13,7 +13,7 @@
         android:includeFontPadding="false"
         android:tag="@string/tag_show_always"
         android:text="@string/mozo_view_address_title"
-        android:textColor="@color/mozo_color_action_text"
+        android:textColor="@color/mozo_color_section_text"
         android:textSize="12sp" />
 
     <TextView

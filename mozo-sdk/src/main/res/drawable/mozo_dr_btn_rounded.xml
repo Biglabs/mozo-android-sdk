@@ -4,13 +4,13 @@
     <item android:id="@android:id/mask">
         <shape>
             <corners android:radius="24dp" />
-            <solid android:color="@drawable/mozo_selector_btn_color" />
+            <solid android:color="@color/mozo_selector_btn_color" />
         </shape>
     </item>
     <item>
         <shape>
             <corners android:radius="24dp" />
-            <solid android:color="@drawable/mozo_selector_btn_color" />
+            <solid android:color="@color/mozo_selector_btn_color" />
         </shape>
     </item>
 </ripple>

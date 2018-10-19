@@ -38,7 +38,7 @@
         android:importantForAutofill="no"
         android:inputType="textPersonName"
         android:textColor="@color/mozo_color_text_main"
-        android:textColorHint="@color/mozo_color_action_text"
+        android:textColorHint="@color/mozo_color_section_text"
         android:textSize="@dimen/mozo_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/mozo_address_add_label"
-        android:textColor="@color/mozo_color_action_text"
+        android:textColor="@color/mozo_color_section_text"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/text_contact_address"
         app:layout_constraintStart_toStartOf="@id/input_contact_name" />

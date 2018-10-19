@@ -1,6 +1,7 @@
 package com.biglabs.mozo.sdk
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.ConnectivityManager
@@ -28,6 +29,9 @@ class MozoSDK private constructor() {
         @Volatile
         internal var context: Context? = null
 
+        @Volatile
+        internal var notifyAciivityClass: Class<out FragmentActivity>? = null
+
         @SuppressLint("StaticFieldLeak")
         @Volatile
         internal var internalContext: Context? = null
@@ -42,6 +46,7 @@ class MozoSDK private constructor() {
 
             profileViewModel = ViewModelProviders.of(activity).get(ViewModels.ProfileViewModel::class.java)
 
+            notifyAciivityClass = activity::class.java
             this.context = activity.applicationContext
 
             if (INSTANCE == null) {

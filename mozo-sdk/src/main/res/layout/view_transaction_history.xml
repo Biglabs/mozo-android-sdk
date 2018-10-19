@@ -61,7 +61,7 @@
             android:paddingStart="5dp"
             android:paddingEnd="0dp"
             android:text="@string/mozo_view_text_tx_all"
-            android:textColor="@color/mozo_color_action_text"
+            android:textColor="@color/mozo_color_section_text"
             android:textSize="12sp" />
     </LinearLayout>
 

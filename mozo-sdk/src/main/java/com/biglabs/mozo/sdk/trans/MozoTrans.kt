@@ -1,9 +1,10 @@
 package com.biglabs.mozo.sdk.trans
 
+import android.arch.lifecycle.Observer
 import com.biglabs.mozo.sdk.MozoSDK
-import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.core.Models
 import com.biglabs.mozo.sdk.core.MozoService
+import com.biglabs.mozo.sdk.core.ViewModels
 import com.biglabs.mozo.sdk.services.WalletService
 import com.biglabs.mozo.sdk.utils.CryptoUtils
 import com.biglabs.mozo.sdk.utils.PreferenceUtils
@@ -19,12 +20,14 @@ class MozoTrans private constructor() {
     private val mPreferenceUtils: PreferenceUtils by lazy { PreferenceUtils.getInstance(MozoSDK.context!!) }
     private val mozoService: MozoService by lazy { MozoService.getInstance(MozoSDK.context!!) }
 
-    private val decimalRate: Double
-    private var exchangeRate: Double = 0.0
+    private var decimal = 0.0
+    private var exchangeRate = BigDecimal.ZERO
 
-    init {
-        val decimal = mPreferenceUtils.getDecimal()
-        decimalRate = Math.pow(10.0, decimal.toDouble())
+    private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
+        it?.run {
+            this@MozoTrans.decimal = decimal.toDouble()
+            exchangeRate = rate
+        }
     }
 
     fun getBalance() = async {
@@ -37,9 +40,6 @@ class MozoTrans private constructor() {
     }
 
     fun getExchangeRate() = async {
-        if (exchangeRate == 0.0) {
-            exchangeRate = mozoService.getExchangeRate(Constant.CURRENCY_KOREA).await()?.rate ?: 0.0
-        }
         return@async exchangeRate
     }
 
@@ -105,14 +105,19 @@ class MozoTrans private constructor() {
 
     internal fun amountWithDecimal(amount: String) = amountWithDecimal(amount.toBigDecimal())
 
-    internal fun amountWithDecimal(amount: BigDecimal) = amount.multiply(BigDecimal.valueOf(decimalRate))
+    internal fun amountWithDecimal(amount: BigDecimal) = amount.multiply(BigDecimal.valueOf(decimal))
 
     companion object {
         @Volatile
         private var instance: MozoTrans? = null
 
         fun getInstance() = instance ?: synchronized(this) {
-            if (instance == null) instance = MozoTrans()
+            if (instance == null) {
+                instance = MozoTrans()
+                MozoSDK.profileViewModel?.run {
+                    balanceAndRateLiveData.observeForever(instance!!.balanceAndRateObserver)
+                }
+            }
             instance
         }!!
     }

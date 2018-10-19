@@ -40,6 +40,7 @@ internal class SecurityActivity : AppCompatActivity() {
             KEY_CREATE_PIN -> showBackupUI()
             KEY_ENTER_PIN -> showPinInputRestoreUI()
             KEY_VERIFY_PIN -> showPinVerifyUI()
+            KEY_VERIFY_PIN_FOR_SEND -> showPinVerifyUI()
             else -> {
                 finishAndRemoveTask()
             }
@@ -143,8 +144,13 @@ internal class SecurityActivity : AppCompatActivity() {
 
     private fun initVerifyUI(clearPin: Boolean = false) {
         initRestoreUI(clearPin)
-        pin_toolbar.screen_title.setText(R.string.mozo_pin_title_verify)
-        sub_title_pin.setText(R.string.mozo_pin_sub_title)
+        if (mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
+            pin_toolbar.screen_title.setText(R.string.mozo_transfer_title)
+            sub_title_pin.setText(R.string.mozo_pin_sub_title_send)
+        } else {
+            pin_toolbar.screen_title.setText(R.string.mozo_pin_title_verify)
+            sub_title_pin.setText(R.string.mozo_pin_sub_title)
+        }
     }
 
     private fun showPinInputConfirmUI() {
@@ -237,14 +243,16 @@ internal class SecurityActivity : AppCompatActivity() {
                     return@async
                 }
             }
-            KEY_VERIFY_PIN -> {
-                mPIN = input_pin.text.toString()
-                val isCorrect = WalletService.getInstance().validatePin(mPIN).await()
-                initVerifyUI(!isCorrect)
-                if (isCorrect) showPinInputCorrectUI()
-                else {
-                    showPinInputWrongUI()
-                    return@async
+            else -> {
+                if (mRequestCode == KEY_VERIFY_PIN || mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
+                    mPIN = input_pin.text.toString()
+                    val isCorrect = WalletService.getInstance().validatePin(mPIN).await()
+                    initVerifyUI(!isCorrect)
+                    if (isCorrect) showPinInputCorrectUI()
+                    else {
+                        showPinInputWrongUI()
+                        return@async
+                    }
                 }
             }
         }
@@ -264,6 +272,7 @@ internal class SecurityActivity : AppCompatActivity() {
         const val KEY_CREATE_PIN = 0x001
         const val KEY_ENTER_PIN = 0x002
         const val KEY_VERIFY_PIN = 0x003
+        const val KEY_VERIFY_PIN_FOR_SEND = 0x004
 
         const val KEY_DATA = "KEY_DATA"
 

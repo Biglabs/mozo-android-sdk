@@ -59,7 +59,8 @@ internal object ViewModels {
                     balanceInDecimal,
                     balanceInCurrency,
                     String.format(Locale.US, "₩%s", balanceInCurrency.displayString()),
-                    balanceInfoLiveData.value?.decimals ?: 0
+                    balanceInfoLiveData.value?.decimals ?: 0,
+                    rate
             )
         }
 
@@ -73,6 +74,7 @@ internal object ViewModels {
             val balanceInDecimal: BigDecimal,
             val balanceInCurrency: BigDecimal,
             val balanceInCurrencyDisplay: String,
-            val decimal: Int
+            val decimal: Int,
+            val rate: BigDecimal
     )
 }

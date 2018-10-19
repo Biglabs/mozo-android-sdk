@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.text.InputFilter
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -121,7 +122,7 @@ internal class TransactionFormActivity : BaseActivity() {
     private fun initUI() {
         launch {
             currentBalance = MozoTrans.getInstance().getBalance().await()
-            currentRate = MozoTrans.getInstance().getExchangeRate().await().toBigDecimal()
+            currentRate = MozoTrans.getInstance().getExchangeRate().await()
             launch(UI) {
                 val str = SpannableString(getString(R.string.mozo_transfer_spendable, currentBalance.displayString()))
                 str.setSpan(
@@ -137,6 +138,10 @@ internal class TransactionFormActivity : BaseActivity() {
         output_receiver_address.onTextChanged {
             hideErrorAddressUI()
             updateSubmitButton()
+        }
+        output_receiver_address.setOnFocusChangeListener { _, hasFocus ->
+            output_receiver_address_label.isSelected = hasFocus
+            output_receiver_address_underline.isSelected = hasFocus
         }
         output_amount.onTextChanged {
             hideErrorAmountUI()
@@ -161,6 +166,10 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
         }
+        output_amount.setOnFocusChangeListener { _, hasFocus ->
+            output_amount_label.isSelected = hasFocus
+            output_amount_underline.isSelected = hasFocus
+        }
 
         val decimal = PreferenceUtils.getInstance(this).getDecimal()
         output_amount.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, decimal))
@@ -178,7 +187,7 @@ internal class TransactionFormActivity : BaseActivity() {
             if (output_receiver_address.isEnabled) {
                 if (validateInput()) showConfirmationUI()
             } else {
-                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN, KEY_VERIFY_PIN)
+                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN_FOR_SEND, KEY_VERIFY_PIN)
             }
         }
     }
@@ -186,7 +195,6 @@ internal class TransactionFormActivity : BaseActivity() {
     private fun showInputUI() {
         output_receiver_address.isEnabled = true
         output_amount.isEnabled = true
-        output_amount_label.setText(R.string.mozo_transfer_amount)
         visible(arrayOf(
                 output_receiver_address,
                 output_receiver_address_underline,
@@ -198,10 +206,11 @@ internal class TransactionFormActivity : BaseActivity() {
         ))
         gone(arrayOf(
                 output_receiver_address_user,
+                send_state_container,
+                confirmation_state_separator,
                 output_amount_preview_container
         ))
 
-        transfer_toolbar.setTitle(R.string.mozo_transfer_title)
         transfer_toolbar.showBackButton(false)
         button_submit.setText(R.string.mozo_button_continue)
 
@@ -216,6 +225,7 @@ internal class TransactionFormActivity : BaseActivity() {
         selectedContact?.run {
             output_receiver_address.visibility = View.INVISIBLE
             output_receiver_address_underline.visibility = View.INVISIBLE
+            button_scan_qr.visibility = View.INVISIBLE
 
             output_receiver_address_user.visible()
             text_receiver_user_name.text = name
@@ -235,7 +245,6 @@ internal class TransactionFormActivity : BaseActivity() {
     private fun showConfirmationUI() {
         output_receiver_address.isEnabled = false
         output_amount.isEnabled = false
-        output_amount_label.setText(R.string.mozo_transfer_amount_offchain)
         gone(arrayOf(
                 output_receiver_address_underline,
                 button_address_book,
@@ -247,9 +256,12 @@ internal class TransactionFormActivity : BaseActivity() {
                 button_clear
         ))
         text_preview_amount.text = output_amount.text
-        output_amount_preview_container.visible()
+        visible(arrayOf(
+                send_state_container,
+                confirmation_state_separator,
+                output_amount_preview_container
+        ))
 
-        transfer_toolbar.setTitle(R.string.mozo_transfer_confirmation)
         transfer_toolbar.showBackButton(true)
         button_submit.setText(R.string.mozo_button_send)
     }
@@ -288,7 +300,8 @@ internal class TransactionFormActivity : BaseActivity() {
         var pendingStatus = true
         while (pendingStatus) {
 
-            val txStatus = MozoTrans.getInstance().getTransactionStatus(history.txHash) { updateTxStatus() }.await()
+            val txStatus = MozoTrans.getInstance().getTransactionStatus(history.txHash
+                    ?: "") { updateTxStatus() }.await()
             launch(UI) {
                 when {
                     txStatus != null && txStatus.isSuccess() -> {
@@ -321,11 +334,11 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun showLoading() = async(UI) {
-        loading_container.show()
+        loading_container.visible()
     }
 
     private fun hideLoading() = async(UI) {
-        loading_container.hide()
+        loading_container.gone()
     }
 
     private fun showErrorAddressUI() {
@@ -336,8 +349,8 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun hideErrorAddressUI() {
-        output_receiver_address_label.setTextColor(color(R.color.mozo_color_content))
-        output_receiver_address_underline.setBackgroundColor(color(R.color.mozo_color_un_active))
+        output_receiver_address_label.setTextColor(ContextCompat.getColorStateList(this, R.color.mozo_color_input_focus))
+        output_receiver_address_underline.setBackgroundResource(R.drawable.mozo_color_line_focus)
         output_receiver_address_error_msg.gone()
     }
 
@@ -350,8 +363,8 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun hideErrorAmountUI() {
-        output_amount_label.setTextColor(color(R.color.mozo_color_content))
-        output_amount_underline.setBackgroundColor(color(R.color.mozo_color_un_active))
+        output_amount_label.setTextColor(ContextCompat.getColorStateList(this, R.color.mozo_color_input_focus))
+        output_amount_underline.setBackgroundResource(R.drawable.mozo_color_line_focus)
         output_amount_error_msg.gone()
         text_spendable.visible()
     }

@@ -22,8 +22,8 @@ class ContactRecyclerAdapter(private val contacts: List<Models.Contact>, private
         var i = 0
         val size = contacts.size
         while (i < size) {
-            val section = contacts[i].name.substring(0..0).toUpperCase()
-            if (!sections.contains(section)) {
+            val section = contacts[i].name?.substring(0..0)?.toUpperCase()
+            if (section != null && !sections.contains(section)) {
                 sections.add(section)
                 mSectionPositions.add(i)
             }

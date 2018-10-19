@@ -8,6 +8,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.NonNull
 import com.biglabs.mozo.sdk.common.Constant
+import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.displayString
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
@@ -70,8 +71,8 @@ object Models {
     /* API services models */
     data class Contact(
             val id: Long,
-            val name: String,
-            val soloAddress: String
+            val name: String?,
+            val soloAddress: String?
     ) : Parcelable {
         constructor(parcel: Parcel) : this(
                 parcel.readLong(),
@@ -105,7 +106,7 @@ object Models {
             val decimals: Int,
             val contractAddress: String?
     ) {
-        fun balanceInDecimal(): BigDecimal = balance.divide(Math.pow(10.0, decimals.toDouble()).toBigDecimal())
+        fun balanceInDecimal(): BigDecimal = Support.calculateAmountDecimal(balance, decimals)
     }
 
     class TransactionAddress(
@@ -148,19 +149,19 @@ object Models {
     )
 
     data class TransactionHistory(
-            var txHash: String,
+            var txHash: String?,
             var blockHeight: Long,
-            var action: String,
+            var action: String?,
             var fees: Double,
             var amount: BigDecimal,
-            var addressFrom: String,
-            var addressTo: String,
-            var contractAddress: String,
-            var symbol: String,
-            var contractAction: String,
+            var addressFrom: String?,
+            var addressTo: String?,
+            var contractAddress: String?,
+            var symbol: String?,
+            var contractAction: String?,
             var decimal: Int,
             var time: Long,
-            var txStatus: String
+            var txStatus: String?
     ) : Parcelable {
         constructor(parcel: Parcel) : this(
                 parcel.readString(),

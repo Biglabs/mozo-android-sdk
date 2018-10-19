@@ -19,7 +19,7 @@
         android:paddingStart="15dp"
         android:paddingEnd="20dp"
         android:text="@string/mozo_button_close"
-        android:textColor="@color/mozo_color_action_text"
+        android:textColor="@color/mozo_color_section_text"
         android:textSize="@dimen/mozo_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
             android:text="@string/mozo_view_text_tx_pending"
-            android:textColor="@color/mozo_color_action_text"
+            android:textColor="@color/mozo_color_section_text"
             android:textSize="@dimen/mozo_text_size"
             android:textStyle="italic" />
     </LinearLayout>
@@ -122,25 +122,42 @@
         android:id="@android:id/candidatesArea"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="97dp"
+        android:layout_marginTop="147dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@android:id/text2">
 
         <LinearLayout
+            android:id="@+id/button_transaction_detail"
+            style="@style/MozoWalletInfoButton"
+            android:layout_width="0dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/mozo_dr_btn_rounded_border"
+            android:focusable="@android:color/transparent"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.78">
+
+            <TextView
+                style="@style/MozoWalletInfoButtonText"
+                android:drawableStart="@drawable/ic_action_view_details"
+                android:text="@string/mozo_transaction_view_button" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/button_save_address"
             style="@style/MozoWalletInfoButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
+            android:background="@drawable/mozo_dr_btn_rounded_border"
+            android:focusable="@android:color/transparent"
             android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="30dp"
-            app:layout_constraintEnd_toStartOf="@id/button_transaction_detail"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_goneMarginEnd="0dp">
+            app:layout_constraintTop_toBottomOf="@id/button_transaction_detail"
+            app:layout_constraintWidth_percent="0.78">
 
             <TextView
                 style="@style/MozoWalletInfoButtonText"
@@ -148,21 +165,5 @@
                 android:text="@string/mozo_button_save_address" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/button_transaction_detail"
-            style="@style/MozoWalletInfoButton"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_save_address">
-
-            <TextView
-                style="@style/MozoWalletInfoButtonText"
-                android:drawableStart="@drawable/ic_action_view_details"
-                android:text="@string/mozo_transaction_detail_title" />
-        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

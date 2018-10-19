@@ -100,7 +100,9 @@ internal class AddressBookActivity : BaseActivity() {
             delay(250)
 
             contacts.clear()
-            contacts.addAll(contactsBackup.filter { it.name.contains(name, ignoreCase = true) })
+            contacts.addAll(contactsBackup.filter {
+                (it.name ?: "").contains(name, ignoreCase = true)
+            })
             launch(UI) {
                 mAdapter.notifyDataSetChanged()
             }

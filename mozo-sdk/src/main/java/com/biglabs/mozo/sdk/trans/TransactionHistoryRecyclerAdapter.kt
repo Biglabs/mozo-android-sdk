@@ -54,7 +54,7 @@ internal class TransactionHistoryRecyclerAdapter(
 
     init {
         launch {
-            currencyRate = MozoTrans.getInstance().getExchangeRate().await().toBigDecimal()
+            currencyRate = MozoTrans.getInstance().getExchangeRate().await()
         }
     }
 
