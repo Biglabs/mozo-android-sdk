@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.biglabs.mozo.sdk.MozoSDK
-import com.biglabs.mozo.sdk.auth.AuthenticationListener
+import com.biglabs.mozo.sdk.authentication.AuthenticationListener
 
 class MainActivity : AppCompatActivity() {
 

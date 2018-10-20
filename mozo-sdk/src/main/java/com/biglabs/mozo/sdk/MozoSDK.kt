@@ -1,14 +1,12 @@
 package com.biglabs.mozo.sdk
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.ConnectivityManager
 import android.support.v4.app.FragmentActivity
-import com.biglabs.mozo.sdk.auth.MozoAuth
-import com.biglabs.mozo.sdk.core.ViewModels
-import com.biglabs.mozo.sdk.services.WalletService
+import com.biglabs.mozo.sdk.common.ViewModels
+import com.biglabs.mozo.sdk.core.WalletService
 
 class MozoSDK private constructor() {
 
@@ -30,7 +28,7 @@ class MozoSDK private constructor() {
         internal var context: Context? = null
 
         @Volatile
-        internal var notifyAciivityClass: Class<out FragmentActivity>? = null
+        internal var notifyActivityClass: Class<out FragmentActivity>? = null
 
         @SuppressLint("StaticFieldLeak")
         @Volatile
@@ -39,15 +37,19 @@ class MozoSDK private constructor() {
         @Volatile
         internal var profileViewModel: ViewModels.ProfileViewModel? = null
 
+        @Volatile
+        internal var contactViewModel: ViewModels.ContactViewModel? = null
+
         @JvmStatic
         @Synchronized
         fun initialize(activity: FragmentActivity) {
             checkNotNull(activity)
 
             profileViewModel = ViewModelProviders.of(activity).get(ViewModels.ProfileViewModel::class.java)
+            contactViewModel = ViewModelProviders.of(activity).get(ViewModels.ContactViewModel::class.java)
 
-            notifyAciivityClass = activity::class.java
-            this.context = activity.applicationContext
+            notifyActivityClass = activity::class.java
+            this.context = activity
 
             if (INSTANCE == null) {
                 INSTANCE = MozoSDK()

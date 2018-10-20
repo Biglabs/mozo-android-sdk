@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.auth.MozoAuth
+import com.biglabs.mozo.sdk.MozoAuth
 
 class LoginButton : BaseButton {
 

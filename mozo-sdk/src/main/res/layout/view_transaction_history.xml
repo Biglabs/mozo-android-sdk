@@ -13,76 +13,93 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/mozo_transaction_history_title" />
+        app:title="@string/mozo_transaction_history_title"
+        tools:background="#5ccc" />
 
-    <View
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="7dp"
-        android:background="@drawable/ic_mozo_offchain"
-        app:layout_constraintBottom_toBottomOf="@android:id/title"
-        app:layout_constraintEnd_toStartOf="@android:id/title"
-        app:layout_constraintTop_toTopOf="@android:id/title" />
-
-    <TextView
-        android:id="@android:id/title"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/history_filter_group"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="51dp"
-        android:layout_marginTop="25dp"
-        android:text="@string/mozo_transaction_history_offchain_text"
-        android:textColor="@color/mozo_color_primary"
-        android:textSize="@dimen/mozo_text_size"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/history_toolbar" />
-
-    <LinearLayout
-        android:id="@+id/button_filter"
-        android:layout_width="110dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="@dimen/mozo_screen_margin"
-        android:background="@drawable/mozo_dr_btn_filter"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
+        android:checkedButton="@id/history_filter_all"
+        android:orientation="horizontal"
+        android:padding="@dimen/mozo_screen_margin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/history_toolbar">
 
-        <TextView
-            android:id="@+id/button_filter_text"
-            android:layout_width="wrap_content"
+        <RadioButton
+            android:id="@+id/history_filter_all"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_arrow_down"
-            android:drawablePadding="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/mozo_check_btn_rounded"
+            android:button="@android:color/transparent"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:paddingStart="5dp"
-            android:paddingEnd="0dp"
+            android:padding="6dp"
             android:text="@string/mozo_view_text_tx_all"
-            android:textColor="@color/mozo_color_section_text"
-            android:textSize="12sp" />
-    </LinearLayout>
+            android:textColor="@color/mozo_check_btn_text_color" />
+
+        <RadioButton
+            android:id="@+id/history_filter_received"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/mozo_check_btn_rounded"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:padding="6dp"
+            android:text="@string/mozo_view_text_tx_received"
+            android:textColor="@color/mozo_check_btn_text_color" />
+
+        <RadioButton
+            android:id="@+id/history_filter_sent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/mozo_check_btn_rounded"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:padding="6dp"
+            android:text="@string/mozo_view_text_tx_sent"
+            android:textColor="@color/mozo_check_btn_text_color" />
+    </RadioGroup>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/list_history_refresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="68dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/history_toolbar">
+        app:layout_constraintTop_toBottomOf="@id/history_filter_group">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_history"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/mozo_screen_margin"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             android:scrollbarStyle="insideOverlay"
             android:scrollbars="horizontal"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             tools:listitem="@layout/item_history" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <View
+        android:id="@+id/history_top_bar_hover"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:alpha="0"
+        android:background="@drawable/mozo_dr_top_bar_hover"
+        android:stateListAnimator="@animator/top_bar_hover"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/history_filter_group" />
 </android.support.constraint.ConstraintLayout>

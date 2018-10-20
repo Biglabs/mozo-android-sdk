@@ -10,6 +10,7 @@ import android.support.annotation.IdRes
 import android.support.annotation.IntegerRes
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -133,6 +134,12 @@ internal fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
             block(s)
         }
     })
+}
+
+internal fun SwipeRefreshLayout.mozoSetup() {
+    val offset = resources.getDimensionPixelSize(R.dimen.mozo_refresh_progress_offset)
+    setProgressViewOffset(true, progressViewStartOffset + offset, progressViewEndOffset + offset / 2)
+    setColorSchemeResources(R.color.mozo_color_primary)
 }
 
 fun BigDecimal.trailingZeros(scale: Int): BigDecimal {

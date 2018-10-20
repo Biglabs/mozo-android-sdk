@@ -2,15 +2,16 @@ package com.biglabs.mozo.sdk.core
 
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
+import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.common.Constant
+import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.MozoAPIs
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
-import com.biglabs.mozo.sdk.auth.AuthStateManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
@@ -18,17 +19,21 @@ import java.util.concurrent.TimeUnit
 
 internal class MozoService private constructor() {
 
-    private fun handleError(ex: Exception, onTryAgain: (() -> Unit)? = null) = async(UI) {
-        if (ex is IOException) {
+    private fun handleError(ex: Exception? = null, onTryAgain: (() -> Unit)? = null) = async(UI) {
+        if (ex != null && ex is IOException) {
             ErrorDialog.networkError(onTryAgain)
         } else {
             ErrorDialog.generalError(onTryAgain)
         }
     }
 
-    fun getContacts(onTryAgain: () -> Unit) = async {
+    fun getContacts(onTryAgain: (() -> Unit)? = null) = async {
         return@async try {
-            mAPIs?.getContacts()?.await()?.body()
+            val response = mAPIs?.getContacts()?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
             emptyList<Models.Contact>()
@@ -37,7 +42,11 @@ internal class MozoService private constructor() {
 
     fun saveContact(contact: Models.Contact, onTryAgain: () -> Unit) = async {
         return@async try {
-            mAPIs?.saveContact(contact)?.await()?.body()
+            val response = mAPIs?.saveContact(contact)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
             null
@@ -46,7 +55,11 @@ internal class MozoService private constructor() {
 
     fun fetchProfile(onTryAgain: () -> Unit) = async {
         return@async try {
-            mAPIs?.fetchProfile()?.await()?.body()
+            val response = mAPIs?.fetchProfile()?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
             null
@@ -61,7 +74,11 @@ internal class MozoService private constructor() {
 
     fun saveWallet(walletInfo: Models.WalletInfo, onTryAgain: () -> Unit) = async {
         return@async try {
-            mAPIs?.saveWallet(walletInfo)?.await()?.body()
+            val response = mAPIs?.saveWallet(walletInfo)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
             null
@@ -70,7 +87,11 @@ internal class MozoService private constructor() {
 
     fun getBalance(address: String) = async {
         return@async try {
-            mAPIs?.getBalance(address)?.await()?.body()
+            val response = mAPIs?.getBalance(address)?.await()
+            if (response?.body() == null) {
+                handleError()
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e)
             null
@@ -79,7 +100,11 @@ internal class MozoService private constructor() {
 
     fun createTransaction(request: Models.TransactionRequest, onTryAgain: (() -> Unit)?) = async {
         return@async try {
-            mAPIs?.createTransaction(request)?.await()?.body()
+            val response = mAPIs?.createTransaction(request)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
             null
@@ -87,22 +112,25 @@ internal class MozoService private constructor() {
     }
 
     fun sendTransaction(request: Models.TransactionResponse, onTryAgain: (() -> Unit)?) = async {
-        var result: Response<Models.TransactionResponse>? = null
         try {
-            result = mAPIs?.sendTransaction(request)?.await()
+            val response = mAPIs?.sendTransaction(request)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
-        } finally {
-            if (result == null || result.code() != 200) {
-                handleError(Exception(result?.message() ?: "no response"), onTryAgain)
-            }
+            null
         }
-        return@async result?.body()
     }
 
     fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, onTryAgain: (() -> Unit)?) = async {
         return@async try {
-            mAPIs?.getTransactionHistory(address, page, size)?.await()?.body()
+            val response = mAPIs?.getTransactionHistory(address, page, size)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
             emptyList<Models.TransactionHistory>()
@@ -111,7 +139,11 @@ internal class MozoService private constructor() {
 
     fun getTransactionStatus(txHash: String, onTryAgain: (() -> Unit)?) = async {
         return@async try {
-            mAPIs?.getTransactionStatus(txHash)?.await()?.body()
+            val response = mAPIs?.getTransactionStatus(txHash)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
             null
@@ -120,7 +152,11 @@ internal class MozoService private constructor() {
 
     fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO) = async {
         return@async try {
-            mAPIs?.getExchangeRate(currency, symbol)?.await()?.body()
+            val response = mAPIs?.getExchangeRate(currency, symbol)?.await()
+            if (response?.body() == null) {
+                handleError()
+            }
+            response?.body()
         } catch (e: Exception) {
             handleError(e)
             Models.ExchangeRate(0.0)

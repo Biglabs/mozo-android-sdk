@@ -10,16 +10,29 @@
     android:paddingStart="@dimen/mozo_screen_margin"
     android:paddingEnd="@dimen/mozo_screen_margin">
 
+    <ImageView
+        android:id="@+id/item_history_type_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@string/mozo_button_send"
+        android:padding="4dp"
+        android:src="@drawable/ic_btn_send"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@drawable/mozo_bg_icon_send" />
+
     <TextView
         android:id="@+id/item_history_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
+        android:layout_marginStart="10dp"
         android:includeFontPadding="false"
-        android:textColor="@color/mozo_color_text_main"
-        android:textSize="@dimen/mozo_text_size"
+        android:textColor="@color/mozo_color_section_text"
+        android:textSize="13sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/item_history_time"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_history_type_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="Received" />
@@ -31,10 +44,10 @@
         android:layout_marginTop="4dp"
         android:includeFontPadding="false"
         android:textColor="@color/mozo_color_section_text"
-        android:textSize="12sp"
+        android:textSize="11sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/item_history_type"
         app:layout_constraintTop_toBottomOf="@id/item_history_type"
         tools:ignore="SmallSp"
         tools:text="Jan 15, 2018 - 6:00 PM" />
@@ -50,21 +63,10 @@
         android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@id/item_history_type"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="+ 0.5 Mozo" />
-
-    <TextView
-        android:id="@+id/item_history_amount_fiat"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="end|center_vertical"
-        android:includeFontPadding="false"
-        android:textColor="@color/mozo_color_section_text"
-        android:textSize="12sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/item_history_time"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="₩3,500" />
+        tools:text="+0.5" />
 
     <View
+        android:id="@+id/item_divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/mozo_color_line"

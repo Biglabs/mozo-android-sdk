@@ -12,9 +12,9 @@ import android.view.View
 import android.widget.TextView
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.auth.MozoAuth
-import com.biglabs.mozo.sdk.core.Models
-import com.biglabs.mozo.sdk.core.ViewModels
+import com.biglabs.mozo.sdk.MozoAuth
+import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
 

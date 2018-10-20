@@ -9,7 +9,7 @@ class Constant {
         const val PAGING_SIZE = 20
         const val LIST_VISIBLE_THRESHOLD = 5
 
-        const val HISTORY_TIME_FORMAT = "MMM dd, yyyy - h:mm aa"
+        const val HISTORY_TIME_FORMAT = "HH:mm MMM dd, yyyy"
 
         const val SYMBOL_SOLO = "SOLO"
 

@@ -14,21 +14,21 @@
     <application android:hardwareAccelerated="true">
 
         <activity
-            android:name=".ui.AddressAddActivity"
+            android:name=".contact.AddressAddActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
 
         <activity
-            android:name=".ui.AddressBookActivity"
+            android:name=".contact.AddressBookActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name=".auth.MozoAuthActivity"
+            android:name=".authentication.MozoAuthActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:theme="@style/MozoTheme.Transparent.Dim"
@@ -51,21 +51,21 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".trans.TransactionFormActivity"
+            android:name=".transaction.TransactionFormActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".trans.TransactionHistoryActivity"
+            android:name=".transaction.TransactionHistoryActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
         <activity
-            android:name=".trans.TransactionDetails"
+            android:name=".transaction.TransactionDetails"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"

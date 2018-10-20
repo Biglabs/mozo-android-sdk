@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.TextView
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.services.WalletService
+import com.biglabs.mozo.sdk.core.WalletService
 import com.biglabs.mozo.sdk.ui.widget.onBackPress
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.view_wallet_backup.*
