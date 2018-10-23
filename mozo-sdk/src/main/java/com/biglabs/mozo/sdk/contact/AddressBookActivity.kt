@@ -6,14 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.ui.BaseActivity
-import com.biglabs.mozo.sdk.utils.click
-import com.biglabs.mozo.sdk.utils.mozoSetup
-import com.biglabs.mozo.sdk.utils.onTextChanged
+import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.view_address_book.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
@@ -37,7 +37,6 @@ internal class AddressBookActivity : BaseActivity() {
     }
     private var mAdapter = ContactRecyclerAdapter(contacts, onItemClick)
 
-
     private var isStartForResult = false
     private var searchJob: Job? = null
 
@@ -47,21 +46,43 @@ internal class AddressBookActivity : BaseActivity() {
         setContentView(R.layout.view_address_book)
         onNewIntent(intent)
 
-        input_search.onTextChanged {
-            button_clear.visibility = if (it?.length ?: 0 == 0) View.GONE else View.VISIBLE
-            searchByName(it.toString())
+        input_search?.apply {
+            onTextChanged {
+                button_clear.visibility = if (it?.length ?: 0 == 0) View.GONE else View.VISIBLE
+                searchByName(it.toString())
+            }
         }
 
         button_clear.click { input_search.setText("") }
 
-        list_contacts.setHasFixedSize(true)
-        list_contacts.itemAnimator = DefaultItemAnimator()
-        list_contacts.adapter = mAdapter
+        list_contacts?.apply {
+            setHasFixedSize(true)
+            itemAnimator = DefaultItemAnimator()
+            adapter = mAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                    address_book_top_bar_hover.isSelected = list_contacts.canScrollVertically(-1)
+                }
+            })
+            onLetterScrollListener = {
+                try {
+                    val position = mAdapter.getSectionPosition(it)
+                    (list_contacts.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+                } catch (e: Exception) {
+
+                }
+            }
+        }
 
         list_contacts_refresh?.apply {
             mozoSetup()
             isRefreshing = true
-            setOnRefreshListener { MozoSDK.contactViewModel?.fetchData() }
+            setOnRefreshListener {
+                if (input_search.length() == 0)
+                    MozoSDK.contactViewModel?.fetchData()
+                else
+                    isRefreshing = false
+            }
         }
 
         MozoSDK.contactViewModel?.run {
@@ -71,6 +92,7 @@ internal class AddressBookActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         isStartForResult = intent?.getBooleanExtra(FLAG_START_FOR_RESULT, isStartForResult) ?: isStartForResult
+        setTitle(if (isStartForResult) R.string.mozo_address_book_pick_title else R.string.mozo_address_book_title)
     }
 
     override fun onDestroy() {
@@ -88,10 +110,8 @@ internal class AddressBookActivity : BaseActivity() {
             contactsBackup.clear()
             contactsBackup.addAll(this)
 
-            launch(UI) {
-                list_contacts_refresh.isRefreshing = false
-                mAdapter.notifyDataSetChanged()
-            }
+            list_contacts_refresh.isRefreshing = false
+            mAdapter.notifyData()
         }
     }
 
@@ -106,7 +126,8 @@ internal class AddressBookActivity : BaseActivity() {
                 (it.name ?: "").contains(name, ignoreCase = true)
             })
             launch(UI) {
-                mAdapter.notifyDataSetChanged()
+                if (contacts.isEmpty()) view_empty_state.visible() else view_empty_state.gone()
+                mAdapter.notifyData(name.isNotEmpty())
             }
         }
     }
@@ -118,7 +139,6 @@ internal class AddressBookActivity : BaseActivity() {
         fun start(context: Context) {
             Intent(context, AddressBookActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 context.startActivity(this)
             }
         }

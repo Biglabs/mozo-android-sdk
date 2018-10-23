@@ -30,10 +30,6 @@ internal object ViewModels {
 
         val balanceAndRateLiveData = MutableLiveData<BalanceAndRate>()
 
-        init {
-            fetchData()
-        }
-
         fun fetchData() = async {
             val profile = MozoDatabase.getInstance(MozoSDK.context!!).profile().getCurrentUserProfile()
             launch(UI) {
@@ -81,10 +77,6 @@ internal object ViewModels {
 
     class ContactViewModel : ViewModel() {
         val contactsLiveData = MutableLiveData<List<Models.Contact>>()
-
-        init {
-            fetchData()
-        }
 
         fun fetchData() = async {
             val response = MozoService.getInstance(MozoSDK.context!!).getContacts { fetchData() }.await()

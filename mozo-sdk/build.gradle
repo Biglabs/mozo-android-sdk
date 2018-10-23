@@ -68,6 +68,7 @@ dependencies {
     api 'org.cryptonode.jncryptor:jncryptor:1.2.0'
     api 'org.web3j:core:3.5.0'
     api 'net.openid:appauth:0.7.1'
+    api 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.2.0'
 
     api "android.arch.lifecycle:extensions:$lifecycle_version"
     api "android.arch.lifecycle:runtime:$lifecycle_version"

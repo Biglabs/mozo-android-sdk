@@ -107,6 +107,7 @@ class MozoAuth private constructor() {
 
         if (auth.isSignedIn) {
             MozoSDK.profileViewModel?.fetchData()
+            MozoSDK.contactViewModel?.fetchData()
             MozoSocketClient.connect(MozoSDK.context!!)
         } else {
             MozoSDK.profileViewModel?.clear()
