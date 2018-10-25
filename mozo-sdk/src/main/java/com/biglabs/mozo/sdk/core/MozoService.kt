@@ -40,13 +40,14 @@ internal class MozoService private constructor() {
         }
     }
 
-    fun saveContact(contact: Models.Contact, onTryAgain: () -> Unit) = async {
+    fun saveContact(contact: Models.Contact, errorCodeForSkipHandle: Array<Int> = emptyArray(), onTryAgain: () -> Unit) = async {
         return@async try {
             val response = mAPIs?.saveContact(contact)?.await()
-            if (response?.body() == null) {
+            if (response?.body() == null &&
+                    !errorCodeForSkipHandle.contains(response?.code() ?: 0)) {
                 handleError(onTryAgain = onTryAgain)
             }
-            response?.body()
+            response
         } catch (e: Exception) {
             handleError(e, onTryAgain)
             null

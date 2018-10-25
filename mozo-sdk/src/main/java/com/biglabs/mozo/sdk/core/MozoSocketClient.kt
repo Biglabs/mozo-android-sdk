@@ -45,7 +45,7 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
     override fun onMessage(s: String?) {
         "message: $s".logAsError("web socket")
         s?.run {
-            if (equals("1|X", ignoreCase = false)) {
+            if (equals("1|X", ignoreCase = true)) {
                 sendPing()
             } else {
                 val messages = split("|")

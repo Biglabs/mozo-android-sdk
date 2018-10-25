@@ -16,6 +16,7 @@
     <color name="mozo_color_error">#f05454</color>
     <color name="mozo_color_line">#d1d7dd</color>
     <color name="mozo_color_ripple">#73ffffff</color>
+    <color name="mozo_color_ripple_primary">#594e94f3</color>
     <color name="mozo_color_un_active">#c1c1c1</color>
 
 </resources>

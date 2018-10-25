@@ -41,13 +41,14 @@ internal class AddressAddActivity : BaseActivity() {
 
         val contact = Models.Contact(0, input_contact_name.text.toString().trim(), text_contact_address.text.toString())
         launch {
-            val response = mozoService.saveContact(contact) {
+            val response = mozoService.saveContact(contact, arrayOf(DUPLICATED_ERROR_CODE)) {
                 executeSaveContact()
             }.await()
-            if (response != null) {
+
+            hideLoading()
+            if (response?.body() != null) {
                 showDoneMsg()
-            } else {
-                hideLoading()
+            } else if (response?.code() == DUPLICATED_ERROR_CODE) {
                 showErrorMsg()
             }
         }
@@ -84,11 +85,12 @@ internal class AddressAddActivity : BaseActivity() {
     }
 
     companion object {
+        private const val DUPLICATED_ERROR_CODE = 400
         private const val FLAG_ADDRESS = "FLAG_ADDRESS"
 
         fun start(context: Context, address: String?) {
             Intent(context, AddressAddActivity::class.java).apply {
-                putExtra(FLAG_ADDRESS, address)
+                putExtra(FLAG_ADDRESS, address?.toLowerCase())
                 context.startActivity(this)
             }
         }

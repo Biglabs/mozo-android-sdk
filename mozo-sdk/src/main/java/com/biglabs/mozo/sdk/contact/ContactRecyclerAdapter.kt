@@ -16,7 +16,7 @@ internal class ContactRecyclerAdapter(
         while (alphabet <= 'Z') {
             val sec = arrayListOf<Models.Contact>()
             contacts.map { c ->
-                if (c.name != null && c.name[0] == alphabet) {
+                if (c.name != null && c.name[0].equals(alphabet, ignoreCase = true)) {
                     sec.add(c)
                 }
             }
@@ -29,7 +29,7 @@ internal class ContactRecyclerAdapter(
 
         val otherContact = arrayListOf<Models.Contact>()
         contacts.map { c ->
-            if (c.name == null || c.name[0] < 'A' || c.name[0] > 'Z') {
+            if (c.name == null || c.name[0].toUpperCase() < 'A' || c.name[0].toUpperCase() > 'Z') {
                 otherContact.add(c)
             }
         }
