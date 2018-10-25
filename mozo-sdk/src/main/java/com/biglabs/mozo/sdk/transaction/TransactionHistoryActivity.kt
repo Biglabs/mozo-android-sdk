@@ -36,8 +36,8 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_transaction_history)
 
-        MozoSDK.profileViewModel?.run {
-            profileLiveData.observeForever(profileObserver)
+        MozoSDK.getInstance().profileViewModel.run {
+            profileLiveData.observe(this@TransactionHistoryActivity, profileObserver)
         }
 
         list_history_refresh?.apply {
@@ -65,8 +65,8 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
     override fun onDestroy() {
         super.onDestroy()
         historyAdapter.stopFilter()
-        MozoSDK.profileViewModel?.run {
-            profileLiveData.removeObserver(profileObserver)
+        MozoSDK.getInstance().profileViewModel.run {
+            profileLiveData.removeObservers(this@TransactionHistoryActivity)
         }
     }
 
@@ -89,7 +89,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
             if (currentPage <= Constant.PAGING_START_INDEX) histories.clear()
 
             response.map {
-                val contact = MozoSDK.contactViewModel?.findByAddress(if (it.type(currentAddress)) it.addressTo else it.addressFrom)
+                val contact = MozoSDK.getInstance().contactViewModel.findByAddress(if (it.type(currentAddress)) it.addressTo else it.addressFrom)
                 if (contact?.name != null) {
                     it.contactName = contact.name
                 }
@@ -120,7 +120,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
             Intent(context, TransactionHistoryActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                context.startActivity(this)
+                context.applicationContext.startActivity(this)
             }
         }
     }

@@ -58,7 +58,7 @@ internal class AddressAddActivity : BaseActivity() {
         input_contact_name.isEnabled = false
         loading_container.hide()
         text_msg_saved.visible()
-        MozoSDK.contactViewModel?.fetchData()
+        MozoSDK.getInstance().contactViewModel.fetchData()
 
         delay(mShowMessageDuration)
         finishAndRemoveTask()

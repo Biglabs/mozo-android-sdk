@@ -106,11 +106,11 @@ class MozoAuth private constructor() {
         EventBus.getDefault().unregister(this@MozoAuth)
 
         if (auth.isSignedIn) {
-            MozoSDK.profileViewModel?.fetchData()
-            MozoSDK.contactViewModel?.fetchData()
+            MozoSDK.getInstance().profileViewModel.fetchData()
+            MozoSDK.getInstance().contactViewModel.fetchData()
             MozoSocketClient.connect(MozoSDK.context!!)
         } else {
-            MozoSDK.profileViewModel?.clear()
+            MozoSDK.getInstance().profileViewModel.clear()
             MozoSocketClient.disconnect()
         }
 

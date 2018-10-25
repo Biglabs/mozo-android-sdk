@@ -12,7 +12,7 @@ import com.biglabs.mozo.sdk.common.MessageEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
-open class BaseButton : AppCompatButton {
+internal open class BaseButton : AppCompatButton {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributes: AttributeSet?) : this(context, attributes, R.attr.buttonStyle)
     constructor(context: Context, attributes: AttributeSet?, defStyle: Int) : super(context, attributes, defStyle) {

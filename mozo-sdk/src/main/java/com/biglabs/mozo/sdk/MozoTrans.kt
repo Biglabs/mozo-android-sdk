@@ -100,7 +100,7 @@ class MozoTrans private constructor() {
         fun getInstance() = instance ?: synchronized(this) {
             if (instance == null) {
                 instance = MozoTrans()
-                MozoSDK.profileViewModel?.run {
+                MozoSDK.getInstance().profileViewModel.run {
                     balanceAndRateLiveData.observeForever(instance!!.balanceAndRateObserver)
                 }
             }

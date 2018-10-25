@@ -9,7 +9,7 @@ import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.MozoTrans
 
-class SendButton : BaseButton {
+internal class SendButton : BaseButton {
 
     private var needToContinue = false
 

@@ -79,25 +79,28 @@ internal class AddressBookActivity : BaseActivity() {
             isRefreshing = true
             setOnRefreshListener {
                 if (input_search.length() == 0)
-                    MozoSDK.contactViewModel?.fetchData()
+                    MozoSDK.getInstance().contactViewModel.fetchData()
                 else
                     isRefreshing = false
             }
         }
 
-        MozoSDK.contactViewModel?.run {
+        MozoSDK.getInstance().contactViewModel.run {
             contactsLiveData.observeForever(contactsObserver)
         }
     }
 
     override fun onNewIntent(intent: Intent?) {
         isStartForResult = intent?.getBooleanExtra(FLAG_START_FOR_RESULT, isStartForResult) ?: isStartForResult
-        setTitle(if (isStartForResult) R.string.mozo_address_book_pick_title else R.string.mozo_address_book_title)
+        address_book_toolbar?.apply {
+            setTitle(if (isStartForResult) R.string.mozo_address_book_pick_title else R.string.mozo_address_book_title)
+            showBackButton(isStartForResult)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        MozoSDK.contactViewModel?.run {
+        MozoSDK.getInstance().contactViewModel.run {
             contactsLiveData.removeObserver(contactsObserver)
         }
     }

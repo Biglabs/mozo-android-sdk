@@ -4,12 +4,12 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.contact.AddressAddActivity
+import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.click
 import com.biglabs.mozo.sdk.utils.displayString
 import com.biglabs.mozo.sdk.utils.gone
@@ -21,7 +21,7 @@ import kotlinx.coroutines.experimental.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TransactionDetails : AppCompatActivity() {
+internal class TransactionDetails : BaseActivity() {
 
     private var mHistory: Models.TransactionHistory? = null
     private val dateFormat = SimpleDateFormat(Constant.HISTORY_TIME_FORMAT, Locale.getDefault())
@@ -39,11 +39,11 @@ class TransactionDetails : AppCompatActivity() {
 
         setContentView(R.layout.view_transaction_details)
 
-        MozoSDK.profileViewModel?.run {
+        MozoSDK.getInstance().profileViewModel.run {
             exchangeRateLiveData.observeForever(exchangeRateObserver)
             profileLiveData.observeForever(profileObserver)
         }
-        MozoSDK.contactViewModel?.run {
+        MozoSDK.getInstance().contactViewModel.run {
             contactsLiveData.observeForever(contactObserver)
         }
     }
@@ -52,11 +52,11 @@ class TransactionDetails : AppCompatActivity() {
         super.onDestroy()
         findContactJob?.cancel()
         findContactJob = null
-        MozoSDK.profileViewModel?.run {
+        MozoSDK.getInstance().profileViewModel.run {
             exchangeRateLiveData.removeObserver(exchangeRateObserver)
             profileLiveData.removeObserver(profileObserver)
         }
-        MozoSDK.contactViewModel?.run {
+        MozoSDK.getInstance().contactViewModel.run {
             contactsLiveData.removeObserver(contactObserver)
         }
     }
@@ -109,7 +109,7 @@ class TransactionDetails : AppCompatActivity() {
     private fun displayContact() {
         findContactJob?.cancel()
         findContactJob = launch {
-            val contact = MozoSDK.contactViewModel?.findByAddress(targetAddress)
+            val contact = MozoSDK.getInstance().contactViewModel.findByAddress(targetAddress)
             launch(UI) {
                 if (contact != null) {
                     text_detail_receiver_user_name.text = contact.name

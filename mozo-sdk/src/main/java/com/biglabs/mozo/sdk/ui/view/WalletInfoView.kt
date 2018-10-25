@@ -74,7 +74,7 @@ class WalletInfoView : ConstraintLayout {
                 }
             }
 
-            MozoSDK.profileViewModel?.run {
+            MozoSDK.getInstance().profileViewModel.run {
                 profileLiveData.observeForever(profileObserver)
                 balanceAndRateLiveData.observeForever(balanceAndRateObserver)
             }
@@ -83,7 +83,7 @@ class WalletInfoView : ConstraintLayout {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        MozoSDK.profileViewModel?.run {
+        MozoSDK.getInstance().profileViewModel.run {
             profileLiveData.removeObserver(profileObserver)
             balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
         }

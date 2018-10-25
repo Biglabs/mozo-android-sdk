@@ -9,7 +9,7 @@ import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 
-class TransactionHistoryButton : BaseButton {
+internal class TransactionHistoryButton : BaseButton {
 
     private var needToContinue = false
 

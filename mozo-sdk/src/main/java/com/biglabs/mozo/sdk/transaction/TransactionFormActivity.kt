@@ -50,8 +50,8 @@ internal class TransactionFormActivity : BaseActivity() {
         initUI()
         showInputUI()
 
-        MozoSDK.profileViewModel?.fetchBalance()
-        MozoSDK.contactViewModel?.run {
+        MozoSDK.getInstance().profileViewModel.fetchBalance()
+        MozoSDK.getInstance().contactViewModel.run {
             contactsLiveData.observeForever(contactsObserver)
         }
     }
@@ -60,10 +60,10 @@ internal class TransactionFormActivity : BaseActivity() {
         super.onDestroy()
         selectedContact = null
         updateTxStatusJob?.cancel()
-        MozoSDK.profileViewModel?.run {
+        MozoSDK.getInstance().profileViewModel.run {
             balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
         }
-        MozoSDK.contactViewModel?.run {
+        MozoSDK.getInstance().contactViewModel.run {
             contactsLiveData.removeObserver(contactsObserver)
         }
     }
@@ -86,7 +86,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 IntentIntegrator
                         .parseActivityResult(requestCode, resultCode, data)
                         .contents?.let {
-                    selectedContact = MozoSDK.contactViewModel?.findByAddress(it)
+                    selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
 
                     showInputUI()
                     if (selectedContact == null) {
@@ -127,7 +127,7 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun initUI() {
-        MozoSDK.profileViewModel?.run {
+        MozoSDK.getInstance().profileViewModel.run {
             balanceAndRateLiveData.observeForever(balanceAndRateObserver)
         }
 

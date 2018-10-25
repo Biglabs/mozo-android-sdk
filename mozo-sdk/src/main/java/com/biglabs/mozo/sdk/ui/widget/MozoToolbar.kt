@@ -9,7 +9,10 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import com.biglabs.mozo.sdk.R
+import com.biglabs.mozo.sdk.common.MessageEvent
+import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.click
+import org.greenrobot.eventbus.EventBus
 
 internal class MozoToolbar : ConstraintLayout {
 
@@ -53,7 +56,9 @@ internal class MozoToolbar : ConstraintLayout {
             }
             viewButtonClose?.click {
                 if (onClosePress != null) onClosePress?.invoke()
-                else (context as? Activity)?.finishAndRemoveTask()
+                else {
+                    EventBus.getDefault().post(MessageEvent.CloseActivities())
+                }
             }
             updateUI()
         }

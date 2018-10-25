@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.core.WalletService
 
-class MozoSDK private constructor() {
+class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewModel, val contactViewModel: ViewModels.ContactViewModel) {
 
     val auth: MozoAuth by lazy { MozoAuth.getInstance() }
     //val beacon: BeaconService by lazy { BeaconService.getInstance() }
@@ -34,25 +34,19 @@ class MozoSDK private constructor() {
         @Volatile
         internal var internalContext: Context? = null
 
-        @Volatile
-        internal var profileViewModel: ViewModels.ProfileViewModel? = null
-
-        @Volatile
-        internal var contactViewModel: ViewModels.ContactViewModel? = null
-
         @JvmStatic
         @Synchronized
         fun initialize(activity: FragmentActivity) {
             checkNotNull(activity)
 
-            profileViewModel = ViewModelProviders.of(activity).get(ViewModels.ProfileViewModel::class.java)
-            contactViewModel = ViewModelProviders.of(activity).get(ViewModels.ContactViewModel::class.java)
-
             notifyActivityClass = activity::class.java
             this.context = activity
 
             if (INSTANCE == null) {
-                INSTANCE = MozoSDK()
+                INSTANCE = MozoSDK(
+                        ViewModelProviders.of(activity).get(ViewModels.ProfileViewModel::class.java),
+                        ViewModelProviders.of(activity).get(ViewModels.ContactViewModel::class.java)
+                )
             }
         }
 

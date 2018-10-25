@@ -58,7 +58,7 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
 
                     message?.getData()?.run {
                         if (event.equals(Constant.NOTIFY_EVENT_BALANCE_CHANGED, ignoreCase = true)) {
-                            MozoSDK.profileViewModel?.fetchData()
+                            MozoSDK.getInstance().profileViewModel.fetchData()
                         }
                         event.logAsError("message event")
                         amount.toString().logAsError("message amount")

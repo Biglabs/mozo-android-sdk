@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.TextViewCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
 import com.biglabs.mozo.sdk.R
@@ -21,8 +20,7 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.EventBus
 
-
-internal class SecurityActivity : AppCompatActivity() {
+internal class SecurityActivity : BaseActivity() {
 
     private var mPIN = ""
     private var mPINLength = 0
@@ -58,7 +56,6 @@ internal class SecurityActivity : AppCompatActivity() {
     }
 
     private fun showBackupUI() {
-        "showBackupUI".logAsError(localClassName)
         setContentView(R.layout.view_wallet_backup)
 
         val paddingVertical = resources.dp2Px(10f).toInt()
