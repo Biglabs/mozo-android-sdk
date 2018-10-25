@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.IntDef
-import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.utils.click
 import kotlinx.android.synthetic.main.dialog_error.*
@@ -53,21 +52,25 @@ internal class ErrorDialog(context: Context, private val argument: Bundle, priva
         @Volatile
         private var instance: ErrorDialog? = null
 
-        fun generalError(onTryAgain: (() -> Unit)? = null) {
-            show(MozoSDK.currentContext()!!, TYPE_GENERAL, onTryAgain)
+        fun generalError(context: Context?, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_GENERAL, onTryAgain)
         }
 
-        fun networkError(onTryAgain: (() -> Unit)? = null) {
-            show(MozoSDK.currentContext()!!, TYPE_NETWORK, onTryAgain)
+        fun networkError(context: Context?, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_NETWORK, onTryAgain)
         }
 
-        fun show(context: Context, @ErrorType type: Int, onTryAgain: (() -> Unit)? = null) = synchronized(this) {
-            if (context is Activity && (context.isFinishing || context.isDestroyed)) return@synchronized
-            if (instance == null) {
+        fun show(context: Context?, @ErrorType type: Int, onTryAgain: (() -> Unit)? = null) = synchronized(this) {
+            context?.run {
+                if (this is Activity && (isFinishing || isDestroyed)) return@synchronized
+                instance?.apply {
+                    dismiss()
+                }
+
                 val bundle = Bundle()
                 bundle.putInt(ERROR_TYPE, type)
 
-                instance = ErrorDialog(context, bundle, onTryAgain)
+                instance = ErrorDialog(this, bundle, onTryAgain)
                 instance!!.show()
             }
         }

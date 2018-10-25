@@ -79,7 +79,7 @@ internal class AddressBookActivity : BaseActivity() {
             isRefreshing = true
             setOnRefreshListener {
                 if (input_search.length() == 0)
-                    MozoSDK.getInstance().contactViewModel.fetchData()
+                    MozoSDK.getInstance().contactViewModel.fetchData(this@AddressBookActivity)
                 else
                     isRefreshing = false
             }

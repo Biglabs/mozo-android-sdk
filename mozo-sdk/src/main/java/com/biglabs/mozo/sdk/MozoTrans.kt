@@ -1,6 +1,7 @@
 package com.biglabs.mozo.sdk
 
 import android.arch.lifecycle.Observer
+import android.content.Context
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.common.ViewModels
@@ -16,8 +17,6 @@ import org.web3j.utils.Numeric
 import java.math.BigDecimal
 
 class MozoTrans private constructor() {
-
-    private val mozoService: MozoService by lazy { MozoService.getInstance(MozoSDK.context!!) }
 
     private var decimal = 0.0
     private var exchangeRate = BigDecimal.ZERO
@@ -40,10 +39,10 @@ class MozoTrans private constructor() {
         TransactionHistoryActivity.start(MozoSDK.context!!)
     }
 
-    internal fun createTransaction(output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = async {
+    internal fun createTransaction(context: Context, output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = async {
         val myAddress = WalletService.getInstance().getAddress().await() ?: return@async null
         val response = MozoService
-                .getInstance(MozoSDK.context!!)
+                .getInstance(context)
                 .createTransaction(
                         prepareRequest(myAddress, output, amount)
                 ) {
@@ -65,16 +64,16 @@ class MozoTrans private constructor() {
             pubKey.logAsError("pubKey")
             response.signatures = arrayListOf(signature)
             response.publicKeys = arrayListOf(pubKey)
-            return@async sendTransaction(response) { retryCallback(response) }.await()
+            return@async sendTransaction(context, response) { retryCallback(response) }.await()
         } else {
             "create Tx failed".logAsError()
             return@async null
         }
     }
 
-    internal fun sendTransaction(request: Models.TransactionResponse, callback: () -> Unit) = async {
+    internal fun sendTransaction(context: Context, request: Models.TransactionResponse, callback: () -> Unit) = async {
         return@async MozoService
-                .getInstance(MozoSDK.context!!)
+                .getInstance(context)
                 .sendTransaction(request, callback)
                 .await()
     }
@@ -87,7 +86,7 @@ class MozoTrans private constructor() {
         )
     }
 
-    internal fun getTransactionStatus(txHash: String, retry: () -> Unit) = mozoService.getTransactionStatus(txHash, retry)
+    internal fun getTransactionStatus(context: Context, txHash: String, retry: () -> Unit) = MozoService.getInstance(context).getTransactionStatus(txHash, retry)
 
     internal fun amountWithDecimal(amount: String) = amountWithDecimal(amount.toBigDecimal())
 

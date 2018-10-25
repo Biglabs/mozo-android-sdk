@@ -17,13 +17,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-internal class MozoService private constructor() {
+internal class MozoService private constructor(val context: Context) {
 
     private fun handleError(ex: Exception? = null, onTryAgain: (() -> Unit)? = null) = async(UI) {
         if (ex != null && ex is IOException) {
-            ErrorDialog.networkError(onTryAgain)
+            ErrorDialog.networkError(context, onTryAgain)
         } else {
-            ErrorDialog.generalError(onTryAgain)
+            ErrorDialog.generalError(context, onTryAgain)
         }
     }
 
@@ -36,7 +36,7 @@ internal class MozoService private constructor() {
             response?.body()
         } catch (e: Exception) {
             handleError(e, onTryAgain)
-            emptyList<Models.Contact>()
+            null
         }
     }
 
@@ -86,16 +86,29 @@ internal class MozoService private constructor() {
         }
     }
 
-    fun getBalance(address: String) = async {
+    fun getBalance(address: String, onTryAgain: (() -> Unit)?) = async {
         return@async try {
             val response = mAPIs?.getBalance(address)?.await()
             if (response?.body() == null) {
-                handleError()
+                handleError(onTryAgain = onTryAgain)
             }
             response?.body()
         } catch (e: Exception) {
-            handleError(e)
+            handleError(e, onTryAgain)
             null
+        }
+    }
+
+    fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO, onTryAgain: (() -> Unit)?) = async {
+        return@async try {
+            val response = mAPIs?.getExchangeRate(currency, symbol)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
+            Models.ExchangeRate(0.0)
         }
     }
 
@@ -151,33 +164,17 @@ internal class MozoService private constructor() {
         }
     }
 
-    fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO) = async {
-        return@async try {
-            val response = mAPIs?.getExchangeRate(currency, symbol)?.await()
-            if (response?.body() == null) {
-                handleError()
-            }
-            response?.body()
-        } catch (e: Exception) {
-            handleError(e)
-            Models.ExchangeRate(0.0)
-        }
-    }
-
     companion object {
 
+        @Volatile
         private var mAPIs: MozoAPIs? = null
 
-        @Volatile
-        private var instance: MozoService? = null
-
-        fun getInstance(context: Context) = instance ?: synchronized(this) {
-            if (instance == null) {
-                mAPIs = createService(context)
-                instance = MozoService()
+        fun getInstance(context: Context) = synchronized(this) {
+            if (mAPIs == null) {
+                mAPIs = createService(context.applicationContext)
             }
-            instance
-        }!!
+            MozoService(context)
+        }
 
         private fun createService(context: Context): MozoAPIs {
             val client = OkHttpClient.Builder()

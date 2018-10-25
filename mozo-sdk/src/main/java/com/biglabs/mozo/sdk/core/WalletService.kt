@@ -31,7 +31,7 @@ internal class WalletService private constructor() {
         getAddress()
     }
 
-    fun initWallet() = async {
+    fun initWallet(context: Context) = async {
         getAddress().await()
         profile?.run {
             if (walletInfo == null || walletInfo!!.encryptSeedPhrase.isNullOrEmpty()) {
@@ -49,8 +49,8 @@ internal class WalletService private constructor() {
                 /* Required input new PIN */
                 return@async SecurityActivity.KEY_CREATE_PIN
             } else {
-                if (PreferenceUtils.getInstance(MozoSDK.context!!).getFlag(PreferenceUtils.FLAG_SYNC_WALLET_INFO)) {
-                    syncWalletInfo(walletInfo!!, MozoSDK.context!!) {}
+                if (PreferenceUtils.getInstance(context).getFlag(PreferenceUtils.FLAG_SYNC_WALLET_INFO)) {
+                    syncWalletInfo(walletInfo!!, context) {}
                 }
                 if (walletInfo?.privateKey.isNullOrEmpty()) {
                     /* Local wallet is existing but no private Key */

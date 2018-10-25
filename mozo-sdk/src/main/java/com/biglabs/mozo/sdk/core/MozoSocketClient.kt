@@ -30,7 +30,7 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
 
     private var myAddress: String? = null
 
-    val notificationManager: NotificationManager by lazy { MozoSDK.context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
+    private val notificationManager: NotificationManager by lazy { MozoSDK.context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
     init {
         launch {
@@ -58,7 +58,7 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
 
                     message?.getData()?.run {
                         if (event.equals(Constant.NOTIFY_EVENT_BALANCE_CHANGED, ignoreCase = true)) {
-                            MozoSDK.getInstance().profileViewModel.fetchData()
+                            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.context!!)
                         }
                         event.logAsError("message event")
                         amount.toString().logAsError("message amount")

@@ -50,7 +50,7 @@ internal class TransactionFormActivity : BaseActivity() {
         initUI()
         showInputUI()
 
-        MozoSDK.getInstance().profileViewModel.fetchBalance()
+        MozoSDK.getInstance().profileViewModel.fetchBalance(this)
         MozoSDK.getInstance().contactViewModel.run {
             contactsLiveData.observeForever(contactsObserver)
         }
@@ -99,16 +99,16 @@ internal class TransactionFormActivity : BaseActivity() {
         }
     }
 
-    private fun sendTx(pin: String?, request: Models.TransactionResponse? = null) {
+    private fun sendTx(pin: String?) {
         if (pin == null) return
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         val amount = output_amount.text.toString()
         launch {
             showLoading()
-            val txResponse = if (request == null)
-                MozoTrans.getInstance().createTransaction(address, amount, pin) { sendTx(pin, it) }.await()
-            else
-                MozoTrans.getInstance().sendTransaction(request) { sendTx(pin, request) }.await()
+            val txResponse = MozoTrans.getInstance()
+                    .createTransaction(this@TransactionFormActivity, address, amount, pin) {
+                        sendTx(pin)
+                    }.await()
             history.addressTo = address
             history.amount = MozoTrans.getInstance().amountWithDecimal(amount)
             history.time = Calendar.getInstance().timeInMillis / 1000L
@@ -315,18 +315,23 @@ internal class TransactionFormActivity : BaseActivity() {
         var pendingStatus = true
         while (pendingStatus) {
 
-            val txStatus = MozoTrans.getInstance().getTransactionStatus(history.txHash
-                    ?: "") { updateTxStatus() }.await()
+            val txStatus = MozoTrans.getInstance().getTransactionStatus(
+                    this@TransactionFormActivity,
+                    history.txHash ?: ""
+            ) {
+                updateTxStatus()
+            }.await() ?: break
+
             launch(UI) {
                 when {
-                    txStatus != null && txStatus.isSuccess() -> {
+                    txStatus.isSuccess() -> {
                         text_tx_status_icon.setImageResource(R.drawable.ic_check_green)
                         text_tx_status_label.setText(R.string.mozo_view_text_tx_success)
                         button_transaction_detail.visible()
                         pendingStatus = false
                         updateTxStatusJob = null
                     }
-                    txStatus != null && txStatus.isFailed() -> {
+                    txStatus.isFailed() -> {
                         text_tx_status_icon.setImageResource(R.drawable.ic_error)
                         text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
                         pendingStatus = false

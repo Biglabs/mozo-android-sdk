@@ -33,19 +33,8 @@ class MozoAuth private constructor() {
     private var mAuthListener: AuthenticationListener? = null
 
     init {
-        launch {
-            val isSignedIn = isSignedIn()
-            if (!isSignedIn) {
-                //val anonymousUser = initAnonymousUser()
-                //anonymousUser.toString().logAsError()
-                // TODO authentication with anonymousUser
-            } else {
-                fetchProfile()
-            }
-
-            launch(UI) {
-                onAuthorizeChanged(MessageEvent.Auth(isSignedIn))
-            }
+        launch(UI) {
+            onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
         }
     }
 
@@ -106,8 +95,8 @@ class MozoAuth private constructor() {
         EventBus.getDefault().unregister(this@MozoAuth)
 
         if (auth.isSignedIn) {
-            MozoSDK.getInstance().profileViewModel.fetchData()
-            MozoSDK.getInstance().contactViewModel.fetchData()
+            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.context!!)
+            MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.context!!)
             MozoSocketClient.connect(MozoSDK.context!!)
         } else {
             MozoSDK.getInstance().profileViewModel.clear()
@@ -118,23 +107,11 @@ class MozoAuth private constructor() {
         mAuthListener?.onChanged(auth.isSignedIn)
     }
 
-    private fun fetchProfile() = async {
-        val response = mozoService.fetchProfile { fetchProfile() }.await()
+    internal fun syncProfile(retryCallback: () -> Unit) = async {
+        val response = mozoService.fetchProfile(retryCallback).await()
 //                if (response.code() == 401) {
 //                    signOut()
 //                    return@launch
-//                } else {
-        response?.run {
-            mozoDB.profile().save(this)
-        }
-        if (authStateManager.current.needsTokenRefresh) {
-            doRefreshToken()
-        }
-//                }
-    }
-
-    internal fun syncProfile(retryCallback: () -> Unit) = async {
-        val response = mozoService.fetchProfile(retryCallback).await()
         if (response != null) {
 
             /* save User info first */

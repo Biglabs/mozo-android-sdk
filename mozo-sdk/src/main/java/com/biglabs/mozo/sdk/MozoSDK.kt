@@ -30,10 +30,6 @@ class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewMo
         @Volatile
         internal var notifyActivityClass: Class<out FragmentActivity>? = null
 
-        @SuppressLint("StaticFieldLeak")
-        @Volatile
-        internal var internalContext: Context? = null
-
         @JvmStatic
         @Synchronized
         fun initialize(activity: FragmentActivity) {
@@ -59,10 +55,8 @@ class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewMo
             return INSTANCE as MozoSDK
         }
 
-        internal fun currentContext() = internalContext ?: context
-
         internal fun isNetworkAvailable(): Boolean {
-            val connectivityManager = currentContext()?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val activeNetworkInfo = connectivityManager.activeNetworkInfo
             return activeNetworkInfo != null && activeNetworkInfo.isConnected
         }
