@@ -1,45 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp"
     tools:background="#5ccc">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="27dp"
         android:text="@string/mozo_dialog_qr_code"
         android:textColor="@color/mozo_color_text_main"
         android:textSize="@dimen/mozo_text_size"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/image_qr_code"
+        app:layout_constraintStart_toStartOf="@id/image_qr_code"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/image_qr_code"
+        app:layout_constraintEnd_toEndOf="@id/image_qr_code"
+        app:layout_constraintStart_toStartOf="@id/image_qr_code"
+        app:layout_constraintTop_toTopOf="@id/image_qr_code" />
 
     <ImageView
         android:id="@+id/image_qr_code"
-        android:layout_width="@dimen/mozo_qr_large_size"
-        android:layout_height="@dimen/mozo_qr_large_size"
-        android:layout_marginStart="30dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/mozo_bg_border_qr_code"
-        android:contentDescription="@string/mozo_button_show_qr_code" />
+        android:contentDescription="@string/mozo_button_show_qr_code"
+        app:layout_constraintBottom_toTopOf="@id/button_close"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_close"
         style="@style/MozoButtonStyle"
         android:layout_width="@dimen/mozo_qr_large_size"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="35dp"
         android:includeFontPadding="false"
         android:text="@string/mozo_button_close"
-        android:textSize="@dimen/mozo_text_size" />
-</FrameLayout>
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</android.support.constraint.ConstraintLayout>

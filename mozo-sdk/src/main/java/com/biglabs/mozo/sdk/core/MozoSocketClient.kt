@@ -20,6 +20,8 @@ import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.displayString
 import com.biglabs.mozo.sdk.utils.logAsError
 import com.google.gson.Gson
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
@@ -81,24 +83,24 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
         "error: ${e?.message}".logAsError("web socket")
     }
 
-    private fun showNotification(message: Models.BroadcastDataContent) {
+    private fun showNotification(message: Models.BroadcastDataContent) = launch {
         MozoSDK.context?.applicationContext?.run {
 
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (!notificationChannelExists(message.event)) {
-                    createChannel(message.event)
+                    createChannel(message.event).await()
                 }
             }
             val isSendType = message.from.equals(myAddress, ignoreCase = true)
 
-            val resultIntent = Intent(MozoSDK.context, MozoSDK.notifyActivityClass)
+            val resultIntent = Intent(this, MozoSDK.notifyActivityClass)
             val requestID = System.currentTimeMillis().toInt()
-            val pendingIntent = PendingIntent.getActivity(MozoSDK.context, requestID, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getActivity(this, requestID, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
             val notifyTitle = String.format(Locale.US, "You %s %s Mozo", (if (isSendType) "sent" else "received"), Support.calculateAmountDecimal(message.amount, message.decimal).displayString())
-            val notifyContent = if (isSendType) buildNotificationContent("To", message.to) else buildNotificationContent("From", message.from)
+            val notifyContent = if (isSendType) buildNotificationContent("To", message.to).await() else buildNotificationContent("From", message.from).await()
 
-            val builder = NotificationCompat.Builder(MozoSDK.context!!, message.event)
+            val builder = NotificationCompat.Builder(this, message.event)
                     .setSmallIcon(R.drawable.ic_mozo_notification)
                     .setColor(ContextCompat.getColor(this, R.color.mozo_color_primary))
                     .setContentTitle(notifyTitle)
@@ -106,13 +108,20 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
                     .setAutoCancel(true)
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setContentIntent(pendingIntent)
-            NotificationManagerCompat.from(this).notify(System.currentTimeMillis().toInt(), builder.build())
+            launch(UI) {
+                NotificationManagerCompat
+                        .from(this@run)
+                        .notify(System.currentTimeMillis().toInt(), builder.build())
+            }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel(channel: String) {
-        val notificationChannel = NotificationChannel(channel, channel, NotificationManager.IMPORTANCE_HIGH)
+    private fun createChannel(channel: String) = async(UI) {
+        var channelName = channel.split("_")[0]
+        channelName = channelName.substring(0, 1).toUpperCase() + channelName.substring(1)
+
+        val notificationChannel = NotificationChannel(channel, channelName, NotificationManager.IMPORTANCE_HIGH)
         notificationChannel.setShowBadge(true)
         notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         notificationManager.createNotificationChannel(notificationChannel)
@@ -121,13 +130,22 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun notificationChannelExists(channelId: String): Boolean = notificationManager.getNotificationChannel(channelId) != null
 
-    private fun buildNotificationContent(prefix: String, address: String) = String.format(
-            Locale.US,
-            "%s Mozo wallet address @%s…%s",
-            prefix,
-            address.substring(0..5),
-            address.substring(address.length - 5 until address.length)
-    )
+    private fun buildNotificationContent(prefix: String, address: String) = async {
+        val contact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
+        if (contact != null) String.format(
+                Locale.US,
+                "%s @%s",
+                prefix,
+                contact.name
+        )
+        else String.format(
+                Locale.US,
+                "%s Mozo wallet address @%s…%s",
+                prefix,
+                address.substring(0..5),
+                address.substring(address.length - 5 until address.length)
+        )
+    }
 
     companion object {
         @Volatile
