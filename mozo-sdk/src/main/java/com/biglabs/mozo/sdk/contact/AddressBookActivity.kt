@@ -60,8 +60,8 @@ internal class AddressBookActivity : BaseActivity() {
             itemAnimator = DefaultItemAnimator()
             adapter = mAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                    address_book_top_bar_hover.isSelected = list_contacts.canScrollVertically(-1)
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    address_book_top_bar_hover.isSelected = recyclerView.canScrollVertically(-1)
                 }
             })
             onLetterScrollListener = {

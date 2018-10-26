@@ -43,8 +43,10 @@ class QRCodeDialog : DialogFragment() {
             inflater.inflate(R.layout.dialog_qr_code, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        dialog.window.setBackgroundDrawableResource(R.drawable.mozo_bg_dialog)
-        dialog.window.setDimAmount(dimAmount)
+        dialog.window?.apply {
+            setBackgroundDrawableResource(R.drawable.mozo_bg_dialog)
+            setDimAmount(dimAmount)
+        }
         rawValue?.let {
             generateQRJob = launch {
                 val size = resources.getDimensionPixelSize(R.dimen.mozo_qr_large_size)

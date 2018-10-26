@@ -66,11 +66,11 @@ class WalletInfoView : ConstraintLayout {
             showLoginRequireUI()
 
             when (context) {
-                is FragmentActivity -> (context as FragmentActivity).run {
-                    this@WalletInfoView.fragmentManager = supportFragmentManager
+                is FragmentActivity -> {
+                    this@WalletInfoView.fragmentManager = (context as FragmentActivity).supportFragmentManager
                 }
-                is Fragment -> (context as Fragment).run {
-                    this@WalletInfoView.fragmentManager = fragmentManager
+                is Fragment -> {
+                    this@WalletInfoView.fragmentManager = (context as Fragment).fragmentManager
                 }
             }
 

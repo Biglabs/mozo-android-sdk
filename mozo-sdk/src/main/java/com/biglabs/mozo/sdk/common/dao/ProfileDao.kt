@@ -15,7 +15,7 @@ interface ProfileDao {
     @Query("SELECT * FROM Profile WHERE userId = :userId")
     fun get(userId: String): Profile?
 
-    @Query("SELECT * FROM Profile INNER JOIN UserInfo ON UserInfo.userId = Profile.userId WHERE UserInfo.id = 0")
+    @Query("SELECT Profile.* FROM Profile INNER JOIN UserInfo ON UserInfo.userId = Profile.userId WHERE UserInfo.id = 0")
     fun getCurrentUserProfile(): Profile?
 
     @Query("SELECT * FROM Profile")

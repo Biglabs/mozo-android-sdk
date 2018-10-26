@@ -15,10 +15,8 @@ internal class ContactSectionDecoration(
 
     private val alphabets = charArrayOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#')
 
-    override fun onDrawOver(canvas: Canvas?, parent: RecyclerView?, state: RecyclerView.State?) {
+    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(canvas, parent, state)
-
-        canvas?.apply {
 
             val paint = Paint()
             paint.color = lettersBarTextColor
@@ -27,14 +25,13 @@ internal class ContactSectionDecoration(
             paint.textAlign = Paint.Align.CENTER
             paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
 
-            val x = width.toFloat() - letterBarWidth / 2
+            val x = canvas.width.toFloat() - letterBarWidth / 2
             var startY = (letterBarMarginTop + lettersBarTextSize).toFloat()
 
             alphabets.map {
-                drawText(it.toString(), x, startY, paint)
+                canvas.drawText(it.toString(), x, startY, paint)
                 startY += lettersBarTextLineHeight
             }
-        }
     }
 
     fun getLetter(y: Float): String {

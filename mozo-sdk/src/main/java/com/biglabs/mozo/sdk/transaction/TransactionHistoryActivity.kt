@@ -49,8 +49,8 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
         list_history.itemAnimator = DefaultItemAnimator()
         list_history.adapter = historyAdapter
         list_history.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                history_top_bar_hover.isSelected = list_history.canScrollVertically(-1)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                history_top_bar_hover.isSelected = recyclerView.canScrollVertically(-1)
             }
         })
         history_filter_group.setOnCheckedChangeListener { _, checkedId ->

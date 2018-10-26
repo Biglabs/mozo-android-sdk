@@ -3,11 +3,11 @@
 buildscript {
     ext.mozo_sdk_version_name = '0.0.2'
 
-    ext.compile_sdk_version = 27
-    ext.target_sdk_version = 27
+    ext.compile_sdk_version = 28
+    ext.target_sdk_version = 28
     ext.min_sdk_version = 21
 
-    ext.android_support_version = '27.1.1'
+    ext.android_support_version = '28.0.0'
     ext.constraint_layout_version = '1.1.3'
     ext.kotlin_version = '1.2.71'
     ext.kotlinx_version = '0.25.3'

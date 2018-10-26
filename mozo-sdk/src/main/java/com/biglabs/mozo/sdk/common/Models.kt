@@ -27,8 +27,8 @@ object Models {
     data class UserInfo(
             @NonNull @PrimaryKey var id: Long = 0L,
             val userId: String,
-            val phoneNumber: String? = null,
-            val fullName: String? = null
+            @ColumnInfo(name = "phoneNumber") val phoneNumber: String? = null,
+            @ColumnInfo(name = "fullName") val fullName: String? = null
     )
 
     @Entity(indices = [Index(value = ["id", "userId"], unique = true)])
@@ -58,11 +58,11 @@ object Models {
     )
 
     @Suppress("SpellCheckingInspection")
-    data class WalletInfo(
-            var encryptSeedPhrase: String? = null,
-            var offchainAddress: String? = null,
-            var privateKey: String? = null
-    )
+    class WalletInfo {
+        var encryptSeedPhrase: String? = null
+        var offchainAddress: String? = null
+        var privateKey: String? = null
+    }
 
     /* API services models */
     data class Contact(
@@ -168,7 +168,7 @@ object Models {
                 parcel.readLong(),
                 parcel.readString(),
                 parcel.readDouble(),
-                parcel.readString().toBigDecimal(),
+                (parcel.readString() ?: "0").toBigDecimal(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
