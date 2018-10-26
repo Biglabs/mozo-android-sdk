@@ -24,6 +24,7 @@
             android:name=".contact.AddressBookActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 

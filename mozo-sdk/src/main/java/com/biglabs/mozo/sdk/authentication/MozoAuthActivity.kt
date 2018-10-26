@@ -34,6 +34,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
     private var modeSignIn = true
     private var signOutConfiguration: AuthorizationServiceConfiguration? = null
+    private var isSignOutBeforeIn = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,27 +67,24 @@ internal class MozoAuthActivity : FragmentActivity() {
         mAuthRequest.set(null)
         mAuthIntent.set(null)
 
-        if (!modeSignIn) {
-            signOutConfiguration = AuthorizationServiceConfiguration(
-                    Uri.parse(string(R.string.auth_logout_uri)),
-                    Uri.parse(string(R.string.auth_logout_uri)),
-                    null
-            )
-            initializeAuthRequest()
-            return@async
+        signOutConfiguration = AuthorizationServiceConfiguration(
+                Uri.parse(string(R.string.auth_logout_uri)),
+                Uri.parse(string(R.string.auth_logout_uri)),
+                null
+        )
+        if (mAuthStateManager!!.current.authorizationServiceConfiguration == null) {
+            mAuthStateManager!!.replace(AuthState(
+                    AuthorizationServiceConfiguration(
+                            Uri.parse(string(R.string.auth_end_point_authorization)),
+                            Uri.parse(string(R.string.auth_end_point_token))
+                    )
+            ))
         }
 
-        if (mAuthStateManager!!.current.authorizationServiceConfiguration != null) {
-            initializeAuthRequest()
+        if (modeSignIn) {
+            doSignOutFirst()
             return@async
         }
-
-        mAuthStateManager!!.replace(AuthState(
-                AuthorizationServiceConfiguration(
-                        Uri.parse(string(R.string.auth_end_point_authorization)),
-                        Uri.parse(string(R.string.auth_end_point_token))
-                )
-        ))
         initializeAuthRequest()
     }
 
@@ -141,14 +139,42 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
 
         val intent = mAuthService!!.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get())
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
         launch(UI) {
             startActivityForResult(intent, KEY_DO_AUTHENTICATION)
         }
     }
 
+    private fun doSignOutFirst() {
+        isSignOutBeforeIn = true
+        val redirectUrl = getString(R.string.auth_redirect_uri, String.format(Locale.US, "com.biglabs.mozosdk.%s", applicationInfo.packageName))
+        val authRequestBuilder = AuthorizationRequest.Builder(signOutConfiguration!!, string(R.string.auth_client_id), ResponseTypeValues.CODE, Uri.parse(redirectUrl))
+
+        val authRequest = authRequestBuilder.build()
+        val intentBuilder = mAuthService!!.createCustomTabsIntentBuilder(authRequest.toUri())
+        val customTabs = intentBuilder.setShowTitle(true).setInstantAppsEnabled(false).build()
+
+        val extras = Bundle()
+        extras.putBinder(CustomTabsIntent.EXTRA_SESSION, null)
+        extras.putBoolean(CustomTabsIntent.EXTRA_DEFAULT_SHARE_MENU_ITEM, false)
+        extras.putParcelableArrayList(CustomTabsIntent.EXTRA_MENU_ITEMS, null)
+        customTabs.intent.putExtras(extras)
+
+        val intent = mAuthService!!.getAuthorizationRequestIntent(authRequest, customTabs)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+        startActivityForResult(intent, KEY_DO_AUTHENTICATION)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when {
             requestCode == KEY_DO_AUTHENTICATION && modeSignIn -> {
+                if (isSignOutBeforeIn) {
+                    isSignOutBeforeIn = false
+                    initializeAuthRequest()
+                    return
+                }
                 if (data == null) return
                 val response = AuthorizationResponse.fromIntent(data)
                 val ex = AuthorizationException.fromIntent(data)

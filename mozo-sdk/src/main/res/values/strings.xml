@@ -12,7 +12,7 @@
     <string name="mozo_address_add_msg_saved">Address Saved</string>
     <string name="mozo_address_add_msg_error">This address already exists in your Address Book</string>
 
-    <string name="mozo_dialog_qr_code">Mozo Wallet Address</string>
+    <string name="mozo_dialog_qr_code">Your Mozo Wallet Address</string>
     <string name="mozo_dialog_storage_permission_title">Storage Access</string>
     <string name="mozo_dialog_storage_permission_msg">Storage permission is required for this feature.</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
