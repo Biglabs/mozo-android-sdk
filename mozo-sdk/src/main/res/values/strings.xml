@@ -41,6 +41,7 @@
     <string name="mozo_button_save">Save</string>
     <string name="mozo_button_save_address">Save Wallet Address</string>
     <string name="mozo_button_retry">Retry</string>
+    <string name="mozo_button_refresh">Refresh</string>
     <string name="mozo_button_try_again">Try Again</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>

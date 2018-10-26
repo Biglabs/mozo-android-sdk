@@ -42,11 +42,11 @@ internal class TransactionHistoryRecyclerAdapter(
     private var loading = false
     private var isCanLoadMode = true
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            if (recyclerView == null || !isCanLoadMode) return
+            if (!isCanLoadMode) return
 
-            totalItemCount = recyclerView.layoutManager.itemCount
+            totalItemCount = recyclerView.layoutManager!!.itemCount
             lastVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
 
             if (!loading && totalItemCount <= (lastVisibleItem + Constant.LIST_VISIBLE_THRESHOLD)) {
@@ -130,7 +130,7 @@ internal class TransactionHistoryRecyclerAdapter(
         notifyDataSetChanged()
     }
 
-    private class ItemViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    private class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(history: Models.TransactionHistory, isSentType: Boolean, dateTime: String, lastItem: Boolean) {
 
             val amountSign: String
@@ -170,7 +170,7 @@ internal class TransactionHistoryRecyclerAdapter(
         }
     }
 
-    class LoadingViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer
+    class LoadingViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer
 
     companion object {
         @Retention(AnnotationRetention.SOURCE)

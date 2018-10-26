@@ -23,17 +23,6 @@
         <attr name="buttonClose" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="WalletInfoView">
-        <attr name="viewMode" format="enum">
-            <enum name="addressAndBalance" value="0" />
-            <enum name="onlyAddress" value="1" />
-            <enum name="onlyBalance" value="2" />
-        </attr>
-        <attr name="showCopyButton" format="boolean" />
-        <attr name="showQRCodeButton" format="boolean" />
-        <attr name="showQRCodeThumbnail" format="boolean" />
-    </declare-styleable>
-
     <declare-styleable name="MozoRecyclerView">
         <attr name="lettersBarEnable" format="boolean" />
         <attr name="lettersBarWidth" format="dimension" />
@@ -41,5 +30,14 @@
         <attr name="lettersBarTextSize" format="dimension" />
         <attr name="lettersBarTextColor" format="color" />
         <attr name="lettersBarTextLineHeight" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="MozoWalletView">
+        <attr name="viewMode" format="enum">
+            <enum name="all" value="0" />
+            <enum name="onlyAddress" value="1" />
+            <enum name="onlyBalance" value="2" />
+        </attr>
+        <attr name="showQRCode" format="boolean" />
     </declare-styleable>
 </resources>

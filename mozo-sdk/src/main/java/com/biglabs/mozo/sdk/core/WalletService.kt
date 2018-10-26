@@ -65,11 +65,11 @@ internal class WalletService private constructor() {
     internal fun executeSaveWallet(pin: String, context: Context, retry: () -> Unit) = async {
         getAddress().await()
         profile?.let {
-            it.walletInfo = Models.WalletInfo(
-                    CryptoUtils.encrypt(this@WalletService.seed!!, pin),
-                    this@WalletService.address!!,
-                    CryptoUtils.encrypt(this@WalletService.privateKey!!, pin)
-            )
+            it.walletInfo = Models.WalletInfo().apply {
+                encryptSeedPhrase = CryptoUtils.encrypt(this@WalletService.seed!!, pin)
+                offchainAddress = this@WalletService.address!!
+                privateKey = CryptoUtils.encrypt(this@WalletService.privateKey!!, pin)
+            }
 
             /* save wallet info to server */
             val isSuccess = syncWalletInfo(it.walletInfo!!, context, retry).await()

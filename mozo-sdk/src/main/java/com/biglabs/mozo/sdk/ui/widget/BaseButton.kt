@@ -1,5 +1,6 @@
 package com.biglabs.mozo.sdk.ui.widget
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -7,10 +8,9 @@ import android.support.v7.widget.AppCompatButton
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.MessageEvent
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
+import com.biglabs.mozo.sdk.common.Models
 
 internal open class BaseButton : AppCompatButton {
     constructor(context: Context) : this(context, null)
@@ -36,24 +36,26 @@ internal open class BaseButton : AppCompatButton {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (!isInEditMode) {
-            EventBus.getDefault().register(this)
+            MozoSDK.getInstance().profileViewModel.run {
+                profileLiveData.observeForever(profileObserver)
+            }
         }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         if (!isInEditMode) {
-            EventBus.getDefault().unregister(this)
+            MozoSDK.getInstance().profileViewModel.run {
+                profileLiveData.removeObserver(profileObserver)
+            }
         }
     }
 
-    @Suppress("unused")
-    @Subscribe
-    internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
-        authorizeChanged(auth)
+    private val profileObserver = Observer<Models.Profile?> {
+        authorizeChanged(it?.walletInfo != null)
     }
 
-    protected open fun authorizeChanged(auth: MessageEvent.Auth) {
+    protected open fun authorizeChanged(signedIn: Boolean) {
 
     }
 

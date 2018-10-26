@@ -83,7 +83,7 @@ internal class PinEntryEditText : AppCompatEditText {
 
     private val fullText: CharSequence
         get() = if (mMask == null) {
-            text
+            text.toString()
         } else {
             maskChars
         }
@@ -93,7 +93,7 @@ internal class PinEntryEditText : AppCompatEditText {
             if (mMaskChars == null) {
                 mMaskChars = StringBuilder()
             }
-            val textLength = text.length
+            val textLength = text?.length ?: 0
             while (mMaskChars!!.length != textLength) {
                 if (mMaskChars!!.length < textLength) {
                     mMaskChars!!.append(mMask)
@@ -204,14 +204,14 @@ internal class PinEntryEditText : AppCompatEditText {
         })
         // When tapped, move cursor to end of text.
         super.setOnClickListener { v ->
-            setSelection(text.length)
+            setSelection(text!!.length)
             if (mClickListener != null) {
                 mClickListener!!.onClick(v)
             }
         }
 
         super.setOnLongClickListener {
-            setSelection(text.length)
+            setSelection(text!!.length)
             true
         }
 
@@ -431,12 +431,12 @@ internal class PinEntryEditText : AppCompatEditText {
             mLastCharPaint.textSize = animation.animatedValue as Float
             this@PinEntryEditText.invalidate()
         }
-        if (text.length == mMaxLength && mOnPinEnteredListener != null) {
+        if (text!!.length == mMaxLength && mOnPinEnteredListener != null) {
             va.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {}
 
                 override fun onAnimationEnd(animation: Animator) {
-                    mOnPinEnteredListener!!.onPinEntered(text)
+                    mOnPinEnteredListener!!.onPinEntered(text.toString())
                 }
 
                 override fun onAnimationCancel(animation: Animator) {}
@@ -473,7 +473,7 @@ internal class PinEntryEditText : AppCompatEditText {
                 override fun onAnimationStart(animation: Animator) {}
 
                 override fun onAnimationEnd(animation: Animator) {
-                    mOnPinEnteredListener!!.onPinEntered(getText())
+                    mOnPinEnteredListener!!.onPinEntered(getText().toString())
                 }
 
                 override fun onAnimationCancel(animation: Animator) {}
