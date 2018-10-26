@@ -7,9 +7,9 @@ import android.util.AttributeSet
 import android.view.View
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.auth.MozoAuth
+import com.biglabs.mozo.sdk.MozoAuth
 
-class LoginButton : BaseButton {
+internal class LoginButton : BaseButton {
 
     private val icSignIn: Drawable?
     private val icSignOut: Drawable?
@@ -28,7 +28,9 @@ class LoginButton : BaseButton {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        updateUI()
+        if (!isInEditMode) {
+            updateUI()
+        }
     }
 
     override fun authorizeChanged(auth: MessageEvent.Auth) {

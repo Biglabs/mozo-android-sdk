@@ -13,7 +13,7 @@
         android:includeFontPadding="false"
         android:tag="@string/tag_show_always"
         android:text="@string/mozo_view_address_title"
-        android:textColor="@color/mozo_color_action_text"
+        android:textColor="@color/mozo_color_section_text"
         android:textSize="12sp" />
 
     <TextView
@@ -24,7 +24,7 @@
         android:ellipsize="end"
         android:hint="@string/mozo_view_text_hint"
         android:lines="1"
-        android:textColor="@color/mozo_color_title"
+        android:textColor="@color/mozo_color_text_main"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -2,109 +2,181 @@ package com.biglabs.mozo.sdk.core
 
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
-import com.biglabs.mozo.sdk.MozoSDK
+import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.common.Constant
-import com.biglabs.mozo.sdk.utils.AuthStateManager
-import com.biglabs.mozo.sdk.utils.logAsError
+import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.MozoAPIs
+import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class MozoService private constructor() {
-    fun getContacts() = async {
-        return@async try {
-            apiService?.getContacts()?.await()?.body()
-        } catch (e: Exception) {
-            emptyList<Models.Contact>()
+internal class MozoService private constructor(val context: Context) {
+
+    private fun handleError(ex: Exception? = null, onTryAgain: (() -> Unit)? = null) = async(UI) {
+        if (ex != null && ex is IOException) {
+            ErrorDialog.networkError(context, onTryAgain)
+        } else {
+            ErrorDialog.generalError(context, onTryAgain)
         }
     }
 
-    fun saveContact(contact: Models.Contact) = async {
+    fun getContacts(onTryAgain: (() -> Unit)? = null) = async {
         return@async try {
-            apiService?.saveContact(contact)?.await()?.body()
-        } catch (ex: Exception) {
+            val response = mAPIs?.getContacts()?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
             null
         }
     }
 
-    fun fetchProfile() = async {
+    fun saveContact(contact: Models.Contact, errorCodeForSkipHandle: Array<Int> = emptyArray(), onTryAgain: () -> Unit) = async {
         return@async try {
-            apiService?.fetchProfile()?.await()?.body()
+            val response = mAPIs?.saveContact(contact)?.await()
+            if (response?.body() == null &&
+                    !errorCodeForSkipHandle.contains(response?.code() ?: 0)) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response
         } catch (e: Exception) {
-            "fetchProfile exception".logAsError()
+            handleError(e, onTryAgain)
             null
         }
     }
 
-    //
+    fun fetchProfile(onTryAgain: () -> Unit) = async {
+        return@async try {
+            val response = mAPIs?.fetchProfile()?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
+            null
+        }
+    }
+
 //    fun saveExchangeInfo(exchangeInfo: Models.Profile): Deferred<Response<Models.Profile>> {
 //    }
 //
 //    fun saveSettings(notificationThreshold: Int): Deferred<Response<Models.Profile>> {
 //    }
 
-    fun saveWallet(walletInfo: Models.WalletInfo) = async {
+    fun saveWallet(walletInfo: Models.WalletInfo, onTryAgain: () -> Unit) = async {
         return@async try {
-            apiService?.saveWallet(walletInfo)?.await()?.body()
-        } catch (ex: Exception) {
-            null
-        }
-    }
-
-    fun getBalance(address: String) = async {
-        return@async try {
-            apiService?.getBalance(address)?.await()?.body()
+            val response = mAPIs?.saveWallet(walletInfo)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
         } catch (e: Exception) {
+            handleError(e, onTryAgain)
             null
         }
     }
 
-    fun createTransaction(request: Models.TransactionRequest) = async {
+    fun getBalance(address: String, onTryAgain: (() -> Unit)?) = async {
         return@async try {
-            apiService?.createTransaction(request)?.await()?.body()
-        } catch (ex: Exception) {
+            val response = mAPIs?.getBalance(address)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
             null
         }
     }
 
-    fun sendTransaction(request: Models.TransactionResponse) = async {
+    fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO, onTryAgain: (() -> Unit)?) = async {
         return@async try {
-            apiService?.sendTransaction(request)?.await()?.body()
-        } catch (ex: Exception) {
+            val response = mAPIs?.getExchangeRate(currency, symbol)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
+            Models.ExchangeRate(0.0)
+        }
+    }
+
+    fun createTransaction(request: Models.TransactionRequest, onTryAgain: (() -> Unit)?) = async {
+        return@async try {
+            val response = mAPIs?.createTransaction(request)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
             null
         }
     }
 
-    fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE) = async {
+    fun sendTransaction(request: Models.TransactionResponse, onTryAgain: (() -> Unit)?) = async {
+        try {
+            val response = mAPIs?.sendTransaction(request)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
+            null
+        }
+    }
+
+    fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, onTryAgain: (() -> Unit)?) = async {
         return@async try {
-            apiService?.getTransactionHistory(address, page, size)?.await()?.body()
-        } catch (ex: Exception) {
+            val response = mAPIs?.getTransactionHistory(address, page, size)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
             emptyList<Models.TransactionHistory>()
+        }
+    }
+
+    fun getTransactionStatus(txHash: String, onTryAgain: (() -> Unit)?) = async {
+        return@async try {
+            val response = mAPIs?.getTransactionStatus(txHash)?.await()
+            if (response?.body() == null) {
+                handleError(onTryAgain = onTryAgain)
+            }
+            response?.body()
+        } catch (e: Exception) {
+            handleError(e, onTryAgain)
+            null
         }
     }
 
     companion object {
 
-        private var apiService: MozoApiService? = null
-
         @Volatile
-        private var instance: MozoService? = null
+        private var mAPIs: MozoAPIs? = null
 
-        fun getInstance(context: Context) = instance ?: synchronized(this) {
-            if (instance == null) {
-                apiService = createService(context)
-                instance = MozoService()
+        fun getInstance(context: Context) = synchronized(this) {
+            if (mAPIs == null) {
+                mAPIs = createService(context.applicationContext)
             }
-            instance
-        }!!
+            MozoService(context)
+        }
 
-        private fun createService(context: Context): MozoApiService {
+        private fun createService(context: Context): MozoAPIs {
             val client = OkHttpClient.Builder()
                     .addInterceptor {
                         val accessToken = AuthStateManager.getInstance(context).current.accessToken
@@ -132,7 +204,7 @@ class MozoService private constructor() {
                     .addCallAdapterFactory(CoroutineCallAdapterFactory())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-                    .create(MozoApiService::class.java)
+                    .create(MozoAPIs::class.java)
         }
     }
 }

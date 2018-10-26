@@ -4,9 +4,10 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import com.biglabs.mozo.sdk.core.dao.AnonymousUserInfoDao
-import com.biglabs.mozo.sdk.core.dao.ProfileDao
-import com.biglabs.mozo.sdk.core.dao.UserInfoDao
+import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.dao.AnonymousUserInfoDao
+import com.biglabs.mozo.sdk.common.dao.ProfileDao
+import com.biglabs.mozo.sdk.common.dao.UserInfoDao
 
 @Database(entities = [Models.AnonymousUserInfo::class, Models.UserInfo::class, Models.Profile::class], version = 1, exportSchema = false)
 abstract class MozoDatabase : RoomDatabase() {

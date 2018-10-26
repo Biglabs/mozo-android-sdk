@@ -29,15 +29,17 @@
         android:layout_margin="@dimen/mozo_screen_margin"
         android:background="@drawable/mozo_bg_border_search"
         android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="10dp"
+        android:drawablePadding="7dp"
         android:gravity="center_vertical"
-        android:hint="@string/mozo_view_text_search"
+        android:hint="@string/mozo_address_book_search_hint"
         android:imeOptions="actionDone"
         android:importantForAutofill="no"
         android:includeFontPadding="true"
         android:inputType="textPersonName"
         android:lines="1"
-        android:textColor="@color/mozo_color_title"
+        android:paddingStart="18dp"
+        android:paddingEnd="45dp"
+        android:textColor="@color/mozo_color_text_main"
         android:textColorHint="@color/mozo_color_un_active"
         android:textSize="@dimen/mozo_text_size"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +54,7 @@
         android:layout_marginEnd="2dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:contentDescription="Clear"
+        android:contentDescription="@string/mozo_button_clear"
         android:focusable="true"
         android:padding="10dp"
         android:src="@drawable/ic_clear"
@@ -61,29 +63,59 @@
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="@id/input_search"
         app:layout_constraintTop_toTopOf="@id/input_search"
-        tools:ignore="HardcodedText"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/view_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/im_search_empty"
+        android:drawablePadding="15dp"
+        android:gravity="center"
+        android:text="@string/mozo_address_book_no_result"
+        android:textColor="@color/mozo_color_line"
+        android:textStyle="italic"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/input_search"
+        app:layout_constraintVertical_bias="0.35"
         tools:visibility="visible" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/list_contacts_refresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_search">
 
-        <com.biglabs.mozo.sdk.ui.view.FastScrollRecyclerView
+        <com.biglabs.mozo.sdk.ui.view.MozoRecyclerView
             android:id="@+id/list_contacts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/mozo_screen_margin"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            app:setIndexBarColor="@android:color/transparent"
-            app:setIndexBarMargin="0dp"
-            app:setIndexBarTextColor="@color/mozo_color_primary"
-            app:setIndexBarWidth="20dp"
-            app:setIndexTextSize="12"
+            app:lettersBarMarginTop="30dp"
+            app:lettersBarTextColor="@color/mozo_color_line"
+            app:lettersBarTextLineHeight="15sp"
+            app:lettersBarTextSize="12sp"
+            app:lettersBarWidth="18dp"
             tools:listitem="@layout/item_contact" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <View
+        android:id="@+id/address_book_top_bar_hover"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:alpha="0"
+        android:background="@drawable/mozo_dr_top_bar_hover"
+        android:stateListAnimator="@animator/top_bar_hover"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/input_search" />
 </android.support.constraint.ConstraintLayout>

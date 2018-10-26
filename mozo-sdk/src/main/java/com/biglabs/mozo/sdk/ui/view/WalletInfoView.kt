@@ -1,5 +1,6 @@
 package com.biglabs.mozo.sdk.ui.view
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.support.annotation.IntDef
 import android.support.constraint.ConstraintLayout
@@ -9,17 +10,13 @@ import android.support.v4.app.FragmentManager
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
+import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.auth.MozoAuth
-import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.services.WalletService
-import com.biglabs.mozo.sdk.trans.MozoTrans
+import com.biglabs.mozo.sdk.MozoAuth
+import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 
 class WalletInfoView : ConstraintLayout {
 
@@ -30,9 +27,11 @@ class WalletInfoView : ConstraintLayout {
 
     private var mAddress: String? = null
     private var mBalance: String? = null
+    private var mBalanceRate: String? = null
 
     private var mWalletAddressView: TextView? = null
     private var mWalletBalanceView: TextView? = null
+    private var mWalletBalanceRateView: TextView? = null
     private var fragmentManager: FragmentManager? = null
 
     private val mTagShowAlways: String
@@ -59,57 +58,54 @@ class WalletInfoView : ConstraintLayout {
         mTagLoginRequire = resources.getString(R.string.tag_login_require)
 
         inflateLayout()
-
-        if (!isInEditMode) {
-            if (context is FragmentActivity) {
-                fragmentManager = context.supportFragmentManager
-            } else if (context is Fragment) {
-                fragmentManager = context.fragmentManager
-            }
-        }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (!isInEditMode) {
-            EventBus.getDefault().register(this)
+            showLoginRequireUI()
 
-            fetchData()
+            when (context) {
+                is FragmentActivity -> (context as FragmentActivity).run {
+                    this@WalletInfoView.fragmentManager = supportFragmentManager
+                }
+                is Fragment -> (context as Fragment).run {
+                    this@WalletInfoView.fragmentManager = fragmentManager
+                }
+            }
+
+            MozoSDK.getInstance().profileViewModel.run {
+                profileLiveData.observeForever(profileObserver)
+                balanceAndRateLiveData.observeForever(balanceAndRateObserver)
+            }
         }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (!isInEditMode) {
-            EventBus.getDefault().unregister(this)
+        MozoSDK.getInstance().profileViewModel.run {
+            profileLiveData.removeObserver(profileObserver)
+            balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
         }
     }
 
-    @Suppress("unused")
-    @Subscribe
-    internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
-        fetchData()
+    private val profileObserver = Observer<Models.Profile?> {
+        if (it?.walletInfo != null) {
+            mAddress = it.walletInfo!!.offchainAddress
+            mWalletAddressView?.text = mAddress
+            showDetailUI()
+        } else {
+            showLoginRequireUI()
+        }
     }
 
-    private fun fetchData() {
-        if (MozoAuth.getInstance().isSignUpCompleted()) {
-            launch {
-                mAddress = WalletService.getInstance().getAddress().await()
-                launch(UI) {
-                    mWalletAddressView?.text = mAddress
-                }
-            }
-
-            launch {
-                mBalance = MozoTrans.getInstance().getBalance().await()
-                launch(UI) {
-                    mWalletBalanceView?.text = mBalance ?: "0"
-                }
-            }
-
-            showDetailUI()
-        } else
-            showLoginRequireUI()
+    private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
+        it?.run {
+            mBalance = balanceInDecimal.displayString()
+            mBalanceRate = balanceInCurrencyDisplay
+            mWalletBalanceView?.text = mBalance
+            mWalletBalanceRateView?.text = mBalanceRate
+        }
     }
 
     private fun inflateLayout() {
@@ -125,16 +121,15 @@ class WalletInfoView : ConstraintLayout {
 
     private fun updateUI() {
         if (isInEditMode) return
-        val balanceRate: TextView?
 
         if (mViewMode == MODE_ONLY_BALANCE) {
-            balanceRate = find(R.id.mozo_wallet_balance_rate_side)
+            mWalletBalanceRateView = find(R.id.mozo_wallet_balance_rate_side)
 
         } else {
             mWalletAddressView = find(R.id.mozo_wallet_address)
             mAddress?.let { mWalletAddressView?.text = it }
 
-            balanceRate = find(R.id.mozo_wallet_balance_rate_bottom)
+            mWalletBalanceRateView = find(R.id.mozo_wallet_balance_rate_bottom)
             find<View>(R.id.mozo_wallet_btn_show_qr)?.apply {
                 if (mShowQRCodeButton) {
                     visible()
@@ -165,9 +160,9 @@ class WalletInfoView : ConstraintLayout {
 //            loginBtnConstraintSet.applyTo(this@WalletInfoView)
         }
 
-        balanceRate?.apply {
+        mWalletBalanceRateView?.apply {
             visible()
-            text = "₩000"
+            text = mBalanceRate
         }
     }
 
@@ -216,7 +211,6 @@ class WalletInfoView : ConstraintLayout {
         if (mViewMode != mode) {
             mViewMode = mode
             inflateLayout()
-            fetchData()
         }
     }
 

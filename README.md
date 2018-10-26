@@ -5,13 +5,26 @@ MozoSDK for Android by Big Labs Pte. Ltd.
 For more information please see [the website][1].
 
 ## Adding to project
-Add this library as a dependency in your app's build.gradle file.
+**MozoSDK requires at minimum Java 8 and Android 5.0 (API 21)**.
+* Add MozoSDK repository to your root-level `build.gradle` file.
 ```
-dependencies {
-    implementation 'com.biglabs:mozo-sdk:0.0.1'
+allprojects {
+    repositories {
+        // ...
+
+        maven {
+            url  "https://dl.bintray.com/mozocoin/MozoSDK"
+        }
+    }
 }
 ```
-MozoSDK requires at minimum Java 8 and Android 5.0.
+
+* Add this library as a dependency in your `app/build.gradle` file.
+```
+dependencies {
+    implementation 'com.biglabs:mozo-sdk:0.0.2'
+}
+```
 
 ## Setting up
 * First, in your module Gradle file (usually the `app/build.gradle`), add the `packagingOptions` and `compileOptions` to remove dupllicate files and make sure your project compiling by Java 8:

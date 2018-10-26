@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:background="#3ccc">
+
+    <ImageView
+        android:id="@+id/image_error_type"
+        android:layout_width="102dp"
+        android:layout_height="102dp"
+        android:layout_marginStart="99dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="99dp"
+        android:contentDescription="@string/mozo_dialog_error_msg"
+        android:src="@drawable/ic_error_general"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_msg_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/mozo_dialog_error_msg"
+        android:textColor="@color/mozo_color_text_main"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_error_type" />
+
+    <Button
+        android:id="@+id/button_try_again"
+        style="@style/MozoButtonStyle.MozoRoundedButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:layout_marginBottom="57dp"
+        android:background="@drawable/mozo_dr_btn_rounded"
+        android:text="@string/mozo_button_try_again"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_msg_error" />
+</android.support.constraint.ConstraintLayout>

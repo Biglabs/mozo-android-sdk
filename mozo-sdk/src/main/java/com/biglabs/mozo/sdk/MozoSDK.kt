@@ -1,12 +1,14 @@
 package com.biglabs.mozo.sdk
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import com.biglabs.mozo.sdk.auth.MozoAuth
-import com.biglabs.mozo.sdk.services.WalletService
 import android.net.ConnectivityManager
+import android.support.v4.app.FragmentActivity
+import com.biglabs.mozo.sdk.common.ViewModels
+import com.biglabs.mozo.sdk.core.WalletService
 
-class MozoSDK private constructor() {
+class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewModel, val contactViewModel: ViewModels.ContactViewModel) {
 
     val auth: MozoAuth by lazy { MozoAuth.getInstance() }
     //val beacon: BeaconService by lazy { BeaconService.getInstance() }
@@ -25,12 +27,22 @@ class MozoSDK private constructor() {
         @Volatile
         internal var context: Context? = null
 
+        @Volatile
+        internal var notifyActivityClass: Class<out FragmentActivity>? = null
+
         @JvmStatic
         @Synchronized
-        fun initialize(context: Context) {
+        fun initialize(activity: FragmentActivity) {
+            checkNotNull(activity)
+
+            notifyActivityClass = activity::class.java
+            this.context = activity
+
             if (INSTANCE == null) {
-                this.context = context.applicationContext
-                INSTANCE = MozoSDK()
+                INSTANCE = MozoSDK(
+                        ViewModelProviders.of(activity).get(ViewModels.ProfileViewModel::class.java),
+                        ViewModelProviders.of(activity).get(ViewModels.ContactViewModel::class.java)
+                )
             }
         }
 
@@ -43,7 +55,7 @@ class MozoSDK private constructor() {
             return INSTANCE as MozoSDK
         }
 
-        fun isNetworkAvailable(): Boolean {
+        internal fun isNetworkAvailable(): Boolean {
             val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val activeNetworkInfo = connectivityManager.activeNetworkInfo
             return activeNetworkInfo != null && activeNetworkInfo.isConnected

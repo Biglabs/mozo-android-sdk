@@ -5,11 +5,11 @@ import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.auth.MozoAuth
+import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.trans.TransactionHistoryActivity
+import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 
-class TransactionHistoryButton : BaseButton {
+internal class TransactionHistoryButton : BaseButton {
 
     private var needToContinue = false
 
