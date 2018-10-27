@@ -13,6 +13,7 @@ import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
+import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
@@ -31,8 +32,10 @@ class MozoWalletView : ConstraintLayout {
     private var textBalanceView: TextView? = null
     private var textCurrencyBalanceView: TextView? = null
     private var imageAddressQRView: ImageView? = null
+    private var buttonShowQRCode: View? = null
 
     private var stateNotLoginView: View? = null
+    private var stateErrorView: View? = null
 
     private var generateQRJob: Job? = null
     private var sizeOfQRImage = 0
@@ -52,6 +55,16 @@ class MozoWalletView : ConstraintLayout {
         minWidth = resources.getDimensionPixelSize(R.dimen.mozo_view_min_width)
 
         inflateLayout()
+
+        if (isInEditMode) {
+            if (mShowQRCode) {
+                imageAddressQRView?.visible()
+                buttonShowQRCode?.visible()
+            } else {
+                imageAddressQRView?.gone()
+                buttonShowQRCode?.gone()
+            }
+        }
     }
 
     private fun inflateLayout() {
@@ -73,11 +86,17 @@ class MozoWalletView : ConstraintLayout {
         textBalanceView = find(R.id.mozo_wallet_balance_value)
         textCurrencyBalanceView = find(R.id.mozo_wallet_currency_balance)
         imageAddressQRView = find(R.id.mozo_wallet_qr_image)
+        buttonShowQRCode = find(R.id.mozo_wallet_qr_image_button)
 
         find<TextView>(R.id.button_copy)?.click { context.copyWithToast(mAddress) }
         find<View>(R.id.button_login)?.click { MozoAuth.getInstance().signIn() }
+        find<View>(R.id.button_refresh)?.click {
+            hideErrorStateUI()
+            MozoSDK.getInstance().profileViewModel.fetchBalance(context)
+        }
 
         stateNotLoginView = find(R.id.mozo_wallet_state_login)
+        stateErrorView = find(R.id.mozo_wallet_state_error)
     }
 
     override fun onAttachedToWindow() {
@@ -118,14 +137,27 @@ class MozoWalletView : ConstraintLayout {
             mBalanceRate = balanceInCurrencyDisplay
             updateUI()
         }
+        if (MozoSDK.getInstance().profileViewModel.balanceInfoLiveData.value == null)
+            showErrorStateUI()
+        else
+            hideErrorStateUI()
     }
 
     private fun showLoginRequireUI() {
         stateNotLoginView?.visible()
+        hideErrorStateUI()
     }
 
     private fun hideLoginRequireUI() {
         stateNotLoginView?.gone()
+    }
+
+    private fun showErrorStateUI() {
+        stateErrorView?.visible()
+    }
+
+    private fun hideErrorStateUI() {
+        stateErrorView?.gone()
     }
 
     private fun updateUI() {
@@ -135,10 +167,18 @@ class MozoWalletView : ConstraintLayout {
 
         if (mShowQRCode && mAddress != null) {
             imageAddressQRView?.apply {
-                visible()
                 generateQRJob = getQRImage()
+                visible()
+                click { QRCodeDialog.show(context, mAddress!!) }
             }
-        } else imageAddressQRView?.gone()
+            buttonShowQRCode?.apply {
+                visible()
+                click { QRCodeDialog.show(context, mAddress!!) }
+            }
+        } else {
+            imageAddressQRView?.gone()
+            buttonShowQRCode?.gone()
+        }
     }
 
     private fun getQRImage() = launch {

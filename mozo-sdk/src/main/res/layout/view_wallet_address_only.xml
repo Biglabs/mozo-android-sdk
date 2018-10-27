@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="22sp"
-        android:layout_marginEnd="150dp"
+        android:layout_marginEnd="100dp"
         android:ellipsize="middle"
         android:hint="@string/mozo_view_text_hint"
         android:includeFontPadding="false"
@@ -81,5 +81,11 @@
     <include
         android:id="@+id/mozo_wallet_state_error"
         layout="@layout/view_wallet_state_error"
-        android:visibility="gone" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </merge>
