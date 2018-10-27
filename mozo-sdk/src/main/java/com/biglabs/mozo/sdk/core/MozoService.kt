@@ -3,9 +3,11 @@ package com.biglabs.mozo.sdk.core
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.authentication.AuthStateManager
+import com.biglabs.mozo.sdk.authentication.MozoAuthActivity
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.MozoAPIs
+import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import kotlinx.coroutines.experimental.android.UI
@@ -20,10 +22,12 @@ import java.util.concurrent.TimeUnit
 internal class MozoService private constructor(val context: Context) {
 
     private fun handleError(ex: Exception? = null, onTryAgain: (() -> Unit)? = null) = async(UI) {
-        if (ex != null && ex is IOException) {
-            ErrorDialog.networkError(context, onTryAgain)
-        } else {
-            ErrorDialog.generalError(context, onTryAgain)
+        if (context is BaseActivity || context is MozoAuthActivity) {
+            if (ex != null && ex is IOException) {
+                ErrorDialog.networkError(context, onTryAgain)
+            } else {
+                ErrorDialog.generalError(context, onTryAgain)
+            }
         }
     }
 

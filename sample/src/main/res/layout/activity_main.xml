@@ -32,11 +32,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
-            android:text="Mozo Off-chain Balance"
+            android:text="Mozo Offchain Balance"
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:viewMode="onlyBalance" />
@@ -46,13 +46,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
-            android:text="Address &amp; QR Code"
+            android:text="Mozo Offchain Address"
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:showQRCode="false"
             app:viewMode="onlyAddress" />
 
         <TextView
@@ -64,7 +65,7 @@
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -77,7 +78,7 @@
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:viewMode="onlyAddress" />
@@ -91,11 +92,9 @@
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.WalletInfoView
+        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:showCopyButton="false"
-            app:showQRCodeButton="false"
-            app:viewMode="addressAndBalance" />
+            app:showQRCode="false" />
     </LinearLayout>
 </ScrollView>

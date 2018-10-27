@@ -77,10 +77,12 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
         "close: $code, reason: $reason, remote: $remote".logAsError("web socket")
+        instance = null
     }
 
     override fun onError(e: Exception?) {
         "error: ${e?.message}".logAsError("web socket")
+        disconnect()
     }
 
     private fun showNotification(message: Models.BroadcastDataContent) = launch {
@@ -164,10 +166,10 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
                                 "X-Atmosphere-tracking-id" to "0",
                                 "X-Atmosphere-Transport" to "websocket"
                         )
-                )
-                instance?.getURI().toString().logAsError("socket uri")
+                ).apply {
+                    connect()
+                }
             }
-            instance?.connect()
         }
 
         fun disconnect() {

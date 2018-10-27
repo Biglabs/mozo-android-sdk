@@ -132,7 +132,7 @@ internal class SecurityActivity : BaseActivity() {
         input_pin?.apply {
             visible()
             if (clearPin) {
-                text.clear()
+                text?.clear()
             }
         }
         text_content_pin.visible()

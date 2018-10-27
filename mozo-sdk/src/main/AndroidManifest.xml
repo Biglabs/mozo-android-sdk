@@ -79,8 +79,8 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="net.openid.appauth.RedirectUriReceiverActivity"
-            android:screenOrientation="portrait"
-            tools:node="replace">
+            android:screenOrientation="portrait">
+            <intent-filter tools:node="removeAll" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -106,6 +106,6 @@
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
-            tools:replace="screenOrientation" />
+            tools:replace="android:screenOrientation" />
     </application>
 </manifest>

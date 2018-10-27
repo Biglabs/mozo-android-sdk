@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@drawable/mozo_bg_component"
+    tools:parentTag="android.support.constraint.ConstraintLayout">
+
+    <View
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/ic_mozo_offchain"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/mozo_wallet_balance_value"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="20dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="start|center_vertical"
+        android:hint="@string/mozo_view_text_hint"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="20sp"
+        app:autoSizeMinTextSize="14sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toStartOf="@id/mozo_wallet_qr_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginEnd="0dp"
+        tools:text="999.99" />
+
+    <TextView
+        android:id="@+id/mozo_wallet_currency_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_un_active"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="₩102.230" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24sp"
+        android:includeFontPadding="false"
+        android:tag="@string/tag_show_always"
+        android:text="@string/mozo_view_address_title"
+        android:textColor="@color/mozo_color_section_text"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/mozo_wallet_currency_balance" />
+
+    <TextView
+        android:id="@+id/mozo_wallet_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="47sp"
+        android:layout_marginEnd="60dp"
+        android:ellipsize="middle"
+        android:hint="@string/mozo_view_text_hint"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:textColor="@color/mozo_color_text_main"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/mozo_wallet_qr_image"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mozo_wallet_currency_balance"
+        app:layout_goneMarginEnd="56dp"
+        tools:text="0x97309d360C015695cf50892f035E516ccA1898F0" />
+
+    <TextView
+        android:id="@+id/button_copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_action_copy"
+        android:drawablePadding="-2dp"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:paddingStart="4dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:text="@string/mozo_button_copy"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/mozo_wallet_address"
+        app:layout_constraintStart_toEndOf="@id/mozo_wallet_address" />
+
+    <ImageView
+        android:id="@+id/mozo_wallet_qr_image"
+        android:layout_width="@dimen/mozo_qr_medium_size"
+        android:layout_height="@dimen/mozo_qr_medium_size"
+        android:layout_marginTop="-14dp"
+        android:clickable="true"
+        android:contentDescription="@string/mozo_view_address_title"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#5ccc"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/mozo_wallet_qr_image_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:paddingTop="5dp"
+        android:text="@string/mozo_button_show_qr_code"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/mozo_wallet_qr_image"
+        app:layout_constraintStart_toStartOf="@id/mozo_wallet_qr_image"
+        app:layout_constraintTop_toBottomOf="@id/mozo_wallet_qr_image"
+        tools:visibility="visible" />
+
+    <include
+        android:id="@+id/mozo_wallet_state_login"
+        layout="@layout/view_wallet_state_not_login"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:tag="@string/tag_show_always"
+        android:text="@string/mozo_view_balance_title"
+        android:textColor="@color/mozo_color_section_text"
+        android:textSize="12sp" />
+
+    <include
+        android:id="@+id/mozo_wallet_state_error"
+        layout="@layout/view_wallet_state_error"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</merge>

@@ -23,7 +23,7 @@ android {
     }
 
     lintOptions {
-        abortOnError true
+        abortOnError false
         disable 'InvalidPackage'
     }
 }
@@ -41,10 +41,8 @@ kotlin {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     // Android support
-    api "com.android.support:appcompat-v7:$android_support_version"
-    api "com.android.support:recyclerview-v7:$android_support_version"
-    api "com.android.support:support-v4:$android_support_version"
-    api "com.android.support:support-media-compat:$android_support_version"
+    api "com.android.support:design:$android_support_version"
+    api "com.android.support:customtabs:$android_support_version"
     api "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     api 'com.google.android:flexbox:1.0.0'
 
@@ -79,4 +77,14 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            details.useVersion android_support_version
+        }
+    }
+}
+
 apply from: 'publish.gradle'
