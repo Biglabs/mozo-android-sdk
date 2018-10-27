@@ -137,10 +137,13 @@ class MozoWalletView : ConstraintLayout {
             mBalanceRate = balanceInCurrencyDisplay
             updateUI()
         }
-        if (MozoSDK.getInstance().profileViewModel.balanceInfoLiveData.value == null)
-            showErrorStateUI()
-        else
-            hideErrorStateUI()
+
+        MozoSDK.getInstance().profileViewModel.run {
+            if (profileLiveData.value?.walletInfo != null && balanceInfoLiveData.value == null)
+                showErrorStateUI()
+            else
+                hideErrorStateUI()
+        }
     }
 
     private fun showLoginRequireUI() {
