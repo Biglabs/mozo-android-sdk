@@ -23,7 +23,7 @@ internal class ContactSection(
 ) {
     override fun getContentItemsTotal(): Int = contacts.size
 
-    override fun getHeaderViewHolder(view: View?): RecyclerView.ViewHolder = HeaderViewHolder(view)
+    override fun getHeaderViewHolder(view: View): RecyclerView.ViewHolder = HeaderViewHolder(view)
 
     override fun onBindHeaderViewHolder(holder: RecyclerView.ViewHolder?) {
         if (holder is HeaderViewHolder) {
@@ -31,7 +31,7 @@ internal class ContactSection(
         }
     }
 
-    override fun getItemViewHolder(view: View?): RecyclerView.ViewHolder = ItemViewHolder(view)
+    override fun getItemViewHolder(view: View): RecyclerView.ViewHolder = ItemViewHolder(view)
 
     override fun onBindItemViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         if (holder is ItemViewHolder) {
@@ -41,13 +41,13 @@ internal class ContactSection(
         }
     }
 
-    class HeaderViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    class HeaderViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(header: String) {
             item_header.text = header
         }
     }
 
-    class ItemViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(contact: Models.Contact) {
             item_title.text = contact.name
             item_content.text = contact.soloAddress

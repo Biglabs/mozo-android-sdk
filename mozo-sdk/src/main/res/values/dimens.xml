@@ -14,7 +14,7 @@
     <dimen name="mozo_text_size">15sp</dimen>
 
     <dimen name="mozo_qr_small_size">70dp</dimen>
-    <dimen name="mozo_qr_medium_size">92dp</dimen>
+    <dimen name="mozo_qr_medium_size">120dp</dimen>
     <dimen name="mozo_qr_large_size">250dp</dimen>
 
     <dimen name="mozo_refresh_progress_offset">20dp</dimen>

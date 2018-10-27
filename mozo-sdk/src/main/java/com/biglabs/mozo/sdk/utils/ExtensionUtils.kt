@@ -109,6 +109,7 @@ internal fun View.hideKeyboard(): Boolean {
 /**
  * Set an onclick listener
  */
+@Suppress("UNCHECKED_CAST")
 internal fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener { block(it as T) }
 
 internal inline fun <reified T : View> View.find(@IdRes id: Int): T? = findViewById(id) as? T
