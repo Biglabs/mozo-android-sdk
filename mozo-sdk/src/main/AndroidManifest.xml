@@ -14,21 +14,22 @@
     <application android:hardwareAccelerated="true">
 
         <activity
-            android:name=".ui.AddressAddActivity"
+            android:name=".contact.AddressAddActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
 
         <activity
-            android:name=".ui.AddressBookActivity"
+            android:name=".contact.AddressBookActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name=".auth.MozoAuthActivity"
+            android:name=".authentication.MozoAuthActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:theme="@style/MozoTheme.Transparent.Dim"
@@ -51,21 +52,21 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".trans.TransactionFormActivity"
+            android:name=".transaction.TransactionFormActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".trans.TransactionHistoryActivity"
+            android:name=".transaction.TransactionHistoryActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
         <activity
-            android:name=".trans.TransactionDetails"
+            android:name=".transaction.TransactionDetails"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
@@ -78,8 +79,8 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="net.openid.appauth.RedirectUriReceiverActivity"
-            android:screenOrientation="portrait"
-            tools:node="replace">
+            android:screenOrientation="portrait">
+            <intent-filter tools:node="removeAll" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -98,13 +99,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/auth_redirect_scheme" />
+                <data android:scheme="com.biglabs.mozosdk.${applicationId}" />
             </intent-filter>
         </activity>
 
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
-            tools:replace="screenOrientation" />
+            tools:replace="android:screenOrientation" />
     </application>
 </manifest>

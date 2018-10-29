@@ -6,10 +6,9 @@ import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.auth.MozoAuth
+import com.biglabs.mozo.sdk.MozoAuth
 
-class LoginButton : BaseButton {
+internal class LoginButton : BaseButton {
 
     private val icSignIn: Drawable?
     private val icSignOut: Drawable?
@@ -26,28 +25,19 @@ class LoginButton : BaseButton {
         }
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        updateUI()
-    }
-
-    override fun authorizeChanged(auth: MessageEvent.Auth) {
-        updateUI()
-    }
-
-    override fun onClick(view: View) {
-        MozoAuth.getInstance().run {
-            if (isSignedIn()) signOut() else signIn()
-        }
-    }
-
-    private fun updateUI() {
-        if (MozoAuth.getInstance().isSignedIn()) {
+    override fun authorizeChanged(signedIn: Boolean) {
+        if (signedIn) {
             super.setCompoundDrawablesWithIntrinsicBounds(icSignOut, null, null, null)
             super.setText(R.string.mozo_button_logout)
         } else {
             super.setCompoundDrawablesWithIntrinsicBounds(icSignIn, null, null, null)
             super.setText(R.string.mozo_button_login)
+        }
+    }
+
+    override fun onClick(view: View) {
+        MozoAuth.getInstance().run {
+            if (isSignedIn()) signOut() else signIn()
         }
     }
 }

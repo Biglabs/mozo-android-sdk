@@ -1,18 +1,25 @@
 <resources>
     <string name="mozo_address_book_title">Address Book</string>
+    <string name="mozo_address_book_pick_title">Select Address</string>
+    <string name="mozo_address_book_pick_btn">Select from address Book</string>
+    <string name="mozo_address_book_no_result">Results not found</string>
+    <string name="mozo_address_book_search_hint">Search Address</string>
 
-    <string name="mozo_address_add_title">Save Address</string>
-    <string name="mozo_address_add_label">Mozo Offchain Wallet Address</string>
+    <string name="mozo_address_add_title">Add New Address</string>
+    <string name="mozo_address_add_label">Wallet Address</string>
     <string name="mozo_address_add_input_name_label">Name</string>
     <string name="mozo_address_add_input_name_hint">Enter contact name</string>
     <string name="mozo_address_add_msg_saved">Address Saved</string>
     <string name="mozo_address_add_msg_error">This address already exists in your Address Book</string>
 
-    <string name="mozo_dialog_qr_code">Mozo Wallet Address</string>
+    <string name="mozo_dialog_qr_code">Your Mozo Wallet Address</string>
     <string name="mozo_dialog_storage_permission_title">Storage Access</string>
     <string name="mozo_dialog_storage_permission_msg">Storage permission is required for this feature.</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
     <string name="mozo_dialog_copied_msg">Copied!</string>
+
+    <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
+    <string name="mozo_dialog_error_msg">There is an error occurred.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
     <string name="mozo_button_login">Sign In to Mozo</string>
@@ -22,60 +29,67 @@
     <string name="mozo_button_withdraw">Withdraw</string>
 
     <string name="mozo_button_back">Back</string>
-    <string name="mozo_button_close">Close</string>
-    <string name="mozo_button_continue">Continue</string>
-    <string name="mozo_button_scan_qr_code">Scan QR Code</string>
-    <string name="mozo_button_show_qr_code">Show QR Code</string>
+    <string name="mozo_button_cancel">Cancel</string>
     <string name="mozo_button_copy">Copy</string>
+    <string name="mozo_button_continue">Continue</string>
+    <string name="mozo_button_close">Close</string>
     <string name="mozo_button_clear">Clear</string>
+    <string name="mozo_button_scan_qr_code">Scan QR Code</string>
+    <string name="mozo_button_scan">Scan</string>
+    <string name="mozo_button_show_qr_code">Show QR Code</string>
     <string name="mozo_button_send">Send</string>
     <string name="mozo_button_save">Save</string>
-    <string name="mozo_button_save_address">Save Address</string>
+    <string name="mozo_button_save_address">Save Wallet Address</string>
     <string name="mozo_button_retry">Retry</string>
+    <string name="mozo_button_refresh">Refresh</string>
+    <string name="mozo_button_try_again">Try Again</string>
 
-    <string name="mozo_backup_title">Back up Wallet</string>
+    <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">Store Recovery Phrase</string>
     <string name="mozo_backup_content">Please write it down on a paper and keep it in a safe place as you would with paper money</string>
-    <string name="mozo_backup_warning">If you lose your recovery phase, your wallet cannot be recovered.</string>
+    <string name="mozo_backup_warning">*If you lose your recovery phase, your wallet cannot be recovered.</string>
     <string name="mozo_backup_confirm_msg">I have safely stored recovery phrase</string>
 
-    <string name="mozo_pin_title">Create Security Pin</string>
-    <string name="mozo_pin_title_restore">Restore wallet</string>
-    <string name="mozo_pin_title_verify">Security pin confirm</string>
+    <string name="mozo_pin_title">Create Security PIN</string>
+    <string name="mozo_pin_title_restore">Restore Wallet</string>
+    <string name="mozo_pin_title_verify">Security PIN Confirm</string>
     <string name="mozo_pin_sub_title">Enter your security pin</string>
     <string name="mozo_pin_sub_title_restore">Enter your security pin\nto restore wallet</string>
+    <string name="mozo_pin_sub_title_send">Enter your security pin\nto send mozo</string>
     <string name="mozo_pin_content">Security PIN should be 6 di-git numbers</string>
     <string name="mozo_pin_confirm_sub_title">Confirm security pin</string>
     <string name="mozo_pin_confirm_content">Re-enter your PIN</string>
     <string name="mozo_pin_msg_create_success">Create Security PIN successful</string>
     <string name="mozo_pin_msg_enter_correct">Security PIN is correct</string>
-    <string name="mozo_pin_msg_enter_incorrect">You entered an incorrect PIN</string>
+    <string name="mozo_pin_msg_enter_incorrect">Incorrect PIN</string>
     <string name="mozo_pin_msg_error">Create Wallet failed</string>
 
-    <string name="mozo_transfer_title">Send Mozo Offchain</string>
+    <string name="mozo_transfer_title">Send Mozo</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>
     <string name="mozo_transfer_from">From Mozo Offchain Wallet</string>
     <string name="mozo_transfer_receiver_address">Receiver Address</string>
     <string name="mozo_transfer_receiver_address_hint">Enter receiver wallet address</string>
     <string name="mozo_transfer_receiver_address_error">Error: The Receiver Address is not valid.</string>
     <string name="mozo_transfer_amount">Amount</string>
-    <string name="mozo_transfer_amount_offchain">Amount (Mozo Offchain)</string>
     <string name="mozo_transfer_amount_hint">Input value in decimal format</string>
+    <string name="mozo_transfer_amount_error_not_enough">Error: Your spendable is not enough for this.</string>
+    <string name="mozo_transfer_amount_error_too_low">Error: Amount is too low, please input valid amount.</string>
     <string name="mozo_transfer_amount_error">Error: Please input value in decimal format.</string>
-    <string name="mozo_transfer_spendable">Spendable: %s Mozo (Offchain)</string>
+    <string name="mozo_transfer_spendable">Spendable: %s Mozo</string>
     <string name="mozo_transfer_send_complete">Your TX has been broadcast</string>
     <string name="mozo_transfer_send_complete_msg">TX Hash:</string>
 
-    <string name="mozo_transaction_detail_title">Transaction detail</string>
+    <string name="mozo_transaction_detail_title">Transaction Detail</string>
+    <string name="mozo_transaction_detail_wallet_address">Wallet Address</string>
+    <string name="mozo_transaction_view_button">View Transaction Detail</string>
     <string name="mozo_transaction_history_title">Transaction History</string>
     <string name="mozo_transaction_history_offchain_text">Mozo Offchain Wallet</string>
-    <string name="mozo_transaction_history_amount_text">%s %s Mozo</string>
 
     <string name="mozo_view_balance_title">Mozo Offchain Balance</string>
     <string name="mozo_view_address_title">Your Mozo Offchain Wallet Address</string>
     <string name="mozo_view_text_hint">…</string>
+    <string name="mozo_view_text_to">To</string>
     <string name="mozo_view_text_from">From</string>
-    <string name="mozo_view_text_search">Search</string>
     <string name="mozo_view_text_login_require_prefix">You must</string>
     <string name="mozo_view_text_login_require_btn"><u>Login</u></string>
     <string name="mozo_view_text_login_require_suffix">to use this function</string>

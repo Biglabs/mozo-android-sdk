@@ -1,0 +1,63 @@
+// publish to JCenter
+// ./gradlew clean build :mozo-sdk:bintrayUpload -PbintrayKey=xxxxx
+
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+def groupProjectId = 'com.biglabs'
+def artifactProjectId = 'mozo-sdk'
+def versionDecs = "MozoSDK v$mozo_sdk_version_name release: " + new Date()
+logger.quiet(versionDecs)
+
+publishing {
+    publications {
+        Production(MavenPublication) {
+            artifact("$buildDir/outputs/aar/mozo-sdk-release.aar")
+            groupId groupProjectId
+            artifactId artifactProjectId
+            version mozo_sdk_version_name
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+
+                // Iterate over the implementation dependencies (we don't want the test ones), adding a <dependency> node for each
+                configurations.implementation.allDependencies.each {
+                    // Ensure dependencies such as fileTree are not included in the pom.
+                    if (it.name != 'unspecified') {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('user') ? project.user : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('key') ? project.key : System.getenv('BINTRAY_API_KEY')
+    publications = ['Production']
+    dryRun = false //[Default: false] Whether to run this as dry-run, without deploying
+    publish = true //[Default: false] Whether version should be auto published after an upload
+    override = true //[Default: false] Whether to override version artifacts already published
+    pkg {
+        userOrg = 'mozocoin'
+        repo = 'MozoSDK'
+        name = 'mozo-sdk'
+        desc = "Mozo SDK for Android"
+        publicDownloadNumbers = true
+        licenses = ['Apache-2.0']
+        labels = ['MozoSDK', 'mozocoin.io']
+        vcsUrl = 'https://github.com/Biglabs/mozo-android-sdk.git'
+        githubRepo = 'Biglabs/mozo-android-sdk' //Optional Github repository
+        githubReleaseNotesFile = 'README.md' //Optional Github readme file
+        version {
+            name = mozo_sdk_version_name
+            desc = versionDecs
+            released = new Date()
+            vcsTag = "v${mozo_sdk_version_name}"
+        }
+    }
+}

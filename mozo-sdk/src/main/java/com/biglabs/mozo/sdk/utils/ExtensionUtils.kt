@@ -10,6 +10,7 @@ import android.support.annotation.IdRes
 import android.support.annotation.IntegerRes
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -77,7 +78,7 @@ internal fun Resources.dp2Px(value: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, displayMetrics)
 }
 
-internal fun String.logAsError(prefix: String? = null) {
+internal fun String?.logAsError(prefix: String? = null) {
     if (BuildConfig.DEBUG) {
         Log.e("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
     }
@@ -108,6 +109,7 @@ internal fun View.hideKeyboard(): Boolean {
 /**
  * Set an onclick listener
  */
+@Suppress("UNCHECKED_CAST")
 internal fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener { block(it as T) }
 
 internal inline fun <reified T : View> View.find(@IdRes id: Int): T? = findViewById(id) as? T
@@ -133,6 +135,12 @@ internal fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
             block(s)
         }
     })
+}
+
+internal fun SwipeRefreshLayout.mozoSetup() {
+    val offset = resources.getDimensionPixelSize(R.dimen.mozo_refresh_progress_offset)
+    setProgressViewOffset(true, progressViewStartOffset + offset, progressViewEndOffset + offset / 2)
+    setColorSchemeResources(R.color.mozo_color_primary)
 }
 
 fun BigDecimal.trailingZeros(scale: Int): BigDecimal {

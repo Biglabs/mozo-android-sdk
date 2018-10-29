@@ -23,32 +23,21 @@
         <attr name="buttonClose" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="WalletInfoView">
+    <declare-styleable name="MozoRecyclerView">
+        <attr name="lettersBarEnable" format="boolean" />
+        <attr name="lettersBarWidth" format="dimension" />
+        <attr name="lettersBarMarginTop" format="dimension" />
+        <attr name="lettersBarTextSize" format="dimension" />
+        <attr name="lettersBarTextColor" format="color" />
+        <attr name="lettersBarTextLineHeight" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="MozoWalletView">
         <attr name="viewMode" format="enum">
-            <enum name="addressAndBalance" value="0" />
+            <enum name="all" value="0" />
             <enum name="onlyAddress" value="1" />
             <enum name="onlyBalance" value="2" />
         </attr>
-        <attr name="showCopyButton" format="boolean" />
-        <attr name="showQRCodeButton" format="boolean" />
-        <attr name="showQRCodeThumbnail" format="boolean" />
-    </declare-styleable>
-
-    <declare-styleable name="FastScrollRecyclerView">
-        <attr name="setIndexTextSize" format="integer" />
-        <attr name="setIndexBarWidth" format="dimension" />
-        <attr name="setIndexBarMargin" format="dimension" />
-
-        <attr name="setPreviewPadding" format="dimension" />
-        <attr name="setPreviewTextSize" format="integer" />
-        <attr name="setPreviewColor" format="color" />
-        <attr name="setPreviewTextColor" format="color" />
-        <attr name="setPreviewTransparentValue" format="float" />
-        <attr name="setIndexBarCornerRadius" format="integer" />
-        <attr name="setIndexBarTransparentValue" format="float" />
-        <attr name="setIndexBarColor" format="color" />
-        <attr name="setIndexBarTextColor" format="color" />
-        <attr name="setIndexBarHighlightTextColor" format="string" />
-        <attr name="setIndexBarHighlightTextColorRes" format="color" />
+        <attr name="showQRCode" format="boolean" />
     </declare-styleable>
 </resources>
