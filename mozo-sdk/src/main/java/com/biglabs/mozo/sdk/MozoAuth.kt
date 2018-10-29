@@ -1,5 +1,6 @@
 package com.biglabs.mozo.sdk
 
+import android.content.Context
 import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.authentication.AuthenticationListener
 import com.biglabs.mozo.sdk.authentication.MozoAuthActivity
@@ -14,7 +15,6 @@ import com.biglabs.mozo.sdk.utils.logAsError
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
-import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -24,7 +24,6 @@ import java.util.*
 class MozoAuth private constructor() {
 
     private val mozoDB: MozoDatabase by lazy { MozoDatabase.getInstance(MozoSDK.context!!) }
-    private val mozoService: MozoService by lazy { MozoService.getInstance(MozoSDK.context!!) }
     private val walletService: WalletService by lazy { WalletService.getInstance() }
 
     private val authStateManager: AuthStateManager by lazy { AuthStateManager.getInstance(MozoSDK.context!!) }
@@ -63,12 +62,7 @@ class MozoAuth private constructor() {
                 launch {
                     mozoDB.userInfo().delete()
 
-                    val currentState = authStateManager.current
-                    val clearedState = AuthState(currentState.authorizationServiceConfiguration!!)
-                    if (currentState.lastRegistrationResponse != null) {
-                        clearedState.update(currentState.lastRegistrationResponse)
-                    }
-                    authStateManager.replace(clearedState)
+                    authStateManager.clearSession()
                 }
             }
         }
@@ -107,8 +101,8 @@ class MozoAuth private constructor() {
         mAuthListener?.onChanged(auth.isSignedIn)
     }
 
-    internal fun syncProfile(retryCallback: () -> Unit) = async {
-        val response = mozoService.fetchProfile(retryCallback).await()
+    internal fun syncProfile(context: Context, retryCallback: () -> Unit) = async {
+        val response = MozoService.getInstance(context).fetchProfile(retryCallback).await()
 //                if (response.code() == 401) {
 //                    signOut()
 //                    return@launch
@@ -121,10 +115,12 @@ class MozoAuth private constructor() {
 
             /* update local profile to match with server profile */
             mozoDB.profile().save(response)
+
+            "syncProfile OK".logAsError()
         } else {
             // TODO handle fetch profile error
         }
-        "syncProfile OK".logAsError()
+        return@async response
     }
 
     private fun doRefreshToken() {
