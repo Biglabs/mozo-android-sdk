@@ -2,6 +2,7 @@ package com.biglabs.mozo.sdk.ui.dialog
 
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.annotation.IntDef
 import com.biglabs.mozo.sdk.R
@@ -40,6 +41,11 @@ internal class ErrorDialog(context: Context, private val argument: Bundle, priva
         instance = null
     }
 
+    override fun onStop() {
+        super.onStop()
+        instance = null
+    }
+
     companion object {
         @Retention(AnnotationRetention.SOURCE)
         @IntDef(TYPE_GENERAL, TYPE_NETWORK)
@@ -73,6 +79,14 @@ internal class ErrorDialog(context: Context, private val argument: Bundle, priva
                 instance = ErrorDialog(this, bundle, onTryAgain)
                 instance!!.show()
             }
+        }
+
+        fun onDismiss(callback: DialogInterface.OnDismissListener) {
+            instance?.setOnDismissListener(callback)
+        }
+
+        fun onCancel(callback: DialogInterface.OnCancelListener) {
+            instance?.setOnCancelListener(callback)
         }
     }
 }
