@@ -127,6 +127,16 @@ public class AuthStateManager {
     }
 
     @AnyThread
+    public void clearSession() {
+        AuthState currentState = getCurrent();
+        AuthState clearedState = new AuthState(currentState.getAuthorizationServiceConfiguration());
+        if (currentState.getLastRegistrationResponse() != null) {
+            clearedState.update(currentState.getLastRegistrationResponse());
+        }
+        replace(clearedState);
+    }
+
+    @AnyThread
     @NonNull
     private AuthState readState() {
         mPrefsLock.lock();
