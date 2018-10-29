@@ -79,7 +79,8 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="net.openid.appauth.RedirectUriReceiverActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:node="replace">
             <intent-filter tools:node="removeAll" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

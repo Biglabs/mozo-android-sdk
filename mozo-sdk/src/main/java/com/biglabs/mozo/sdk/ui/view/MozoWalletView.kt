@@ -168,7 +168,7 @@ class MozoWalletView : ConstraintLayout {
         textBalanceView?.text = mBalance
         textCurrencyBalanceView?.text = mBalanceRate
 
-        if (mShowQRCode && mAddress != null) {
+        if (mShowQRCode && !mAddress.isNullOrEmpty()) {
             imageAddressQRView?.apply {
                 generateQRJob = getQRImage()
                 visible()

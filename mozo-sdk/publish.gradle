@@ -57,7 +57,7 @@ bintray {
             name = mozo_sdk_version_name
             desc = versionDecs
             released = new Date()
-            vcsTag = "v${mozo_sdk_version_name}"
+            vcsTag = "${mozo_sdk_version_name}"
         }
     }
 }
