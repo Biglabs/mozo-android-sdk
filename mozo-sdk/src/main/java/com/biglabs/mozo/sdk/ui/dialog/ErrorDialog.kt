@@ -36,14 +36,21 @@ internal class ErrorDialog(context: Context, private val argument: Bundle, priva
         }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        instance = null
+    override fun cancel() {
+        super.cancel()
+        cancelCallback?.onCancel(this)
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        dismissCallback?.onDismiss(this)
     }
 
     override fun onStop() {
         super.onStop()
         instance = null
+        cancelCallback = null
+        dismissCallback = null
     }
 
     companion object {
@@ -55,8 +62,15 @@ internal class ErrorDialog(context: Context, private val argument: Bundle, priva
         const val TYPE_NETWORK = 1
 
         private const val ERROR_TYPE = "ERROR_TYPE"
+
         @Volatile
         private var instance: ErrorDialog? = null
+
+        @Volatile
+        private var dismissCallback: DialogInterface.OnDismissListener? = null
+
+        @Volatile
+        private var cancelCallback: DialogInterface.OnCancelListener? = null
 
         fun generalError(context: Context?, onTryAgain: (() -> Unit)? = null) {
             show(context, TYPE_GENERAL, onTryAgain)
@@ -82,11 +96,11 @@ internal class ErrorDialog(context: Context, private val argument: Bundle, priva
         }
 
         fun onDismiss(callback: DialogInterface.OnDismissListener) {
-            instance?.setOnDismissListener(callback)
+            dismissCallback = callback
         }
 
         fun onCancel(callback: DialogInterface.OnCancelListener) {
-            instance?.setOnCancelListener(callback)
+            cancelCallback = callback
         }
     }
 }
