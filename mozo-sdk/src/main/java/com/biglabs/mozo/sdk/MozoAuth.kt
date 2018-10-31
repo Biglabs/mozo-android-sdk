@@ -103,9 +103,6 @@ class MozoAuth private constructor() {
 
     internal fun syncProfile(context: Context, retryCallback: () -> Unit) = async {
         val response = MozoService.getInstance(context).fetchProfile(retryCallback).await()
-//                if (response.code() == 401) {
-//                    signOut()
-//                    return@launch
         if (response != null) {
 
             /* save User info first */

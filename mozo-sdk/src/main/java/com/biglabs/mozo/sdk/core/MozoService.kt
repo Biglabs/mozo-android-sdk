@@ -2,6 +2,7 @@ package com.biglabs.mozo.sdk.core
 
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
+import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.authentication.MozoAuthActivity
 import com.biglabs.mozo.sdk.common.Constant
@@ -12,8 +13,10 @@ import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
@@ -21,9 +24,16 @@ import java.util.concurrent.TimeUnit
 
 internal class MozoService private constructor(val context: Context) {
 
-    private fun handleError(ex: Exception? = null, onTryAgain: (() -> Unit)? = null) = async(UI) {
+    private fun <T> handleError(response: Response<T>? = null, exception: Exception? = null, onTryAgain: (() -> Unit)? = null, skipCodes: Array<Int> = emptyArray()) = launch(UI) {
+        if (response?.body() != null || skipCodes.contains(response?.code() ?: 0)) return@launch
+
+        if (response?.code() == 401 /* The access token has expired */) {
+            MozoAuth.getInstance().signOut()
+            return@launch
+        }
+
         if (context is BaseActivity || context is MozoAuthActivity) {
-            if (ex != null && ex is IOException) {
+            if (exception != null && exception is IOException) {
                 ErrorDialog.networkError(context, onTryAgain)
             } else {
                 ErrorDialog.generalError(context, onTryAgain)
@@ -32,43 +42,39 @@ internal class MozoService private constructor(val context: Context) {
     }
 
     fun getContacts(onTryAgain: (() -> Unit)? = null) = async {
-        return@async try {
-            val response = mAPIs?.getContacts()?.await()
-            if (response?.body() == null) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response?.body()
-        } catch (e: Exception) {
-            handleError(e, onTryAgain)
+        var response: Response<List<Models.Contact>>? = null
+        val ex = try {
+            response = mAPIs?.getContacts()?.await()
             null
+        } catch (e: Exception) {
+            e
         }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body()
     }
 
     fun saveContact(contact: Models.Contact, errorCodeForSkipHandle: Array<Int> = emptyArray(), onTryAgain: () -> Unit) = async {
-        return@async try {
-            val response = mAPIs?.saveContact(contact)?.await()
-            if (response?.body() == null &&
-                    !errorCodeForSkipHandle.contains(response?.code() ?: 0)) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response
-        } catch (e: Exception) {
-            handleError(e, onTryAgain)
+        var response: Response<Models.Contact>? = null
+        val ex = try {
+            response = mAPIs?.saveContact(contact)?.await()
             null
+        } catch (e: Exception) {
+            e
         }
+        handleError(response, ex, onTryAgain, errorCodeForSkipHandle)
+        return@async response
     }
 
     fun fetchProfile(onTryAgain: () -> Unit) = async {
-        return@async try {
-            val response = mAPIs?.fetchProfile()?.await()
-            if (response?.body() == null) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response?.body()
-        } catch (e: Exception) {
-            handleError(e, onTryAgain)
+        var response: Response<Models.Profile>? = null
+        val ex = try {
+            response = mAPIs?.fetchProfile()?.await()
             null
+        } catch (e: Exception) {
+            e
         }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body()
     }
 
 //    fun saveExchangeInfo(exchangeInfo: Models.Profile): Deferred<Response<Models.Profile>> {
@@ -78,94 +84,87 @@ internal class MozoService private constructor(val context: Context) {
 //    }
 
     fun saveWallet(walletInfo: Models.WalletInfo, onTryAgain: () -> Unit) = async {
-        return@async try {
-            val response = mAPIs?.saveWallet(walletInfo)?.await()
-            if (response?.body() == null) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response?.body()
-        } catch (e: Exception) {
-            handleError(e, onTryAgain)
+        var response: Response<Models.Profile>? = null
+        val ex = try {
+            response = mAPIs?.saveWallet(walletInfo)?.await()
             null
+        } catch (e: Exception) {
+            e
         }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body()
     }
 
     fun getBalance(address: String, onTryAgain: (() -> Unit)?) = async {
-        return@async try {
-            val response = mAPIs?.getBalance(address)?.await()
-            if (response?.body() == null) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response?.body()
-        } catch (e: Exception) {
-            handleError(e, onTryAgain)
+        var response: Response<Models.BalanceInfo>? = null
+        val ex = try {
+            response = mAPIs?.getBalance(address)?.await()
             null
+        } catch (e: Exception) {
+            e
         }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body()
     }
 
     fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO, onTryAgain: (() -> Unit)?) = async {
-        return@async try {
-            val response = mAPIs?.getExchangeRate(currency, symbol)?.await()
-            if (response?.body() == null) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response?.body()
+        var response: Response<Models.ExchangeRate>? = null
+        val ex = try {
+            response = mAPIs?.getExchangeRate(currency, symbol)?.await()
+            null
         } catch (e: Exception) {
-            handleError(e, onTryAgain)
-            Models.ExchangeRate(0.0)
+            e
         }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body() ?: Models.ExchangeRate(0.0)
     }
 
     fun createTransaction(request: Models.TransactionRequest, onTryAgain: (() -> Unit)?) = async {
-        return@async try {
-            val response = mAPIs?.createTransaction(request)?.await()
-            if (response?.body() == null) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response?.body()
-        } catch (e: Exception) {
-            handleError(e, onTryAgain)
+        var response: Response<Models.TransactionResponse>? = null
+        val ex = try {
+            response = mAPIs?.createTransaction(request)?.await()
             null
+        } catch (e: Exception) {
+            e
         }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body()
     }
 
     fun sendTransaction(request: Models.TransactionResponse, onTryAgain: (() -> Unit)?) = async {
-        try {
-            val response = mAPIs?.sendTransaction(request)?.await()
-            if (response?.body() == null) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response?.body()
-        } catch (e: Exception) {
-            handleError(e, onTryAgain)
+        var response: Response<Models.TransactionResponse>? = null
+        val ex = try {
+            response = mAPIs?.sendTransaction(request)?.await()
             null
+        } catch (e: Exception) {
+            e
         }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body()
     }
 
     fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, onTryAgain: (() -> Unit)?) = async {
-        return@async try {
-            val response = mAPIs?.getTransactionHistory(address, page, size)?.await()
-            if (response?.body() == null) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response?.body()
+        var response: Response<List<Models.TransactionHistory>>? = null
+        val ex = try {
+            response = mAPIs?.getTransactionHistory(address, page, size)?.await()
+            null
         } catch (e: Exception) {
-            handleError(e, onTryAgain)
-            emptyList<Models.TransactionHistory>()
+            e
         }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body() ?: emptyList()
     }
 
     fun getTransactionStatus(txHash: String, onTryAgain: (() -> Unit)?) = async {
-        return@async try {
-            val response = mAPIs?.getTransactionStatus(txHash)?.await()
-            if (response?.body() == null) {
-                handleError(onTryAgain = onTryAgain)
-            }
-            response?.body()
-        } catch (e: Exception) {
-            handleError(e, onTryAgain)
+        var response: Response<Models.TransactionStatus>? = null
+        val ex = try {
+            response = mAPIs?.getTransactionStatus(txHash)?.await()
             null
+        } catch (e: Exception) {
+            e
         }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body()
     }
 
     companion object {

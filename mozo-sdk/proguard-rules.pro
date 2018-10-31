@@ -26,6 +26,8 @@
 -dontwarn javax.annotation.**
 -dontwarn retrofit2.Platform$Java8
 -dontwarn kotlin.**
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }

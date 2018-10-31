@@ -305,9 +305,6 @@ internal class TransactionFormActivity : BaseActivity() {
             }
 
             updateTxStatusJob = updateTxStatus()
-        } else {
-            // TODO show send Tx failed UI
-            "send Tx failed UI".logAsError()
         }
     }
 

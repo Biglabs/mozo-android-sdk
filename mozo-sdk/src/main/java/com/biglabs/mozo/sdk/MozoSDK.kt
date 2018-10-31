@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.core.MozoSocketClient
 import com.biglabs.mozo.sdk.core.WalletService
+import com.biglabs.mozo.sdk.utils.PermissionUtils
 
 class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewModel, val contactViewModel: ViewModels.ContactViewModel) {
 
@@ -41,6 +42,8 @@ class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewMo
         /* register network changes */
         val networkRequest = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+
+        PermissionUtils.requestLocationPermission(context!!)
     }
 
     companion object {
