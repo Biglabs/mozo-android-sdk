@@ -20,9 +20,10 @@ import com.biglabs.mozo.sdk.utils.gone
 import com.biglabs.mozo.sdk.utils.visible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_history.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -102,14 +103,14 @@ internal class TransactionHistoryRecyclerAdapter(
 
     fun filter(@FilterMode mode: Int) {
         stopFilter()
-        dataFilterJob = launch {
+        dataFilterJob = GlobalScope.launch {
             dataFilter = when (mode) {
-                FILTER_RECEIVED -> histories.filter { it.type(address) == false }
-                FILTER_SENT -> histories.filter { it.type(address) == true }
+                FILTER_RECEIVED -> histories.filter { !it.type(address) }
+                FILTER_SENT -> histories.filter { it.type(address) }
                 else -> null
             }
 
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 dataFilterJob = null
                 notifyDataSetChanged()
             }

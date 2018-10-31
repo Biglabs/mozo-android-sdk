@@ -6,9 +6,9 @@ import android.content.Context
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.utils.displayString
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.util.*
 
@@ -30,33 +30,37 @@ internal object ViewModels {
 
         val balanceAndRateLiveData = MutableLiveData<BalanceAndRate>()
 
-        fun fetchData(context: Context) = async {
+        fun fetchData(context: Context) = GlobalScope.launch {
             val profile = MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 profileLiveData.value = profile
                 fetchBalance(context)
             }
         }
 
-        fun fetchBalance(context: Context) = async {
-            profileLiveData.value?.walletInfo?.offchainAddress?.run {
-                val balanceInfo = MozoService.getInstance(context).getBalance(this) {
-                    fetchBalance(context)
-                }.await()
-                launch(UI) {
-                    balanceInfoLiveData.value = balanceInfo
-                    fetchExchangeRate(context)
+        fun fetchBalance(context: Context) {
+            GlobalScope.launch {
+                profileLiveData.value?.walletInfo?.offchainAddress?.run {
+                    val balanceInfo = MozoService.getInstance(context).getBalance(this) {
+                        fetchBalance(context)
+                    }.await()
+                    launch(Dispatchers.Main) {
+                        balanceInfoLiveData.value = balanceInfo
+                        fetchExchangeRate(context)
+                    }
                 }
             }
         }
 
-        fun fetchExchangeRate(context: Context) = async {
-            val rate = MozoService.getInstance(context).getExchangeRate(Constant.CURRENCY_KOREA) {
-                fetchExchangeRate(context)
-            }.await()
-            launch(UI) {
-                exchangeRateLiveData.value = rate
-                updateBalanceAndRate()
+        fun fetchExchangeRate(context: Context) {
+            GlobalScope.launch {
+                val rate = MozoService.getInstance(context).getExchangeRate(Constant.CURRENCY_KOREA) {
+                    fetchExchangeRate(context)
+                }.await()
+                launch(Dispatchers.Main) {
+                    exchangeRateLiveData.value = rate
+                    updateBalanceAndRate()
+                }
             }
         }
 
@@ -73,7 +77,7 @@ internal object ViewModels {
             )
         }
 
-        fun clear() = launch(UI) {
+        fun clear() = GlobalScope.launch(Dispatchers.Main) {
             profileLiveData.value = null
             balanceInfoLiveData.value = null
         }
@@ -82,11 +86,13 @@ internal object ViewModels {
     class ContactViewModel : ViewModel() {
         val contactsLiveData = MutableLiveData<List<Models.Contact>>()
 
-        fun fetchData(context: Context) = async {
-            val response = MozoService.getInstance(context).getContacts { fetchData(context) }.await()
-            response?.let { contactsResponse ->
-                launch(UI) {
-                    contactsLiveData.value = (contactsResponse.sortedBy { it.name })
+        fun fetchData(context: Context) {
+            GlobalScope.launch {
+                val response = MozoService.getInstance(context).getContacts { fetchData(context) }.await()
+                response?.let { contactsResponse ->
+                    launch(Dispatchers.Main) {
+                        contactsLiveData.value = (contactsResponse.sortedBy { it.name })
+                    }
                 }
             }
         }

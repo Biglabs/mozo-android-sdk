@@ -15,9 +15,10 @@ import com.biglabs.mozo.sdk.utils.displayString
 import com.biglabs.mozo.sdk.utils.gone
 import com.biglabs.mozo.sdk.utils.visible
 import kotlinx.android.synthetic.main.view_transaction_details.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -108,9 +109,9 @@ internal class TransactionDetails : BaseActivity() {
 
     private fun displayContact() {
         findContactJob?.cancel()
-        findContactJob = launch {
+        findContactJob = GlobalScope.launch {
             val contact = MozoSDK.getInstance().contactViewModel.findByAddress(targetAddress)
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 if (contact != null) {
                     text_detail_receiver_user_name.text = contact.name
                     visible(arrayOf(

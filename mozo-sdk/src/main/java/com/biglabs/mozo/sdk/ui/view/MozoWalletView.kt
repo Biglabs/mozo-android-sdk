@@ -15,9 +15,10 @@ import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MozoWalletView : ConstraintLayout {
 
@@ -184,9 +185,9 @@ class MozoWalletView : ConstraintLayout {
         }
     }
 
-    private fun getQRImage() = launch {
+    private fun getQRImage() = GlobalScope.launch {
         val qrImage = Support.generateQRCode(mAddress!!, sizeOfQRImage)
-        launch(UI) {
+        launch(Dispatchers.Main) {
             imageAddressQRView?.setImageBitmap(qrImage)
         }
         generateQRJob = null

@@ -8,7 +8,8 @@ import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.utils.CryptoUtils
 import com.biglabs.mozo.sdk.utils.PreferenceUtils
 import com.biglabs.mozo.sdk.utils.logAsError
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.web3j.crypto.Credentials
@@ -31,7 +32,7 @@ internal class WalletService private constructor() {
         getAddress()
     }
 
-    fun initWallet(context: Context) = async {
+    fun initWallet(context: Context) = GlobalScope.async {
         getAddress().await()
         profile?.run {
             if (walletInfo == null || walletInfo!!.encryptSeedPhrase.isNullOrEmpty()) {
@@ -62,7 +63,7 @@ internal class WalletService private constructor() {
         return@async 0
     }
 
-    internal fun executeSaveWallet(pin: String, context: Context, retry: () -> Unit) = async {
+    internal fun executeSaveWallet(pin: String, context: Context, retry: () -> Unit) = GlobalScope.async {
         getAddress().await()
         profile?.let {
             it.walletInfo = Models.WalletInfo().apply {
@@ -85,7 +86,7 @@ internal class WalletService private constructor() {
         return@async true
     }
 
-    private fun syncWalletInfo(walletInfo: Models.WalletInfo, context: Context, retry: () -> Unit) = async {
+    private fun syncWalletInfo(walletInfo: Models.WalletInfo, context: Context, retry: () -> Unit) = GlobalScope.async {
         val response = MozoService.getInstance(context).saveWallet(walletInfo, retry).await()
         val success = response != null
         PreferenceUtils.getInstance(context).setFlag(
@@ -96,7 +97,7 @@ internal class WalletService private constructor() {
         return@async success
     }
 
-    fun validatePin(pin: String) = async {
+    fun validatePin(pin: String) = GlobalScope.async {
         getAddress().await()
         profile?.walletInfo?.run {
             if (encryptSeedPhrase.isNullOrEmpty() || pin.isEmpty()) return@async false
@@ -133,7 +134,7 @@ internal class WalletService private constructor() {
     }
 
     @Synchronized
-    fun getAddress() = async {
+    fun getAddress() = GlobalScope.async {
         if (profile == null) {
             profile = mozoDB.profile().getCurrentUserProfile()
             address = profile?.walletInfo?.offchainAddress
@@ -144,7 +145,7 @@ internal class WalletService private constructor() {
 
     internal fun getSeed() = this.seed
 
-    internal fun getPrivateKeyEncrypted() = async {
+    internal fun getPrivateKeyEncrypted() = GlobalScope.async {
         if (privateKeyEncrypted == null) {
             getAddress().await()
             privateKeyEncrypted = profile?.walletInfo?.privateKey

@@ -10,10 +10,11 @@ import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.MozoAPIs
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit
 
 internal class MozoService private constructor(val context: Context) {
 
-    private fun <T> handleError(response: Response<T>? = null, exception: Exception? = null, onTryAgain: (() -> Unit)? = null, skipCodes: Array<Int> = emptyArray()) = launch(UI) {
+    private fun <T> handleError(response: Response<T>? = null, exception: Exception? = null, onTryAgain: (() -> Unit)? = null, skipCodes: Array<Int> = emptyArray()) = GlobalScope.launch(Dispatchers.Main) {
         if (response?.body() != null || skipCodes.contains(response?.code() ?: 0)) return@launch
 
         if (response?.code() == 401 /* The access token has expired */) {
@@ -41,7 +42,7 @@ internal class MozoService private constructor(val context: Context) {
         }
     }
 
-    fun getContacts(onTryAgain: (() -> Unit)? = null) = async {
+    fun getContacts(onTryAgain: (() -> Unit)? = null) = GlobalScope.async {
         var response: Response<List<Models.Contact>>? = null
         val ex = try {
             response = mAPIs?.getContacts()?.await()
@@ -53,7 +54,7 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body()
     }
 
-    fun saveContact(contact: Models.Contact, errorCodeForSkipHandle: Array<Int> = emptyArray(), onTryAgain: () -> Unit) = async {
+    fun saveContact(contact: Models.Contact, errorCodeForSkipHandle: Array<Int> = emptyArray(), onTryAgain: () -> Unit) = GlobalScope.async {
         var response: Response<Models.Contact>? = null
         val ex = try {
             response = mAPIs?.saveContact(contact)?.await()
@@ -65,7 +66,7 @@ internal class MozoService private constructor(val context: Context) {
         return@async response
     }
 
-    fun fetchProfile(onTryAgain: () -> Unit) = async {
+    fun fetchProfile(onTryAgain: () -> Unit) = GlobalScope.async {
         var response: Response<Models.Profile>? = null
         val ex = try {
             response = mAPIs?.fetchProfile()?.await()
@@ -83,7 +84,7 @@ internal class MozoService private constructor(val context: Context) {
 //    fun saveSettings(notificationThreshold: Int): Deferred<Response<Models.Profile>> {
 //    }
 
-    fun saveWallet(walletInfo: Models.WalletInfo, onTryAgain: () -> Unit) = async {
+    fun saveWallet(walletInfo: Models.WalletInfo, onTryAgain: () -> Unit) = GlobalScope.async {
         var response: Response<Models.Profile>? = null
         val ex = try {
             response = mAPIs?.saveWallet(walletInfo)?.await()
@@ -95,7 +96,7 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body()
     }
 
-    fun getBalance(address: String, onTryAgain: (() -> Unit)?) = async {
+    fun getBalance(address: String, onTryAgain: (() -> Unit)?) = GlobalScope.async {
         var response: Response<Models.BalanceInfo>? = null
         val ex = try {
             response = mAPIs?.getBalance(address)?.await()
@@ -107,7 +108,7 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body()
     }
 
-    fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO, onTryAgain: (() -> Unit)?) = async {
+    fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO, onTryAgain: (() -> Unit)?) = GlobalScope.async {
         var response: Response<Models.ExchangeRate>? = null
         val ex = try {
             response = mAPIs?.getExchangeRate(currency, symbol)?.await()
@@ -119,7 +120,7 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body() ?: Models.ExchangeRate(0.0)
     }
 
-    fun createTransaction(request: Models.TransactionRequest, onTryAgain: (() -> Unit)?) = async {
+    fun createTransaction(request: Models.TransactionRequest, onTryAgain: (() -> Unit)?) = GlobalScope.async {
         var response: Response<Models.TransactionResponse>? = null
         val ex = try {
             response = mAPIs?.createTransaction(request)?.await()
@@ -131,7 +132,7 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body()
     }
 
-    fun sendTransaction(request: Models.TransactionResponse, onTryAgain: (() -> Unit)?) = async {
+    fun sendTransaction(request: Models.TransactionResponse, onTryAgain: (() -> Unit)?) = GlobalScope.async {
         var response: Response<Models.TransactionResponse>? = null
         val ex = try {
             response = mAPIs?.sendTransaction(request)?.await()
@@ -143,7 +144,7 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body()
     }
 
-    fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, onTryAgain: (() -> Unit)?) = async {
+    fun getTransactionHistory(address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, onTryAgain: (() -> Unit)?) = GlobalScope.async {
         var response: Response<List<Models.TransactionHistory>>? = null
         val ex = try {
             response = mAPIs?.getTransactionHistory(address, page, size)?.await()
@@ -155,7 +156,7 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body() ?: emptyList()
     }
 
-    fun getTransactionStatus(txHash: String, onTryAgain: (() -> Unit)?) = async {
+    fun getTransactionStatus(txHash: String, onTryAgain: (() -> Unit)?) = GlobalScope.async {
         var response: Response<Models.TransactionStatus>? = null
         val ex = try {
             response = mAPIs?.getTransactionStatus(txHash)?.await()

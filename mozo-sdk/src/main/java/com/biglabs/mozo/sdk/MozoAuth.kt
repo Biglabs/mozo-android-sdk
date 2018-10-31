@@ -12,9 +12,10 @@ import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.core.MozoSocketClient
 import com.biglabs.mozo.sdk.core.WalletService
 import com.biglabs.mozo.sdk.utils.logAsError
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -32,7 +33,7 @@ class MozoAuth private constructor() {
     private var mAuthListener: AuthenticationListener? = null
 
     init {
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
         }
     }
@@ -59,7 +60,7 @@ class MozoAuth private constructor() {
 
                 onAuthorizeChanged(MessageEvent.Auth(false))
 
-                launch {
+                GlobalScope.launch {
                     mozoDB.userInfo().delete()
 
                     authStateManager.clearSession()
@@ -101,7 +102,7 @@ class MozoAuth private constructor() {
         mAuthListener?.onChanged(auth.isSignedIn)
     }
 
-    internal fun syncProfile(context: Context, retryCallback: () -> Unit) = async {
+    internal fun syncProfile(context: Context, retryCallback: () -> Unit) = GlobalScope.async {
         val response = MozoService.getInstance(context).fetchProfile(retryCallback).await()
         if (response != null) {
 

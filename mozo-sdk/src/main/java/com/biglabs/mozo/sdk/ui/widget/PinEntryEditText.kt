@@ -38,8 +38,9 @@ import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.InputMethodManager
 import com.biglabs.mozo.sdk.R
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 internal class PinEntryEditText : AppCompatEditText {
@@ -506,9 +507,7 @@ internal class PinEntryEditText : AppCompatEditText {
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             onBackPress?.let {
-                launch(UI) {
-                    it()
-                }
+                GlobalScope.launch(Dispatchers.Main) { it() }
             }
             return true
         }

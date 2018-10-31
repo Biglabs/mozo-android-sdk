@@ -15,10 +15,7 @@ import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.view_address_book.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.*
 
 internal class AddressBookActivity : BaseActivity() {
 
@@ -120,7 +117,7 @@ internal class AddressBookActivity : BaseActivity() {
 
     private fun searchByName(name: String) {
         searchJob?.cancel()
-        searchJob = launch {
+        searchJob = GlobalScope.launch {
 
             delay(250)
 
@@ -128,7 +125,7 @@ internal class AddressBookActivity : BaseActivity() {
             contacts.addAll(contactsBackup.filter {
                 (it.name ?: "").contains(name, ignoreCase = true)
             })
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 if (contacts.isEmpty()) view_empty_state.visible() else view_empty_state.gone()
                 mAdapter.notifyData(name.isNotEmpty())
             }

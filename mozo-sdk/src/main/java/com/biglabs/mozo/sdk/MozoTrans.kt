@@ -3,14 +3,15 @@ package com.biglabs.mozo.sdk
 import android.arch.lifecycle.Observer
 import android.content.Context
 import com.biglabs.mozo.sdk.common.Models
-import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.common.ViewModels
+import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.core.WalletService
 import com.biglabs.mozo.sdk.transaction.TransactionFormActivity
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 import com.biglabs.mozo.sdk.utils.CryptoUtils
 import com.biglabs.mozo.sdk.utils.logAsError
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.Sign
 import org.web3j.utils.Numeric
@@ -39,7 +40,7 @@ class MozoTrans private constructor() {
         TransactionHistoryActivity.start(MozoSDK.context!!)
     }
 
-    internal fun createTransaction(context: Context, output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = async {
+    internal fun createTransaction(context: Context, output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = GlobalScope.async {
         val myAddress = WalletService.getInstance().getAddress().await() ?: return@async null
         val response = MozoService
                 .getInstance(context)
@@ -71,7 +72,7 @@ class MozoTrans private constructor() {
         }
     }
 
-    internal fun sendTransaction(context: Context, request: Models.TransactionResponse, callback: () -> Unit) = async {
+    internal fun sendTransaction(context: Context, request: Models.TransactionResponse, callback: () -> Unit) = GlobalScope.async {
         return@async MozoService
                 .getInstance(context)
                 .sendTransaction(request, callback)

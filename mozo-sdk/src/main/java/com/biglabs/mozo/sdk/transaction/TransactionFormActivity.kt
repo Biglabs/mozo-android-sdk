@@ -25,11 +25,7 @@ import com.biglabs.mozo.sdk.utils.*
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.view_transaction_form.*
 import kotlinx.android.synthetic.main.view_transaction_sent.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.*
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
 import java.util.*
@@ -103,7 +99,7 @@ internal class TransactionFormActivity : BaseActivity() {
         if (pin == null) return
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         val amount = output_amount.text.toString()
-        launch {
+        GlobalScope.launch {
             showLoading()
             val txResponse = MozoTrans.getInstance()
                     .createTransaction(this@TransactionFormActivity, address, amount, pin) {
@@ -150,11 +146,11 @@ internal class TransactionFormActivity : BaseActivity() {
                     return@run
                 }
                 if (this.startsWith(".")) {
-                    output_amount.setText("0$this")
+                    output_amount.setText(String.format(Locale.US, "0%s", this))
                     output_amount.setSelection(this.length + 1)
                     return@run
                 }
-                launch(UI) {
+                GlobalScope.launch(Dispatchers.Main) {
                     val amount = BigDecimal(this@run)
                     val rate = String.format(Locale.US, "₩%s", amount.multiply(currentRate).displayString())
                     output_amount_rate.text = rate
@@ -281,7 +277,7 @@ internal class TransactionFormActivity : BaseActivity() {
         button_submit.setText(R.string.mozo_button_send)
     }
 
-    private fun showResultUI(txResponse: Models.TransactionResponse?) = async(UI) {
+    private fun showResultUI(txResponse: Models.TransactionResponse?) = GlobalScope.launch(Dispatchers.Main) {
         if (txResponse != null) {
             setContentView(R.layout.view_transaction_sent)
             button_close_transfer.click { finishAndRemoveTask() }
@@ -304,45 +300,48 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
 
-            updateTxStatusJob = updateTxStatus()
+            updateTxStatus()
         }
     }
 
-    private fun updateTxStatus() = async {
-        var pendingStatus = true
-        while (pendingStatus) {
+    private fun updateTxStatus() {
+        updateTxStatusJob?.cancel()
+        updateTxStatusJob = GlobalScope.launch {
+            var pendingStatus = true
+            while (pendingStatus) {
 
-            val txStatus = MozoTrans.getInstance().getTransactionStatus(
-                    this@TransactionFormActivity,
-                    history.txHash ?: ""
-            ) {
-                updateTxStatus()
-            }.await() ?: break
+                val txStatus = MozoTrans.getInstance().getTransactionStatus(
+                        this@TransactionFormActivity,
+                        history.txHash ?: ""
+                ) {
+                    updateTxStatus()
+                }.await() ?: break
 
-            launch(UI) {
-                when {
-                    txStatus.isSuccess() -> {
-                        text_tx_status_icon.setImageResource(R.drawable.ic_check_green)
-                        text_tx_status_label.setText(R.string.mozo_view_text_tx_success)
-                        button_transaction_detail.visible()
-                        pendingStatus = false
-                        updateTxStatusJob = null
+                launch(Dispatchers.Main) {
+                    when {
+                        txStatus.isSuccess() -> {
+                            text_tx_status_icon.setImageResource(R.drawable.ic_check_green)
+                            text_tx_status_label.setText(R.string.mozo_view_text_tx_success)
+                            button_transaction_detail.visible()
+                            pendingStatus = false
+                            updateTxStatusJob = null
+                        }
+                        txStatus.isFailed() -> {
+                            text_tx_status_icon.setImageResource(R.drawable.ic_error)
+                            text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
+                            pendingStatus = false
+                            updateTxStatusJob = null
+                        }
                     }
-                    txStatus.isFailed() -> {
-                        text_tx_status_icon.setImageResource(R.drawable.ic_error)
-                        text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
-                        pendingStatus = false
-                        updateTxStatusJob = null
+
+                    if (!pendingStatus) {
+                        text_tx_status_loading.gone()
+                        text_tx_status_icon.visible()
                     }
                 }
 
-                if (!pendingStatus) {
-                    text_tx_status_loading.gone()
-                    text_tx_status_icon.visible()
-                }
+                delay(1500)
             }
-
-            delay(1500)
         }
     }
 
@@ -350,11 +349,11 @@ internal class TransactionFormActivity : BaseActivity() {
         button_submit.isEnabled = (selectedContact != null || output_receiver_address.length() > 0) && output_amount.length() > 0
     }
 
-    private fun showLoading() = async(UI) {
+    private fun showLoading() = GlobalScope.launch(Dispatchers.Main) {
         loading_container.visible()
     }
 
-    private fun hideLoading() = async(UI) {
+    private fun hideLoading() = GlobalScope.launch(Dispatchers.Main) {
         loading_container.gone()
     }
 

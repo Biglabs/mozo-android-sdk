@@ -32,12 +32,6 @@ androidExtensions {
     experimental = true
 }
 
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}
-
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     // Android support
@@ -54,7 +48,7 @@ dependencies {
     // Retrofit
     api "com.squareup.retrofit2:retrofit:$retrofit_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    api "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:1.0.0"
+    api "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
 
     // Other
     api "android.arch.persistence.room:runtime:1.1.1"

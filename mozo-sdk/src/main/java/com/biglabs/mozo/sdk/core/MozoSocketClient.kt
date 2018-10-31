@@ -20,9 +20,10 @@ import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.displayString
 import com.biglabs.mozo.sdk.utils.logAsError
 import com.google.gson.Gson
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
@@ -35,7 +36,7 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
     private val notificationManager: NotificationManager by lazy { MozoSDK.context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
     init {
-        launch {
+        GlobalScope.launch {
             myAddress = WalletService.getInstance().getAddress().await()
         }
     }
@@ -85,7 +86,7 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
         disconnect()
     }
 
-    private fun showNotification(message: Models.BroadcastDataContent) = launch {
+    private fun showNotification(message: Models.BroadcastDataContent) = GlobalScope.launch {
         MozoSDK.context?.applicationContext?.run {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -110,7 +111,7 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
                     .setAutoCancel(true)
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setContentIntent(pendingIntent)
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 NotificationManagerCompat
                         .from(this@run)
                         .notify(System.currentTimeMillis().toInt(), builder.build())
@@ -119,7 +120,7 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel(channel: String) = async(UI) {
+    private fun createChannel(channel: String) = GlobalScope.async(Dispatchers.Main) {
         var channelName = channel.split("_")[0]
         channelName = channelName.substring(0, 1).toUpperCase() + channelName.substring(1)
 
@@ -132,7 +133,7 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun notificationChannelExists(channelId: String): Boolean = notificationManager.getNotificationChannel(channelId) != null
 
-    private fun buildNotificationContent(prefix: String, address: String) = async {
+    private fun buildNotificationContent(prefix: String, address: String) = GlobalScope.async {
         val contact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
         if (contact != null) String.format(
                 Locale.US,
