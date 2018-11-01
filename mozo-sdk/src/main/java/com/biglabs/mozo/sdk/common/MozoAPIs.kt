@@ -4,7 +4,7 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.*
 
-interface MozoAPIs {
+internal interface MozoAPIs {
     @GET("contacts")
     fun getContacts(): Deferred<Response<List<Models.Contact>>>
 

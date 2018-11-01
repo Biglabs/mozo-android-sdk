@@ -29,7 +29,7 @@ import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import java.util.*
 
-class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
+internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
 
     private var myAddress: String? = null
 

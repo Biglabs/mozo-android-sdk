@@ -6,9 +6,12 @@ import android.os.Parcelable
 import android.support.annotation.NonNull
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.displayString
+import com.estimote.coresdk.recognition.packets.Beacon
+import com.estimote.coresdk.recognition.utils.MacAddress
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
+import java.util.*
 import kotlin.collections.ArrayList
 
 object Models {
@@ -251,4 +254,8 @@ object Models {
             val symbol: String,
             val time: Long
     )
+
+    class BeaconSignal : Beacon {
+        constructor(beacon: Beacon) : super(beacon.proximityUUID, beacon.macAddress, beacon.major, beacon.minor, beacon.measuredPower, beacon.rssi, beacon.timestamp)
+    }
 }

@@ -21,7 +21,6 @@ class PermissionUtils {
 
         fun requestLocationPermission(context: Context) {
             PermissionWrapperActivity.startRequestPermission(context, arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION
             ))
         }

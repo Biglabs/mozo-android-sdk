@@ -10,7 +10,7 @@ import com.biglabs.mozo.sdk.common.dao.ProfileDao
 import com.biglabs.mozo.sdk.common.dao.UserInfoDao
 
 @Database(entities = [Models.AnonymousUserInfo::class, Models.UserInfo::class, Models.Profile::class], version = 1, exportSchema = false)
-abstract class MozoDatabase : RoomDatabase() {
+internal abstract class MozoDatabase : RoomDatabase() {
 
     abstract fun anonymousUserInfo(): AnonymousUserInfoDao
     abstract fun userInfo(): UserInfoDao

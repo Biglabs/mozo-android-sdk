@@ -27,7 +27,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
 
-internal fun Activity.setMatchParent() {
+fun Activity.setMatchParent() {
     val attrs = window.attributes
     attrs.width = ViewGroup.LayoutParams.MATCH_PARENT
     attrs.height = ViewGroup.LayoutParams.MATCH_PARENT
@@ -62,13 +62,13 @@ internal fun Context.color(@ColorRes id: Int): Int {
     return ContextCompat.getColor(this, id)
 }
 
-internal fun visible(views: Array<View>) {
+fun visible(views: Array<View>) {
     views.map {
         it.visible()
     }
 }
 
-internal fun gone(views: Array<View>) {
+fun gone(views: Array<View>) {
     views.map {
         it.gone()
     }
@@ -78,7 +78,7 @@ internal fun Resources.dp2Px(value: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, displayMetrics)
 }
 
-internal fun String?.logAsError(prefix: String? = null) {
+fun String?.logAsError(prefix: String? = null) {
     if (BuildConfig.DEBUG) {
         Log.e("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
     }
@@ -87,7 +87,7 @@ internal fun String?.logAsError(prefix: String? = null) {
 /**
  * Extension method to show a keyboard for View.
  */
-internal fun View.showKeyboard() {
+fun View.showKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     this.requestFocus()
     imm.showSoftInput(this, 0)
@@ -97,7 +97,7 @@ internal fun View.showKeyboard() {
  * Try to hide the keyboard and returns whether it worked
  * https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
  */
-internal fun View.hideKeyboard(): Boolean {
+fun View.hideKeyboard(): Boolean {
     try {
         val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         return inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
@@ -110,15 +110,15 @@ internal fun View.hideKeyboard(): Boolean {
  * Set an onclick listener
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener { block(it as T) }
+fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener { block(it as T) }
 
 internal inline fun <reified T : View> View.find(@IdRes id: Int): T? = findViewById(id) as? T
 
-internal fun View.visible() {
+fun View.visible() {
     visibility = View.VISIBLE
 }
 
-internal fun View.gone() {
+fun View.gone() {
     visibility = View.GONE
 }
 

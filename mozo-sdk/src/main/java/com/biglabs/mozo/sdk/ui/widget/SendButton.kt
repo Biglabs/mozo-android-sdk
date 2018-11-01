@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.MozoAuth
-import com.biglabs.mozo.sdk.MozoTrans
+import com.biglabs.mozo.sdk.MozoTx
 
 internal class SendButton : BaseButton {
 
@@ -29,7 +29,7 @@ internal class SendButton : BaseButton {
     }
 
     private fun doTransfer() {
-        MozoTrans.getInstance().transfer()
+        MozoTx.getInstance().transfer()
     }
 
     override fun onClick(view: View) {

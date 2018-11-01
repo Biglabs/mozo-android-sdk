@@ -41,19 +41,20 @@ dependencies {
     api 'com.google.android:flexbox:1.0.0'
 
     // Kotlin & Coroutines
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
 
     // Retrofit
-    api "com.squareup.retrofit2:retrofit:$retrofit_version"
-    api "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    api "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
 
     // Other
     api "android.arch.persistence.room:runtime:1.1.1"
     kapt "android.arch.persistence.room:compiler:1.1.1"
-    api 'com.estimote:proximity-sdk:1.0.2'
+    implementation 'com.estimote:sdk:1.4.5'
+//  implementation 'com.estimote:proximity-sdk:1.0.3'
     api 'com.journeyapps:zxing-android-embedded:3.6.0'
     api 'org.bitcoinj:bitcoinj-core:0.14.7'
     api 'org.greenrobot:eventbus:3.1.1'

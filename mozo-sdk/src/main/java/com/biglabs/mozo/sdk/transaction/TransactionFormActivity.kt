@@ -12,7 +12,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import com.biglabs.mozo.sdk.MozoSDK
-import com.biglabs.mozo.sdk.MozoTrans
+import com.biglabs.mozo.sdk.MozoTx
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.Models.TransactionHistory.CREATOR.MY_ADDRESS
@@ -101,12 +101,12 @@ internal class TransactionFormActivity : BaseActivity() {
         val amount = output_amount.text.toString()
         GlobalScope.launch {
             showLoading()
-            val txResponse = MozoTrans.getInstance()
+            val txResponse = MozoTx.getInstance()
                     .createTransaction(this@TransactionFormActivity, address, amount, pin) {
                         sendTx(pin)
                     }.await()
             history.addressTo = address
-            history.amount = MozoTrans.getInstance().amountWithDecimal(amount)
+            history.amount = MozoTx.getInstance().amountWithDecimal(amount)
             history.time = Calendar.getInstance().timeInMillis / 1000L
             showResultUI(txResponse)
             hideLoading()
@@ -166,11 +166,7 @@ internal class TransactionFormActivity : BaseActivity() {
         transfer_toolbar.onBackPress = { onBackPressed() }
         button_address_book.click { AddressBookActivity.startForResult(this, KEY_PICK_ADDRESS) }
         button_scan_qr.click {
-            IntentIntegrator(this)
-                    .setBeepEnabled(true)
-                    .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-                    .setPrompt("")
-                    .initiateScan()
+            Support.scanQRCode(this)
         }
         button_submit.click {
             if (output_receiver_address.isEnabled) {
@@ -310,7 +306,7 @@ internal class TransactionFormActivity : BaseActivity() {
             var pendingStatus = true
             while (pendingStatus) {
 
-                val txStatus = MozoTrans.getInstance().getTransactionStatus(
+                val txStatus = MozoTx.getInstance().getTransactionStatus(
                         this@TransactionFormActivity,
                         history.txHash ?: ""
                 ) {
