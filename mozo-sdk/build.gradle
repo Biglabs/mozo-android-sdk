@@ -53,7 +53,8 @@ dependencies {
     // Other
     api "android.arch.persistence.room:runtime:1.1.1"
     kapt "android.arch.persistence.room:compiler:1.1.1"
-    api 'com.estimote:proximity-sdk:1.0.2'
+    api 'com.estimote:sdk:1.4.5'
+//    api 'com.estimote:proximity-sdk:1.0.3'
     api 'com.journeyapps:zxing-android-embedded:3.6.0'
     api 'org.bitcoinj:bitcoinj-core:0.14.7'
     api 'org.greenrobot:eventbus:3.1.1'

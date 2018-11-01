@@ -17,14 +17,14 @@ import org.web3j.crypto.Sign
 import org.web3j.utils.Numeric
 import java.math.BigDecimal
 
-class MozoTrans private constructor() {
+class MozoTx private constructor() {
 
     private var decimal = 0.0
     private var exchangeRate = BigDecimal.ZERO
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
         it?.run {
-            this@MozoTrans.decimal = decimal.toDouble()
+            this@MozoTx.decimal = decimal.toDouble()
             exchangeRate = rate
         }
     }
@@ -72,7 +72,7 @@ class MozoTrans private constructor() {
         }
     }
 
-    internal fun sendTransaction(context: Context, request: Models.TransactionResponse, callback: () -> Unit) = GlobalScope.async {
+    private fun sendTransaction(context: Context, request: Models.TransactionResponse, callback: () -> Unit) = GlobalScope.async {
         return@async MozoService
                 .getInstance(context)
                 .sendTransaction(request, callback)
@@ -95,11 +95,11 @@ class MozoTrans private constructor() {
 
     companion object {
         @Volatile
-        private var instance: MozoTrans? = null
+        private var instance: MozoTx? = null
 
         fun getInstance() = instance ?: synchronized(this) {
             if (instance == null) {
-                instance = MozoTrans()
+                instance = MozoTx()
                 MozoSDK.getInstance().profileViewModel.run {
                     balanceAndRateLiveData.observeForever(instance!!.balanceAndRateObserver)
                 }
