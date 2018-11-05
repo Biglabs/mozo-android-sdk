@@ -3,7 +3,6 @@ package com.biglabs.mozo.sdk.core
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.MozoAuth
-import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.authentication.MozoAuthActivity
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
@@ -175,15 +174,15 @@ internal class MozoService private constructor(val context: Context) {
 
         fun getInstance(context: Context) = synchronized(this) {
             if (mAPIs == null) {
-                mAPIs = createService(context.applicationContext)
+                mAPIs = createService()
             }
             MozoService(context)
         }
 
-        private fun createService(context: Context): MozoAPIs {
+        private fun createService(): MozoAPIs {
             val client = OkHttpClient.Builder()
                     .addInterceptor {
-                        val accessToken = AuthStateManager.getInstance(context).current.accessToken
+                        val accessToken = MozoAuth.getInstance().getAccessToken()
                         val original = it.request()
                         val request = original.newBuilder()
                                 .header("Authorization", "Bearer $accessToken")

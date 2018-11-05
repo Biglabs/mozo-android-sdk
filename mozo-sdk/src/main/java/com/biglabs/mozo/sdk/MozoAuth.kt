@@ -74,6 +74,8 @@ class MozoAuth private constructor() {
         this.mAuthListener = listener
     }
 
+    fun getAccessToken() = authStateManager.current.accessToken
+
     private suspend fun initAnonymousUser(): AnonymousUserInfo {
         var anonymousUser = mozoDB.anonymousUserInfo().get()
         if (anonymousUser == null) {

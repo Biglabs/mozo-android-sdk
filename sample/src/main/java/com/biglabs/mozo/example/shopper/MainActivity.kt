@@ -38,9 +38,4 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         MozoBeacon.getInstance().startRanging(this)
     }
-
-    override fun onStart() {
-        super.onStart()
-        MozoBeacon.getInstance().startRanging(this)
-    }
 }
