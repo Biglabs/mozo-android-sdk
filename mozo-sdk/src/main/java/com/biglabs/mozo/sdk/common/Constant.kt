@@ -6,7 +6,7 @@ class Constant {
         const val BASE_SOCKET_URL = "ws://18.136.38.11:8089/websocket/user/"
 
         const val PAGING_START_INDEX = 1
-        const val PAGING_SIZE = 20
+        const val PAGING_SIZE = 15
         const val LIST_VISIBLE_THRESHOLD = 5
 
         const val HISTORY_TIME_FORMAT = "HH:mm MMM dd, yyyy"

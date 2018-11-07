@@ -64,7 +64,6 @@ class MozoAuth private constructor() {
                     mozoDB.userInfo().delete()
 
                     authStateManager.clearSession()
-                    MozoBeacon.getInstance().stopRanging()
                 }
             }
         }
