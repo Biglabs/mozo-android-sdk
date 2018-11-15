@@ -16,6 +16,6 @@
         android:layout_gravity="center"
         android:background="@drawable/mozo_bg_dialog"
         android:padding="32dp"
-        android:progressBackgroundTint="@color/colorPrimary"
-        android:progressTint="@color/colorPrimary" />
+        android:progressBackgroundTint="?attr/colorPrimary"
+        android:progressTint="?attr/colorPrimary" />
 </LinearLayout>

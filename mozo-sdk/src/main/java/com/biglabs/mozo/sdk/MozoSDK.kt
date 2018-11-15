@@ -59,7 +59,7 @@ class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewMo
             checkNotNull(activity)
 
             notifyActivityClass = activity::class.java
-            this.context = activity
+            this.context = activity.applicationContext
 
             if (instance == null) {
                 instance = MozoSDK(

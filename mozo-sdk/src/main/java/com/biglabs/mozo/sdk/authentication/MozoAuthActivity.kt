@@ -176,7 +176,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                 if (isSignOutWhenError) {
                     mAuthStateManager?.clearSession()
                     EventBus.getDefault().post(MessageEvent.Auth(modeSignIn))
-                    finishAndRemoveTask()
+                    finish()
                     return
                 }
                 if (isSignOutBeforeIn) {
@@ -199,13 +199,13 @@ internal class MozoAuthActivity : FragmentActivity() {
                         exchangeAuthorizationCode(response)
                     }
                     else -> {
-                        finishAndRemoveTask()
+                        finish()
                     }
                 }
             }
             requestCode == KEY_DO_ENTER_PIN -> {
                 EventBus.getDefault().post(MessageEvent.Auth(modeSignIn))
-                finishAndRemoveTask()
+                finish()
             }
             !modeSignIn -> {
                 handleResult()
@@ -263,7 +263,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
             launch(Dispatchers.Main) {
                 EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, exception))
-                finishAndRemoveTask()
+                finish()
             }
         }
     }
