@@ -3,7 +3,7 @@ package com.biglabs.mozo.sdk.contact
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 internal class ContactSectionDecoration(
         private var letterBarWidth: Int,

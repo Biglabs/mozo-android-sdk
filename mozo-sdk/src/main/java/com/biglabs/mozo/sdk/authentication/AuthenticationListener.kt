@@ -1,6 +1,6 @@
 package com.biglabs.mozo.sdk.authentication
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
 abstract class AuthenticationListener {
     @CallSuper

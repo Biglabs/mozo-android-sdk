@@ -3,7 +3,7 @@ package com.biglabs.mozo.sdk.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.TextViewCompat
+import androidx.core.widget.TextViewCompat
 import android.view.View
 import android.widget.TextView
 import com.biglabs.mozo.sdk.R

@@ -1,12 +1,12 @@
 package com.biglabs.mozo.sdk
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.core.MozoSocketClient
 import com.biglabs.mozo.sdk.core.WalletService

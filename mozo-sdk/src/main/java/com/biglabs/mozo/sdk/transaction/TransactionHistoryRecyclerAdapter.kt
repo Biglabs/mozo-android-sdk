@@ -1,10 +1,10 @@
 package com.biglabs.mozo.sdk.transaction
 
 import android.graphics.Typeface.BOLD
-import android.support.annotation.IntDef
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.IntDef
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan

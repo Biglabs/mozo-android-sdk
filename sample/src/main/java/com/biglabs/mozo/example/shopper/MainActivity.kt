@@ -1,7 +1,7 @@
 package com.biglabs.mozo.example.shopper
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.MozoSDK

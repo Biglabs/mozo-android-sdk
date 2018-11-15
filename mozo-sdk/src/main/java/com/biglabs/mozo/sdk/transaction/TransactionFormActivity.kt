@@ -1,12 +1,12 @@
 package com.biglabs.mozo.sdk.transaction
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import android.text.InputFilter
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan

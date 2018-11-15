@@ -1,10 +1,10 @@
 package com.biglabs.mozo.sdk.ui.widget
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.support.v7.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatButton
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View

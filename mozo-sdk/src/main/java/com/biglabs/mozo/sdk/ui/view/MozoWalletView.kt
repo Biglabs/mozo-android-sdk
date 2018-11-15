@@ -1,9 +1,9 @@
 package com.biglabs.mozo.sdk.ui.view
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
-import android.support.annotation.IntDef
-import android.support.constraint.ConstraintLayout
+import androidx.annotation.IntDef
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View

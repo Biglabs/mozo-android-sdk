@@ -1,8 +1,8 @@
 package com.biglabs.mozo.sdk.core
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import android.content.Context
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.dao.AnonymousUserInfoDao

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.utils.click
 import kotlinx.android.synthetic.main.dialog_error.*

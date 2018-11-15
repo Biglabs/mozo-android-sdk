@@ -1,6 +1,6 @@
 package com.biglabs.mozo.sdk.contact
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models

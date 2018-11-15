@@ -1,6 +1,6 @@
 package com.biglabs.mozo.sdk
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels

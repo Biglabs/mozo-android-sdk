@@ -25,10 +25,10 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v4.text.TextUtilsCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.AppCompatEditText
+import androidx.core.content.ContextCompat
+import androidx.core.text.TextUtilsCompat
+import androidx.core.view.ViewCompat
+import androidx.appcompat.widget.AppCompatEditText
 import android.text.InputFilter
 import android.text.InputType
 import android.text.TextUtils
