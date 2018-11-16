@@ -5,9 +5,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.BitmapFactory
-import androidx.core.content.ContextCompat
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -20,8 +17,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.biglabs.mozo.sdk.BuildConfig
+import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -81,7 +81,7 @@ internal fun Resources.dp2Px(value: Float): Float {
 }
 
 internal fun String?.logAsError(prefix: String? = null) {
-    if (BuildConfig.DEBUG) {
+    if (BuildConfig.DEBUG || MozoSDK.isEnableDebugLogging) {
         Log.e("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
     }
 }

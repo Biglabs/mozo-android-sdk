@@ -1,12 +1,12 @@
 package com.biglabs.mozo.sdk
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProviders
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.core.MozoSocketClient
 import com.biglabs.mozo.sdk.core.WalletService
@@ -53,6 +53,9 @@ class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewMo
         @Volatile
         internal var notifyActivityClass: Class<out FragmentActivity>? = null
 
+        @Volatile
+        internal var isEnableDebugLogging = false
+
         @JvmStatic
         @Synchronized
         fun initialize(activity: FragmentActivity) {
@@ -76,6 +79,11 @@ class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewMo
                 throw IllegalStateException("MozoSDK is not initialized. Make sure to call MozoSDK.initialize(Context) first.")
             }
             return instance as MozoSDK
+        }
+
+        @JvmStatic
+        fun enableDebugLogging(enable: Boolean) {
+            isEnableDebugLogging = enable
         }
 
         internal fun isNetworkAvailable(): Boolean {
