@@ -5,10 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Resources
-import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
-import androidx.annotation.IntegerRes
-import androidx.annotation.StringRes
+import android.graphics.BitmapFactory
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.text.Editable
@@ -21,6 +18,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.*
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toBitmap
 import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.R
 import java.math.BigDecimal
@@ -62,6 +62,8 @@ internal fun Context.color(@ColorRes id: Int): Int {
     return ContextCompat.getColor(this, id)
 }
 
+internal fun Context.bitmap(@DrawableRes icon: Int) = AppCompatResources.getDrawable(this, icon)?.toBitmap()
+
 fun visible(views: Array<View>) {
     views.map {
         it.visible()
@@ -83,6 +85,10 @@ internal fun String?.logAsError(prefix: String? = null) {
         Log.e("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
     }
 }
+
+fun String.censor(paddingStart: Int, paddingEnd: Int, mask: Char = '*'): String = toCharArray().mapIndexed { i, c ->
+    if (i >= paddingStart && i < length - paddingEnd && !c.isWhitespace()) mask else c
+}.joinToString(separator = "")
 
 /**
  * Extension method to show a keyboard for View.
