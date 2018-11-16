@@ -107,7 +107,7 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body()
     }
 
-    fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_SOLO, onTryAgain: (() -> Unit)?) = GlobalScope.async {
+    fun getExchangeRate(currency: String, symbol: String = Constant.SYMBOL_MOZO, onTryAgain: (() -> Unit)?) = GlobalScope.async {
         var response: Response<Models.ExchangeRate>? = null
         val ex = try {
             response = mAPIs?.getExchangeRate(currency, symbol)?.await()

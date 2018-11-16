@@ -11,7 +11,7 @@ class Constant {
 
         const val HISTORY_TIME_FORMAT = "HH:mm MMM dd, yyyy"
 
-        const val SYMBOL_SOLO = "SOLO"
+        const val SYMBOL_MOZO = "MOZOX"
 
         const val CURRENCY_KOREA = "KRW"
         const val CURRENCY_USA = "USD"
