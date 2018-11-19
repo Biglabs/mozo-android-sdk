@@ -24,7 +24,7 @@ import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryRecyclerAdapter
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
-import kotlinx.android.synthetic.main.fragment_wallet.*
+import kotlinx.android.synthetic.main.fragment_mozo_wallet.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -43,45 +43,47 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var generateQRJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_wallet, container, false)
+            inflater.inflate(R.layout.fragment_mozo_wallet, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        button_refresh_balance?.click {
+        wallet_fragment_btn_refresh_balance?.click {
             if (context != null) MozoSDK.getInstance().profileViewModel.fetchBalance(context!!)
         }
-        button_payment_request?.click {
+        wallet_fragment_btn_payment_request?.click {
             if (context != null) PaymentRequestActivity.start(context!!)
         }
-        button_send?.click {
+        wallet_fragment_btn_send?.click {
             MozoTx.getInstance().transfer()
         }
-        button_view_all?.click {
+        wallet_fragment_btn_view_all?.click {
             if (context != null) TransactionHistoryActivity.start(context!!)
         }
-        mozo_wallet_qr_image?.click {
+        wallet_fragment_qr_image?.click {
             if (context != null && currentAddress != null)
                 QRCodeDialog.show(context!!, currentAddress!!)
         }
-        mozo_wallet_qr_image_button?.click {
+        wallet_fragment_btn_show?.click {
             if (context != null && currentAddress != null)
                 QRCodeDialog.show(context!!, currentAddress!!)
         }
 
-        list_history_refresh?.apply {
+        wallet_fragment_refresh_layout?.apply {
             mozoSetup()
             setOnRefreshListener(this@MozoWalletFragment)
         }
 
-        list_history.setHasFixedSize(true)
-        list_history.itemAnimator = DefaultItemAnimator()
-        list_history.adapter = historyAdapter
-        list_history.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                history_top_bar_hover.isSelected = recyclerView.canScrollVertically(-1)
-            }
-        })
+        wallet_fragment_history_recycler?.apply {
+            setHasFixedSize(true)
+            itemAnimator = DefaultItemAnimator()
+            adapter = historyAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    wallet_fragment_top_hover?.isSelected = recyclerView.canScrollVertically(-1)
+                }
+            })
+        }
 
         MozoSDK.getInstance().profileViewModel.run {
             profileLiveData.observe(this@MozoWalletFragment, profileObserver)
@@ -118,10 +120,10 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
         it?.run {
-            view?.find<TextView>(R.id.mozo_wallet_balance_value)?.apply {
+            view?.find<TextView>(R.id.wallet_fragment_balance_value)?.apply {
                 text = balanceInDecimal.displayString()
             }
-            view?.find<TextView>(R.id.mozo_wallet_currency_balance)?.apply {
+            view?.find<TextView>(R.id.wallet_fragment_currency_value)?.apply {
                 text = balanceInCurrencyDisplay
             }
         }
@@ -149,7 +151,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             historyAdapter.setCanLoadMore(false)
 
             launch(Dispatchers.Main) {
-                list_history_refresh.isRefreshing = false
+                wallet_fragment_refresh_layout?.isRefreshing = false
                 historyAdapter.notifyData()
             }
         }
@@ -159,14 +161,14 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if (currentAddress != null) {
             val qrImage = Support.generateQRCode(currentAddress!!, resources.dp2Px(128f).toInt())
             launch(Dispatchers.Main) {
-                mozo_wallet_qr_image?.setImageBitmap(qrImage)
+                wallet_fragment_qr_image?.setImageBitmap(qrImage)
             }
         }
         generateQRJob = null
     }
 
     private fun checkLogin() {
-        view?.find<View>(R.id.view_login_required)?.apply {
+        view?.find<View>(R.id.wallet_fragment_login_required)?.apply {
             isClickable = true
             if (MozoAuth.getInstance().isSignUpCompleted()) gone() else visible()
         }

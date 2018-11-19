@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:paddingTop="@dimen/mozo_screen_margin">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/wallet_info_container"
@@ -22,7 +23,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/button_refresh_balance"
+                android:id="@+id/wallet_fragment_btn_refresh_balance"
                 android:layout_width="40dp"
                 android:layout_height="0dp"
                 android:layout_margin="10dp"
@@ -61,7 +62,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/mozo_wallet_balance_value"
+                android:id="@+id/wallet_fragment_balance_value"
                 android:layout_width="0dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="7dp"
@@ -77,14 +78,14 @@
                 app:autoSizeMinTextSize="14sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toTopOf="@android:id/icon"
-                app:layout_constraintEnd_toStartOf="@id/mozo_wallet_qr_image"
+                app:layout_constraintEnd_toStartOf="@id/wallet_fragment_qr_image"
                 app:layout_constraintStart_toEndOf="@android:id/icon"
                 app:layout_constraintTop_toBottomOf="@android:id/icon"
                 app:layout_goneMarginEnd="0dp"
                 tools:text="999.999.999" />
 
             <TextView
-                android:id="@+id/mozo_wallet_currency_balance"
+                android:id="@+id/wallet_fragment_currency_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -99,7 +100,7 @@
                 tools:text="₩102.230" />
 
             <ImageView
-                android:id="@+id/mozo_wallet_qr_image"
+                android:id="@+id/wallet_fragment_qr_image"
                 android:layout_width="100dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="24dp"
@@ -113,7 +114,7 @@
                 tools:background="#5ccc" />
 
             <TextView
-                android:id="@+id/mozo_wallet_qr_image_button"
+                android:id="@+id/wallet_fragment_btn_show"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -123,14 +124,14 @@
                 android:text="@string/mozo_button_show_qr_code"
                 android:textColor="@color/mozo_color_primary"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@id/mozo_wallet_qr_image"
-                app:layout_constraintStart_toStartOf="@id/mozo_wallet_qr_image"
-                app:layout_constraintTop_toBottomOf="@id/mozo_wallet_qr_image" />
+                app:layout_constraintEnd_toEndOf="@id/wallet_fragment_qr_image"
+                app:layout_constraintStart_toStartOf="@id/wallet_fragment_qr_image"
+                app:layout_constraintTop_toBottomOf="@id/wallet_fragment_qr_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/button_payment_request"
+        android:id="@+id/wallet_fragment_btn_payment_request"
         style="@style/MozoButtonStyle.MozoRoundedButtonStyle"
         android:layout_width="0dp"
         android:layout_marginStart="@dimen/mozo_screen_margin"
@@ -142,13 +143,13 @@
         android:text="@string/mozo_button_payment_request"
         app:autoSizeMinTextSize="12sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintEnd_toStartOf="@id/button_send"
+        app:layout_constraintEnd_toStartOf="@id/wallet_fragment_btn_send"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/wallet_info_container"
         app:layout_constraintWidth_max="165dp" />
 
     <LinearLayout
-        android:id="@+id/button_send"
+        android:id="@+id/wallet_fragment_btn_send"
         style="@style/MozoButtonStyle.MozoRoundedButtonStyle"
         android:layout_width="0dp"
         android:layout_marginEnd="@dimen/mozo_screen_margin"
@@ -156,8 +157,8 @@
         android:focusable="true"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_payment_request"
-        app:layout_constraintTop_toTopOf="@id/button_payment_request"
+        app:layout_constraintStart_toEndOf="@id/wallet_fragment_btn_payment_request"
+        app:layout_constraintTop_toTopOf="@id/wallet_fragment_btn_payment_request"
         app:layout_constraintWidth_max="165dp"
         tools:ignore="UseCompoundDrawables">
 
@@ -177,17 +178,17 @@
     </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/list_history_refresh"
+        android:id="@+id/wallet_fragment_refresh_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="66dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_payment_request">
+        app:layout_constraintTop_toBottomOf="@id/wallet_fragment_btn_payment_request">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_history"
+            android:id="@+id/wallet_fragment_history_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -201,7 +202,7 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <View
-        android:id="@+id/history_top_bar_hover"
+        android:id="@+id/wallet_fragment_top_hover"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:alpha="0"
@@ -209,7 +210,7 @@
         android:stateListAnimator="@animator/top_bar_hover"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/list_history_refresh" />
+        app:layout_constraintTop_toTopOf="@id/wallet_fragment_refresh_layout" />
 
     <TextView
         android:id="@android:id/text1"
@@ -222,10 +223,10 @@
         android:textSize="@dimen/mozo_text_size"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_payment_request" />
+        app:layout_constraintTop_toBottomOf="@id/wallet_fragment_btn_payment_request" />
 
     <TextView
-        android:id="@+id/button_view_all"
+        android:id="@+id/wallet_fragment_btn_view_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -239,7 +240,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <FrameLayout
-        android:id="@+id/view_login_required"
+        android:id="@+id/wallet_fragment_login_required"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:elevation="100dp"
