@@ -72,13 +72,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 }
 
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == 'com.android.support') {
-            details.useVersion android_support_version
-        }
-    }
-}
-
 apply from: 'publish.gradle'

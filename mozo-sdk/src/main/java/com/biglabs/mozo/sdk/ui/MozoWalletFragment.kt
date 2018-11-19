@@ -48,16 +48,16 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        button_refresh.click {
+        button_refresh_balance?.click {
             if (context != null) MozoSDK.getInstance().profileViewModel.fetchBalance(context!!)
         }
-        button_payment_request.click {
+        button_payment_request?.click {
             if (context != null) PaymentRequestActivity.start(context!!)
         }
-        button_send.click {
+        button_send?.click {
             MozoTx.getInstance().transfer()
         }
-        button_view_all.click {
+        button_view_all?.click {
             if (context != null) TransactionHistoryActivity.start(context!!)
         }
         mozo_wallet_qr_image?.click {
