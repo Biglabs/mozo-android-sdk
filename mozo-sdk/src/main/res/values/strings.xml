@@ -25,6 +25,7 @@
     <string name="mozo_button_transfer">Send Mozo</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
     <string name="mozo_button_withdraw">Withdraw</string>
+    <string name="mozo_button_payment_request">Payment Request</string>
 
     <string name="mozo_button_back">Back</string>
     <string name="mozo_button_cancel">Cancel</string>
@@ -68,6 +69,10 @@
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
 
+    <string name="mozo_payment_request_title">Payment Request</string>
+    <string name="mozo_payment_request_amount">Receive Amount</string>
+    <string name="mozo_payment_request_btn_create">Create Payment Request</string>
+
     <string name="mozo_transfer_title">Send Mozo</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>
     <string name="mozo_transfer_from">From Mozo Offchain Wallet</string>
@@ -103,4 +108,6 @@
     <string name="mozo_view_text_tx_pending">Pending</string>
     <string name="mozo_view_text_tx_failed">Failed</string>
     <string name="mozo_view_text_tx_success">Success</string>
+    <string name="mozo_view_text_view_all">View All</string>
+    <string name="mozo_view_text_total_mozo">Total Mozo Coin</string>
 </resources>

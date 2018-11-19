@@ -17,7 +17,7 @@
     <dimen name="mozo_qr_medium_size">120dp</dimen>
     <dimen name="mozo_qr_large_size">250dp</dimen>
 
-    <dimen name="mozo_refresh_progress_offset">20dp</dimen>
+    <dimen name="mozo_refresh_progress_offset">10dp</dimen>
 
     <item name="mozo_background_dim_amount" format="float" type="dimen">0.4</item>
 </resources>

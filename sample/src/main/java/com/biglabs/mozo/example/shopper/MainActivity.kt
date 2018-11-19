@@ -1,8 +1,11 @@
 package com.biglabs.mozo.example.shopper
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.authentication.AuthenticationListener
@@ -22,5 +25,19 @@ class MainActivity : AppCompatActivity() {
                 Log.i("MozoSDK", "Authentication changed, signed in: $isSinged")
             }
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_demo_fragment -> {
+                startActivity(Intent(this, DemoFragmentActivity::class.java))
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

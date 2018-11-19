@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/wallet_info_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/mozo_screen_margin"
+        app:cardCornerRadius="@dimen/mozo_dialog_corner_radius"
+        app:cardElevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/button_refresh"
+                android:layout_width="40dp"
+                android:layout_height="0dp"
+                android:layout_margin="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/mozo_button_refresh"
+                android:focusable="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_action_sync"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="7dp"
+                android:includeFontPadding="false"
+                android:text="@string/mozo_view_text_total_mozo"
+                android:textColor="@color/mozo_color_section_text"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@android:id/icon"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <View
+                android:id="@android:id/icon"
+                android:layout_width="30dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="69dp"
+                android:background="@drawable/ic_mozo_offchain"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/mozo_wallet_balance_value"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:hint="@string/mozo_view_text_hint"
+                android:includeFontPadding="false"
+                android:lines="1"
+                android:textColor="@color/mozo_color_title"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toTopOf="@android:id/icon"
+                app:layout_constraintEnd_toStartOf="@id/mozo_wallet_qr_image"
+                app:layout_constraintStart_toEndOf="@android:id/icon"
+                app:layout_constraintTop_toBottomOf="@android:id/icon"
+                app:layout_goneMarginEnd="0dp"
+                tools:text="999.999.999" />
+
+            <TextView
+                android:id="@+id/mozo_wallet_currency_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:includeFontPadding="false"
+                android:textColor="@color/mozo_color_section_text"
+                android:textSize="@dimen/mozo_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@android:id/icon"
+                tools:text="₩102.230" />
+
+            <ImageView
+                android:id="@+id/mozo_wallet_qr_image"
+                android:layout_width="100dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:clickable="true"
+                android:contentDescription="@string/mozo_view_address_title"
+                android:focusable="true"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="#5ccc" />
+
+            <TextView
+                android:id="@+id/mozo_wallet_qr_image_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/mozo_button_show_qr_code"
+                android:textColor="@color/mozo_color_primary"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@id/mozo_wallet_qr_image"
+                app:layout_constraintStart_toStartOf="@id/mozo_wallet_qr_image"
+                app:layout_constraintTop_toBottomOf="@id/mozo_wallet_qr_image" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/button_payment_request"
+        style="@style/MozoButtonStyle.MozoRoundedButtonStyle"
+        android:layout_width="0dp"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:lines="1"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/mozo_button_payment_request"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toStartOf="@id/button_send"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallet_info_container"
+        app:layout_constraintWidth_max="165dp" />
+
+    <LinearLayout
+        android:id="@+id/button_send"
+        style="@style/MozoButtonStyle.MozoRoundedButtonStyle"
+        android:layout_width="0dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_payment_request"
+        app:layout_constraintTop_toTopOf="@id/button_payment_request"
+        app:layout_constraintWidth_max="165dp"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:contentDescription="@string/mozo_button_transfer"
+            android:src="@drawable/ic_btn_send" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mozo_button_transfer"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/mozo_text_size"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/list_history_refresh"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="66dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_payment_request">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/mozo_screen_margin"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_history" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <View
+        android:id="@+id/history_top_bar_hover"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:alpha="0"
+        android:background="@drawable/mozo_dr_top_bar_hover"
+        android:stateListAnimator="@animator/top_bar_hover"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/list_history_refresh" />
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="37dp"
+        android:text="@string/mozo_transaction_history_title"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="@dimen/mozo_text_size"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_payment_request" />
+
+    <TextView
+        android:id="@+id/button_view_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:padding="@dimen/mozo_screen_margin"
+        android:text="@string/mozo_view_text_view_all"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintBaseline_toBaselineOf="@android:id/text1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/view_login_required"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="100dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/view_wallet_state_not_login" />
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,6 @@ import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.contact.AddressAddActivity
 import com.biglabs.mozo.sdk.contact.AddressBookActivity
 import com.biglabs.mozo.sdk.ui.BaseActivity
-import com.biglabs.mozo.sdk.ui.ScannerQRActivity
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.utils.*
 import com.google.zxing.integration.android.IntentIntegrator
