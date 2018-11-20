@@ -84,16 +84,23 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 }
             })
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        checkLogin()
         MozoSDK.getInstance().profileViewModel.run {
             profileLiveData.observe(this@MozoWalletFragment, profileObserver)
             balanceAndRateLiveData.observeForever(balanceAndRateObserver)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        checkLogin()
+    override fun onPause() {
+        super.onPause()
+        MozoSDK.getInstance().profileViewModel.run {
+            profileLiveData.removeObserver(profileObserver)
+            balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
+        }
     }
 
     override fun onDestroyView() {
