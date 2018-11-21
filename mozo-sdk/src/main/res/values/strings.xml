@@ -64,6 +64,7 @@
     <string name="mozo_pin_msg_error">Create Wallet failed</string>
 
     <string name="mozo_notify_title_come_in">Customer come in</string>
+    <string name="mozo_notify_title_just_left">Customer has just left</string>
     <string name="mozo_notify_title_received">Received %s Mozo</string>
     <string name="mozo_notify_title_sent">Sent %s Mozo</string>
     <string name="mozo_notify_content_from">From %s</string>

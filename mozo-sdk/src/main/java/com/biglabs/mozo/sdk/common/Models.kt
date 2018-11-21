@@ -246,15 +246,15 @@ object Models {
             val event: String,
             val from: String,
             val to: String,
-            val amount: BigDecimal,
+            val amount: BigDecimal?,
             val decimal: Int,
             val symbol: String,
             val time: Long,
             val phoneNo: String?,
-            val isComeIn: Boolean,
+            val comeIn: Boolean,
             val storeName: String
     ) {
         override fun toString(): String =
-                "{event=$event, from=$from, to=$to, amount=$amount, decimal=$decimal, symbol=$symbol, time=$time, phoneNo=$phoneNo, isComeIn=$isComeIn, storeName=$storeName}"
+                "{event=$event, from=$from, to=$to, amount=$amount, decimal=$decimal, symbol=$symbol, time=$time, phoneNo=$phoneNo, comeIn=$comeIn, storeName=$storeName}"
     }
 }

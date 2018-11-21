@@ -89,10 +89,10 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
         val isSendType = message.from.equals(myAddress, ignoreCase = true)
 
-        var title = context.getString(
+        var title = if (message.amount != null) context.getString(
                 if (isSendType) R.string.mozo_notify_title_sent else R.string.mozo_notify_title_received,
                 Support.calculateAmountDecimal(message.amount, message.decimal).displayString()
-        )
+        ) else ""
         var content = ""
         var largeIcon = R.drawable.im_notification_received_sent
 
@@ -102,7 +102,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 largeIcon = R.drawable.im_notification_airdrop
             }
             Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
-                title = context.string(R.string.mozo_notify_title_come_in)
+                title = context.string(if (message.comeIn) R.string.mozo_notify_title_come_in else R.string.mozo_notify_title_just_left)
                 message.phoneNo?.let {
                     content = it.censor(3, 4)
                 }
