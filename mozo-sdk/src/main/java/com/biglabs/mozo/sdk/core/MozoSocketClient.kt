@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.text.set
+import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.authentication.AuthStateManager
@@ -176,7 +177,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             if (instance == null) {
                 val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
                 instance = MozoSocketClient(
-                        URI(Constant.BASE_SOCKET_URL + UUID.randomUUID().toString()),
+                        URI("ws://${BuildConfig.DOMAIN_SOCKET}/websocket/user/" + UUID.randomUUID().toString()),
                         mutableMapOf(
                                 "Authorization" to "bearer $accessToken",
                                 "Content-Type" to "application/json",

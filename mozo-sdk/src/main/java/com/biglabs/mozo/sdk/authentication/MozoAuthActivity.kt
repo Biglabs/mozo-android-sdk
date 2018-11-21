@@ -6,7 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
+import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
@@ -16,7 +18,10 @@ import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
 import com.biglabs.mozo.sdk.utils.logAsError
 import com.biglabs.mozo.sdk.utils.setMatchParent
 import com.biglabs.mozo.sdk.utils.string
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import net.openid.appauth.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -70,16 +75,17 @@ internal class MozoAuthActivity : FragmentActivity() {
         mAuthRequest.set(null)
         mAuthIntent.set(null)
 
+        val logoutUrl = getString(R.string.auth_logout_uri, BuildConfig.DOMAIN_AUTH)
         signOutConfiguration = AuthorizationServiceConfiguration(
-                Uri.parse(string(R.string.auth_logout_uri)),
-                Uri.parse(string(R.string.auth_logout_uri)),
+                logoutUrl.toUri(),
+                logoutUrl.toUri(),
                 null
         )
         if (mAuthStateManager!!.current.authorizationServiceConfiguration == null) {
             mAuthStateManager!!.replace(AuthState(
                     AuthorizationServiceConfiguration(
-                            Uri.parse(string(R.string.auth_end_point_authorization)),
-                            Uri.parse(string(R.string.auth_end_point_token))
+                            getString(R.string.auth_end_point_authorization, BuildConfig.DOMAIN_AUTH).toUri(),
+                            getString(R.string.auth_end_point_token, BuildConfig.DOMAIN_AUTH).toUri()
                     )
             ))
         }
