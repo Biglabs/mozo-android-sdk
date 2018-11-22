@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
+import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.FragmentActivity
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.R
@@ -114,6 +115,10 @@ internal class MozoAuthActivity : FragmentActivity() {
                 .setPrompt("login")
                 .setScope("openid profile phone")
 
+        val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
+        authRequestBuilder.setAdditionalParameters(
+                mutableMapOf("kcLocale" to locale.language)
+        )
         mAuthRequest.set(authRequestBuilder.build())
     }
 
@@ -168,10 +173,14 @@ internal class MozoAuthActivity : FragmentActivity() {
         extras.putParcelableArrayList(CustomTabsIntent.EXTRA_MENU_ITEMS, null)
         customTabs.intent.putExtras(extras)
 
-        val intent = mAuthService!!.getAuthorizationRequestIntent(authRequest, customTabs)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-        startActivityForResult(intent, KEY_DO_AUTHENTICATION)
+        try {
+            val intent = mAuthService!!.getAuthorizationRequestIntent(authRequest, customTabs)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+            startActivityForResult(intent, KEY_DO_AUTHENTICATION)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
