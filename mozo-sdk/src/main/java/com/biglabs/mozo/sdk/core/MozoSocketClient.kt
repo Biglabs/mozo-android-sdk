@@ -177,7 +177,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             if (instance == null) {
                 val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
                 instance = MozoSocketClient(
-                        URI("ws://${BuildConfig.DOMAIN_SOCKET}/websocket/user/" + UUID.randomUUID().toString()),
+                        URI("ws://${Support.domainSocket()}/websocket/user/" + UUID.randomUUID().toString()),
                         mutableMapOf(
                                 "Authorization" to "bearer $accessToken",
                                 "Content-Type" to "application/json",

@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        MozoSDK.initialize(this)
+        MozoSDK.initialize(this, MozoSDK.ENVIRONMENT_DEVELOP)
 
         MozoAuth.getInstance().setAuthenticationListener(object : AuthenticationListener() {
             override fun onChanged(isSinged: Boolean) {

@@ -15,28 +15,9 @@ android {
 
     buildTypes {
         debug {
-            def domainAuth = 'dev.keycloak.mozocoin.io'
-            buildConfigField "String", "DOMAIN_API", '"dev.gateway.mozocoin.io"'
-            buildConfigField "String", "DOMAIN_AUTH", "\"$domainAuth\""
-            buildConfigField "String", "DOMAIN_SOCKET", '"18.136.38.11:8089"'
-            resValue "string", "auth_redirect_host", "$domainAuth"
             minifyEnabled false
-        }
-        staging {
-            def domainAuth = 'staging.keycloak.mozocoin.io'
-            buildConfigField "String", "DOMAIN_API", '"staging.gateway.mozocoin.io"'
-            buildConfigField "String", "DOMAIN_AUTH", "\"$domainAuth\""
-            buildConfigField "String", "DOMAIN_SOCKET", '"52.76.238.125:8089"'
-            resValue "string", "auth_redirect_host", "$domainAuth"
-            minifyEnabled false
-            debuggable true
         }
         release {
-            def domainAuth = 'staging.keycloak.mozocoin.io'
-            buildConfigField "String", "DOMAIN_API", '"staging.gateway.mozocoin.io"'
-            buildConfigField "String", "DOMAIN_AUTH", "\"$domainAuth\""
-            buildConfigField "String", "DOMAIN_SOCKET", '"52.76.238.125:8089"'
-            resValue "string", "auth_redirect_host", "$domainAuth"
             minifyEnabled false
             proguardFiles 'proguard-rules.pro'
         }

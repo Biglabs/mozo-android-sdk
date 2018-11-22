@@ -8,13 +8,13 @@ import android.os.Bundle
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
-import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.core.WalletService
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
+import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.logAsError
 import com.biglabs.mozo.sdk.utils.setMatchParent
 import com.biglabs.mozo.sdk.utils.string
@@ -75,20 +75,18 @@ internal class MozoAuthActivity : FragmentActivity() {
         mAuthRequest.set(null)
         mAuthIntent.set(null)
 
-        val logoutUrl = getString(R.string.auth_logout_uri, BuildConfig.DOMAIN_AUTH)
+        val logoutUrl = getString(R.string.auth_logout_uri, Support.domainAuth())
         signOutConfiguration = AuthorizationServiceConfiguration(
                 logoutUrl.toUri(),
                 logoutUrl.toUri(),
                 null
         )
-        if (mAuthStateManager!!.current.authorizationServiceConfiguration == null) {
-            mAuthStateManager!!.replace(AuthState(
-                    AuthorizationServiceConfiguration(
-                            getString(R.string.auth_end_point_authorization, BuildConfig.DOMAIN_AUTH).toUri(),
-                            getString(R.string.auth_end_point_token, BuildConfig.DOMAIN_AUTH).toUri()
-                    )
-            ))
-        }
+        mAuthStateManager!!.replace(AuthState(
+                AuthorizationServiceConfiguration(
+                        getString(R.string.auth_end_point_authorization, Support.domainAuth()).toUri(),
+                        getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
+                )
+        ))
 
         if (modeSignIn) {
             doSignOutFirst()

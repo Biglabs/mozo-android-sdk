@@ -11,20 +11,7 @@ android {
         versionName "1.0"
     }
 
-    signingConfigs {
-        debug {
-            keyAlias = debug_key_alias
-            keyPassword = debug_key_pass
-            storeFile file(debug_key_file)
-            storePassword = debug_store_pass
-        }
-    }
     buildTypes {
-        staging {
-            minifyEnabled false
-            debuggable true
-            signingConfig signingConfigs.debug
-        }
         release {
             minifyEnabled false
             signingConfig signingConfigs.debug

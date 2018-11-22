@@ -9,6 +9,7 @@ import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.MozoAPIs
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
+import com.biglabs.mozo.sdk.utils.Support
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -202,7 +203,7 @@ internal class MozoService private constructor(val context: Context) {
             }
 
             return Retrofit.Builder()
-                    .baseUrl("https://${BuildConfig.DOMAIN_API}/solomon/api/")
+                    .baseUrl("https://${Support.domainAPI()}/solomon/api/")
                     .client(client.build())
                     .addCallAdapterFactory(CoroutineCallAdapterFactory())
                     .addConverterFactory(GsonConverterFactory.create())

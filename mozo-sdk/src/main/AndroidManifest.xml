@@ -92,17 +92,6 @@
             android:screenOrientation="portrait"
             tools:node="replace">
             <intent-filter tools:node="removeAll" />
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="@string/auth_redirect_host"
-                    android:path="/auth/realms/mozo/login-actions/authenticate"
-                    android:scheme="https" />
-            </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

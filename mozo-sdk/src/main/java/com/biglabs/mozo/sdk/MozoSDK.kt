@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
+import androidx.annotation.IntDef
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import com.biglabs.mozo.sdk.common.ViewModels
@@ -42,9 +43,20 @@ class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewMo
     }
 
     companion object {
+        @Retention(AnnotationRetention.SOURCE)
+        @IntDef(ENVIRONMENT_DEVELOP, ENVIRONMENT_STAGING, ENVIRONMENT_PRODUCTION)
+        annotation class Environment
+
+        const val ENVIRONMENT_PRODUCTION = 0
+        const val ENVIRONMENT_STAGING = 1
+        const val ENVIRONMENT_DEVELOP = 2
+
         @SuppressLint("StaticFieldLeak")
         @Volatile
         private var instance: MozoSDK? = null
+
+        @Volatile
+        internal var serviceEnvironment = ENVIRONMENT_PRODUCTION
 
         @SuppressLint("StaticFieldLeak")
         @Volatile
@@ -58,8 +70,10 @@ class MozoSDK private constructor(val profileViewModel: ViewModels.ProfileViewMo
 
         @JvmStatic
         @Synchronized
-        fun initialize(activity: FragmentActivity) {
+        fun initialize(activity: FragmentActivity, @Environment environment: Int = ENVIRONMENT_PRODUCTION) {
             checkNotNull(activity)
+
+            serviceEnvironment = environment
 
             notifyActivityClass = activity::class.java
             this.context = activity.applicationContext
