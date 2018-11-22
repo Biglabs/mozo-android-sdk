@@ -117,7 +117,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
         authRequestBuilder.setAdditionalParameters(
-                mutableMapOf("kcLocale" to locale.language)
+                mutableMapOf("kc_locale" to locale.language)
         )
         mAuthRequest.set(authRequestBuilder.build())
     }
