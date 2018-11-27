@@ -1,20 +1,24 @@
 package com.biglabs.mozo.sdk.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.widget.TextViewCompat
 import android.view.View
 import android.widget.TextView
+import androidx.core.widget.TextViewCompat
+import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.ui.widget.onBackPress
 import com.biglabs.mozo.sdk.utils.*
+import kotlinx.android.synthetic.main.view_toolbar.view.*
 import kotlinx.android.synthetic.main.view_wallet_backup.*
 import kotlinx.android.synthetic.main.view_wallet_security.*
-import kotlinx.android.synthetic.main.view_toolbar.view.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 internal class SecurityActivity : BaseActivity() {
@@ -276,6 +280,14 @@ internal class SecurityActivity : BaseActivity() {
             Intent(activity, SecurityActivity::class.java).apply {
                 putExtra(KEY_MODE, mode)
                 activity.startActivityForResult(this, requestCode)
+            }
+        }
+
+        fun startVerify(context: Context) {
+            Intent(context, SecurityActivity::class.java).apply {
+                putExtra(KEY_MODE, KEY_VERIFY_PIN)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(this)
             }
         }
     }

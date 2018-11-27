@@ -3,4 +3,8 @@
     <item
         android:id="@+id/action_demo_fragment"
         android:title="Demo Wallet Fragment" />
+
+    <item
+        android:id="@+id/action_sign_message"
+        android:title="Demo Sign Message" />
 </menu>
