@@ -15,9 +15,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.text.set
-import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
+import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
@@ -40,7 +40,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     init {
         GlobalScope.launch {
-            myAddress = WalletService.getInstance().getAddress().await()
+            myAddress = MozoWallet.getInstance().getAddress().await()
         }
     }
 

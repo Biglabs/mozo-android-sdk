@@ -10,7 +10,6 @@ import com.biglabs.mozo.sdk.common.Models.AnonymousUserInfo
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.core.MozoSocketClient
-import com.biglabs.mozo.sdk.core.WalletService
 import com.biglabs.mozo.sdk.utils.logAsError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -25,7 +24,7 @@ import java.util.*
 class MozoAuth private constructor() {
 
     private val mozoDB: MozoDatabase by lazy { MozoDatabase.getInstance(MozoSDK.context!!) }
-    private val walletService: WalletService by lazy { WalletService.getInstance() }
+    private val walletService: MozoWallet by lazy { MozoWallet.getInstance() }
 
     private val authStateManager: AuthStateManager by lazy { AuthStateManager.getInstance(MozoSDK.context!!) }
     private val mAuthService: AuthorizationService by lazy { AuthorizationService(MozoSDK.context!!) }

@@ -5,7 +5,6 @@ import android.content.Context
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.core.MozoService
-import com.biglabs.mozo.sdk.core.WalletService
 import com.biglabs.mozo.sdk.transaction.TransactionFormActivity
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 import com.biglabs.mozo.sdk.utils.CryptoUtils
@@ -41,7 +40,7 @@ class MozoTx private constructor() {
     }
 
     internal fun createTransaction(context: Context, output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = GlobalScope.async {
-        val myAddress = WalletService.getInstance().getAddress().await() ?: return@async null
+        val myAddress = MozoWallet.getInstance().getAddress().await() ?: return@async null
         val response = MozoService
                 .getInstance(context)
                 .createTransaction(
@@ -51,7 +50,7 @@ class MozoTx private constructor() {
                 }
                 .await()
         if (response != null) {
-            val privateKeyEncrypted = WalletService.getInstance().getPrivateKeyEncrypted().await()
+            val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted().await()
             val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, pin)
             privateKey?.logAsError("raw privateKey")
 

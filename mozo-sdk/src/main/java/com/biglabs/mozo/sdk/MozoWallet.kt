@@ -1,9 +1,10 @@
-package com.biglabs.mozo.sdk.core
+package com.biglabs.mozo.sdk
 
 import android.content.Context
-import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.core.MozoDatabase
+import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.utils.CryptoUtils
 import com.biglabs.mozo.sdk.utils.PreferenceUtils
@@ -17,7 +18,7 @@ import org.web3j.crypto.MnemonicUtils
 import java.security.SecureRandom
 
 @Suppress("unused")
-internal class WalletService private constructor() {
+class MozoWallet private constructor() {
 
     private val mozoDB: MozoDatabase by lazy { MozoDatabase.getInstance(MozoSDK.context!!) }
 
@@ -32,7 +33,7 @@ internal class WalletService private constructor() {
         getAddress()
     }
 
-    fun initWallet(context: Context) = GlobalScope.async {
+    internal fun initWallet(context: Context) = GlobalScope.async {
         getAddress().await()
         profile?.run {
             if (walletInfo == null || walletInfo!!.encryptSeedPhrase.isNullOrEmpty()) {
@@ -41,11 +42,11 @@ internal class WalletService private constructor() {
                 val mnemonic = MnemonicUtils.generateMnemonic(
                         SecureRandom().generateSeed(16)
                 )
-                this@WalletService.seed = mnemonic
-                this@WalletService.privateKey = CryptoUtils.getFirstAddressPrivateKey(mnemonic)
+                this@MozoWallet.seed = mnemonic
+                this@MozoWallet.privateKey = CryptoUtils.getFirstAddressPrivateKey(mnemonic)
 
                 val credentials = Credentials.create(privateKey)
-                this@WalletService.address = credentials.address
+                this@MozoWallet.address = credentials.address
 
                 /* Required input new PIN */
                 return@async SecurityActivity.KEY_CREATE_PIN
@@ -67,9 +68,9 @@ internal class WalletService private constructor() {
         getAddress().await()
         profile?.let {
             it.walletInfo = Models.WalletInfo().apply {
-                encryptSeedPhrase = CryptoUtils.encrypt(this@WalletService.seed!!, pin)
-                offchainAddress = this@WalletService.address!!
-                privateKey = CryptoUtils.encrypt(this@WalletService.privateKey!!, pin)
+                encryptSeedPhrase = CryptoUtils.encrypt(this@MozoWallet.seed!!, pin)
+                offchainAddress = this@MozoWallet.address!!
+                privateKey = CryptoUtils.encrypt(this@MozoWallet.privateKey!!, pin)
             }
 
             /* save wallet info to server */
@@ -97,7 +98,7 @@ internal class WalletService private constructor() {
         return@async success
     }
 
-    fun validatePin(pin: String) = GlobalScope.async {
+    internal fun validatePin(pin: String) = GlobalScope.async {
         getAddress().await()
         profile?.walletInfo?.run {
             if (encryptSeedPhrase.isNullOrEmpty() || pin.isEmpty()) return@async false
@@ -123,11 +124,11 @@ internal class WalletService private constructor() {
         return@async false
     }
 
-    fun isHasWallet() = profile?.walletInfo != null
+    internal fun isHasWallet() = profile?.walletInfo != null
 
     @Subscribe
-    fun onReceivePin(event: MessageEvent.Pin) {
-        EventBus.getDefault().unregister(this@WalletService)
+    internal fun onReceivePin(event: MessageEvent.Pin) {
+        EventBus.getDefault().unregister(this@MozoWallet)
         /* load data to variables */
         getAddress()
         address?.logAsError("address after synchronize")
@@ -159,16 +160,16 @@ internal class WalletService private constructor() {
     }
 
     private fun clearVariables() {
-        this@WalletService.seed = null
-        this@WalletService.privateKey = null
+        this@MozoWallet.seed = null
+        this@MozoWallet.privateKey = null
     }
 
     companion object {
         @Volatile
-        private var instance: WalletService? = null
+        private var instance: MozoWallet? = null
 
         fun getInstance() = instance ?: synchronized(this) {
-            if (instance == null) instance = WalletService()
+            if (instance == null) instance = MozoWallet()
             instance
         }!!
     }

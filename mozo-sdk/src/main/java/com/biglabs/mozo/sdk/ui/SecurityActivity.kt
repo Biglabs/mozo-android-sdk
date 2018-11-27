@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.TextView
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.core.WalletService
+import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.ui.widget.onBackPress
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.view_wallet_backup.*
@@ -57,7 +57,7 @@ internal class SecurityActivity : BaseActivity() {
 
         val paddingVertical = resources.dp2Px(10f).toInt()
         val paddingHorizontal = resources.dp2Px(8f).toInt()
-        WalletService.getInstance().getSeed()?.split(" ")?.map {
+        MozoWallet.getInstance().getSeed()?.split(" ")?.map {
             val word = TextView(this@SecurityActivity)
             word.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
             word.text = it
@@ -219,7 +219,7 @@ internal class SecurityActivity : BaseActivity() {
 
             when (mRequestCode) {
                 KEY_CREATE_PIN -> {
-                    val isSuccess = WalletService.getInstance()
+                    val isSuccess = MozoWallet.getInstance()
                             .executeSaveWallet(mPIN, this@SecurityActivity) { submitForResult() }
                             .await()
                     if (!isSuccess) {
@@ -230,7 +230,7 @@ internal class SecurityActivity : BaseActivity() {
                 }
                 KEY_ENTER_PIN -> {
                     mPIN = input_pin.text.toString()
-                    val isCorrect = WalletService.getInstance().validatePin(mPIN).await()
+                    val isCorrect = MozoWallet.getInstance().validatePin(mPIN).await()
                     initRestoreUI(!isCorrect)
                     if (isCorrect) showPinInputCorrectUI()
                     else {
@@ -241,7 +241,7 @@ internal class SecurityActivity : BaseActivity() {
                 else -> {
                     if (mRequestCode == KEY_VERIFY_PIN || mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
                         mPIN = input_pin.text.toString()
-                        val isCorrect = WalletService.getInstance().validatePin(mPIN).await()
+                        val isCorrect = MozoWallet.getInstance().validatePin(mPIN).await()
                         initVerifyUI(!isCorrect)
                         if (isCorrect) showPinInputCorrectUI()
                         else {

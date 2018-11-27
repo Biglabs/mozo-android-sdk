@@ -9,7 +9,7 @@ import org.web3j.crypto.MnemonicUtils;
 
 import java.security.SecureRandom;
 
-public class WalletServiceUnitTest {
+public class MozoWalletUnitTest {
 
     private static final String PIN = "000000";
     private static final int quantify = 10;

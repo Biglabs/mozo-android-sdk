@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.core.WalletService
+import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
 import com.biglabs.mozo.sdk.utils.Support
@@ -264,7 +264,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                         return@launch
                     }
 
-                    val flag = WalletService.getInstance().initWallet(this@MozoAuthActivity).await()
+                    val flag = MozoWallet.getInstance().initWallet(this@MozoAuthActivity).await()
                     SecurityActivity.start(this@MozoAuthActivity, flag, KEY_DO_ENTER_PIN)
                 } else {
                     //TODO handle authentication error
