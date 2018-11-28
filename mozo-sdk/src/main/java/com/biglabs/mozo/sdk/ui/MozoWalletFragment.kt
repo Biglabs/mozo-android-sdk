@@ -203,4 +203,14 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             if (MozoAuth.getInstance().isSignUpCompleted()) gone() else visible()
         }
     }
+
+    companion object {
+        @Volatile
+        private var instance: MozoWalletFragment? = null
+
+        fun getInstance() = instance ?: synchronized(this) {
+            instance = MozoWalletFragment()
+            return@synchronized instance!!
+        }
+    }
 }
