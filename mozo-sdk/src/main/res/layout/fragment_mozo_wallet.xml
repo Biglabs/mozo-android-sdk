@@ -160,6 +160,7 @@
         app:layout_constraintStart_toEndOf="@id/wallet_fragment_btn_payment_request"
         app:layout_constraintTop_toTopOf="@id/wallet_fragment_btn_payment_request"
         app:layout_constraintWidth_max="165dp"
+        app:layout_goneMarginTop="20dp"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
@@ -177,6 +178,14 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/wallet_fragment_btn_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierAllowsGoneWidgets="true"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="wallet_fragment_btn_payment_request, wallet_fragment_btn_send" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/wallet_fragment_refresh_layout"
         android:layout_width="0dp"
@@ -185,7 +194,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wallet_fragment_btn_payment_request">
+        app:layout_constraintTop_toBottomOf="@id/wallet_fragment_btn_barrier">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/wallet_fragment_history_recycler"
@@ -223,7 +232,7 @@
         android:textSize="@dimen/mozo_text_size"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wallet_fragment_btn_payment_request" />
+        app:layout_constraintTop_toBottomOf="@id/wallet_fragment_btn_barrier" />
 
     <TextView
         android:id="@+id/wallet_fragment_btn_view_all"

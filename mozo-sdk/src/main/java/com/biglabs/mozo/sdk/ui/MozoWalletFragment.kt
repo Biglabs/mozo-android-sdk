@@ -1,6 +1,8 @@
 package com.biglabs.mozo.sdk.ui
 
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +39,10 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             TransactionDetails.start(context!!, history)
         }
     }
+
+    private var buttonPaymentRequest = true
+    private var buttonSend = true
+
     private var historyAdapter = TransactionHistoryRecyclerAdapter(histories, onItemClick, null)
     private var currentAddress: String? = null
     private var fetchDataJob: Job? = null
@@ -51,11 +57,17 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         wallet_fragment_btn_refresh_balance?.click {
             if (context != null) MozoSDK.getInstance().profileViewModel.fetchBalance(context!!)
         }
-        wallet_fragment_btn_payment_request?.click {
-            if (context != null) PaymentRequestActivity.start(context!!)
+        wallet_fragment_btn_payment_request?.apply {
+            visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
+            click {
+                if (context != null) PaymentRequestActivity.start(context!!)
+            }
         }
-        wallet_fragment_btn_send?.click {
-            MozoTx.getInstance().transfer()
+        wallet_fragment_btn_send?.apply {
+            visibility = if (buttonSend) View.VISIBLE else View.GONE
+            click {
+                MozoTx.getInstance().transfer()
+            }
         }
         wallet_fragment_btn_view_all?.click {
             if (context != null) TransactionHistoryActivity.start(context!!)
@@ -83,6 +95,17 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     wallet_fragment_top_hover?.isSelected = recyclerView.canScrollVertically(-1)
                 }
             })
+        }
+    }
+
+    override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+        super.onInflate(context, attrs, savedInstanceState)
+
+        attrs?.run {
+            val typedArray = resources.obtainAttributes(this, R.styleable.MozoWalletFragment)
+            buttonPaymentRequest = typedArray.getBoolean(R.styleable.MozoWalletFragment_buttonPaymentRequest, buttonPaymentRequest)
+            buttonSend = typedArray.getBoolean(R.styleable.MozoWalletFragment_buttonSend, buttonSend)
+            typedArray.recycle()
         }
     }
 

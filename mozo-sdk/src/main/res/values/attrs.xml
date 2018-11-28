@@ -40,4 +40,9 @@
         </attr>
         <attr name="showQRCode" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="MozoWalletFragment">
+        <attr name="buttonPaymentRequest" format="boolean" />
+        <attr name="buttonSend" format="boolean" />
+    </declare-styleable>
 </resources>
