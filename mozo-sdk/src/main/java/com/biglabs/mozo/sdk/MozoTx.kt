@@ -27,8 +27,8 @@ class MozoTx private constructor() {
     private var decimal = 0.0
     private var exchangeRate = BigDecimal.ZERO
 
-    private var messageToSign: String? = null
-    private var messageToSignCallback: ((message: String, signature: String, publicKey: String) -> Unit)? = null
+    private var messagesToSign: Array<out String>? = null
+    private var callbackToSign: ((result: List<Triple<String, String, String>>) -> Unit)? = null
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
         it?.run {
@@ -105,34 +105,51 @@ class MozoTx private constructor() {
     internal fun onReceivePin(event: MessageEvent.Pin) {
         EventBus.getDefault().unregister(this)
 
-        messageToSign ?: return
+        messagesToSign ?: return
 
-        if (messageToSign!!.isNotEmpty() && messageToSignCallback != null && event.requestCode == SecurityActivity.KEY_VERIFY_PIN) {
+        if (messagesToSign!!.isNotEmpty() && callbackToSign != null && event.requestCode == SecurityActivity.KEY_VERIFY_PIN) {
             GlobalScope.launch {
                 val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted().await()
                 val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, event.pin)
-
                 val credentials = Credentials.create(privateKey)
-                val signatureData = Sign.signMessage(Numeric.hexStringToByteArray(messageToSign), credentials.ecKeyPair, false)
+                val publicKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
 
-                val signature = CryptoUtils.serializeSignature(signatureData)
-                val pubKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
+                val result = messagesToSign!!.map {
+                    val signature = CryptoUtils.serializeSignature(
+                            Sign.signMessage(
+                                    Numeric.hexStringToByteArray(it),
+                                    credentials.ecKeyPair,
+                                    false
+                            )
+                    )
+                    return@map Triple(it, signature, publicKey)
+                }
 
                 launch(Dispatchers.Main) {
-                    messageToSignCallback!!.invoke(messageToSign!!, signature, pubKey)
-                    messageToSign = null
-                    messageToSignCallback = null
+                    callbackToSign!!.invoke(result)
+                    messagesToSign = null
+                    callbackToSign = null
                 }
             }
         } else {
-            messageToSign = null
-            messageToSignCallback = null
+            messagesToSign = null
+            callbackToSign = null
         }
     }
 
-    fun signMessage(context: Context, messageToSign: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {
-        this.messageToSign = messageToSign
-        this.messageToSignCallback = callback
+    fun signMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {
+        signMessages(context, message) {
+            it.firstOrNull()?.run {
+                callback.invoke(first, second, third)
+            }
+        }
+    }
+
+    fun signMessages(context: Context, vararg messages: String, callback: (result: List<Triple<String, String, String>>) -> Unit) {
+        if (callbackToSign != null) return
+
+        this.messagesToSign = messages
+        this.callbackToSign = callback
 
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)

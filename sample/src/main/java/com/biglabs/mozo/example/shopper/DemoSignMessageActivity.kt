@@ -12,7 +12,7 @@ class DemoSignMessageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_demo_sign_message)
 
         button_sign.setOnClickListener {
-
+            /*
             MozoTx.getInstance().signMessage(this, input_to_sign.text.toString()) { message, signature, publicKey ->
                 text_result.text = StringBuilder()
                         .append("message: ")
@@ -23,6 +23,23 @@ class DemoSignMessageActivity : AppCompatActivity() {
                         .append("\n\n")
                         .append("publicKey: ")
                         .append(publicKey)
+            }
+            */
+            MozoTx.getInstance().signMessages(this, input_to_sign.text.toString(), input_to_sign.text.toString()) { result ->
+
+                val stringBuilder = StringBuilder()
+                result.mapIndexed { index, value ->
+                    stringBuilder.append("$index \nmessage: ")
+                            .append(value.first)
+                            .append("\n\n")
+                            .append("signature: ")
+                            .append(value.second)
+                            .append("\n\n")
+                            .append("publicKey: ")
+                            .append(value.third)
+                            .append("\n\n")
+                }
+                text_result.text = stringBuilder
             }
         }
     }
