@@ -204,6 +204,18 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
+    @Suppress("unused")
+    fun showPaymentRequestButton(display: Boolean) {
+        buttonPaymentRequest = display
+        wallet_fragment_btn_payment_request?.visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
+    }
+
+    @Suppress("unused")
+    fun showSendButton(display: Boolean) {
+        buttonSend = display
+        wallet_fragment_btn_send?.visibility = if (buttonSend) View.VISIBLE else View.GONE
+    }
+
     companion object {
         @Volatile
         private var instance: MozoWalletFragment? = null

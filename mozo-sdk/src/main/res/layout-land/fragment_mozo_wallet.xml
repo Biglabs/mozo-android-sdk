@@ -167,6 +167,7 @@
         app:layout_constraintStart_toEndOf="@id/wallet_fragment_btn_payment_request"
         app:layout_constraintTop_toTopOf="@id/wallet_fragment_btn_payment_request"
         app:layout_constraintWidth_max="165dp"
+        app:layout_goneMarginTop="20dp"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
