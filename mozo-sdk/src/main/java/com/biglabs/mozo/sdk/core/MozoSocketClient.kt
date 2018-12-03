@@ -16,8 +16,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.text.set
 import com.biglabs.mozo.sdk.MozoSDK
-import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.MozoWallet
+import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
@@ -86,6 +86,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
     }
 
     private fun showNotification(message: Models.BroadcastDataContent) = GlobalScope.launch {
+        MozoSDK.getInstance().notifyActivityClass ?: return@launch
+
         val context = MozoSDK.context?.applicationContext ?: return@launch
 
         val isSendType = message.from.equals(myAddress, ignoreCase = true)
@@ -127,7 +129,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event)) {
             createChannel(message.event).await()
         }
-        val resultIntent = Intent(context, MozoSDK.notifyActivityClass)
+        val resultIntent = Intent(context, MozoSDK.getInstance().notifyActivityClass)
+        // TODO put message data to intent
         val requestID = System.currentTimeMillis().toInt()
         val pendingIntent = PendingIntent.getActivity(context, requestID, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val builder = NotificationCompat.Builder(context, message.event)

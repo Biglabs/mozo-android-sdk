@@ -203,7 +203,7 @@ internal class MozoService private constructor(val context: Context) {
             }
 
             return Retrofit.Builder()
-                    .baseUrl("https://${Support.domainAPI()}/solomon/api/")
+                    .baseUrl("https://${Support.domainAPI()}/solomon/api/app/")
                     .client(client.build())
                     .addCallAdapterFactory(CoroutineCallAdapterFactory())
                     .addConverterFactory(GsonConverterFactory.create())

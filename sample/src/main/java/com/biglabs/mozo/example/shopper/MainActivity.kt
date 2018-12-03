@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.biglabs.mozo.sdk.MozoAuth
-import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.authentication.AuthenticationListener
 
 class MainActivity : AppCompatActivity() {
@@ -15,8 +14,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        MozoSDK.initialize(this, MozoSDK.ENVIRONMENT_DEVELOP)
 
         MozoAuth.getInstance().setAuthenticationListener(object : AuthenticationListener() {
             override fun onChanged(isSinged: Boolean) {
