@@ -10,7 +10,7 @@ import com.biglabs.mozo.sdk.transaction.TransactionFormActivity
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.utils.CryptoUtils
-import com.biglabs.mozo.sdk.utils.logAsError
+import com.biglabs.mozo.sdk.utils.logAsInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -46,7 +46,7 @@ class MozoTx private constructor() {
     }
 
     internal fun createTransaction(context: Context, output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = GlobalScope.async {
-        val myAddress = MozoWallet.getInstance().getAddress().await() ?: return@async null
+        val myAddress = MozoWallet.getInstance().getAddress() ?: return@async null
         val response = MozoService
                 .getInstance(context)
                 .createTransaction(
@@ -56,23 +56,20 @@ class MozoTx private constructor() {
                 }
                 .await()
         if (response != null) {
-            val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted().await()
+            val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted()
             val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, pin)
-            privateKey?.logAsError("raw privateKey")
 
             val toSign = response.toSign[0]
             val credentials = Credentials.create(privateKey)
             val signatureData = Sign.signMessage(Numeric.hexStringToByteArray(toSign), credentials.ecKeyPair, false)
 
             val signature = CryptoUtils.serializeSignature(signatureData)
-            signature.logAsError("signature")
             val pubKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
-            pubKey.logAsError("pubKey")
             response.signatures = arrayListOf(signature)
             response.publicKeys = arrayListOf(pubKey)
             return@async sendTransaction(context, response) { retryCallback(response) }.await()
         } else {
-            "create Tx failed".logAsError()
+            "create transaction failed".logAsInfo(TAG)
             return@async null
         }
     }
@@ -106,7 +103,7 @@ class MozoTx private constructor() {
 
         if (messagesToSign!!.isNotEmpty() && callbackToSign != null && event.requestCode == SecurityActivity.KEY_VERIFY_PIN) {
             GlobalScope.launch {
-                val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted().await()
+                val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted()
                 val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, event.pin)
                 val credentials = Credentials.create(privateKey)
                 val publicKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
@@ -155,6 +152,8 @@ class MozoTx private constructor() {
     }
 
     companion object {
+        private const val TAG = "Transaction"
+
         @Volatile
         private var instance: MozoTx? = null
 

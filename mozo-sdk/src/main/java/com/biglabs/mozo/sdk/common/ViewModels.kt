@@ -1,8 +1,8 @@
 package com.biglabs.mozo.sdk.common
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.content.Context
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.utils.displayString
@@ -30,10 +30,11 @@ internal object ViewModels {
 
         val balanceAndRateLiveData = MutableLiveData<BalanceAndRate>()
 
-        fun fetchData(context: Context) = GlobalScope.launch {
+        fun fetchData(context: Context, callback: (() -> Unit)? = null) = GlobalScope.launch {
             val profile = MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
             launch(Dispatchers.Main) {
                 profileLiveData.value = profile
+                callback?.invoke()
                 fetchBalance(context)
             }
         }
@@ -76,6 +77,12 @@ internal object ViewModels {
                     rate
             )
         }
+
+        fun updateProfile(p: Models.Profile) {
+            profileLiveData.value = p
+        }
+
+        fun hasWallet() = profileLiveData.value?.walletInfo != null
 
         fun clear() = GlobalScope.launch(Dispatchers.Main) {
             profileLiveData.value = null

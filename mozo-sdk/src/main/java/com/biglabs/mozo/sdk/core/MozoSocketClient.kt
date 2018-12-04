@@ -34,16 +34,8 @@ import java.util.*
 
 internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
 
-    private var myAddress: String? = null
-
     private val notificationManager: NotificationManager by lazy {
         MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    }
-
-    init {
-        GlobalScope.launch {
-            myAddress = MozoWallet.getInstance().getAddress().await()
-        }
     }
 
     override fun onOpen(serverHandshake: ServerHandshake?) {
@@ -65,8 +57,6 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                     }
 
                     message?.getData()?.run {
-                        toString().logAsError("Socket message")
-
                         if (event.equals(Constant.NOTIFY_EVENT_BALANCE_CHANGED, ignoreCase = true)) {
                             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                         }
@@ -92,7 +82,10 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
         val context = MozoSDK.getInstance().context
 
-        val isSendType = message.from.equals(myAddress, ignoreCase = true)
+        val isSendType = message.from.equals(
+                MozoWallet.getInstance().getAddress() ?: "",
+                ignoreCase = true
+        )
 
         var title = if (message.amount != null) context.getString(
                 if (isSendType) R.string.mozo_notify_title_sent else R.string.mozo_notify_title_received,

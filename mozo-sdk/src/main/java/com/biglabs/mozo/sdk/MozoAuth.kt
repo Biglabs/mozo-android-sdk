@@ -87,16 +87,17 @@ class MozoAuth private constructor() {
         EventBus.getDefault().unregister(this@MozoAuth)
 
         if (auth.isSignedIn) {
-            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
+                mAuthListener?.onChanged(true)
+            }
             MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
             MozoSocketClient.connect(MozoSDK.getInstance().context)
         } else {
             MozoSDK.getInstance().profileViewModel.clear()
             MozoSocketClient.disconnect()
+            /* notify for caller */
+            mAuthListener?.onChanged(false)
         }
-
-        /* notify for caller */
-        mAuthListener?.onChanged(auth.isSignedIn)
     }
 
     internal fun syncProfile(context: Context, retryCallback: () -> Unit) = GlobalScope.async {
@@ -110,8 +111,9 @@ class MozoAuth private constructor() {
 
             /* update local profile to match with server profile */
             mozoDB.profile().save(response)
-
-            "syncProfile OK".logAsError()
+            launch(Dispatchers.Main) {
+                MozoSDK.getInstance().profileViewModel.updateProfile(response)
+            }
         } else {
             // TODO handle fetch profile error
         }

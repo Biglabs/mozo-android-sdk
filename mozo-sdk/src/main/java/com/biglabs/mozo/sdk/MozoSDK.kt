@@ -33,9 +33,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
     internal var notifyActivityClass: Class<out Activity>? = null
 
     init {
-        /* initialize Wallet Service */
-        MozoWallet.getInstance()
-
         /* register network changes */
         val networkRequest = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
@@ -88,6 +85,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 this.serviceEnvironment = environment
                 this.isRetailerApp = isRetailerApp
                 this.instance = MozoSDK(context.applicationContext)
+
+                /* initialize Wallet Service */
+                MozoWallet.getInstance()
             }
         }
 

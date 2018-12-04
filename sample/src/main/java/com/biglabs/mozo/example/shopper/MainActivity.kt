@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.biglabs.mozo.sdk.MozoAuth
+import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.authentication.AuthenticationListener
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
                 super.onChanged(isSinged)
 
                 Log.i("MozoSDK", "Authentication changed, signed in: $isSinged")
+                Log.i("MozoSDK", "My Mozo address: ${MozoWallet.getInstance().getAddress()}")
             }
         })
     }
