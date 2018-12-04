@@ -31,5 +31,8 @@ class Constant {
         internal const val DOMAIN_SOCKET_DEV = "18.136.38.11:8089"
         internal const val DOMAIN_SOCKET_STAGING = "52.76.238.125:8089"
         internal const val DOMAIN_SOCKET_PRODUCTION = "52.76.238.125:8089"
+
+        internal const val SOCKET_CHANNEL_SHOPPER = "shopper"
+        internal const val SOCKET_CHANNEL_RETAILER = "retailer"
     }
 }

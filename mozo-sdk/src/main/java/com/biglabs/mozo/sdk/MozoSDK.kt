@@ -74,15 +74,19 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         internal var serviceEnvironment = ENVIRONMENT_PRODUCTION
 
         @Volatile
+        internal var isRetailerApp = false
+
+        @Volatile
         internal var isEnableDebugLogging = false
 
         @JvmStatic
         @Synchronized
-        fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_PRODUCTION) {
+        fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_PRODUCTION, isRetailerApp: Boolean = false) {
             if (instance == null) {
                 checkNotNull(context)
 
                 this.serviceEnvironment = environment
+                this.isRetailerApp = isRetailerApp
                 this.instance = MozoSDK(context.applicationContext)
             }
         }
@@ -102,7 +106,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         }
 
         @JvmStatic
-        fun attachActivityToReceiveNotificationMessage(activity: Class<out Activity>) {
+        fun attachNotificationReceiverActivity(activity: Class<out Activity>) {
             checkNotNull(activity)
             getInstance().notifyActivityClass = activity
         }

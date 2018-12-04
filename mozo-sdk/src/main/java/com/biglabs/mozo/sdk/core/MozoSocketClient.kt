@@ -47,11 +47,11 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
     }
 
     override fun onOpen(serverHandshake: ServerHandshake?) {
-        "open: ${serverHandshake?.httpStatus}, ${serverHandshake?.httpStatusMessage}".logAsError("web socket")
+        "open [status: ${serverHandshake?.httpStatus}, url: $uri]".logAsInfo(TAG)
     }
 
     override fun onMessage(s: String?) {
-        "message: $s".logAsError("web socket")
+        "message $s".logAsInfo(TAG)
         s?.run {
             if (equals("1|X", ignoreCase = true)) {
                 sendPing()
@@ -78,12 +78,12 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
-        "close: $code, reason: $reason, remote: $remote".logAsError("web socket")
+        "close [code: $code, reason: $reason]".logAsInfo(TAG)
         instance = null
     }
 
     override fun onError(e: Exception?) {
-        "error: ${e?.message}".logAsError("web socket")
+        "error [message: ${e?.message}]".logAsInfo(TAG)
         disconnect()
     }
 
@@ -175,14 +175,17 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
     }
 
     companion object {
+        private const val TAG = "Socket"
+
         @Volatile
         private var instance: MozoSocketClient? = null
 
         fun connect(context: Context) = synchronized(this) {
             if (instance == null) {
                 val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
+                val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
                 instance = MozoSocketClient(
-                        URI("ws://${Support.domainSocket()}/websocket/user/" + UUID.randomUUID().toString()),
+                        URI("ws://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
                         mutableMapOf(
                                 "Authorization" to "bearer $accessToken",
                                 "Content-Type" to "application/json",

@@ -10,6 +10,6 @@ class MyApplication : Application() {
 
         MozoSDK.initialize(this, MozoSDK.ENVIRONMENT_DEVELOP)
         MozoSDK.enableDebugLogging(true)
-        MozoSDK.attachActivityToReceiveNotificationMessage(MainActivity::class.java)
+        MozoSDK.attachNotificationReceiverActivity(MainActivity::class.java)
     }
 }
