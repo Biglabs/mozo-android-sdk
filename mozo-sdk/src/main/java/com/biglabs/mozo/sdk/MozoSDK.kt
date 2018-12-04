@@ -13,25 +13,10 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.core.MozoSocketClient
 
-class MozoSDK private constructor() : ViewModelStoreOwner {
+class MozoSDK private constructor(internal val context: Context) : ViewModelStoreOwner {
 
-    internal val connectivityManager: ConnectivityManager by lazy { context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
-
-    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network?) {
-            context?.run {
-                if (MozoAuth.getInstance().isSignUpCompleted()) {
-                    profileViewModel.fetchData(this)
-                    contactViewModel.fetchData(this)
-                }
-
-                MozoSocketClient.connect(this)
-            }
-        }
-
-        override fun onLost(network: Network?) {
-            MozoSocketClient.disconnect()
-        }
+    internal val connectivityManager: ConnectivityManager by lazy {
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
     private val mViewModelStore: ViewModelStore by lazy { ViewModelStore() }
@@ -53,7 +38,20 @@ class MozoSDK private constructor() : ViewModelStoreOwner {
 
         /* register network changes */
         val networkRequest = NetworkRequest.Builder().build()
-        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+        connectivityManager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network?) {
+                if (MozoAuth.getInstance().isSignUpCompleted()) {
+                    profileViewModel.fetchData(context)
+                    contactViewModel.fetchData(context)
+                }
+
+                MozoSocketClient.connect(context)
+            }
+
+            override fun onLost(network: Network?) {
+                MozoSocketClient.disconnect()
+            }
+        })
     }
 
     override fun getViewModelStore(): ViewModelStore = mViewModelStore
@@ -75,10 +73,6 @@ class MozoSDK private constructor() : ViewModelStoreOwner {
         @Volatile
         internal var serviceEnvironment = ENVIRONMENT_PRODUCTION
 
-        @SuppressLint("StaticFieldLeak")
-        @Volatile
-        internal var context: Context? = null
-
         @Volatile
         internal var isEnableDebugLogging = false
 
@@ -89,8 +83,7 @@ class MozoSDK private constructor() : ViewModelStoreOwner {
                 checkNotNull(context)
 
                 this.serviceEnvironment = environment
-                this.context = context.applicationContext
-                this.instance = MozoSDK()
+                this.instance = MozoSDK(context.applicationContext)
             }
         }
 

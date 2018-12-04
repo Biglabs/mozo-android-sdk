@@ -20,7 +20,7 @@ import java.security.SecureRandom
 @Suppress("unused")
 class MozoWallet private constructor() {
 
-    private val mozoDB: MozoDatabase by lazy { MozoDatabase.getInstance(MozoSDK.context!!) }
+    private val mozoDB: MozoDatabase by lazy { MozoDatabase.getInstance(MozoSDK.getInstance().context) }
 
     private var seed: String? = null
     private var address: String? = null

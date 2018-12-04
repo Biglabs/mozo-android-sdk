@@ -23,11 +23,11 @@ import java.util.*
 @Suppress("RedundantSuspendModifier", "unused")
 class MozoAuth private constructor() {
 
-    private val mozoDB: MozoDatabase by lazy { MozoDatabase.getInstance(MozoSDK.context!!) }
+    private val mozoDB: MozoDatabase by lazy { MozoDatabase.getInstance(MozoSDK.getInstance().context) }
     private val walletService: MozoWallet by lazy { MozoWallet.getInstance() }
 
-    private val authStateManager: AuthStateManager by lazy { AuthStateManager.getInstance(MozoSDK.context!!) }
-    private val mAuthService: AuthorizationService by lazy { AuthorizationService(MozoSDK.context!!) }
+    private val authStateManager: AuthStateManager by lazy { AuthStateManager.getInstance(MozoSDK.getInstance().context) }
+    private val mAuthService: AuthorizationService by lazy { AuthorizationService(MozoSDK.getInstance().context) }
 
     private var mAuthListener: AuthenticationListener? = null
 
@@ -39,13 +39,11 @@ class MozoAuth private constructor() {
 
     fun signIn() {
         walletService.clear()
-        MozoSDK.context?.run {
-            if (!EventBus.getDefault().isRegistered(this@MozoAuth)) {
-                EventBus.getDefault().register(this@MozoAuth)
-            }
-            MozoAuthActivity.signIn(this)
-            return
+        if (!EventBus.getDefault().isRegistered(this@MozoAuth)) {
+            EventBus.getDefault().register(this@MozoAuth)
         }
+        MozoAuthActivity.signIn(MozoSDK.getInstance().context)
+        return
     }
 
     fun isSignedIn() = authStateManager.current.isAuthorized
@@ -54,16 +52,14 @@ class MozoAuth private constructor() {
 
     fun signOut() {
         walletService.clear()
-        MozoSDK.context?.let {
-            MozoAuthActivity.signOut(it) {
+        MozoAuthActivity.signOut(MozoSDK.getInstance().context) {
 
-                onAuthorizeChanged(MessageEvent.Auth(false))
+            onAuthorizeChanged(MessageEvent.Auth(false))
 
-                GlobalScope.launch {
-                    mozoDB.userInfo().delete()
+            GlobalScope.launch {
+                mozoDB.userInfo().delete()
 
-                    authStateManager.clearSession()
-                }
+                authStateManager.clearSession()
             }
         }
     }
@@ -91,9 +87,9 @@ class MozoAuth private constructor() {
         EventBus.getDefault().unregister(this@MozoAuth)
 
         if (auth.isSignedIn) {
-            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.context!!)
-            MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.context!!)
-            MozoSocketClient.connect(MozoSDK.context!!)
+            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+            MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
+            MozoSocketClient.connect(MozoSDK.getInstance().context)
         } else {
             MozoSDK.getInstance().profileViewModel.clear()
             MozoSocketClient.disconnect()

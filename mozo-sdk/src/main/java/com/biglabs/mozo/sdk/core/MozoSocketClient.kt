@@ -36,7 +36,9 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     private var myAddress: String? = null
 
-    private val notificationManager: NotificationManager by lazy { MozoSDK.context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
+    private val notificationManager: NotificationManager by lazy {
+        MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     init {
         GlobalScope.launch {
@@ -66,7 +68,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         toString().logAsError("Socket message")
 
                         if (event.equals(Constant.NOTIFY_EVENT_BALANCE_CHANGED, ignoreCase = true)) {
-                            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.context!!)
+                            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                         }
                         showNotification(this)
                     }
@@ -88,7 +90,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
     private fun showNotification(message: Models.BroadcastDataContent) = GlobalScope.launch {
         MozoSDK.getInstance().notifyActivityClass ?: return@launch
 
-        val context = MozoSDK.context?.applicationContext ?: return@launch
+        val context = MozoSDK.getInstance().context
 
         val isSendType = message.from.equals(myAddress, ignoreCase = true)
 

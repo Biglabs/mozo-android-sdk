@@ -38,14 +38,11 @@ class MozoTx private constructor() {
     }
 
     fun transfer() {
-        MozoSDK.context?.run {
-            TransactionFormActivity.start(this)
-            return
-        }
+        TransactionFormActivity.start(MozoSDK.getInstance().context)
     }
 
     fun openTransactionHistory() {
-        TransactionHistoryActivity.start(MozoSDK.context!!)
+        TransactionHistoryActivity.start(MozoSDK.getInstance().context)
     }
 
     internal fun createTransaction(context: Context, output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = GlobalScope.async {
