@@ -8,6 +8,7 @@ import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.utils.displayString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.util.*
@@ -30,13 +31,15 @@ internal object ViewModels {
 
         val balanceAndRateLiveData = MutableLiveData<BalanceAndRate>()
 
-        fun fetchData(context: Context, callback: (() -> Unit)? = null) = GlobalScope.launch {
+        fun fetchData(context: Context, callback: (() -> Unit)? = null) = GlobalScope.async {
             val profile = MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
             launch(Dispatchers.Main) {
                 profileLiveData.value = profile
                 callback?.invoke()
                 fetchBalance(context)
             }
+
+            return@async profile
         }
 
         fun fetchBalance(context: Context) {
@@ -95,8 +98,9 @@ internal object ViewModels {
 
         fun fetchData(context: Context) {
             GlobalScope.launch {
-                val response = MozoService.getInstance(context).getContacts { fetchData(context) }.await()
-                response?.let { contactsResponse ->
+                MozoService.getInstance(context).getContacts {
+                    fetchData(context)
+                }.await()?.let { contactsResponse ->
                     launch(Dispatchers.Main) {
                         contactsLiveData.value = (contactsResponse.sortedBy { it.name })
                     }

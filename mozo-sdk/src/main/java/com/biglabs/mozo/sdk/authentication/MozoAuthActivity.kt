@@ -10,9 +10,9 @@ import androidx.core.net.toUri
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.FragmentActivity
 import com.biglabs.mozo.sdk.MozoAuth
+import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
 import com.biglabs.mozo.sdk.utils.Support
@@ -64,6 +64,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mAuthService?.dispose()
+        authenticationInProgress = false
     }
 
     /**
@@ -287,14 +288,18 @@ internal class MozoAuthActivity : FragmentActivity() {
         private const val KEY_DO_ENTER_PIN = 200
 
         private var signOutCallBack: (() -> Unit)? = null
+        @Volatile
+        private var authenticationInProgress = false
 
         private fun start(context: Context, signIn: Boolean = true) {
+            if (authenticationInProgress) return
             Intent(context, MozoAuthActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 putExtra(FLAG_MODE_SIGN_IN, signIn)
                 context.startActivity(this)
             }
+            authenticationInProgress = true
         }
 
         fun signIn(context: Context) {

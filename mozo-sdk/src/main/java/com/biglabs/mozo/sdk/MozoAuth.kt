@@ -108,11 +108,13 @@ class MozoAuth private constructor() {
             mozoDB.userInfo().save(Models.UserInfo(
                     userId = response.userId
             ))
-
-            /* update local profile to match with server profile */
-            mozoDB.profile().save(response)
-            launch(Dispatchers.Main) {
-                MozoSDK.getInstance().profileViewModel.updateProfile(response)
+            val profile = MozoSDK.getInstance().profileViewModel.fetchData(context).await()
+            if (profile == null) {
+                /* update local profile to match with server profile */
+                mozoDB.profile().save(response)
+                launch(Dispatchers.Main) {
+                    MozoSDK.getInstance().profileViewModel.updateProfile(response)
+                }
             }
         } else {
             // TODO handle fetch profile error

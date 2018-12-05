@@ -12,6 +12,9 @@ interface UserInfoDao {
     @Query("SELECT * FROM UserInfo WHERE id = :id")
     fun get(id: Long = 0L): UserInfo?
 
+    @Query("SELECT * FROM UserInfo")
+    fun getAll(): List<UserInfo>
+
     @Query("DELETE from UserInfo")
     fun delete()
 }
