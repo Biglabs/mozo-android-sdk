@@ -131,24 +131,23 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         @Volatile
         private var instance: MozoSocketClient? = null
 
-        fun connect(context: Context) = synchronized(this) {
-            if (instance == null) {
-                val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
-                val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
-                instance = MozoSocketClient(
-                        URI("ws://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
-                        mutableMapOf(
-                                "Authorization" to "bearer $accessToken",
-                                "Content-Type" to "application/json",
-                                "X-atmo-protocol" to "true",
-                                "X-Atmosphere-Framework" to "2.3.3-javascript",
-                                "X-Atmosphere-tracking-id" to "0",
-                                "X-Atmosphere-Transport" to "websocket"
-                        )
-                ).apply {
-                    connect()
-                }
+        fun connect(context: Context) = instance ?: synchronized(this) {
+            val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
+            val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
+            instance = MozoSocketClient(
+                    URI("ws://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
+                    mutableMapOf(
+                            "Authorization" to "bearer $accessToken",
+                            "Content-Type" to "application/json",
+                            "X-atmo-protocol" to "true",
+                            "X-Atmosphere-Framework" to "2.3.3-javascript",
+                            "X-Atmosphere-tracking-id" to "0",
+                            "X-Atmosphere-Transport" to "websocket"
+                    )
+            ).apply {
+                connect()
             }
+            return@synchronized instance!!
         }
 
         fun disconnect() {

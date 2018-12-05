@@ -63,9 +63,11 @@ class MozoNotification {
         }
 
         @JvmStatic
-        fun getAll(callback: (notifications: List<Notification>) -> Unit) = GlobalScope.launch {
-            val result = MozoDatabase.getInstance(MozoSDK.getInstance().context).notifications().getAll()
-            launch(Dispatchers.Main) { callback.invoke(result) }
+        fun getAll(callback: (notifications: List<Notification>) -> Unit) {
+            GlobalScope.launch {
+                val result = MozoDatabase.getInstance(MozoSDK.getInstance().context).notifications().getAll()
+                launch(Dispatchers.Main) { callback.invoke(result) }
+            }
         }
     }
 }
