@@ -2,6 +2,7 @@
 <resources>
     <dimen name="mozo_dialog_corner_radius">5dp</dimen>
 
+    <dimen name="mozo_btn_rounded_radius">22.5dp</dimen>
     <dimen name="mozo_btn_corner_radius">5dp</dimen>
     <dimen name="mozo_btn_width">45dp</dimen>
     <dimen name="mozo_btn_height">30dp</dimen>

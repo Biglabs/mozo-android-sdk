@@ -59,6 +59,15 @@
         <item name="android:layout_height">45dp</item>
     </style>
 
+    <style name="MozoMaterialButton" parent="@style/MozoButtonStyle.MozoRoundedButtonStyle">
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:buttonCornerRadius">@dimen/mozo_btn_rounded_radius</item>
+        <item name="android:backgroundTint">@color/mozo_selector_btn_color</item>
+    </style>
+
     <style name="MozoPopup" parent="Widget.AppCompat.PopupMenu">
         <item name="android:textColor">@color/mozo_color_text_main</item>
         <item name="android:itemBackground">@drawable/mozo_bg_component</item>

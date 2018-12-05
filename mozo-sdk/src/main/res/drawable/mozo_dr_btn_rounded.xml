@@ -3,13 +3,13 @@
     android:color="@color/mozo_color_ripple">
     <item android:id="@android:id/mask">
         <shape>
-            <corners android:radius="24dp" />
+            <corners android:radius="@dimen/mozo_btn_rounded_radius" />
             <solid android:color="@android:color/black" />
         </shape>
     </item>
     <item>
         <shape>
-            <corners android:radius="24dp" />
+            <corners android:radius="@dimen/mozo_btn_rounded_radius" />
             <solid android:color="@color/mozo_selector_btn_color" />
         </shape>
     </item>
