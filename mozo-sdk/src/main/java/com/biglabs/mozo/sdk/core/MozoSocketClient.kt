@@ -6,22 +6,20 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Build
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.text.set
+import com.biglabs.mozo.sdk.MozoNotification
 import com.biglabs.mozo.sdk.MozoSDK
-import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
-import com.biglabs.mozo.sdk.utils.*
+import com.biglabs.mozo.sdk.utils.Support
+import com.biglabs.mozo.sdk.utils.bitmap
+import com.biglabs.mozo.sdk.utils.color
+import com.biglabs.mozo.sdk.utils.logAsInfo
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -57,9 +55,16 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                     }
 
                     message?.getData()?.run {
+                        /* Save notification to local storage */
+                        MozoNotification.save(this)
+
+                        /* Reload balance */
                         if (event.equals(Constant.NOTIFY_EVENT_BALANCE_CHANGED, ignoreCase = true)) {
+                            @Suppress("DeferredResultUnused")
                             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                         }
+
+                        /* Do show notification on system tray */
                         showNotification(this)
                     }
                 }
@@ -81,45 +86,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         MozoSDK.getInstance().notifyActivityClass ?: return@launch
 
         val context = MozoSDK.getInstance().context
-
-        val isSendType = message.from.equals(
-                MozoWallet.getInstance().getAddress() ?: "",
-                ignoreCase = true
-        )
-
-        var title = if (message.amount != null) context.getString(
-                if (isSendType) R.string.mozo_notify_title_sent else R.string.mozo_notify_title_received,
-                Support.calculateAmountDecimal(message.amount, message.decimal).displayString()
-        ) else ""
-        var content = ""
-        var largeIcon = R.drawable.im_notification_received_sent
-
-        when (message.event) {
-            Constant.NOTIFY_EVENT_AIRDROPPED -> {
-                content = context.getString(R.string.mozo_notify_content_from, message.storeName)
-                largeIcon = R.drawable.im_notification_airdrop
-            }
-            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
-                title = context.string(if (message.comeIn) R.string.mozo_notify_title_come_in else R.string.mozo_notify_title_just_left)
-                message.phoneNo?.let {
-                    content = it.censor(3, 4)
-                }
-                largeIcon = R.drawable.im_notification_customer_came
-            }
-            else -> {
-                content = buildNotificationContent(context, isSendType, if (isSendType) message.to else message.from).await()
-            }
-        }
-
-        val contentTitle = SpannableString(title).apply {
-            set(0, length, StyleSpan(Typeface.BOLD))
-            if (!Constant.NOTIFY_EVENT_CUSTOMER_CAME.equals(message.event, ignoreCase = true))
-                set(indexOf(" "), length, ForegroundColorSpan(context.color(R.color.mozo_color_primary)))
-        }
-        val contentText = SpannableString(content).apply {
-            set(0, length, StyleSpan(Typeface.ITALIC))
-            set(0, length, ForegroundColorSpan(context.color(R.color.mozo_color_section_text)))
-        }
+        val notification = MozoNotification.prepareNotification(context, message)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event)) {
             createChannel(message.event).await()
@@ -130,10 +97,10 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         val pendingIntent = PendingIntent.getActivity(context, requestID, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val builder = NotificationCompat.Builder(context, message.event)
                 .setSmallIcon(R.drawable.ic_mozo_notification)
-                .setLargeIcon(context.bitmap(largeIcon))
+                .setLargeIcon(context.bitmap(notification.icon))
                 .setColor(context.color(R.color.mozo_color_primary))
-                .setContentTitle(contentTitle)
-                .setContentText(contentText)
+                .setContentTitle(notification.titleDisplay())
+                .setContentText(notification.contentDisplay())
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
@@ -157,15 +124,6 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun notificationChannelExists(channelId: String): Boolean = notificationManager.getNotificationChannel(channelId) != null
-
-    private fun buildNotificationContent(context: Context, isSent: Boolean, address: String) = GlobalScope.async {
-        val contact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
-
-        return@async context.getString(
-                if (isSent) R.string.mozo_notify_content_to else R.string.mozo_notify_content_from,
-                contact?.name ?: address
-        )
-    }
 
     companion object {
         private const val TAG = "Socket"

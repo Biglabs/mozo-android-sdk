@@ -57,8 +57,7 @@ class MozoAuth private constructor() {
             onAuthorizeChanged(MessageEvent.Auth(false))
 
             GlobalScope.launch {
-                mozoDB.userInfo().delete()
-
+                mozoDB.clear()
                 authStateManager.clearSession()
             }
         }

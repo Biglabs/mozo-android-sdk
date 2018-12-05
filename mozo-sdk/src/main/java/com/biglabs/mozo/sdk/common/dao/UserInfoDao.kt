@@ -16,5 +16,5 @@ interface UserInfoDao {
     fun getAll(): List<UserInfo>
 
     @Query("DELETE from UserInfo")
-    fun delete()
+    fun deleteAll()
 }

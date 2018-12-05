@@ -27,6 +27,7 @@ import com.biglabs.mozo.sdk.transaction.TransactionHistoryRecyclerAdapter
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_mozo_wallet.*
+import kotlinx.android.synthetic.main.view_wallet_state_not_login.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -95,6 +96,10 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     wallet_fragment_top_hover?.isSelected = recyclerView.canScrollVertically(-1)
                 }
             })
+        }
+
+        button_login?.click {
+            MozoAuth.getInstance().signIn()
         }
     }
 

@@ -1,15 +1,14 @@
 package com.biglabs.mozo.sdk.common
 
-import androidx.room.*
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.NonNull
+import androidx.room.*
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.displayString
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
-import kotlin.collections.ArrayList
 
 object Models {
 

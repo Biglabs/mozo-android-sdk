@@ -22,9 +22,6 @@
         </activity>
 
         <activity
-            android:name=".DemoFragmentActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".DemoSignMessageActivity"
             android:parentActivityName=".MainActivity" />
     </application>
