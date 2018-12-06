@@ -18,19 +18,30 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class NotificationFragment : Fragment() {
+
+    private val onNotificationItemClick: (position: Int) -> Unit = { index ->
+        notifications.getOrNull(index)?.let { notification ->
+            MozoNotification.markAsRead(notification) {
+                notifications[index] = it
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+    private var notifications = arrayListOf<Notification>()
+    private val adapter = NotificationAdapter(notifications, onNotificationItemClick)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_notification, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val notifications = arrayListOf<Notification>()
-        val adapter = NotificationAdapter(notifications)
         recycler_notification.setHasFixedSize(true)
         recycler_notification.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         recycler_notification.adapter = adapter
 
         MozoNotification.getAll {
+            notifications.clear()
             notifications.addAll(it)
             adapter.notifyDataSetChanged()
         }
@@ -41,9 +52,17 @@ class NotificationFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         })
+
+        button_mark_all.setOnClickListener {
+            MozoNotification.markAllAsRead { results ->
+                notifications.clear()
+                notifications.addAll(results)
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
 
-    class NotificationAdapter(private val notifications: List<Notification>) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
+    class NotificationAdapter(private val notifications: List<Notification>, private val itemClick: (position: Int) -> Unit) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
                 ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_notification, parent, false))
 
@@ -51,6 +70,9 @@ class NotificationFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.bind(notifications[position])
+            holder.itemView.setOnClickListener {
+                itemClick.invoke(position)
+            }
         }
 
         class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -62,7 +84,7 @@ class NotificationFragment : Fragment() {
                 val format = SimpleDateFormat("HH:mm:ss dd MMM yyyy", Locale.US).format(Date(notification.time))
                 view.findViewById<TextView>(R.id.item_time)?.text = format
 
-                view.setBackgroundColor(if(notification.read) Color.TRANSPARENT else Color.parseColor("#7FFFDAB0"))
+                view.setBackgroundColor(if (notification.read) Color.TRANSPARENT else Color.parseColor("#7FFFDAB0"))
             }
         }
     }

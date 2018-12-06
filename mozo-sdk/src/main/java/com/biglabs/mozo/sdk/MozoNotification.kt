@@ -55,6 +55,7 @@ class MozoNotification {
             return Notification(icon = largeIcon, title = title, content = content, type = message.event, time = message.time)
         }
 
+        @Synchronized
         internal fun save(data: Models.BroadcastDataContent) {
             GlobalScope.launch {
                 val itemId = MozoDatabase.getInstance(MozoSDK.getInstance().context)
@@ -84,14 +85,33 @@ class MozoNotification {
             MozoSDK.getInstance().onNotificationReceiveListener = listener
         }
 
+        @Synchronized
         @JvmStatic
-        fun markAsRead(notification: Notification) {
-
+        fun markAsRead(notification: Notification, callback: (notification: Notification) -> Unit) {
+            GlobalScope.launch {
+                notification.read = true
+                MozoDatabase.getInstance(MozoSDK.getInstance().context)
+                        .notifications()
+                        .updateRead(notification)
+                launch(Dispatchers.Main) { callback.invoke(notification) }
+            }
         }
 
+        @Synchronized
         @JvmStatic
-        fun markAllAsRead() {
-
+        fun markAllAsRead(callback: (notifications: List<Notification>) -> Unit) {
+            GlobalScope.launch {
+                val result = MozoDatabase.getInstance(MozoSDK.getInstance().context)
+                        .notifications()
+                        .getAll()
+                        .map {
+                            it.apply { read = true }
+                        }
+                MozoDatabase.getInstance(MozoSDK.getInstance().context)
+                        .notifications()
+                        .updateRead(*result.toTypedArray())
+                launch(Dispatchers.Main) { callback.invoke(result) }
+            }
         }
     }
 }

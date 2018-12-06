@@ -1,9 +1,6 @@
 package com.biglabs.mozo.sdk.common.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.biglabs.mozo.sdk.common.model.Notification
 
 @Dao
@@ -17,6 +14,9 @@ interface NotificationDao {
 
     @Query("SELECT * FROM notifications ORDER BY time DESC")
     fun getAll(): List<Notification>
+
+    @Update
+    fun updateRead(vararg notifications: Notification)
 
     @Query("DELETE from notifications")
     fun deleteAll()
