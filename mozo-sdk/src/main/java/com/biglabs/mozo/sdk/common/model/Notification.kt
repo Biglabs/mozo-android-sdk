@@ -15,7 +15,7 @@ import com.biglabs.mozo.sdk.utils.color
 @Entity(tableName = "notifications")
 class Notification(
         @PrimaryKey(autoGenerate = true)
-        var id: Long = 0L,
+        val id: Long = 0L,
         val read: Boolean = false,
         val icon: Int,
         val title: String,

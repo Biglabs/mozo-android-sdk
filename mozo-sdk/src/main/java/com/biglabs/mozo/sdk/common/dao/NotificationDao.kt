@@ -10,9 +10,12 @@ import com.biglabs.mozo.sdk.common.model.Notification
 interface NotificationDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun save(data: Notification)
+    fun save(data: Notification): Long
 
-    @Query("SELECT * FROM notifications")
+    @Query("SELECT * FROM notifications WHERE id = :id")
+    fun get(id: Long): Notification
+
+    @Query("SELECT * FROM notifications ORDER BY time DESC")
     fun getAll(): List<Notification>
 
     @Query("DELETE from notifications")

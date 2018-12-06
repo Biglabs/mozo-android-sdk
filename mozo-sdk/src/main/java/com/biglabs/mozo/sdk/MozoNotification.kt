@@ -3,6 +3,7 @@ package com.biglabs.mozo.sdk
 import android.content.Context
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.OnNotificationReceiveListener
 import com.biglabs.mozo.sdk.common.model.Notification
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.utils.Support
@@ -36,7 +37,7 @@ class MozoNotification {
                     largeIcon = R.drawable.im_notification_airdrop
                 }
                 Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
-                    title = context.string(if (message.comeIn) R.string.mozo_notify_title_come_in else R.string.mozo_notify_title_just_left)
+                    title = context.string(if (message.isComeIn) R.string.mozo_notify_title_come_in else R.string.mozo_notify_title_just_left)
                     message.phoneNo?.let {
                         content = it.censor(3, 4)
                     }
@@ -54,12 +55,20 @@ class MozoNotification {
             return Notification(icon = largeIcon, title = title, content = content, type = message.event, time = message.time)
         }
 
-        internal fun save(data: Models.BroadcastDataContent) = GlobalScope.launch {
-            MozoDatabase.getInstance(MozoSDK.getInstance().context)
-                    .notifications()
-                    .save(
-                            prepareNotification(MozoSDK.getInstance().context, data)
-                    )
+        internal fun save(data: Models.BroadcastDataContent) {
+            GlobalScope.launch {
+                val itemId = MozoDatabase.getInstance(MozoSDK.getInstance().context)
+                        .notifications()
+                        .save(prepareNotification(MozoSDK.getInstance().context, data))
+
+                val result = MozoDatabase.getInstance(MozoSDK.getInstance().context)
+                        .notifications()
+                        .get(itemId)
+
+                launch(Dispatchers.Main) {
+                    MozoSDK.getInstance().onNotificationReceiveListener?.onReveiced(result)
+                }
+            }
         }
 
         @JvmStatic
@@ -68,6 +77,21 @@ class MozoNotification {
                 val result = MozoDatabase.getInstance(MozoSDK.getInstance().context).notifications().getAll()
                 launch(Dispatchers.Main) { callback.invoke(result) }
             }
+        }
+
+        @JvmStatic
+        fun setNotificationReceiveListener(listener: OnNotificationReceiveListener) {
+            MozoSDK.getInstance().onNotificationReceiveListener = listener
+        }
+
+        @JvmStatic
+        fun markAsRead(notification: Notification) {
+
+        }
+
+        @JvmStatic
+        fun markAllAsRead() {
+
         }
     }
 }

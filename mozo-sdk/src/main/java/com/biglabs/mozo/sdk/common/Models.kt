@@ -235,7 +235,9 @@ object Models {
             val content: String
     ) {
         fun getData() = try {
-            Gson().fromJson(content, BroadcastDataContent::class.java)
+            Gson().fromJson(content, BroadcastDataContent::class.java)?.apply {
+                time = this@BroadcastData.time
+            }
         } catch (e: Exception) {
             null
         }
@@ -248,12 +250,12 @@ object Models {
             val amount: BigDecimal?,
             val decimal: Int,
             val symbol: String,
-            val time: Long,
+            var time: Long,
             val phoneNo: String?,
-            val comeIn: Boolean,
+            val isComeIn: Boolean,
             val storeName: String
     ) {
         override fun toString(): String =
-                "{event=$event, from=$from, to=$to, amount=$amount, decimal=$decimal, symbol=$symbol, time=$time, phoneNo=$phoneNo, comeIn=$comeIn, storeName=$storeName}"
+                "{event=$event, from=$from, to=$to, amount=$amount, decimal=$decimal, symbol=$symbol, time=$time, phoneNo=$phoneNo, comeIn=$isComeIn, storeName=$storeName}"
     }
 }

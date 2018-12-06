@@ -10,6 +10,7 @@ import androidx.annotation.IntDef
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import com.biglabs.mozo.sdk.common.OnNotificationReceiveListener
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.core.MozoSocketClient
 
@@ -31,6 +32,8 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
     }
 
     internal var notifyActivityClass: Class<out Activity>? = null
+
+    internal var onNotificationReceiveListener: OnNotificationReceiveListener? = null
 
     init {
         /* register network changes */
