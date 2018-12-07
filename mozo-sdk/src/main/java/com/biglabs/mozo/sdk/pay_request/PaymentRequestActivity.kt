@@ -1,4 +1,4 @@
-package com.biglabs.mozo.sdk.transaction
+package com.biglabs.mozo.sdk.pay_request
 
 import android.content.Context
 import android.content.Intent

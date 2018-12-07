@@ -16,6 +16,30 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/mozo_payment_request_title" />
 
+    <RadioGroup
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/payment_request_toolbar">
+
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null" />
+
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"/>
+    </RadioGroup>
+
     <TextView
         android:id="@+id/output_amount_label"
         android:layout_width="0dp"

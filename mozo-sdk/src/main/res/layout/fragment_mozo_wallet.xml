@@ -149,22 +149,35 @@
         app:layout_constraintTop_toBottomOf="@id/wallet_info_container"
         app:layout_constraintWidth_max="165dp" />
 
-    <com.google.android.material.button.MaterialButton
+    <LinearLayout
         android:id="@+id/wallet_fragment_btn_send"
-        style="@style/MozoMaterialButton"
+        style="@style/MozoButtonStyle.MozoRoundedButtonStyle"
         android:layout_width="0dp"
         android:layout_marginEnd="@dimen/mozo_screen_margin"
-        android:text="@string/mozo_button_transfer"
-        app:cornerRadius="@dimen/mozo_btn_rounded_radius"
-        app:icon="@drawable/ic_btn_send"
-        app:iconGravity="textStart"
-        app:iconPadding="5dp"
-        app:iconTint="@android:color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/wallet_fragment_btn_payment_request"
         app:layout_constraintTop_toTopOf="@id/wallet_fragment_btn_payment_request"
         app:layout_constraintWidth_max="165dp"
-        app:layout_goneMarginTop="20dp" />
+        app:layout_goneMarginTop="20dp"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:contentDescription="@string/mozo_button_transfer"
+            android:src="@drawable/ic_btn_send" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mozo_button_transfer"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/mozo_text_size"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/wallet_fragment_btn_barrier"
