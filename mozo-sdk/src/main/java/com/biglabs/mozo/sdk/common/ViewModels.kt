@@ -81,7 +81,7 @@ internal object ViewModels {
             )
         }
 
-        fun updateProfile(p: Models.Profile) {
+        fun updateProfile(p: Models.Profile) = GlobalScope.launch(Dispatchers.Main) {
             profileLiveData.value = p
         }
 

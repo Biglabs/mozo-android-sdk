@@ -258,4 +258,35 @@ object Models {
         override fun toString(): String =
                 "{event=$event, from=$from, to=$to, amount=$amount, decimal=$decimal, symbol=$symbol, time=$time, phoneNo=$phoneNo, comeIn=$isComeIn, storeName=$storeName}"
     }
+
+    data class PaymentRequest(
+            val date: Long = 0L,
+            val toAddress: String?,
+            val content: String?
+    ) : Parcelable {
+        constructor(parcel: Parcel) : this(
+                parcel.readLong(),
+                parcel.readString(),
+                parcel.readString())
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeLong(date)
+            parcel.writeString(toAddress)
+            parcel.writeString(content)
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<PaymentRequest> {
+            override fun createFromParcel(parcel: Parcel): PaymentRequest {
+                return PaymentRequest(parcel)
+            }
+
+            override fun newArray(size: Int): Array<PaymentRequest?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 }

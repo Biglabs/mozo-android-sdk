@@ -1,7 +1,7 @@
 <resources>
     <string name="mozo_address_book_title">Address Book</string>
     <string name="mozo_address_book_pick_title">Select Address</string>
-    <string name="mozo_address_book_pick_btn">Select from address Book</string>
+    <string name="mozo_address_book_pick_btn">Select from Address Book</string>
     <string name="mozo_address_book_no_result">Results not found</string>
     <string name="mozo_address_book_search_hint">Search Address</string>
 
@@ -26,6 +26,7 @@
     <string name="mozo_button_transaction_history">Transaction History</string>
     <string name="mozo_button_withdraw">Withdraw</string>
     <string name="mozo_button_payment_request">Payment Request</string>
+    <string name="mozo_button_pay">Pay</string>
 
     <string name="mozo_button_back">Back</string>
     <string name="mozo_button_cancel">Cancel</string>
@@ -72,7 +73,19 @@
 
     <string name="mozo_payment_request_title">Payment Request</string>
     <string name="mozo_payment_request_amount">Receive Amount</string>
+    <string name="mozo_payment_request_tab_list">Requested List</string>
+    <string name="mozo_payment_request_tab_create">Create Request</string>
+    <string name="mozo_payment_request_explain">You can ask another user to send Mozo to your wallet address, just by create Payment Request.</string>
     <string name="mozo_payment_request_btn_create">Create Payment Request</string>
+    <string name="mozo_payment_request_btn_send">Send Payment Request</string>
+    <string name="mozo_payment_request_btn_scan">Scan To Pay</string>
+    <string name="mozo_payment_request_text_scan_to_transfer">Scan to transfer:</string>
+    <string name="mozo_payment_request_text_send_to">Send request to</string>
+    <string name="mozo_payment_request_text_send_success">Send Payment Request Successful</string>
+    <string name="mozo_payment_request_text_sent">You sent payment request for:</string>
+    <string name="mozo_payment_request_text_sent_to">To:</string>
+    <string name="mozo_payment_request_item_label_from">From:</string>
+    <string name="mozo_payment_request_item_label_amount">Payment Request:</string>
 
     <string name="mozo_transfer_title">Send Mozo</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>

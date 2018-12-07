@@ -250,4 +250,15 @@
             android:drawableStart="@drawable/ic_action_save_user"
             android:text="@string/mozo_button_save_address" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button_pay"
+        style="@style/MozoButtonStyle.Floating"
+        android:layout_width="0dp"
+        android:text="@string/mozo_button_pay"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -129,7 +129,7 @@
         app:layout_constraintVertical_bias="0.42"
         app:layout_constraintWidth_percent="0.6"
         app:pinAnimationType="fromBottom"
-        app:pinLineColors="@drawable/mozo_dr_pin_input"
+        app:pinLineColors="@color/mozo_color_pin_input"
         app:pinLineStroke="1dp"
         app:pinLineStrokeSelected="2dp"
         app:pinTextBottomPadding="10dp"

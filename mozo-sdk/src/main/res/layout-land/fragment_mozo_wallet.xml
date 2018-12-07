@@ -139,15 +139,20 @@
 
     <Button
         android:id="@+id/wallet_fragment_btn_payment_request"
-        style="@style/MozoButtonStyle.MozoRoundedButtonStyle"
         android:layout_width="0dp"
+        android:layout_height="45dp"
         android:layout_marginStart="@dimen/mozo_screen_margin"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:background="@drawable/mozo_dr_btn_rounded"
         android:lines="1"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:text="@string/mozo_button_payment_request"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/mozo_text_size"
+        android:textStyle="bold"
         app:autoSizeMinTextSize="12sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toStartOf="@id/wallet_fragment_btn_send"
@@ -157,7 +162,7 @@
 
     <LinearLayout
         android:id="@+id/wallet_fragment_btn_send"
-        style="@style/MozoButtonStyle.MozoRoundedButtonStyle"
+        style="@style/MozoButtonStyle.Rounded"
         android:layout_width="0dp"
         android:layout_marginEnd="@dimen/mozo_screen_margin"
         android:clickable="true"

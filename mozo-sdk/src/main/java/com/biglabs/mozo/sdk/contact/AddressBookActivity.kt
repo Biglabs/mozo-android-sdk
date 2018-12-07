@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.biglabs.mozo.sdk.MozoSDK
@@ -147,6 +148,13 @@ internal class AddressBookActivity : BaseActivity() {
             Intent(activity, AddressBookActivity::class.java).apply {
                 putExtra(FLAG_START_FOR_RESULT, true)
                 activity.startActivityForResult(this, requestCode)
+            }
+        }
+
+        fun startForResult(fragment: Fragment, requestCode: Int) {
+            Intent(fragment.context, AddressBookActivity::class.java).apply {
+                putExtra(FLAG_START_FOR_RESULT, true)
+                fragment.startActivityForResult(this, requestCode)
             }
         }
     }

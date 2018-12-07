@@ -9,7 +9,7 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.utils.click
 import kotlinx.android.synthetic.main.dialog_error.*
 
-internal class ErrorDialog(context: Context, private val argument: Bundle, private val onTryAgain: (() -> Unit)? = null) : BaseDialog(context) {
+class ErrorDialog(context: Context, private val argument: Bundle, private val onTryAgain: (() -> Unit)? = null) : BaseDialog(context) {
 
     private var errorType = TYPE_GENERAL
 

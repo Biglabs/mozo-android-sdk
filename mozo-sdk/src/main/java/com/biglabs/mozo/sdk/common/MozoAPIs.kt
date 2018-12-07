@@ -40,4 +40,7 @@ internal interface MozoAPIs {
 
     @GET("exchange/rate")
     fun getExchangeRate(@Query("currency") currency: String, @Query("symbol") symbol: String): Deferred<Response<Models.ExchangeRate>>
+
+    @POST("send-payment-request")
+    fun sendPaymentRequest(@Body request: Models.PaymentRequest): Deferred<Response<Models.PaymentRequest>>
 }

@@ -15,6 +15,7 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.OnLoadMoreListener
+import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.click
 import com.biglabs.mozo.sdk.utils.gone
 import com.biglabs.mozo.sdk.utils.visible
@@ -24,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 internal class TransactionHistoryRecyclerAdapter(
@@ -36,7 +36,6 @@ internal class TransactionHistoryRecyclerAdapter(
     var address: String? = null
     private var dataFilter: List<Models.TransactionHistory>? = null
     private var dataFilterJob: Job? = null
-    private val dateFormat = SimpleDateFormat(Constant.HISTORY_TIME_FORMAT, Locale.getDefault())
 
     private var totalItemCount = 0
     private var lastVisibleItem = 0
@@ -88,7 +87,7 @@ internal class TransactionHistoryRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
             val history = getData()[position]
-            holder.bind(history, history.type(address), dateFormat.format(Date(history.time * 1000L)), position == itemCount - 1)
+            holder.bind(history, history.type(address), Support.getDisplayDate(history.time * 1000L, Constant.HISTORY_TIME_FORMAT), position == itemCount - 1)
             holder.itemView.click { itemClick?.invoke(history) }
         }
     }

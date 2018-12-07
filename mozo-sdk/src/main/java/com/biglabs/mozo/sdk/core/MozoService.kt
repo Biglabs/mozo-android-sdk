@@ -168,6 +168,18 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body()
     }
 
+    fun sendPaymentRequest(request: Models.PaymentRequest, onTryAgain: (() -> Unit)?)= GlobalScope.async {
+        var response: Response<Models.PaymentRequest>? = null
+        val ex = try {
+            response = mAPIs?.sendPaymentRequest(request)?.await()
+            null
+        } catch (e: Exception) {
+            e
+        }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body()
+    }
+
     companion object {
 
         @Volatile

@@ -37,14 +37,6 @@ class MozoTx private constructor() {
         }
     }
 
-    fun transfer() {
-        TransactionFormActivity.start(MozoSDK.getInstance().context)
-    }
-
-    fun openTransactionHistory() {
-        TransactionHistoryActivity.start(MozoSDK.getInstance().context)
-    }
-
     internal fun createTransaction(context: Context, output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = GlobalScope.async {
         val myAddress = MozoWallet.getInstance().getAddress() ?: return@async null
         val response = MozoService
@@ -91,10 +83,6 @@ class MozoTx private constructor() {
 
     internal fun getTransactionStatus(context: Context, txHash: String, retry: () -> Unit) = MozoService.getInstance(context).getTransactionStatus(txHash, retry)
 
-    internal fun amountWithDecimal(amount: String) = amountWithDecimal(amount.toBigDecimal())
-
-    internal fun amountWithDecimal(amount: BigDecimal) = amount.multiply(Math.pow(10.0, decimal).toBigDecimal())
-
     @Subscribe
     internal fun onReceivePin(event: MessageEvent.Pin) {
         EventBus.getDefault().unregister(this)
@@ -131,6 +119,16 @@ class MozoTx private constructor() {
         }
     }
 
+    fun amountWithDecimal(amount: String): BigDecimal = amountWithDecimal(amount.toBigDecimal())
+    fun amountWithDecimal(amount: BigDecimal): BigDecimal = amount.multiply(Math.pow(10.0, decimal).toBigDecimal())
+
+    fun amountNonDecimal(amount: String): BigDecimal = amountNonDecimal(amount.toBigDecimal())
+    fun amountNonDecimal(amount: BigDecimal): BigDecimal = amount.divide(Math.pow(10.0, decimal).toBigDecimal())
+
+    fun openTransactionHistory() {
+        TransactionHistoryActivity.start(MozoSDK.getInstance().context)
+    }
+
     fun signMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {
         signMessages(context, message) {
             it.firstOrNull()?.run {
@@ -151,6 +149,10 @@ class MozoTx private constructor() {
         SecurityActivity.startVerify(context)
     }
 
+    fun transfer() {
+        TransactionFormActivity.start(MozoSDK.getInstance().context)
+    }
+
     companion object {
         private const val TAG = "Transaction"
 
@@ -158,13 +160,11 @@ class MozoTx private constructor() {
         private var instance: MozoTx? = null
 
         fun getInstance() = instance ?: synchronized(this) {
-            if (instance == null) {
-                instance = MozoTx()
-                MozoSDK.getInstance().profileViewModel.run {
-                    balanceAndRateLiveData.observeForever(instance!!.balanceAndRateObserver)
-                }
+            instance = MozoTx()
+            MozoSDK.getInstance().profileViewModel.run {
+                balanceAndRateLiveData.observeForever(instance!!.balanceAndRateObserver)
             }
-            instance
-        }!!
+            return@synchronized instance!!
+        }
     }
 }

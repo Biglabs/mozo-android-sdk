@@ -20,7 +20,7 @@ import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.core.MozoService
-import com.biglabs.mozo.sdk.pay_request.PaymentRequestActivity
+import com.biglabs.mozo.sdk.transaction.payment.PaymentRequestActivity
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryRecyclerAdapter
@@ -222,12 +222,6 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     companion object {
-        @Volatile
-        private var instance: MozoWalletFragment? = null
-
-        fun getInstance() = instance ?: synchronized(this) {
-            instance = MozoWalletFragment()
-            return@synchronized instance!!
-        }
+        fun getInstance() = MozoWalletFragment()
     }
 }

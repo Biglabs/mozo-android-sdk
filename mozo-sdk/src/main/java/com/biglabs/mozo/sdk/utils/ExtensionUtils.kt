@@ -19,6 +19,8 @@ import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.MozoSDK
@@ -32,6 +34,18 @@ fun Activity.setMatchParent() {
     attrs.width = ViewGroup.LayoutParams.MATCH_PARENT
     attrs.height = ViewGroup.LayoutParams.MATCH_PARENT
     window.attributes = attrs
+}
+
+fun FragmentActivity.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
+    supportFragmentManager?.beginTransaction()?.replace(id, fragment)?.apply {
+        if (backStackName != null) addToBackStack(backStackName)
+    }?.commit()
+}
+
+fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
+    childFragmentManager.beginTransaction().replace(id, fragment).apply {
+        if (backStackName != null) addToBackStack(backStackName)
+    }.commit()
 }
 
 internal fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -160,5 +174,5 @@ fun BigDecimal.trailingZeros(scale: Int): BigDecimal {
 }
 
 fun BigDecimal?.displayString(scale: Int = 6): String {
-    return NumberFormat.getNumberInstance().format(if (this == null) BigDecimal.ZERO else trailingZeros(scale))
+    return NumberFormat.getNumberInstance().format(this?.trailingZeros(scale) ?: BigDecimal.ZERO)
 }

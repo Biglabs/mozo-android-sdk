@@ -48,11 +48,11 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".pay_request.PaymentRequestActivity"
+            android:name=".transaction.payment.PaymentRequestActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
-            android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".transaction.TransactionFormActivity"
