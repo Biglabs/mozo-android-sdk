@@ -37,6 +37,12 @@ class MozoTx private constructor() {
         }
     }
 
+    init {
+        MozoSDK.getInstance().profileViewModel.run {
+            balanceAndRateLiveData.observeForever(balanceAndRateObserver)
+        }
+    }
+
     internal fun createTransaction(context: Context, output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = GlobalScope.async {
         val myAddress = MozoWallet.getInstance().getAddress() ?: return@async null
         val response = MozoService
@@ -161,9 +167,6 @@ class MozoTx private constructor() {
 
         fun getInstance() = instance ?: synchronized(this) {
             instance = MozoTx()
-            MozoSDK.getInstance().profileViewModel.run {
-                balanceAndRateLiveData.observeForever(instance!!.balanceAndRateObserver)
-            }
             return@synchronized instance!!
         }
     }

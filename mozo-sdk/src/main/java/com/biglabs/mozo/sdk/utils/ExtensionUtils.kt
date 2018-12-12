@@ -76,6 +76,8 @@ internal fun Context.color(@ColorRes id: Int): Int {
     return ContextCompat.getColor(this, id)
 }
 
+fun Context.dimen(@DimenRes id: Int): Int = resources.getDimensionPixelSize(id)
+
 internal fun Context.bitmap(@DrawableRes icon: Int) = AppCompatResources.getDrawable(this, icon)?.toBitmap()
 
 fun visible(views: Array<View>) {

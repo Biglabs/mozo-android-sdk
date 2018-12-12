@@ -1,16 +1,16 @@
 package com.biglabs.mozo.sdk.transaction
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import android.text.InputFilter
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.MozoTx
 import com.biglabs.mozo.sdk.R
@@ -43,12 +43,25 @@ internal class TransactionFormActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_transaction_form)
 
+        /* initialize MozoTx */
+        MozoTx.getInstance()
+
         initUI()
         showInputUI()
 
-        MozoSDK.getInstance().profileViewModel.fetchBalance(this)
-        MozoSDK.getInstance().contactViewModel.run {
-            contactsLiveData.observeForever(contactsObserver)
+        MozoSDK.getInstance().profileViewModel.run {
+            balanceAndRateLiveData.observe(this@TransactionFormActivity, balanceAndRateObserver)
+            fetchBalance(this@TransactionFormActivity)
+        }
+        MozoSDK.getInstance().contactViewModel.contactsLiveData.observe(this, contactsObserver)
+
+        val address = intent?.getStringExtra(KEY_DATA_ADDRESS)
+        val amount = intent?.getStringExtra(KEY_DATA_AMOUNT)
+        if (address != null && amount != null) {
+            output_receiver_address.setText(address)
+            output_amount.setText(amount)
+            showConfirmationUI()
+            button_submit.performClick()
         }
     }
 
@@ -56,12 +69,6 @@ internal class TransactionFormActivity : BaseActivity() {
         super.onDestroy()
         selectedContact = null
         updateTxStatusJob?.cancel()
-        MozoSDK.getInstance().profileViewModel.run {
-            balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
-        }
-        MozoSDK.getInstance().contactViewModel.run {
-            contactsLiveData.removeObserver(contactsObserver)
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -123,10 +130,6 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun initUI() {
-        MozoSDK.getInstance().profileViewModel.run {
-            balanceAndRateLiveData.observeForever(balanceAndRateObserver)
-        }
-
         output_receiver_address.onTextChanged {
             hideErrorAddressUI()
             updateSubmitButton()
@@ -418,10 +421,20 @@ internal class TransactionFormActivity : BaseActivity() {
     companion object {
         private const val KEY_PICK_ADDRESS = 0x0021
         private const val KEY_VERIFY_PIN = 0x0022
+        private const val KEY_DATA_ADDRESS = "key_data_address"
+        private const val KEY_DATA_AMOUNT = "key_data_amount"
 
         fun start(context: Context) {
             Intent(context, TransactionFormActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(this)
+            }
+        }
+
+        fun start(context: Context, address: String?, amount: String?) {
+            Intent(context, TransactionFormActivity::class.java).apply {
+                putExtra(KEY_DATA_ADDRESS, address)
+                putExtra(KEY_DATA_AMOUNT, amount)
                 context.startActivity(this)
             }
         }

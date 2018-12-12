@@ -168,10 +168,34 @@ internal class MozoService private constructor(val context: Context) {
         return@async response?.body()
     }
 
-    fun sendPaymentRequest(request: Models.PaymentRequest, onTryAgain: (() -> Unit)?)= GlobalScope.async {
+    fun getPaymentRequests(page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, onTryAgain: (() -> Unit)?) = GlobalScope.async {
+        var response: Response<List<Models.PaymentRequest>>? = null
+        val ex = try {
+            response = mAPIs?.getPaymentRequests(page, size)?.await()
+            null
+        } catch (e: Exception) {
+            e
+        }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body() ?: emptyList()
+    }
+
+    fun sendPaymentRequest(toAddress: String, request: Models.PaymentRequest, onTryAgain: (() -> Unit)?) = GlobalScope.async {
         var response: Response<Models.PaymentRequest>? = null
         val ex = try {
-            response = mAPIs?.sendPaymentRequest(request)?.await()
+            response = mAPIs?.sendPaymentRequest(toAddress, request)?.await()
+            null
+        } catch (e: Exception) {
+            e
+        }
+        handleError(response, ex, onTryAgain)
+        return@async response?.body()
+    }
+
+    fun deletePaymentRequest(id: Long, onTryAgain: (() -> Unit)?) = GlobalScope.async {
+        var response: Response<Any>? = null
+        val ex = try {
+            response = mAPIs?.deletePaymentRequest(id)?.await()
             null
         } catch (e: Exception) {
             e

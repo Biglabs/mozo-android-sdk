@@ -50,6 +50,7 @@ internal class TransactionDetails : BaseActivity() {
             mPaymentRequest != null -> {
                 mPaymentRequest!!.content ?: return
                 val data = Support.parsePaymentRequest(mPaymentRequest!!.content!!)
+                targetAddress = data.firstOrNull()
                 data.lastOrNull()?.let {
                     amount = it.toBigDecimal()
                 }
@@ -57,7 +58,7 @@ internal class TransactionDetails : BaseActivity() {
                 setTitle(R.string.mozo_payment_request_title)
                 button_pay.visible()
                 button_pay.click {
-
+                    TransactionFormActivity.start(this, targetAddress, data.lastOrNull())
                 }
             }
         }
@@ -101,7 +102,7 @@ internal class TransactionDetails : BaseActivity() {
                 targetAddress = data.firstOrNull()
 
                 text_detail_status.setText(R.string.mozo_button_transfer)
-                detailTime = mPaymentRequest!!.date
+                detailTime = mPaymentRequest!!.timeInSec * 1000
                 data.lastOrNull()?.let {
                     amountDisplay = it.toBigDecimal().displayString()
                 }

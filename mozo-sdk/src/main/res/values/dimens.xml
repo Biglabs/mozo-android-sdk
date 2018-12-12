@@ -10,6 +10,8 @@
     <dimen name="mozo_screen_margin">15dp</dimen>
     <dimen name="mozo_screen_padding">40dp</dimen>
 
+    <dimen name="mozo_list_padding">20dp</dimen>
+
     <dimen name="mozo_text_size">15sp</dimen>
     <dimen name="mozo_view_min_width">300dp</dimen>
     <dimen name="mozo_view_min_height">70dp</dimen>
