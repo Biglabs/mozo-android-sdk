@@ -26,7 +26,7 @@ class MozoNotification {
 
             var title = if (message.amount != null) context.getString(
                     if (isSendType) R.string.mozo_notify_title_sent else R.string.mozo_notify_title_received,
-                    Support.calculateAmountDecimal(message.amount, message.decimal).displayString()
+                    Support.toAmountNonDecimal(message.amount, message.decimal).displayString()
             ) else ""
             var content = ""
             var largeIcon = R.drawable.im_notification_received_sent

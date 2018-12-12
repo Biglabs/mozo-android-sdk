@@ -14,6 +14,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.MnemonicUtils
+import java.math.BigDecimal
 import java.security.SecureRandom
 
 @Suppress("unused")
@@ -34,6 +35,26 @@ class MozoWallet private constructor() {
     }
 
     fun getAddress() = mProfile?.walletInfo?.offchainAddress
+
+    /**
+     * Returns the balance of current wallet.
+     *
+     * @since  2018-12-12
+     * @param  fromCache    If true the balance will be returns from cache immediately if it
+     * available, otherwise the value will be reloaded from network before returns. Default is true
+     * @param  callback     The listener to receive balance value
+     * @return              The balance of current wallet
+     */
+    fun getBalance(fromCache: Boolean = true, callback: (balance: BigDecimal) -> Unit) {
+        if (fromCache && MozoSDK.getInstance().profileViewModel.getBalance() != null) {
+            callback.invoke(MozoSDK.getInstance().profileViewModel.getBalance()!!.balanceNonDecimal())
+            return
+        }
+
+        MozoSDK.getInstance().profileViewModel.fetchBalance(MozoSDK.getInstance().context) {
+            callback.invoke(it?.balanceNonDecimal() ?: BigDecimal.ZERO)
+        }
+    }
 
     internal fun initWallet(context: Context) = GlobalScope.async {
         mProfile?.run {

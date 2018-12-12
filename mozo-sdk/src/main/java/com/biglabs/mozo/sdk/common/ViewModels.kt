@@ -42,7 +42,7 @@ internal object ViewModels {
             return@async profile
         }
 
-        fun fetchBalance(context: Context) {
+        fun fetchBalance(context: Context, callback: ((balanceInfo: Models.BalanceInfo?) -> Unit)? = null) {
             GlobalScope.launch {
                 profileLiveData.value?.walletInfo?.offchainAddress?.run {
                     val balanceInfo = MozoService.getInstance(context).getBalance(this) {
@@ -50,6 +50,7 @@ internal object ViewModels {
                     }.await()
                     launch(Dispatchers.Main) {
                         balanceInfoLiveData.value = balanceInfo
+                        callback?.invoke(balanceInfo)
                         fetchExchangeRate(context)
                     }
                 }
@@ -68,12 +69,14 @@ internal object ViewModels {
             }
         }
 
+        fun getBalance() = balanceInfoLiveData.value
+
         private fun updateBalanceAndRate() {
-            val balanceInDecimal = balanceInfoLiveData.value?.balanceInDecimal() ?: BigDecimal.ZERO
+            val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal() ?: BigDecimal.ZERO
             val rate = (exchangeRateLiveData.value?.rate ?: 0.0).toBigDecimal()
-            val balanceInCurrency = balanceInDecimal.multiply(rate)
+            val balanceInCurrency = balanceNonDecimal.multiply(rate)
             balanceAndRateLiveData.value = BalanceAndRate(
-                    balanceInDecimal,
+                    balanceNonDecimal,
                     balanceInCurrency,
                     String.format(Locale.US, "₩%s", balanceInCurrency.displayString()),
                     balanceInfoLiveData.value?.decimals ?: 0,

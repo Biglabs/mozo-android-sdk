@@ -101,7 +101,7 @@ object Models {
             val decimals: Int,
             val contractAddress: String?
     ) {
-        fun balanceInDecimal(): BigDecimal = Support.calculateAmountDecimal(balance, decimals)
+        fun balanceNonDecimal(): BigDecimal = Support.toAmountNonDecimal(balance, decimals)
     }
 
     class TransactionAddress(

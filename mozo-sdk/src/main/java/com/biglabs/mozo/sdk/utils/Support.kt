@@ -43,8 +43,8 @@ class Support {
                 hashMapOf(EncodeHintType.MARGIN to 0)
         )
 
-        fun calculateAmountDecimal(amount: BigDecimal, decimal: Int): BigDecimal = calculateAmountDecimal(amount, decimal.toDouble())
-        fun calculateAmountDecimal(amount: BigDecimal, decimal: Double): BigDecimal = amount.divide(Math.pow(10.0, decimal).toBigDecimal())
+        fun toAmountNonDecimal(amount: BigDecimal, decimal: Int): BigDecimal = toAmountNonDecimal(amount, decimal.toDouble())
+        fun toAmountNonDecimal(amount: BigDecimal, decimal: Double): BigDecimal = amount.divide(Math.pow(10.0, decimal).toBigDecimal())
 
         fun parsePaymentRequest(content: String): Array<String> {
             // mozox:0xbc049e92d22a6e544d1032b243310ac167ac2f9a?amount=1028
