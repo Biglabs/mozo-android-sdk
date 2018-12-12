@@ -60,7 +60,7 @@ class PaymentTabListFragment : Fragment() {
                         )
                     } else {
                         AlertDialog.Builder(this.context!!)
-                                .setMessage("Scanned value is invalid.")
+                                .setMessage(R.string.mozo_dialog_error_scan_invalid_msg)
                                 .setNegativeButton(android.R.string.ok, null)
                                 .show()
                     }

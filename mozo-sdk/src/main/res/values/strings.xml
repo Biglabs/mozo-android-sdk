@@ -17,6 +17,7 @@
     <string name="mozo_dialog_copied_msg">Copied!</string>
 
     <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
+    <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
     <string name="mozo_dialog_error_msg">There is an error occurred.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
