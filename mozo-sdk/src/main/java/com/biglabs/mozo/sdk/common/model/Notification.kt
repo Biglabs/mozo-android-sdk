@@ -17,6 +17,7 @@ class Notification(
         @PrimaryKey(autoGenerate = true)
         val id: Long = 0L,
         var read: Boolean = false,
+        val isSend: Boolean = false,
         val icon: Int,
         val title: String,
         val content: String,

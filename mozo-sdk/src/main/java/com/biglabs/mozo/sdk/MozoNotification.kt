@@ -52,7 +52,7 @@ class MozoNotification {
                     )
                 }
             }
-            return Notification(icon = largeIcon, title = title, content = content, type = message.event, time = message.time)
+            return Notification(isSend = isSendType, icon = largeIcon, title = title, content = content, type = message.event, time = message.time)
         }
 
         @Synchronized
