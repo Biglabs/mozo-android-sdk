@@ -260,19 +260,19 @@ object Models {
     }
 
     data class PaymentRequest(
-            val date: Long = 0L,
-            val toAddress: String?,
-            val content: String?
+            val id: Long = 0L,
+            val content: String?,
+            val timeInSec: Long = 0L
     ) : Parcelable {
         constructor(parcel: Parcel) : this(
                 parcel.readLong(),
                 parcel.readString(),
-                parcel.readString())
+                parcel.readLong())
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeLong(date)
-            parcel.writeString(toAddress)
+            parcel.writeLong(id)
             parcel.writeString(content)
+            parcel.writeLong(timeInSec)
         }
 
         override fun describeContents(): Int {

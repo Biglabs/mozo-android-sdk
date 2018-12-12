@@ -4,5 +4,5 @@ import com.biglabs.mozo.sdk.common.Models
 
 interface PaymentRequestInteractionListener {
     fun onCreateRequestClicked(amount: String)
-    fun onSendRequestClicked(amount: String, request: Models.PaymentRequest)
+    fun onSendRequestClicked(amount: String, toAddress: String, request: Models.PaymentRequest)
 }

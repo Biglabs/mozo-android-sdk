@@ -8,16 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.biglabs.mozo.sdk.MozoWallet
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.click
+import com.biglabs.mozo.sdk.utils.mozoSetup
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.fragment_payment_list.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class PaymentTabListFragment : Fragment() {
+class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val requests = arrayListOf<Models.PaymentRequest>()
 
@@ -27,6 +33,9 @@ class PaymentTabListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        payment_request_swipe_refresh.mozoSetup()
+        payment_request_swipe_refresh.setOnRefreshListener(this)
+
         val adapter = PaymentRequestRecyclerAdapter(requests, payment_request_empty_view, onItemClickListener)
         payment_request_recycler.setHasFixedSize(true)
         payment_request_recycler.adapter = adapter
@@ -34,10 +43,8 @@ class PaymentTabListFragment : Fragment() {
         button_scan_qr.click {
             Support.scanQRCode(this)
         }
-    }
 
-    private val onItemClickListener: (position: Int) -> Unit = {
-        TransactionDetails.start(this.context!!, requests[it])
+        fetchData()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -49,7 +56,7 @@ class PaymentTabListFragment : Fragment() {
                     if (param.isNotEmpty()) {
                         TransactionDetails.start(
                                 this.context!!,
-                                Models.PaymentRequest(toAddress = MozoWallet.getInstance().getAddress(), content = it)
+                                Models.PaymentRequest(content = it)
                         )
                     } else {
                         AlertDialog.Builder(this.context!!)
@@ -60,6 +67,28 @@ class PaymentTabListFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun fetchData() {
+        GlobalScope.launch {
+            val response = MozoService.getInstance(MozoSDK.getInstance().context)
+                    .getPaymentRequests(0, 100, onTryAgain = { fetchData() })
+                    .await()
+            requests.clear()
+            requests.addAll(response)
+            launch(Dispatchers.Main) {
+                payment_request_swipe_refresh?.isRefreshing = false
+                payment_request_recycler?.adapter?.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private val onItemClickListener: (position: Int) -> Unit = {
+        TransactionDetails.start(this.context!!, requests[it])
+    }
+
+    override fun onRefresh() {
+        fetchData()
     }
 
     companion object {

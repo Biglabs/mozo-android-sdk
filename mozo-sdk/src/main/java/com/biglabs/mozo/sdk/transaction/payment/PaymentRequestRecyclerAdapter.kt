@@ -51,7 +51,7 @@ class PaymentRequestRecyclerAdapter(
                 item_payment_amount.text = String.format(Locale.US, "%s Mozo", param.lastOrNull())
             }
 
-            item_payment_time.text = Support.getDisplayDate(request.date, "h:mm aa MMM dd, yyyy")
+            item_payment_time.text = Support.getDisplayDate(request.timeInSec * 1000, "h:mm aa MMM dd, yyyy")
         }
     }
 }

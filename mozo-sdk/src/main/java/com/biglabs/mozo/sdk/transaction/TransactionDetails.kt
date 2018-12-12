@@ -101,7 +101,7 @@ internal class TransactionDetails : BaseActivity() {
                 targetAddress = data.firstOrNull()
 
                 text_detail_status.setText(R.string.mozo_button_transfer)
-                detailTime = mPaymentRequest!!.date
+                detailTime = mPaymentRequest!!.timeInSec * 1000
                 data.lastOrNull()?.let {
                     amountDisplay = it.toBigDecimal().displayString()
                 }

@@ -74,11 +74,8 @@ class PaymentRequestSendFragment : Fragment() {
         button_send.click {
             mListener?.onSendRequestClicked(
                     amount,
-                    Models.PaymentRequest(
-                            toAddress = selectedContact?.soloAddress
-                                    ?: output_receiver_address.text.toString(),
-                            content = content
-                    )
+                    selectedContact?.soloAddress ?: output_receiver_address.text.toString(),
+                    Models.PaymentRequest(content = content)
             )
         }
 

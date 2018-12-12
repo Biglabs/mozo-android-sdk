@@ -41,19 +41,19 @@ internal class PaymentRequestActivity : BaseActivity(), PaymentRequestInteractio
         )
     }
 
-    override fun onSendRequestClicked(amount: String, request: Models.PaymentRequest) {
+    override fun onSendRequestClicked(amount: String, toAddress: String, request: Models.PaymentRequest) {
         GlobalScope.launch {
             val response = MozoService
                     .getInstance(this@PaymentRequestActivity)
-                    .sendPaymentRequest(request) {
-                        onSendRequestClicked(amount, request)
+                    .sendPaymentRequest(toAddress, request) {
+                        onSendRequestClicked(amount, toAddress, request)
                     }.await()
 
             launch(Dispatchers.Main) {
                 response?.let {
                     isSendCompleted = true
                     payment_request_toolbar.showBackButton(false)
-                    replace(R.id.payment_request_content_frame, PaymentRequestSentFragment.getInstance(amount, it))
+                    replace(R.id.payment_request_content_frame, PaymentRequestSentFragment.getInstance(amount, toAddress))
                 }
             }
         }
