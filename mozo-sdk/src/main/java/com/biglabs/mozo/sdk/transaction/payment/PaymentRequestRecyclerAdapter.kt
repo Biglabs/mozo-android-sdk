@@ -9,19 +9,28 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.click
+import com.biglabs.mozo.sdk.utils.gone
+import com.biglabs.mozo.sdk.utils.visible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_payment_request.*
 import java.util.*
 
 class PaymentRequestRecyclerAdapter(
         private val requests: List<Models.PaymentRequest>,
+        private val emptyView: View? = null,
         private val itemClick: ((position: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<PaymentRequestRecyclerAdapter.ItemPaymentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemPaymentViewHolder =
             ItemPaymentViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_payment_request, parent, false))
 
-    override fun getItemCount(): Int = requests.size
+    override fun getItemCount(): Int {
+        emptyView?.run {
+            if (requests.isNotEmpty()) gone()
+            else visible()
+        }
+        return requests.size
+    }
 
     override fun onBindViewHolder(holder: ItemPaymentViewHolder, position: Int) {
         holder.bind(requests[position])

@@ -19,13 +19,7 @@ import kotlinx.android.synthetic.main.fragment_payment_list.*
 
 class PaymentTabListFragment : Fragment() {
 
-    private val requests = arrayListOf(
-            Models.PaymentRequest(1544585937018L, "0xbc049e92d22a6e544d1032b243310ac167ac2f9a", "mozox:0xbc049e92d22a6e544d1032b243310ac167ac2f9a?amount=1028"),
-            Models.PaymentRequest(1544585876325L, "0xbc049e92d22a6e544d1032b243310ac167ac2f9a", "mozox:0x8f62c2331fa2d7c62c34e9653264f56e3e5658c0?amount=100"),
-            Models.PaymentRequest(1544585831300L, "0xbc049e92d22a6e544d1032b243310ac167ac2f9a", "mozox:0xa816b085db03f61ed19909fbb0006fb94c0bf959?amount=3.5"),
-            Models.PaymentRequest(1544585810627L, "0xbc049e92d22a6e544d1032b243310ac167ac2f9a", "mozox:0xf54dd76cda278afd22e6dd2593b246842c34ba9c?amount=15.0"),
-            Models.PaymentRequest(1544585798706L, "0xbc049e92d22a6e544d1032b243310ac167ac2f9a", "mozox:0x011df24265841dCdbf2e60984BB94007b0C1d76A?amount=0.5")
-    )
+    private val requests = arrayListOf<Models.PaymentRequest>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_payment_list, container, false)
@@ -33,8 +27,7 @@ class PaymentTabListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val adapter = PaymentRequestRecyclerAdapter(requests, onItemClickListener)
+        val adapter = PaymentRequestRecyclerAdapter(requests, payment_request_empty_view, onItemClickListener)
         payment_request_recycler.setHasFixedSize(true)
         payment_request_recycler.adapter = adapter
 
