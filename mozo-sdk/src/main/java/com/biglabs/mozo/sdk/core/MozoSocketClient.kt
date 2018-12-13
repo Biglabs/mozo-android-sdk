@@ -36,6 +36,10 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
+    init {
+        connect()
+    }
+
     override fun onOpen(serverHandshake: ServerHandshake?) {
         "open [status: ${serverHandshake?.httpStatus}, url: $uri]".logAsInfo(TAG)
     }
@@ -131,23 +135,24 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         @Volatile
         private var instance: MozoSocketClient? = null
 
-        fun connect(context: Context) = instance ?: synchronized(this) {
-            val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
-            val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
-            instance = MozoSocketClient(
-                    URI("ws://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
-                    mutableMapOf(
-                            "Authorization" to "bearer $accessToken",
-                            "Content-Type" to "application/json",
-                            "X-atmo-protocol" to "true",
-                            "X-Atmosphere-Framework" to "2.3.3-javascript",
-                            "X-Atmosphere-tracking-id" to "0",
-                            "X-Atmosphere-Transport" to "websocket"
-                    )
-            ).apply {
-                connect()
+        @Synchronized
+        fun connect(context: Context): MozoSocketClient {
+            if (instance == null) {
+                val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
+                val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
+                instance = MozoSocketClient(
+                        URI("ws://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
+                        mutableMapOf(
+                                "Authorization" to "bearer $accessToken",
+                                "Content-Type" to "application/json",
+                                "X-atmo-protocol" to "true",
+                                "X-Atmosphere-Framework" to "2.3.3-javascript",
+                                "X-Atmosphere-tracking-id" to "0",
+                                "X-Atmosphere-Transport" to "websocket"
+                        )
+                )
             }
-            return@synchronized instance!!
+            return instance!!
         }
 
         fun disconnect() {
