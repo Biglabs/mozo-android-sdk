@@ -130,8 +130,9 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/wallet_fragment_btn_payment_request"
+        style="@style/MozoButtonStyle.Rounded"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="@dimen/mozo_screen_margin"
@@ -144,8 +145,8 @@
         android:text="@string/mozo_button_payment_request"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textStyle="bold"
         android:textSize="@dimen/mozo_text_size"
+        android:textStyle="bold"
         app:autoSizeMinTextSize="12sp"
         app:autoSizeTextType="uniform"
         app:cornerRadius="@dimen/mozo_btn_rounded_radius"

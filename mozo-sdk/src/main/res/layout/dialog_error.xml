@@ -31,18 +31,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_error_type" />
 
-    <Button
+    <TextView
         android:id="@+id/button_try_again"
+        style="@style/MozoButtonStyle.Rounded"
         android:layout_width="wrap_content"
-        android:layout_height="45dp"
         android:layout_marginTop="27dp"
         android:layout_marginBottom="57dp"
-        android:background="@drawable/mozo_dr_btn_rounded"
         android:minWidth="143dp"
         android:text="@string/mozo_button_try_again"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

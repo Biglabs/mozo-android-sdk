@@ -27,6 +27,7 @@ internal class SecurityActivity : BaseActivity() {
     private var mPINLength = 0
     private var mShowMessageDuration = 0L
     private var mRequestCode = -1
+    private var willReturnsResult = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +47,11 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        willReturnsResult = false
+    }
+
     override fun onStop() {
         super.onStop()
         input_pin?.hideKeyboard()
@@ -54,6 +60,9 @@ internal class SecurityActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mPIN = ""
+        if (!willReturnsResult) {
+            EventBus.getDefault().post(MessageEvent.UserCancel())
+        }
     }
 
     private fun showBackupUI() {
@@ -262,6 +271,7 @@ internal class SecurityActivity : BaseActivity() {
             val intent = Intent()
             intent.putExtra(KEY_DATA, mPIN)
             setResult(RESULT_OK, intent)
+            willReturnsResult = true
             finishAndRemoveTask()
         }
     }

@@ -90,6 +90,13 @@ class MozoTx private constructor() {
     internal fun getTransactionStatus(context: Context, txHash: String, retry: () -> Unit) = MozoService.getInstance(context).getTransactionStatus(txHash, retry)
 
     @Subscribe
+    internal fun onUserCancel(event: MessageEvent.UserCancel) {
+        EventBus.getDefault().unregister(this)
+        messagesToSign = null
+        callbackToSign = null
+    }
+
+    @Subscribe
     internal fun onReceivePin(event: MessageEvent.Pin) {
         EventBus.getDefault().unregister(this)
 
