@@ -20,7 +20,10 @@ class PaymentRequestSentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        payment_request_address.text = arguments?.getString(KEY_ADDRESS)
+        val address = arguments?.getString(KEY_ADDRESS)
+        payment_request_address.text = MozoSDK.getInstance()
+                .contactViewModel
+                .findByAddress(address)?.name ?: address
 
         val amount = arguments?.getString(KEY_AMOUNT)?.toBigDecimal() ?: BigDecimal.ZERO
         payment_request_amount.text = amount.displayString()
