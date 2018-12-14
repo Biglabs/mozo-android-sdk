@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -17,6 +16,7 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
+import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.SwipeToDeleteCallback
 import com.biglabs.mozo.sdk.utils.click
@@ -71,10 +71,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
                                 Models.PaymentRequest(content = it)
                         )
                     } else {
-                        AlertDialog.Builder(this.context!!)
-                                .setMessage(R.string.mozo_dialog_error_scan_invalid_msg)
-                                .setNegativeButton(android.R.string.ok, null)
-                                .show()
+                        MessageDialog.show(this.context!!, R.string.mozo_dialog_error_scan_invalid_msg)
                     }
                 }
             }

@@ -19,6 +19,7 @@
     <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
     <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
     <string name="mozo_dialog_error_msg">There is an error occurred.</string>
+    <string name="mozo_dialog_error_not_enough_msg">Your balance is not enough for this.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
     <string name="mozo_button_login">Sign In to Mozo</string>

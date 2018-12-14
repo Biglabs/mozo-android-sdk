@@ -11,6 +11,7 @@ import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.contact.AddressAddActivity
 import com.biglabs.mozo.sdk.ui.BaseActivity
+import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.view_transaction_details.*
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +28,7 @@ internal class TransactionDetails : BaseActivity() {
 
     private var findContactJob: Job? = null
     private var targetAddress: String? = null
+    private var currentBalance = BigDecimal.ZERO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +60,10 @@ internal class TransactionDetails : BaseActivity() {
                 setTitle(R.string.mozo_payment_request_title)
                 button_pay.visible()
                 button_pay.click {
-                    TransactionFormActivity.start(this, targetAddress, data.lastOrNull())
+                    if (amount > currentBalance) {
+                        MessageDialog.show(this, R.string.mozo_dialog_error_not_enough_msg)
+                    } else
+                        TransactionFormActivity.start(this, targetAddress, data.lastOrNull())
                 }
             }
         }
@@ -70,9 +75,10 @@ internal class TransactionDetails : BaseActivity() {
                 displayContact()
             }
         })
-        MozoSDK.getInstance().profileViewModel.exchangeRateLiveData.observe(this, Observer {
+        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this, Observer {
+            currentBalance = it.balanceInDecimal
             it?.rate?.run {
-                text_detail_amount_rate_side.text = String.format(Locale.US, "(₩%s)", amount.multiply(toBigDecimal()).displayString())
+                text_detail_amount_rate_side.text = String.format(Locale.US, "(₩%s)", amount.multiply(this).displayString())
             }
         })
     }
