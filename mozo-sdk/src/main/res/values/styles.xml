@@ -47,6 +47,8 @@
 
     <!--widget styles-->
     <style name="MozoButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="enforceMaterialTheme">false</item>
+        <item name="enforceTextAppearance">false</item>
         <item name="android:layout_height">45dp</item>
         <item name="android:insetLeft">0dp</item>
         <item name="android:insetTop">0dp</item>
@@ -54,18 +56,20 @@
         <item name="android:insetBottom">0dp</item>
         <item name="android:background">@drawable/mozo_dr_btn</item>
         <item name="android:backgroundTint">@color/mozo_selector_btn_color</item>
-        <item name="android:backgroundTintMode">src_over</item>
-        <item name="android:buttonCornerRadius">@dimen/mozo_dialog_corner_radius</item>
+        <item name="backgroundTint">@color/mozo_selector_btn_color</item>
+        <item name="cornerRadius">@dimen/mozo_dialog_corner_radius</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/mozo_text_size</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">@null</item>
     </style>
 
     <style name="MozoButtonStyle.Rounded">
         <item name="android:background">@drawable/mozo_dr_btn_rounded</item>
         <item name="android:backgroundTint">@color/mozo_selector_btn_color</item>
-        <item name="android:buttonCornerRadius">@dimen/mozo_btn_rounded_radius</item>
+        <item name="backgroundTint">@color/mozo_selector_btn_color</item>
+        <item name="cornerRadius">@dimen/mozo_btn_rounded_radius</item>
         <item name="android:minWidth">143dp</item>
     </style>
 

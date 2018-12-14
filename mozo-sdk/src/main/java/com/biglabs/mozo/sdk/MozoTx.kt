@@ -89,6 +89,7 @@ class MozoTx private constructor() {
 
     internal fun getTransactionStatus(context: Context, txHash: String, retry: () -> Unit) = MozoService.getInstance(context).getTransactionStatus(txHash, retry)
 
+    @SuppressWarnings("unused")
     @Subscribe
     internal fun onUserCancel(event: MessageEvent.UserCancel) {
         EventBus.getDefault().unregister(this)
@@ -96,6 +97,7 @@ class MozoTx private constructor() {
         callbackToSign = null
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     internal fun onReceivePin(event: MessageEvent.Pin) {
         EventBus.getDefault().unregister(this)
