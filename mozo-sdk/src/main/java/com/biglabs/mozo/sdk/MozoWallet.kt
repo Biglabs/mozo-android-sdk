@@ -3,6 +3,7 @@ package com.biglabs.mozo.sdk
 import android.content.Context
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.contact.AddressBookActivity
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.ui.SecurityActivity
@@ -54,6 +55,10 @@ class MozoWallet private constructor() {
         MozoSDK.getInstance().profileViewModel.fetchBalance(MozoSDK.getInstance().context) {
             callback.invoke(it?.balanceNonDecimal() ?: BigDecimal.ZERO)
         }
+    }
+
+    fun openAddressBook() {
+        AddressBookActivity.start(MozoSDK.getInstance().context)
     }
 
     internal fun initWallet(context: Context) = GlobalScope.async {

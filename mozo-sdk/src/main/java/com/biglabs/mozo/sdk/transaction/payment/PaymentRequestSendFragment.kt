@@ -15,6 +15,7 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.contact.AddressBookActivity
+import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.*
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.fragment_payment_send.*
@@ -22,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
 import java.util.*
 
@@ -101,14 +103,18 @@ class PaymentRequestSendFragment : Fragment() {
             }
             data != null -> {
                 IntentIntegrator.parseActivityResult(requestCode, resultCode, data).contents?.let {
-                    selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
+                    if (WalletUtils.isValidAddress(it)) {
+                        selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
 
-                    showInputUI()
-                    if (selectedContact == null) {
-                        output_receiver_address.setText(it)
-                    } else
-                        showContactInfoUI()
-                    updateSubmitButton()
+                        showInputUI()
+                        if (selectedContact == null) {
+                            output_receiver_address.setText(it)
+                        } else
+                            showContactInfoUI()
+                        updateSubmitButton()
+                    } else if (context != null) {
+                        MessageDialog.show(context!!, R.string.mozo_dialog_error_scan_invalid_msg)
+                    }
                 }
             }
         }

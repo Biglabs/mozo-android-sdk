@@ -43,9 +43,6 @@ internal class TransactionFormActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_transaction_form)
 
-        /* initialize MozoTx */
-        MozoTx.getInstance()
-
         initUI()
         showInputUI()
 
@@ -58,6 +55,7 @@ internal class TransactionFormActivity : BaseActivity() {
         val address = intent?.getStringExtra(KEY_DATA_ADDRESS)
         val amount = intent?.getStringExtra(KEY_DATA_AMOUNT)
         if (address != null && amount != null) {
+            selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
             output_receiver_address.setText(address)
             output_amount.setText(amount)
             showConfirmationUI()
