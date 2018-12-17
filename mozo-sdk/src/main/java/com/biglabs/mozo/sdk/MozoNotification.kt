@@ -1,22 +1,37 @@
 package com.biglabs.mozo.sdk
 
 import android.content.Context
+import android.content.Intent
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.OnNotificationReceiveListener
 import com.biglabs.mozo.sdk.common.model.Notification
 import com.biglabs.mozo.sdk.core.MozoDatabase
+import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.censor
 import com.biglabs.mozo.sdk.utils.displayString
 import com.biglabs.mozo.sdk.utils.string
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 
 @Suppress("unused")
 class MozoNotification {
     companion object {
+
+        const val REQUEST_CODE = 0x3020
+        private const val KEY_DATA = "mozo_notification_data"
+
+        @Synchronized
+        internal fun prepareDataIntent(message: Models.BroadcastDataContent): Intent = Intent(
+                MozoSDK.getInstance().context,
+                MozoSDK.getInstance().notifyActivityClass
+        ).apply {
+            putExtra(KEY_DATA, Gson().toJson(message))
+        }
 
         internal fun prepareNotification(context: Context, message: Models.BroadcastDataContent): Notification {
             val isSendType = message.from.equals(
@@ -52,7 +67,9 @@ class MozoNotification {
                     )
                 }
             }
-            return Notification(isSend = isSendType, icon = largeIcon, title = title, content = content, type = message.event, time = message.time)
+            return Notification(isSend = isSendType, icon = largeIcon, title = title, content = content, type = message.event, time = message.time).apply {
+                raw = Gson().toJson(message)
+            }
         }
 
         @Synchronized
@@ -68,6 +85,37 @@ class MozoNotification {
 
                 launch(Dispatchers.Main) {
                     MozoSDK.getInstance().onNotificationReceiveListener?.onReveiced(result)
+                }
+            }
+        }
+
+        @Synchronized
+        internal fun openDetails(context: Context, data: String) {
+            try {
+                Gson().fromJson(data, Models.BroadcastDataContent::class.java)
+            } catch (e: Exception) {
+                null
+            }?.let {
+                when (it.event) {
+                    Constant.NOTIFY_EVENT_AIRDROPPED,
+                    Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
+                        val txHistory = Models.TransactionHistory(
+                                null,
+                                0L,
+                                null,
+                                0.0,
+                                it.amount ?: BigDecimal.ZERO,
+                                it.from,
+                                it.to,
+                                null,
+                                it.symbol,
+                                null,
+                                it.decimal,
+                                it.time / 1000L,
+                                Constant.STATUS_SUCCESS
+                        )
+                        TransactionDetails.start(context, txHistory)
+                    }
                 }
             }
         }
@@ -112,6 +160,19 @@ class MozoNotification {
                         .updateRead(*result.toTypedArray())
                 launch(Dispatchers.Main) { callback.invoke(result) }
             }
+        }
+
+        @JvmStatic
+        fun openDetails(context: Context, intent: Intent) {
+            intent.getStringExtra(KEY_DATA)?.let {
+                openDetails(context, it)
+            }
+        }
+
+        @JvmStatic
+        fun openDetails(context: Context, notification: Notification) {
+            notification.raw ?: return
+            openDetails(context, notification.raw!!)
         }
     }
 }

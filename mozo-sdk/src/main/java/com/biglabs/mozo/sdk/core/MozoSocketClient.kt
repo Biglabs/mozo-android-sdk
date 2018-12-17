@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -95,10 +94,13 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event)) {
             createChannel(message.event).await()
         }
-        val resultIntent = Intent(context, MozoSDK.getInstance().notifyActivityClass)
-        // TODO put message data to intent
-        val requestID = System.currentTimeMillis().toInt()
-        val pendingIntent = PendingIntent.getActivity(context, requestID, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val pendingIntent = PendingIntent.getActivity(
+                context,
+                MozoNotification.REQUEST_CODE,
+                MozoNotification.prepareDataIntent(message),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        )
         val builder = NotificationCompat.Builder(context, message.event)
                 .setSmallIcon(R.drawable.ic_mozo_notification)
                 .setLargeIcon(context.bitmap(notification.icon))

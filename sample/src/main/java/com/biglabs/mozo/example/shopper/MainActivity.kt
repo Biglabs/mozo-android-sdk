@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.biglabs.mozo.sdk.MozoAuth
+import com.biglabs.mozo.sdk.MozoNotification
 import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.authentication.AuthenticationListener
 import com.biglabs.mozo.sdk.ui.MozoWalletFragment
@@ -33,6 +34,13 @@ class MainActivity : AppCompatActivity() {
                 Log.i("MozoSDK", "My Mozo address: ${MozoWallet.getInstance().getAddress()}")
             }
         })
+
+        handleNotification(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleNotification(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,5 +55,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun handleNotification(intent: Intent?) {
+        intent?.let {
+            MozoNotification.openDetails(this, it)
+        }
     }
 }

@@ -24,6 +24,8 @@ class Notification(
         val type: String,
         val time: Long
 ) {
+    var raw: String? = null
+
     fun titleDisplay() = SpannableString(title).apply {
         set(0, length, StyleSpan(Typeface.BOLD))
         if (!Constant.NOTIFY_EVENT_CUSTOMER_CAME.equals(type, ignoreCase = true))
