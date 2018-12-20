@@ -6,9 +6,10 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.click
 import kotlinx.android.synthetic.main.dialog_qr_code.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 internal class QRCodeDialog(context: Context, val value: String) : BaseDialog(context) {
 
@@ -21,10 +22,10 @@ internal class QRCodeDialog(context: Context, val value: String) : BaseDialog(co
         window?.setBackgroundDrawableResource(R.drawable.mozo_bg_dialog)
         setContentView(R.layout.dialog_qr_code)
 
-        generateQRJob = launch {
+        generateQRJob = GlobalScope.launch {
             val size = context.resources.getDimensionPixelSize(R.dimen.mozo_qr_large_size)
             val qrImage = Support.generateQRCode(value, size)
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 image_qr_code?.setImageBitmap(qrImage)
             }
         }

@@ -5,10 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application android:hardwareAccelerated="true">
@@ -52,6 +48,13 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".transaction.payment.PaymentRequestActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
             android:name=".transaction.TransactionFormActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
@@ -73,6 +76,13 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
         <activity
+            android:name=".ui.ScannerQRActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+
+        <activity
             android:name="net.openid.appauth.AuthorizationManagementActivity"
             android:exported="false"
             android:launchMode="singleTask"
@@ -82,17 +92,6 @@
             android:screenOrientation="portrait"
             tools:node="replace">
             <intent-filter tools:node="removeAll" />
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="@string/auth_redirect_host"
-                    android:path="/auth/realms/mozo/login-actions/authenticate"
-                    android:scheme="https" />
-            </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -103,10 +102,5 @@
                 <data android:scheme="com.biglabs.mozosdk.${applicationId}" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="com.journeyapps.barcodescanner.CaptureActivity"
-            android:screenOrientation="portrait"
-            tools:replace="android:screenOrientation" />
     </application>
 </manifest>

@@ -1,10 +1,10 @@
 package com.biglabs.mozo.sdk.transaction
 
 import android.graphics.Typeface.BOLD
-import android.support.annotation.IntDef
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.IntDef
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
@@ -15,15 +15,16 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.OnLoadMoreListener
+import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.click
 import com.biglabs.mozo.sdk.utils.gone
 import com.biglabs.mozo.sdk.utils.visible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_history.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import java.text.SimpleDateFormat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.*
 
 internal class TransactionHistoryRecyclerAdapter(
@@ -35,7 +36,6 @@ internal class TransactionHistoryRecyclerAdapter(
     var address: String? = null
     private var dataFilter: List<Models.TransactionHistory>? = null
     private var dataFilterJob: Job? = null
-    private val dateFormat = SimpleDateFormat(Constant.HISTORY_TIME_FORMAT, Locale.getDefault())
 
     private var totalItemCount = 0
     private var lastVisibleItem = 0
@@ -87,7 +87,7 @@ internal class TransactionHistoryRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
             val history = getData()[position]
-            holder.bind(history, history.type(address), dateFormat.format(Date(history.time * 1000L)), position == itemCount - 1)
+            holder.bind(history, history.type(address), Support.getDisplayDate(history.time * 1000L, Constant.HISTORY_TIME_FORMAT), position == itemCount - 1)
             holder.itemView.click { itemClick?.invoke(history) }
         }
     }
@@ -102,14 +102,14 @@ internal class TransactionHistoryRecyclerAdapter(
 
     fun filter(@FilterMode mode: Int) {
         stopFilter()
-        dataFilterJob = launch {
+        dataFilterJob = GlobalScope.launch {
             dataFilter = when (mode) {
-                FILTER_RECEIVED -> histories.filter { it.type(address) == false }
-                FILTER_SENT -> histories.filter { it.type(address) == true }
+                FILTER_RECEIVED -> histories.filter { !it.type(address) }
+                FILTER_SENT -> histories.filter { it.type(address) }
                 else -> null
             }
 
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 dataFilterJob = null
                 notifyDataSetChanged()
             }

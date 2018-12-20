@@ -9,7 +9,7 @@ import android.view.Window
 import android.view.WindowManager
 import com.biglabs.mozo.sdk.R
 
-internal open class BaseDialog(context: Context) : Dialog(context) {
+open class BaseDialog(context: Context) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

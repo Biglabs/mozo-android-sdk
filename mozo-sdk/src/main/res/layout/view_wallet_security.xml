@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -129,7 +129,7 @@
         app:layout_constraintVertical_bias="0.42"
         app:layout_constraintWidth_percent="0.6"
         app:pinAnimationType="fromBottom"
-        app:pinLineColors="@drawable/mozo_dr_pin_input"
+        app:pinLineColors="@color/mozo_color_pin_input"
         app:pinLineStroke="1dp"
         app:pinLineStrokeSelected="2dp"
         app:pinTextBottomPadding="10dp"
@@ -171,4 +171,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/input_loading_indicator" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

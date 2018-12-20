@@ -1,10 +1,10 @@
 package com.biglabs.mozo.sdk.common
 
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.*
 
-interface MozoAPIs {
+internal interface MozoAPIs {
     @GET("contacts")
     fun getContacts(): Deferred<Response<List<Models.Contact>>>
 
@@ -40,4 +40,13 @@ interface MozoAPIs {
 
     @GET("exchange/rate")
     fun getExchangeRate(@Query("currency") currency: String, @Query("symbol") symbol: String): Deferred<Response<Models.ExchangeRate>>
+
+    @GET("payment-request")
+    fun getPaymentRequests(@Query("page") page: Int, @Query("size") size: Int, @Query("sort") sort: String = "timeInSec,desc"): Deferred<Response<List<Models.PaymentRequest>>>
+
+    @POST("payment-request/{address}")
+    fun sendPaymentRequest(@Path("address") address: String, @Body request: Models.PaymentRequest): Deferred<Response<Models.PaymentRequest>>
+
+    @DELETE("payment-request/{id}")
+    fun deletePaymentRequest(@Path("id") id: Long): Deferred<Response<Any>>
 }

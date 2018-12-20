@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:text="@string/mozo_payment_request_explain"
+        android:textColor="@color/mozo_color_error"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/output_amount_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:text="@string/mozo_payment_request_amount"
+        android:textColor="@color/mozo_color_input_focus"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintEnd_toEndOf="@android:id/text1"
+        app:layout_constraintStart_toStartOf="@android:id/text1"
+        app:layout_constraintTop_toBottomOf="@android:id/text1"
+        app:layout_goneMarginTop="60dp" />
+
+    <EditText
+        android:id="@+id/output_amount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/mozo_transfer_amount_hint"
+        android:background="@android:color/transparent"
+        android:hint="@string/mozo_transfer_amount_hint"
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
+        android:lines="1"
+        android:paddingStart="40dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="50dp"
+        android:textColor="@color/mozo_color_title"
+        android:textColorHint="@color/mozo_color_un_active"
+        android:textSize="@dimen/mozo_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/output_amount_label"
+        app:layout_constraintStart_toStartOf="@id/output_amount_label"
+        app:layout_constraintTop_toBottomOf="@id/output_amount_label"
+        tools:targetApi="o" />
+
+    <View
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="7.5dp"
+        android:background="@drawable/ic_mozo_offchain"
+        app:layout_constraintStart_toStartOf="@id/output_amount"
+        app:layout_constraintTop_toTopOf="@id/output_amount" />
+
+    <TextView
+        android:id="@+id/output_amount_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_un_active"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintBaseline_toBaselineOf="@id/output_amount"
+        app:layout_constraintEnd_toEndOf="@id/output_amount"
+        tools:text="₩100" />
+
+    <View
+        android:id="@+id/output_amount_underline"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="45dp"
+        android:background="@drawable/mozo_color_line_focus"
+        app:layout_constraintEnd_toEndOf="@id/output_amount"
+        app:layout_constraintStart_toStartOf="@id/output_amount"
+        app:layout_constraintTop_toBottomOf="@id/output_amount_label" />
+
+    <Button
+        android:id="@+id/button_submit"
+        style="@style/MozoButtonStyle.Floating"
+        android:layout_width="0dp"
+        android:enabled="false"
+        android:text="@string/mozo_payment_request_btn_create"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

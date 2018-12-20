@@ -1,7 +1,7 @@
 package com.biglabs.mozo.sdk.ui
 
-import android.support.annotation.CallSuper
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.CallSuper
+import androidx.appcompat.app.AppCompatActivity
 import com.biglabs.mozo.sdk.common.MessageEvent
 import kotlinx.android.synthetic.main.view_toolbar.*
 import org.greenrobot.eventbus.EventBus

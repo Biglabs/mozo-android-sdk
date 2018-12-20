@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -33,15 +33,13 @@
 
     <Button
         android:id="@+id/button_try_again"
-        style="@style/MozoButtonStyle.MozoRoundedButtonStyle"
+        style="@style/MozoButtonStyle.Rounded"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginTop="27dp"
         android:layout_marginBottom="57dp"
-        android:background="@drawable/mozo_dr_btn_rounded"
         android:text="@string/mozo_button_try_again"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_msg_error" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

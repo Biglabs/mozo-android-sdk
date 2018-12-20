@@ -1,6 +1,6 @@
 package com.biglabs.mozo.sdk.common.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.biglabs.mozo.sdk.common.Models.UserInfo
 
 @Dao
@@ -12,6 +12,9 @@ interface UserInfoDao {
     @Query("SELECT * FROM UserInfo WHERE id = :id")
     fun get(id: Long = 0L): UserInfo?
 
+    @Query("SELECT * FROM UserInfo")
+    fun getAll(): List<UserInfo>
+
     @Query("DELETE from UserInfo")
-    fun delete()
+    fun deleteAll()
 }

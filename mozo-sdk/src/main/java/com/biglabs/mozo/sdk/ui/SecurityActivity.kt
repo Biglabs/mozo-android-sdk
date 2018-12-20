@@ -1,36 +1,38 @@
 package com.biglabs.mozo.sdk.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.TextViewCompat
 import android.view.View
 import android.widget.TextView
+import androidx.core.widget.TextViewCompat
+import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.core.WalletService
 import com.biglabs.mozo.sdk.ui.widget.onBackPress
 import com.biglabs.mozo.sdk.utils.*
+import kotlinx.android.synthetic.main.view_toolbar.view.*
 import kotlinx.android.synthetic.main.view_wallet_backup.*
 import kotlinx.android.synthetic.main.view_wallet_security.*
-import kotlinx.android.synthetic.main.view_toolbar.view.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 internal class SecurityActivity : BaseActivity() {
 
     private var mPIN = ""
     private var mPINLength = 0
-    private var mShowMessageDuration = 0
+    private var mShowMessageDuration = 0L
     private var mRequestCode = -1
+    private var willReturnsResult = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mPINLength = getInteger(R.integer.security_pin_length)
-        mShowMessageDuration = getInteger(R.integer.security_pin_show_msg_duration)
+        mShowMessageDuration = getInteger(R.integer.security_pin_show_msg_duration).toLong()
 
         mRequestCode = intent.getIntExtra(KEY_MODE, mRequestCode)
 
@@ -45,6 +47,11 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        willReturnsResult = false
+    }
+
     override fun onStop() {
         super.onStop()
         input_pin?.hideKeyboard()
@@ -53,6 +60,9 @@ internal class SecurityActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mPIN = ""
+        if (!willReturnsResult) {
+            EventBus.getDefault().post(MessageEvent.UserCancel())
+        }
     }
 
     private fun showBackupUI() {
@@ -60,7 +70,7 @@ internal class SecurityActivity : BaseActivity() {
 
         val paddingVertical = resources.dp2Px(10f).toInt()
         val paddingHorizontal = resources.dp2Px(8f).toInt()
-        WalletService.getInstance().getSeed()?.split(" ")?.map {
+        MozoWallet.getInstance().getSeed()?.split(" ")?.map {
             val word = TextView(this@SecurityActivity)
             word.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
             word.text = it
@@ -107,8 +117,8 @@ internal class SecurityActivity : BaseActivity() {
                 }
             }
 
-            launch(UI) {
-                delay(500)
+            GlobalScope.launch(Dispatchers.Main) {
+                delay(500L)
                 showKeyboard()
             }
         }
@@ -216,51 +226,54 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
-    private fun submitForResult() = async(UI) {
-        showLoadingUI()
+    private fun submitForResult() {
+        GlobalScope.launch(Dispatchers.Main) {
+            showLoadingUI()
 
-        when (mRequestCode) {
-            KEY_CREATE_PIN -> {
-                val isSuccess = WalletService.getInstance()
-                        .executeSaveWallet(mPIN, this@SecurityActivity) { submitForResult() }
-                        .await()
-                if (!isSuccess) {
-                    showErrorAndRetryUI()
-                    return@async
+            when (mRequestCode) {
+                KEY_CREATE_PIN -> {
+                    val isSuccess = MozoWallet.getInstance()
+                            .executeSaveWallet(mPIN, this@SecurityActivity) { submitForResult() }
+                            .await()
+                    if (!isSuccess) {
+                        showErrorAndRetryUI()
+                        return@launch
+                    }
+                    showPinCreatedUI()
                 }
-                showPinCreatedUI()
-            }
-            KEY_ENTER_PIN -> {
-                mPIN = input_pin.text.toString()
-                val isCorrect = WalletService.getInstance().validatePin(mPIN).await()
-                initRestoreUI(!isCorrect)
-                if (isCorrect) showPinInputCorrectUI()
-                else {
-                    showPinInputWrongUI()
-                    return@async
-                }
-            }
-            else -> {
-                if (mRequestCode == KEY_VERIFY_PIN || mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
+                KEY_ENTER_PIN -> {
                     mPIN = input_pin.text.toString()
-                    val isCorrect = WalletService.getInstance().validatePin(mPIN).await()
-                    initVerifyUI(!isCorrect)
+                    val isCorrect = MozoWallet.getInstance().validatePin(mPIN).await()
+                    initRestoreUI(!isCorrect)
                     if (isCorrect) showPinInputCorrectUI()
                     else {
                         showPinInputWrongUI()
-                        return@async
+                        return@launch
+                    }
+                }
+                else -> {
+                    if (mRequestCode == KEY_VERIFY_PIN || mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
+                        mPIN = input_pin.text.toString()
+                        val isCorrect = MozoWallet.getInstance().validatePin(mPIN).await()
+                        initVerifyUI(!isCorrect)
+                        if (isCorrect) showPinInputCorrectUI()
+                        else {
+                            showPinInputWrongUI()
+                            return@launch
+                        }
                     }
                 }
             }
+            delay(mShowMessageDuration)
+
+            EventBus.getDefault().post(MessageEvent.Pin(mPIN, mRequestCode))
+
+            val intent = Intent()
+            intent.putExtra(KEY_DATA, mPIN)
+            setResult(RESULT_OK, intent)
+            willReturnsResult = true
+            finishAndRemoveTask()
         }
-        delay(mShowMessageDuration)
-
-        EventBus.getDefault().post(MessageEvent.Pin(mPIN, mRequestCode))
-
-        val intent = Intent()
-        intent.putExtra(KEY_DATA, mPIN)
-        setResult(RESULT_OK, intent)
-        finishAndRemoveTask()
     }
 
     companion object {
@@ -277,6 +290,14 @@ internal class SecurityActivity : BaseActivity() {
             Intent(activity, SecurityActivity::class.java).apply {
                 putExtra(KEY_MODE, mode)
                 activity.startActivityForResult(this, requestCode)
+            }
+        }
+
+        fun startVerify(context: Context) {
+            Intent(context, SecurityActivity::class.java).apply {
+                putExtra(KEY_MODE, KEY_VERIFY_PIN)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(this)
             }
         }
     }

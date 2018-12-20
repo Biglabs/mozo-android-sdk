@@ -1,18 +1,18 @@
 package com.biglabs.mozo.sdk.transaction
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
 import android.text.InputFilter
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.MozoSDK
-import com.biglabs.mozo.sdk.MozoTrans
+import com.biglabs.mozo.sdk.MozoTx
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.Models.TransactionHistory.CREATOR.MY_ADDRESS
@@ -25,11 +25,7 @@ import com.biglabs.mozo.sdk.utils.*
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.view_transaction_form.*
 import kotlinx.android.synthetic.main.view_transaction_sent.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.*
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
 import java.util.*
@@ -50,9 +46,20 @@ internal class TransactionFormActivity : BaseActivity() {
         initUI()
         showInputUI()
 
-        MozoSDK.getInstance().profileViewModel.fetchBalance(this)
-        MozoSDK.getInstance().contactViewModel.run {
-            contactsLiveData.observeForever(contactsObserver)
+        MozoSDK.getInstance().profileViewModel.run {
+            balanceAndRateLiveData.observe(this@TransactionFormActivity, balanceAndRateObserver)
+            fetchBalance(this@TransactionFormActivity)
+        }
+        MozoSDK.getInstance().contactViewModel.contactsLiveData.observe(this, contactsObserver)
+
+        val address = intent?.getStringExtra(KEY_DATA_ADDRESS)
+        val amount = intent?.getStringExtra(KEY_DATA_AMOUNT)
+        if (address != null && amount != null) {
+            selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
+            output_receiver_address.setText(address)
+            output_amount.setText(amount)
+            showConfirmationUI()
+            button_submit.performClick()
         }
     }
 
@@ -60,12 +67,6 @@ internal class TransactionFormActivity : BaseActivity() {
         super.onDestroy()
         selectedContact = null
         updateTxStatusJob?.cancel()
-        MozoSDK.getInstance().profileViewModel.run {
-            balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
-        }
-        MozoSDK.getInstance().contactViewModel.run {
-            contactsLiveData.removeObserver(contactsObserver)
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -103,14 +104,14 @@ internal class TransactionFormActivity : BaseActivity() {
         if (pin == null) return
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         val amount = output_amount.text.toString()
-        launch {
+        GlobalScope.launch {
             showLoading()
-            val txResponse = MozoTrans.getInstance()
+            val txResponse = MozoTx.getInstance()
                     .createTransaction(this@TransactionFormActivity, address, amount, pin) {
                         sendTx(pin)
                     }.await()
             history.addressTo = address
-            history.amount = MozoTrans.getInstance().amountWithDecimal(amount)
+            history.amount = MozoTx.getInstance().amountWithDecimal(amount)
             history.time = Calendar.getInstance().timeInMillis / 1000L
             showResultUI(txResponse)
             hideLoading()
@@ -127,10 +128,6 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun initUI() {
-        MozoSDK.getInstance().profileViewModel.run {
-            balanceAndRateLiveData.observeForever(balanceAndRateObserver)
-        }
-
         output_receiver_address.onTextChanged {
             hideErrorAddressUI()
             updateSubmitButton()
@@ -150,11 +147,11 @@ internal class TransactionFormActivity : BaseActivity() {
                     return@run
                 }
                 if (this.startsWith(".")) {
-                    output_amount.setText("0$this")
+                    output_amount.setText(String.format(Locale.US, "0%s", this))
                     output_amount.setSelection(this.length + 1)
                     return@run
                 }
-                launch(UI) {
+                GlobalScope.launch(Dispatchers.Main) {
                     val amount = BigDecimal(this@run)
                     val rate = String.format(Locale.US, "₩%s", amount.multiply(currentRate).displayString())
                     output_amount_rate.text = rate
@@ -170,11 +167,7 @@ internal class TransactionFormActivity : BaseActivity() {
         transfer_toolbar.onBackPress = { onBackPressed() }
         button_address_book.click { AddressBookActivity.startForResult(this, KEY_PICK_ADDRESS) }
         button_scan_qr.click {
-            IntentIntegrator(this)
-                    .setBeepEnabled(true)
-                    .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-                    .setPrompt("")
-                    .initiateScan()
+            Support.scanQRCode(this)
         }
         button_submit.click {
             if (output_receiver_address.isEnabled) {
@@ -281,7 +274,7 @@ internal class TransactionFormActivity : BaseActivity() {
         button_submit.setText(R.string.mozo_button_send)
     }
 
-    private fun showResultUI(txResponse: Models.TransactionResponse?) = async(UI) {
+    private fun showResultUI(txResponse: Models.TransactionResponse?) = GlobalScope.launch(Dispatchers.Main) {
         if (txResponse != null) {
             setContentView(R.layout.view_transaction_sent)
             button_close_transfer.click { finishAndRemoveTask() }
@@ -304,48 +297,48 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
 
-            updateTxStatusJob = updateTxStatus()
-        } else {
-            // TODO show send Tx failed UI
-            "send Tx failed UI".logAsError()
+            updateTxStatus()
         }
     }
 
-    private fun updateTxStatus() = async {
-        var pendingStatus = true
-        while (pendingStatus) {
+    private fun updateTxStatus() {
+        updateTxStatusJob?.cancel()
+        updateTxStatusJob = GlobalScope.launch {
+            var pendingStatus = true
+            while (pendingStatus) {
 
-            val txStatus = MozoTrans.getInstance().getTransactionStatus(
-                    this@TransactionFormActivity,
-                    history.txHash ?: ""
-            ) {
-                updateTxStatus()
-            }.await() ?: break
+                val txStatus = MozoTx.getInstance().getTransactionStatus(
+                        this@TransactionFormActivity,
+                        history.txHash ?: ""
+                ) {
+                    updateTxStatus()
+                }.await() ?: break
 
-            launch(UI) {
-                when {
-                    txStatus.isSuccess() -> {
-                        text_tx_status_icon.setImageResource(R.drawable.ic_check_green)
-                        text_tx_status_label.setText(R.string.mozo_view_text_tx_success)
-                        button_transaction_detail.visible()
-                        pendingStatus = false
-                        updateTxStatusJob = null
+                launch(Dispatchers.Main) {
+                    when {
+                        txStatus.isSuccess() -> {
+                            text_tx_status_icon.setImageResource(R.drawable.ic_check_green)
+                            text_tx_status_label.setText(R.string.mozo_view_text_tx_success)
+                            button_transaction_detail.visible()
+                            pendingStatus = false
+                            updateTxStatusJob = null
+                        }
+                        txStatus.isFailed() -> {
+                            text_tx_status_icon.setImageResource(R.drawable.ic_error)
+                            text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
+                            pendingStatus = false
+                            updateTxStatusJob = null
+                        }
                     }
-                    txStatus.isFailed() -> {
-                        text_tx_status_icon.setImageResource(R.drawable.ic_error)
-                        text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
-                        pendingStatus = false
-                        updateTxStatusJob = null
+
+                    if (!pendingStatus) {
+                        text_tx_status_loading.gone()
+                        text_tx_status_icon.visible()
                     }
                 }
 
-                if (!pendingStatus) {
-                    text_tx_status_loading.gone()
-                    text_tx_status_icon.visible()
-                }
+                delay(1500)
             }
-
-            delay(1500)
         }
     }
 
@@ -353,11 +346,11 @@ internal class TransactionFormActivity : BaseActivity() {
         button_submit.isEnabled = (selectedContact != null || output_receiver_address.length() > 0) && output_amount.length() > 0
     }
 
-    private fun showLoading() = async(UI) {
+    private fun showLoading() = GlobalScope.launch(Dispatchers.Main) {
         loading_container.visible()
     }
 
-    private fun hideLoading() = async(UI) {
+    private fun hideLoading() = GlobalScope.launch(Dispatchers.Main) {
         loading_container.gone()
     }
 
@@ -426,10 +419,20 @@ internal class TransactionFormActivity : BaseActivity() {
     companion object {
         private const val KEY_PICK_ADDRESS = 0x0021
         private const val KEY_VERIFY_PIN = 0x0022
+        private const val KEY_DATA_ADDRESS = "key_data_address"
+        private const val KEY_DATA_AMOUNT = "key_data_amount"
 
         fun start(context: Context) {
             Intent(context, TransactionFormActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(this)
+            }
+        }
+
+        fun start(context: Context, address: String?, amount: String?) {
+            Intent(context, TransactionFormActivity::class.java).apply {
+                putExtra(KEY_DATA_ADDRESS, address)
+                putExtra(KEY_DATA_AMOUNT, amount)
                 context.startActivity(this)
             }
         }

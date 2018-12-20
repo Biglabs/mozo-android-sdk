@@ -25,10 +25,10 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v4.text.TextUtilsCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.AppCompatEditText
+import androidx.core.content.ContextCompat
+import androidx.core.text.TextUtilsCompat
+import androidx.core.view.ViewCompat
+import androidx.appcompat.widget.AppCompatEditText
 import android.text.InputFilter
 import android.text.InputType
 import android.text.TextUtils
@@ -38,8 +38,9 @@ import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.InputMethodManager
 import com.biglabs.mozo.sdk.R
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 internal class PinEntryEditText : AppCompatEditText {
@@ -506,9 +507,7 @@ internal class PinEntryEditText : AppCompatEditText {
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             onBackPress?.let {
-                launch(UI) {
-                    it()
-                }
+                GlobalScope.launch(Dispatchers.Main) { it() }
             }
             return true
         }

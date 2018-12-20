@@ -5,20 +5,24 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.app.FragmentActivity
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
+import androidx.core.os.ConfigurationCompat
+import androidx.fragment.app.FragmentActivity
 import com.biglabs.mozo.sdk.MozoAuth
+import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.core.WalletService
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
+import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.logAsError
 import com.biglabs.mozo.sdk.utils.setMatchParent
 import com.biglabs.mozo.sdk.utils.string
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import net.openid.appauth.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -39,6 +43,8 @@ internal class MozoAuthActivity : FragmentActivity() {
     private var isSignOutBeforeIn = false
     private var isSignOutWhenError = false
 
+    private var handleJob: Job? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_loading)
@@ -58,35 +64,35 @@ internal class MozoAuthActivity : FragmentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mAuthService?.dispose()
+        authenticationInProgress = false
     }
 
     /**
      * Initializes the authorization service configuration if necessary, either from the local
      * static values or by retrieving an OpenID discovery document.
      */
-    private fun initializeAppAuth() = async {
+    private fun initializeAppAuth() = GlobalScope.launch {
         mAuthService?.dispose()
         mAuthService = AuthorizationService(this@MozoAuthActivity)
         mAuthRequest.set(null)
         mAuthIntent.set(null)
 
+        val logoutUrl = getString(R.string.auth_logout_uri, Support.domainAuth())
         signOutConfiguration = AuthorizationServiceConfiguration(
-                Uri.parse(string(R.string.auth_logout_uri)),
-                Uri.parse(string(R.string.auth_logout_uri)),
+                logoutUrl.toUri(),
+                logoutUrl.toUri(),
                 null
         )
-        if (mAuthStateManager!!.current.authorizationServiceConfiguration == null) {
-            mAuthStateManager!!.replace(AuthState(
-                    AuthorizationServiceConfiguration(
-                            Uri.parse(string(R.string.auth_end_point_authorization)),
-                            Uri.parse(string(R.string.auth_end_point_token))
-                    )
-            ))
-        }
+        mAuthStateManager!!.replace(AuthState(
+                AuthorizationServiceConfiguration(
+                        getString(R.string.auth_end_point_authorization, Support.domainAuth()).toUri(),
+                        getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
+                )
+        ))
 
         if (modeSignIn) {
             doSignOutFirst()
-            return@async
+            return@launch
         }
         initializeAuthRequest()
     }
@@ -110,6 +116,10 @@ internal class MozoAuthActivity : FragmentActivity() {
                 .setPrompt("login")
                 .setScope("openid profile phone")
 
+        val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
+        authRequestBuilder.setAdditionalParameters(
+                mutableMapOf("kc_locale" to locale.language)
+        )
         mAuthRequest.set(authRequestBuilder.build())
     }
 
@@ -144,7 +154,7 @@ internal class MozoAuthActivity : FragmentActivity() {
         val intent = mAuthService!!.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get())
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             startActivityForResult(intent, KEY_DO_AUTHENTICATION)
         }
     }
@@ -164,10 +174,14 @@ internal class MozoAuthActivity : FragmentActivity() {
         extras.putParcelableArrayList(CustomTabsIntent.EXTRA_MENU_ITEMS, null)
         customTabs.intent.putExtras(extras)
 
-        val intent = mAuthService!!.getAuthorizationRequestIntent(authRequest, customTabs)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-        startActivityForResult(intent, KEY_DO_AUTHENTICATION)
+        try {
+            val intent = mAuthService!!.getAuthorizationRequestIntent(authRequest, customTabs)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+            startActivityForResult(intent, KEY_DO_AUTHENTICATION)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -176,7 +190,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                 if (isSignOutWhenError) {
                     mAuthStateManager?.clearSession()
                     EventBus.getDefault().post(MessageEvent.Auth(modeSignIn))
-                    finishAndRemoveTask()
+                    finish()
                     return
                 }
                 if (isSignOutBeforeIn) {
@@ -199,13 +213,13 @@ internal class MozoAuthActivity : FragmentActivity() {
                         exchangeAuthorizationCode(response)
                     }
                     else -> {
-                        finishAndRemoveTask()
+                        finish()
                     }
                 }
             }
             requestCode == KEY_DO_ENTER_PIN -> {
                 EventBus.getDefault().post(MessageEvent.Auth(modeSignIn))
-                finishAndRemoveTask()
+                finish()
             }
             !modeSignIn -> {
                 handleResult()
@@ -233,33 +247,38 @@ internal class MozoAuthActivity : FragmentActivity() {
         mAuthService!!.performTokenRequest(request, clientAuthentication, callback)
     }
 
-    private fun handleResult(exception: Exception? = null) = async {
-        if (modeSignIn) {
-            if (exception == null) {
-                val response = MozoAuth.getInstance()
-                        .syncProfile(this@MozoAuthActivity) { handleResult(null) }
-                        .await()
-                if (response == null) {
-                    ErrorDialog.onCancel(DialogInterface.OnCancelListener {
-                        isSignOutWhenError = true
-                        doSignOutFirst()
-                    })
-                    return@async
+    private fun handleResult(exception: Exception? = null) {
+        handleJob?.cancel()
+        handleJob = GlobalScope.launch {
+            if (modeSignIn) {
+                if (exception == null) {
+                    val response = MozoAuth.getInstance()
+                            .syncProfile(this@MozoAuthActivity) {
+                                handleResult()
+                            }
+                            .await()
+                    if (response == null) {
+                        ErrorDialog.onCancel(DialogInterface.OnCancelListener {
+                            isSignOutWhenError = true
+                            doSignOutFirst()
+                        })
+                        return@launch
+                    }
+
+                    val flag = MozoWallet.getInstance().initWallet(this@MozoAuthActivity).await()
+                    SecurityActivity.start(this@MozoAuthActivity, flag, KEY_DO_ENTER_PIN)
+                } else {
+                    //TODO handle authentication error
+                    exception.message?.logAsError("authentication")
                 }
+                return@launch
+            } else
+                signOutCallBack?.invoke()
 
-                val flag = WalletService.getInstance().initWallet(this@MozoAuthActivity).await()
-                SecurityActivity.start(this@MozoAuthActivity, flag, KEY_DO_ENTER_PIN)
-            } else {
-                //TODO handle authentication error
-                exception.message?.logAsError("authentication")
+            launch(Dispatchers.Main) {
+                EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, exception))
+                finish()
             }
-            return@async
-        } else
-            signOutCallBack?.invoke()
-
-        launch(UI) {
-            EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, exception))
-            finishAndRemoveTask()
         }
     }
 
@@ -269,14 +288,18 @@ internal class MozoAuthActivity : FragmentActivity() {
         private const val KEY_DO_ENTER_PIN = 200
 
         private var signOutCallBack: (() -> Unit)? = null
+        @Volatile
+        private var authenticationInProgress = false
 
         private fun start(context: Context, signIn: Boolean = true) {
+            if (authenticationInProgress) return
             Intent(context, MozoAuthActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 putExtra(FLAG_MODE_SIGN_IN, signIn)
                 context.startActivity(this)
             }
+            authenticationInProgress = true
         }
 
         fun signIn(context: Context) {

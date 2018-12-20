@@ -1,8 +1,9 @@
 package com.biglabs.mozo.sdk.utils
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import com.biglabs.mozo.sdk.ui.PermissionWrapperActivity
 
 
@@ -16,6 +17,12 @@ class PermissionUtils {
                 return false
             }
             return true
+        }
+
+        fun requestLocationPermission(context: Context) {
+            PermissionWrapperActivity.startRequestPermission(context, arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            ))
         }
     }
 }

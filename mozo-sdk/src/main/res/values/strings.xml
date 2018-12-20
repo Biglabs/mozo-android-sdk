@@ -1,7 +1,7 @@
 <resources>
     <string name="mozo_address_book_title">Address Book</string>
     <string name="mozo_address_book_pick_title">Select Address</string>
-    <string name="mozo_address_book_pick_btn">Select from address Book</string>
+    <string name="mozo_address_book_pick_btn">Select from Address Book</string>
     <string name="mozo_address_book_no_result">Results not found</string>
     <string name="mozo_address_book_search_hint">Search Address</string>
 
@@ -13,13 +13,13 @@
     <string name="mozo_address_add_msg_error">This address already exists in your Address Book</string>
 
     <string name="mozo_dialog_qr_code">Your Mozo Wallet Address</string>
-    <string name="mozo_dialog_storage_permission_title">Storage Access</string>
-    <string name="mozo_dialog_storage_permission_msg">Storage permission is required for this feature.</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
     <string name="mozo_dialog_copied_msg">Copied!</string>
 
     <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
+    <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
     <string name="mozo_dialog_error_msg">There is an error occurred.</string>
+    <string name="mozo_dialog_error_not_enough_msg">Your balance is not enough for this.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
     <string name="mozo_button_login">Sign In to Mozo</string>
@@ -27,6 +27,8 @@
     <string name="mozo_button_transfer">Send Mozo</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
     <string name="mozo_button_withdraw">Withdraw</string>
+    <string name="mozo_button_payment_request">Payment Request</string>
+    <string name="mozo_button_pay">Pay</string>
 
     <string name="mozo_button_back">Back</string>
     <string name="mozo_button_cancel">Cancel</string>
@@ -64,6 +66,30 @@
     <string name="mozo_pin_msg_enter_incorrect">Incorrect PIN</string>
     <string name="mozo_pin_msg_error">Create Wallet failed</string>
 
+    <string name="mozo_notify_title_come_in">Customer come in</string>
+    <string name="mozo_notify_title_just_left">Customer has just left</string>
+    <string name="mozo_notify_title_received">Received %s Mozo</string>
+    <string name="mozo_notify_title_sent">Sent %s Mozo</string>
+    <string name="mozo_notify_content_from">From %s</string>
+    <string name="mozo_notify_content_to">To %s</string>
+
+    <string name="mozo_payment_request_title">Payment Request</string>
+    <string name="mozo_payment_request_amount">Receive Amount</string>
+    <string name="mozo_payment_request_tab_list">Requested List</string>
+    <string name="mozo_payment_request_tab_create">Create Request</string>
+    <string name="mozo_payment_request_explain">You can ask another user to send Mozo to your wallet address, just by create Payment Request.</string>
+    <string name="mozo_payment_request_btn_create">Create Payment Request</string>
+    <string name="mozo_payment_request_btn_send">Send Payment Request</string>
+    <string name="mozo_payment_request_btn_scan">Scan To Pay</string>
+    <string name="mozo_payment_request_text_scan_to_transfer">Scan to transfer:</string>
+    <string name="mozo_payment_request_text_send_to">Send request to</string>
+    <string name="mozo_payment_request_text_send_success">Send Payment Request Successful</string>
+    <string name="mozo_payment_request_text_sent">You sent payment request for:</string>
+    <string name="mozo_payment_request_text_sent_to">To:</string>
+    <string name="mozo_payment_request_text_empty">Payment request list is empty</string>
+    <string name="mozo_payment_request_item_label_from">From:</string>
+    <string name="mozo_payment_request_item_label_amount">Payment Request:</string>
+
     <string name="mozo_transfer_title">Send Mozo</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>
     <string name="mozo_transfer_from">From Mozo Offchain Wallet</string>
@@ -99,4 +125,6 @@
     <string name="mozo_view_text_tx_pending">Pending</string>
     <string name="mozo_view_text_tx_failed">Failed</string>
     <string name="mozo_view_text_tx_success">Success</string>
+    <string name="mozo_view_text_view_all">View All</string>
+    <string name="mozo_view_text_total_mozo">Total Mozo Coin</string>
 </resources>

@@ -3,10 +3,10 @@ package com.biglabs.mozo.sdk.ui.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
+import androidx.recyclerview.widget.RecyclerView
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.contact.ContactSectionDecoration
 

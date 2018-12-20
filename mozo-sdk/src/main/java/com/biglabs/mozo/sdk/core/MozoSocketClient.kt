@@ -5,47 +5,46 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
-import android.support.v4.content.ContextCompat
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.biglabs.mozo.sdk.MozoNotification
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.utils.Support
-import com.biglabs.mozo.sdk.utils.displayString
-import com.biglabs.mozo.sdk.utils.logAsError
+import com.biglabs.mozo.sdk.utils.bitmap
+import com.biglabs.mozo.sdk.utils.color
+import com.biglabs.mozo.sdk.utils.logAsInfo
 import com.google.gson.Gson
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import java.util.*
 
-class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
+internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
 
-    private var myAddress: String? = null
-
-    private val notificationManager: NotificationManager by lazy { MozoSDK.context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
+    private val notificationManager: NotificationManager by lazy {
+        MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     init {
-        launch {
-            myAddress = WalletService.getInstance().getAddress().await()
-        }
+        connect()
     }
 
     override fun onOpen(serverHandshake: ServerHandshake?) {
-        "open: ${serverHandshake?.httpStatus}, ${serverHandshake?.httpStatusMessage}".logAsError("web socket")
+        "open [status: ${serverHandshake?.httpStatus}, url: $uri]".logAsInfo(TAG)
     }
 
     override fun onMessage(s: String?) {
-        "message: $s".logAsError("web socket")
+        "message $s".logAsInfo(TAG)
         s?.run {
             if (equals("1|X", ignoreCase = true)) {
                 sendPing()
@@ -59,15 +58,16 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
                     }
 
                     message?.getData()?.run {
-                        if (event.equals(Constant.NOTIFY_EVENT_BALANCE_CHANGED, ignoreCase = true)) {
-                            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.context!!)
-                        }
-                        event.logAsError("message event")
-                        amount.toString().logAsError("message amount")
-                        decimal.toString().logAsError("decimal")
-                        from.logAsError("from")
-                        to.logAsError("to")
+                        /* Save notification to local storage */
+                        MozoNotification.save(this)
 
+                        /* Reload balance */
+                        if (event.equals(Constant.NOTIFY_EVENT_BALANCE_CHANGED, ignoreCase = true)) {
+                            @Suppress("DeferredResultUnused")
+                            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+                        }
+
+                        /* Do show notification on system tray */
                         showNotification(this)
                     }
                 }
@@ -76,50 +76,49 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
-        "close: $code, reason: $reason, remote: $remote".logAsError("web socket")
+        "close [code: $code, reason: $reason]".logAsInfo(TAG)
         instance = null
     }
 
     override fun onError(e: Exception?) {
-        "error: ${e?.message}".logAsError("web socket")
+        "error [message: ${e?.message}]".logAsInfo(TAG)
         disconnect()
     }
 
-    private fun showNotification(message: Models.BroadcastDataContent) = launch {
-        MozoSDK.context?.applicationContext?.run {
+    private fun showNotification(message: Models.BroadcastDataContent) = GlobalScope.launch {
+        MozoSDK.getInstance().notifyActivityClass ?: return@launch
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (!notificationChannelExists(message.event)) {
-                    createChannel(message.event).await()
-                }
-            }
-            val isSendType = message.from.equals(myAddress, ignoreCase = true)
+        val context = MozoSDK.getInstance().context
+        val notification = MozoNotification.prepareNotification(context, message)
 
-            val resultIntent = Intent(this, MozoSDK.notifyActivityClass)
-            val requestID = System.currentTimeMillis().toInt()
-            val pendingIntent = PendingIntent.getActivity(this, requestID, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event)) {
+            createChannel(message.event).await()
+        }
 
-            val notifyTitle = String.format(Locale.US, "You %s %s Mozo", (if (isSendType) "sent" else "received"), Support.calculateAmountDecimal(message.amount, message.decimal).displayString())
-            val notifyContent = if (isSendType) buildNotificationContent("To", message.to).await() else buildNotificationContent("From", message.from).await()
-
-            val builder = NotificationCompat.Builder(this, message.event)
-                    .setSmallIcon(R.drawable.ic_mozo_notification)
-                    .setColor(ContextCompat.getColor(this, R.color.mozo_color_primary))
-                    .setContentTitle(notifyTitle)
-                    .setContentText(notifyContent)
-                    .setAutoCancel(true)
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setContentIntent(pendingIntent)
-            launch(UI) {
-                NotificationManagerCompat
-                        .from(this@run)
-                        .notify(System.currentTimeMillis().toInt(), builder.build())
-            }
+        val pendingIntent = PendingIntent.getActivity(
+                context,
+                MozoNotification.REQUEST_CODE,
+                MozoNotification.prepareDataIntent(message),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val builder = NotificationCompat.Builder(context, message.event)
+                .setSmallIcon(R.drawable.ic_mozo_notification)
+                .setLargeIcon(context.bitmap(notification.icon))
+                .setColor(context.color(R.color.mozo_color_primary))
+                .setContentTitle(notification.titleDisplay())
+                .setContentText(notification.contentDisplay())
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent)
+        launch(Dispatchers.Main) {
+            NotificationManagerCompat
+                    .from(context)
+                    .notify(System.currentTimeMillis().toInt(), builder.build())
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel(channel: String) = async(UI) {
+    private fun createChannel(channel: String) = GlobalScope.async(Dispatchers.Main) {
         var channelName = channel.split("_")[0]
         channelName = channelName.substring(0, 1).toUpperCase() + channelName.substring(1)
 
@@ -132,32 +131,19 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun notificationChannelExists(channelId: String): Boolean = notificationManager.getNotificationChannel(channelId) != null
 
-    private fun buildNotificationContent(prefix: String, address: String) = async {
-        val contact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
-        if (contact != null) String.format(
-                Locale.US,
-                "%s @%s",
-                prefix,
-                contact.name
-        )
-        else String.format(
-                Locale.US,
-                "%s Mozo wallet address @%s…%s",
-                prefix,
-                address.substring(0..5),
-                address.substring(address.length - 5 until address.length)
-        )
-    }
-
     companion object {
+        private const val TAG = "Socket"
+
         @Volatile
         private var instance: MozoSocketClient? = null
 
-        fun connect(context: Context) = synchronized(this) {
+        @Synchronized
+        fun connect(context: Context): MozoSocketClient {
             if (instance == null) {
                 val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
+                val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
                 instance = MozoSocketClient(
-                        URI(Constant.BASE_SOCKET_URL + UUID.randomUUID().toString()),
+                        URI("ws://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
                         mutableMapOf(
                                 "Authorization" to "bearer $accessToken",
                                 "Content-Type" to "application/json",
@@ -166,10 +152,9 @@ class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(
                                 "X-Atmosphere-tracking-id" to "0",
                                 "X-Atmosphere-Transport" to "websocket"
                         )
-                ).apply {
-                    connect()
-                }
+                )
             }
+            return instance!!
         }
 
         fun disconnect() {

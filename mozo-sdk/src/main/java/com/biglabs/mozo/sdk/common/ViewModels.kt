@@ -1,14 +1,15 @@
 package com.biglabs.mozo.sdk.common
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.utils.displayString
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.util.*
 
@@ -30,42 +31,52 @@ internal object ViewModels {
 
         val balanceAndRateLiveData = MutableLiveData<BalanceAndRate>()
 
-        fun fetchData(context: Context) = async {
+        fun fetchData(context: Context, callback: (() -> Unit)? = null) = GlobalScope.async {
             val profile = MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 profileLiveData.value = profile
+                callback?.invoke()
                 fetchBalance(context)
             }
+
+            return@async profile
         }
 
-        fun fetchBalance(context: Context) = async {
-            profileLiveData.value?.walletInfo?.offchainAddress?.run {
-                val balanceInfo = MozoService.getInstance(context).getBalance(this) {
-                    fetchBalance(context)
-                }.await()
-                launch(UI) {
-                    balanceInfoLiveData.value = balanceInfo
-                    fetchExchangeRate(context)
+        fun fetchBalance(context: Context, callback: ((balanceInfo: Models.BalanceInfo?) -> Unit)? = null) {
+            GlobalScope.launch {
+                profileLiveData.value?.walletInfo?.offchainAddress?.run {
+                    val balanceInfo = MozoService.getInstance(context).getBalance(this) {
+                        fetchBalance(context)
+                    }.await()
+                    launch(Dispatchers.Main) {
+                        balanceInfoLiveData.value = balanceInfo
+                        callback?.invoke(balanceInfo)
+                        fetchExchangeRate(context)
+                    }
                 }
             }
         }
 
-        fun fetchExchangeRate(context: Context) = async {
-            val rate = MozoService.getInstance(context).getExchangeRate(Constant.CURRENCY_KOREA) {
-                fetchExchangeRate(context)
-            }.await()
-            launch(UI) {
-                exchangeRateLiveData.value = rate
-                updateBalanceAndRate()
+        fun fetchExchangeRate(context: Context) {
+            GlobalScope.launch {
+                val rate = MozoService.getInstance(context).getExchangeRate(Constant.CURRENCY_KOREA) {
+                    fetchExchangeRate(context)
+                }.await()
+                launch(Dispatchers.Main) {
+                    exchangeRateLiveData.value = rate
+                    updateBalanceAndRate()
+                }
             }
         }
 
+        fun getBalance() = balanceInfoLiveData.value
+
         private fun updateBalanceAndRate() {
-            val balanceInDecimal = balanceInfoLiveData.value?.balanceInDecimal() ?: BigDecimal.ZERO
+            val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal() ?: BigDecimal.ZERO
             val rate = (exchangeRateLiveData.value?.rate ?: 0.0).toBigDecimal()
-            val balanceInCurrency = balanceInDecimal.multiply(rate)
+            val balanceInCurrency = balanceNonDecimal.multiply(rate)
             balanceAndRateLiveData.value = BalanceAndRate(
-                    balanceInDecimal,
+                    balanceNonDecimal,
                     balanceInCurrency,
                     String.format(Locale.US, "₩%s", balanceInCurrency.displayString()),
                     balanceInfoLiveData.value?.decimals ?: 0,
@@ -73,7 +84,13 @@ internal object ViewModels {
             )
         }
 
-        fun clear() = launch(UI) {
+        fun updateProfile(p: Models.Profile) = GlobalScope.launch(Dispatchers.Main) {
+            profileLiveData.value = p
+        }
+
+        fun hasWallet() = profileLiveData.value?.walletInfo != null
+
+        fun clear() = GlobalScope.launch(Dispatchers.Main) {
             profileLiveData.value = null
             balanceInfoLiveData.value = null
         }
@@ -82,11 +99,14 @@ internal object ViewModels {
     class ContactViewModel : ViewModel() {
         val contactsLiveData = MutableLiveData<List<Models.Contact>>()
 
-        fun fetchData(context: Context) = async {
-            val response = MozoService.getInstance(context).getContacts { fetchData(context) }.await()
-            response?.let { contactsResponse ->
-                launch(UI) {
-                    contactsLiveData.value = (contactsResponse.sortedBy { it.name })
+        fun fetchData(context: Context) {
+            GlobalScope.launch {
+                MozoService.getInstance(context).getContacts {
+                    fetchData(context)
+                }.await()?.let { contactsResponse ->
+                    launch(Dispatchers.Main) {
+                        contactsLiveData.value = (contactsResponse.sortedBy { it.name })
+                    }
                 }
             }
         }

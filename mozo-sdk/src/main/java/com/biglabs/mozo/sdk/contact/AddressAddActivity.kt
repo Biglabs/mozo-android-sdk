@@ -10,22 +10,22 @@ import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.view_address_add_new.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 internal class AddressAddActivity : BaseActivity() {
 
     private val mozoService by lazy { MozoService.getInstance(this) }
 
-    private var mShowMessageDuration: Int = 0
+    private var mShowMessageDuration = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_address_add_new)
 
-        mShowMessageDuration = getInteger(R.integer.security_pin_show_msg_duration)
+        mShowMessageDuration = getInteger(R.integer.security_pin_show_msg_duration).toLong()
 
         text_contact_address.text = intent.getStringExtra(FLAG_ADDRESS)
 
@@ -40,7 +40,7 @@ internal class AddressAddActivity : BaseActivity() {
         showLoading()
 
         val contact = Models.Contact(0, input_contact_name.text.toString().trim(), text_contact_address.text.toString())
-        launch {
+        GlobalScope.launch {
             val response = mozoService.saveContact(contact, arrayOf(DUPLICATED_ERROR_CODE)) {
                 executeSaveContact()
             }.await()
@@ -54,7 +54,7 @@ internal class AddressAddActivity : BaseActivity() {
         }
     }
 
-    private fun showDoneMsg() = async(UI) {
+    private fun showDoneMsg() = GlobalScope.launch(Dispatchers.Main) {
         input_contact_name.isEnabled = false
         loading_container.hide()
         text_msg_saved.visible()
@@ -64,7 +64,7 @@ internal class AddressAddActivity : BaseActivity() {
         finishAndRemoveTask()
     }
 
-    private fun showErrorMsg() = async(UI) {
+    private fun showErrorMsg() = GlobalScope.launch(Dispatchers.Main) {
         text_msg_error.visible()
     }
 
@@ -76,7 +76,7 @@ internal class AddressAddActivity : BaseActivity() {
         text_msg_error.gone()
     }
 
-    private fun hideLoading() = async(UI) {
+    private fun hideLoading() = GlobalScope.launch(Dispatchers.Main) {
         input_contact_name.requestFocus()
         input_contact_name.showKeyboard()
         button_save.isEnabled = true

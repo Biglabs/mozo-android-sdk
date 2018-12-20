@@ -1,24 +1,22 @@
 package com.biglabs.mozo.sdk.contact
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DefaultItemAnimator
 import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.view_address_book.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.*
 
 internal class AddressBookActivity : BaseActivity() {
 
@@ -120,7 +118,7 @@ internal class AddressBookActivity : BaseActivity() {
 
     private fun searchByName(name: String) {
         searchJob?.cancel()
-        searchJob = launch {
+        searchJob = GlobalScope.launch {
 
             delay(250)
 
@@ -128,7 +126,7 @@ internal class AddressBookActivity : BaseActivity() {
             contacts.addAll(contactsBackup.filter {
                 (it.name ?: "").contains(name, ignoreCase = true)
             })
-            launch(UI) {
+            launch(Dispatchers.Main) {
                 if (contacts.isEmpty()) view_empty_state.visible() else view_empty_state.gone()
                 mAdapter.notifyData(name.isNotEmpty())
             }
@@ -150,6 +148,13 @@ internal class AddressBookActivity : BaseActivity() {
             Intent(activity, AddressBookActivity::class.java).apply {
                 putExtra(FLAG_START_FOR_RESULT, true)
                 activity.startActivityForResult(this, requestCode)
+            }
+        }
+
+        fun startForResult(fragment: Fragment, requestCode: Int) {
+            Intent(fragment.context, AddressBookActivity::class.java).apply {
+                putExtra(FLAG_START_FOR_RESULT, true)
+                fragment.startActivityForResult(this, requestCode)
             }
         }
     }

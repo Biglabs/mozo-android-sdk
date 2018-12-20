@@ -1,6 +1,6 @@
 package com.biglabs.mozo.sdk.common.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.biglabs.mozo.sdk.common.Models.Profile
 
 @Dao

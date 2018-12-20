@@ -1,12 +1,14 @@
 package com.biglabs.mozo.sdk.ui.view
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
-import android.support.annotation.IntDef
-import android.support.constraint.ConstraintLayout
+import androidx.annotation.IntDef
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.MozoSDK
@@ -15,9 +17,10 @@ import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MozoWalletView : ConstraintLayout {
 
@@ -96,6 +99,10 @@ class MozoWalletView : ConstraintLayout {
         }
 
         stateNotLoginView = find(R.id.mozo_wallet_state_login)
+        if (stateNotLoginView is LinearLayout && (mViewMode == MODE_ONLY_ADDRESS || mViewMode == MODE_ONLY_BALANCE)) {
+            (stateNotLoginView as LinearLayout).gravity = Gravity.CENTER_VERTICAL
+        }
+
         stateErrorView = find(R.id.mozo_wallet_state_error)
     }
 
@@ -184,9 +191,9 @@ class MozoWalletView : ConstraintLayout {
         }
     }
 
-    private fun getQRImage() = launch {
+    private fun getQRImage() = GlobalScope.launch {
         val qrImage = Support.generateQRCode(mAddress!!, sizeOfQRImage)
-        launch(UI) {
+        launch(Dispatchers.Main) {
             imageAddressQRView?.setImageBitmap(qrImage)
         }
         generateQRJob = null

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:background="@drawable/mozo_bg_component"
-    tools:parentTag="android.support.constraint.ConstraintLayout">
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <View
         android:layout_width="24dp"
@@ -14,7 +14,7 @@
         android:background="@drawable/ic_mozo_offchain"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/mozo_wallet_balance_value"
         android:layout_width="0dp"
         android:layout_height="24dp"

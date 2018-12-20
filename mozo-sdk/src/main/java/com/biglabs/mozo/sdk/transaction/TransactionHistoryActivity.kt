@@ -1,24 +1,25 @@
 package com.biglabs.mozo.sdk.transaction
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
-import com.biglabs.mozo.sdk.common.OnLoadMoreListener
 import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.OnLoadMoreListener
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.mozoSetup
 import kotlinx.android.synthetic.main.view_transaction_history.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -31,6 +32,8 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
     private var currentAddress: String? = null
     private var currentPage = Constant.PAGING_START_INDEX
     private var loadFirstPage = true
+
+    private var fetchDataJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +67,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
 
     override fun onDestroy() {
         super.onDestroy()
+        fetchDataJob?.cancel()
         historyAdapter.stopFilter()
         MozoSDK.getInstance().profileViewModel.run {
             profileLiveData.removeObservers(this@TransactionHistoryActivity)
@@ -78,14 +82,15 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
         }
     }
 
-    private fun fetchData() = async {
-        if (currentAddress == null) return@async
+    private fun fetchData() {
+        fetchDataJob?.cancel()
+        fetchDataJob = GlobalScope.launch {
+            if (currentAddress == null) return@launch
 
-        val response = MozoService.getInstance(this@TransactionHistoryActivity)
-                .getTransactionHistory(currentAddress!!, page = currentPage) { fetchData() }
-                .await()
+            val response = MozoService.getInstance(this@TransactionHistoryActivity)
+                    .getTransactionHistory(currentAddress!!, page = currentPage) { fetchData() }
+                    .await()
 
-        if (response != null) {
             if (currentPage <= Constant.PAGING_START_INDEX) histories.clear()
 
             response.map {
@@ -96,11 +101,11 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
             }
             histories.addAll(response)
             historyAdapter.setCanLoadMore(response.size == Constant.PAGING_SIZE)
-        }
 
-        launch(UI) {
-            list_history_refresh.isRefreshing = false
-            historyAdapter.notifyData()
+            launch(Dispatchers.Main) {
+                list_history_refresh.isRefreshing = false
+                historyAdapter.notifyData()
+            }
         }
     }
 

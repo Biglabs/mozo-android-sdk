@@ -32,6 +32,10 @@
         <attr name="lettersBarTextLineHeight" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="MozoEmptyView">
+        <attr name="drawableSize" format="dimension" />
+    </declare-styleable>
+
     <declare-styleable name="MozoWalletView">
         <attr name="viewMode" format="enum">
             <enum name="all" value="0" />
@@ -39,5 +43,10 @@
             <enum name="onlyBalance" value="2" />
         </attr>
         <attr name="showQRCode" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MozoWalletFragment">
+        <attr name="buttonPaymentRequest" format="boolean" />
+        <attr name="buttonSend" format="boolean" />
     </declare-styleable>
 </resources>

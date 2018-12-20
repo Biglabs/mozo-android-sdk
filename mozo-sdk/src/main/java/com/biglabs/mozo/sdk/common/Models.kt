@@ -1,15 +1,14 @@
 package com.biglabs.mozo.sdk.common
 
-import android.arch.persistence.room.*
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
+import androidx.room.*
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.displayString
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
-import kotlin.collections.ArrayList
 
 object Models {
 
@@ -102,7 +101,7 @@ object Models {
             val decimals: Int,
             val contractAddress: String?
     ) {
-        fun balanceInDecimal(): BigDecimal = Support.calculateAmountDecimal(balance, decimals)
+        fun balanceNonDecimal(): BigDecimal = Support.toAmountNonDecimal(balance, decimals)
     }
 
     class TransactionAddress(
@@ -236,7 +235,9 @@ object Models {
             val content: String
     ) {
         fun getData() = try {
-            Gson().fromJson(content, BroadcastDataContent::class.java)
+            Gson().fromJson(content, BroadcastDataContent::class.java)?.apply {
+                time = this@BroadcastData.time
+            }
         } catch (e: Exception) {
             null
         }
@@ -246,9 +247,46 @@ object Models {
             val event: String,
             val from: String,
             val to: String,
-            val amount: BigDecimal,
+            val amount: BigDecimal?,
             val decimal: Int,
             val symbol: String,
-            val time: Long
-    )
+            var time: Long,
+            val phoneNo: String?,
+            val isComeIn: Boolean,
+            val storeName: String
+    ) {
+        override fun toString(): String =
+                "{event=$event, from=$from, to=$to, amount=$amount, decimal=$decimal, symbol=$symbol, time=$time, phoneNo=$phoneNo, comeIn=$isComeIn, storeName=$storeName}"
+    }
+
+    data class PaymentRequest(
+            val id: Long = 0L,
+            val content: String?,
+            val timeInSec: Long = 0L
+    ) : Parcelable {
+        constructor(parcel: Parcel) : this(
+                parcel.readLong(),
+                parcel.readString(),
+                parcel.readLong())
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeLong(id)
+            parcel.writeString(content)
+            parcel.writeLong(timeInSec)
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<PaymentRequest> {
+            override fun createFromParcel(parcel: Parcel): PaymentRequest {
+                return PaymentRequest(parcel)
+            }
+
+            override fun newArray(size: Int): Array<PaymentRequest?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 }
