@@ -90,10 +90,10 @@ internal class MozoAuthActivity : FragmentActivity() {
                 )
         ))
 
-        if (modeSignIn) {
-            doSignOutFirst()
-            return@launch
-        }
+//        if (modeSignIn) {
+//            doSignOutFirst()
+//            return@launch
+//        }
         initializeAuthRequest()
     }
 
@@ -113,12 +113,15 @@ internal class MozoAuthActivity : FragmentActivity() {
                 string(R.string.auth_client_id),
                 ResponseTypeValues.CODE,
                 Uri.parse(redirectUrl))
-                .setPrompt("login")
+                .setPrompt("consent")
                 .setScope("openid profile phone")
 
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
         authRequestBuilder.setAdditionalParameters(
-                mutableMapOf("kc_locale" to locale.language)
+                mutableMapOf(
+                        "kc_locale" to locale.language,
+                        "application_type" to "native"
+                )
         )
         mAuthRequest.set(authRequestBuilder.build())
     }
