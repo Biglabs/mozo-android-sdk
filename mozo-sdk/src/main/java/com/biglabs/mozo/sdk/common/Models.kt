@@ -244,7 +244,7 @@ object Models {
     }
 
     data class BroadcastDataContent(
-            val event: String,
+            val event: String?,
             val from: String,
             val to: String,
             val amount: BigDecimal?,

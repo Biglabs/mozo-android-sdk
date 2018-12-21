@@ -46,7 +46,7 @@ class MozoNotification {
             var content = ""
             var largeIcon = R.drawable.im_notification_received_sent
 
-            when (message.event) {
+            when (message.event ?: "") {
                 Constant.NOTIFY_EVENT_AIRDROPPED -> {
                     content = context.getString(R.string.mozo_notify_content_from, message.storeName)
                     largeIcon = R.drawable.im_notification_airdrop
@@ -67,7 +67,8 @@ class MozoNotification {
                     )
                 }
             }
-            return Notification(isSend = isSendType, icon = largeIcon, title = title, content = content, type = message.event, time = message.time).apply {
+            return Notification(isSend = isSendType, icon = largeIcon, title = title, content = content, type = message.event
+                    ?: "", time = message.time).apply {
                 raw = Gson().toJson(message)
             }
         }

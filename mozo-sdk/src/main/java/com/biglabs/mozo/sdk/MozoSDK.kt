@@ -89,6 +89,8 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 this.isRetailerApp = isRetailerApp
                 this.instance = MozoSDK(context.applicationContext)
 
+                /* initialize Authentication Service */
+                MozoAuth.getInstance()
                 /* initialize Wallet Service */
                 MozoWallet.getInstance()
                 /* initialize Transaction Service */

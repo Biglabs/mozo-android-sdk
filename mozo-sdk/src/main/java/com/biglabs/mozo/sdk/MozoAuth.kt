@@ -125,7 +125,8 @@ class MozoAuth private constructor() {
         try {
             mAuthService.performTokenRequest(
                     authStateManager.current.createTokenRefreshRequest(),
-                    authStateManager.current.clientAuthentication) { response, ex ->
+                    authStateManager.current.clientAuthentication
+            ) { response, ex ->
                 authStateManager.updateAfterTokenResponse(response, ex)
                 response?.run {
                     "Refresh token successful: $accessToken".logAsError()

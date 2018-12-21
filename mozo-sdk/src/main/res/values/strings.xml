@@ -12,7 +12,7 @@
     <string name="mozo_address_add_msg_saved">Address Saved</string>
     <string name="mozo_address_add_msg_error">This address already exists in your Address Book</string>
 
-    <string name="mozo_dialog_qr_code">Your Mozo Wallet Address</string>
+    <string name="mozo_dialog_qr_code">Your MozoX Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
     <string name="mozo_dialog_copied_msg">Copied!</string>
 
@@ -22,9 +22,9 @@
     <string name="mozo_dialog_error_not_enough_msg">Your balance is not enough for this.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
-    <string name="mozo_button_login">Sign In to Mozo</string>
-    <string name="mozo_button_logout">Log Out Mozo</string>
-    <string name="mozo_button_transfer">Send Mozo</string>
+    <string name="mozo_button_login">Sign In to MozoX</string>
+    <string name="mozo_button_logout">Log Out MozoX</string>
+    <string name="mozo_button_transfer">Send MozoX</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
     <string name="mozo_button_withdraw">Withdraw</string>
     <string name="mozo_button_payment_request">Payment Request</string>
@@ -57,7 +57,7 @@
     <string name="mozo_pin_title_verify">Security PIN Confirm</string>
     <string name="mozo_pin_sub_title">Enter your security pin</string>
     <string name="mozo_pin_sub_title_restore">Enter your security pin\nto restore wallet</string>
-    <string name="mozo_pin_sub_title_send">Enter your security pin\nto send mozo</string>
+    <string name="mozo_pin_sub_title_send">Enter your security pin\nto send MozoX</string>
     <string name="mozo_pin_content">Security PIN should be 6 di-git numbers</string>
     <string name="mozo_pin_confirm_sub_title">Confirm security pin</string>
     <string name="mozo_pin_confirm_content">Re-enter your PIN</string>
@@ -68,8 +68,8 @@
 
     <string name="mozo_notify_title_come_in">Customer come in</string>
     <string name="mozo_notify_title_just_left">Customer has just left</string>
-    <string name="mozo_notify_title_received">Received %s Mozo</string>
-    <string name="mozo_notify_title_sent">Sent %s Mozo</string>
+    <string name="mozo_notify_title_received">Received %s MozoX</string>
+    <string name="mozo_notify_title_sent">Sent %s MozoX</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
 
@@ -77,7 +77,7 @@
     <string name="mozo_payment_request_amount">Receive Amount</string>
     <string name="mozo_payment_request_tab_list">Requested List</string>
     <string name="mozo_payment_request_tab_create">Create Request</string>
-    <string name="mozo_payment_request_explain">You can ask another user to send Mozo to your wallet address, just by create Payment Request.</string>
+    <string name="mozo_payment_request_explain">You can ask another user to send MozoX to your wallet address, just by create Payment Request.</string>
     <string name="mozo_payment_request_btn_create">Create Payment Request</string>
     <string name="mozo_payment_request_btn_send">Send Payment Request</string>
     <string name="mozo_payment_request_btn_scan">Scan To Pay</string>
@@ -90,9 +90,9 @@
     <string name="mozo_payment_request_item_label_from">From:</string>
     <string name="mozo_payment_request_item_label_amount">Payment Request:</string>
 
-    <string name="mozo_transfer_title">Send Mozo</string>
+    <string name="mozo_transfer_title">Send MozoX</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>
-    <string name="mozo_transfer_from">From Mozo Offchain Wallet</string>
+    <string name="mozo_transfer_from">From MozoX Offchain Wallet</string>
     <string name="mozo_transfer_receiver_address">Receiver Address</string>
     <string name="mozo_transfer_receiver_address_hint">Enter receiver wallet address</string>
     <string name="mozo_transfer_receiver_address_error">Error: The Receiver Address is not valid.</string>
@@ -101,7 +101,7 @@
     <string name="mozo_transfer_amount_error_not_enough">Error: Your spendable is not enough for this.</string>
     <string name="mozo_transfer_amount_error_too_low">Error: Amount is too low, please input valid amount.</string>
     <string name="mozo_transfer_amount_error">Error: Please input value in decimal format.</string>
-    <string name="mozo_transfer_spendable">Spendable: %s Mozo</string>
+    <string name="mozo_transfer_spendable">Spendable: %s MozoX</string>
     <string name="mozo_transfer_send_complete">Your TX has been broadcast</string>
     <string name="mozo_transfer_send_complete_msg">TX Hash:</string>
 
@@ -109,10 +109,10 @@
     <string name="mozo_transaction_detail_wallet_address">Wallet Address</string>
     <string name="mozo_transaction_view_button">View Transaction Detail</string>
     <string name="mozo_transaction_history_title">Transaction History</string>
-    <string name="mozo_transaction_history_offchain_text">Mozo Offchain Wallet</string>
+    <string name="mozo_transaction_history_offchain_text">MozoX Offchain Wallet</string>
 
-    <string name="mozo_view_balance_title">Mozo Offchain Balance</string>
-    <string name="mozo_view_address_title">Your Mozo Offchain Wallet Address</string>
+    <string name="mozo_view_balance_title">MozoX Offchain Balance</string>
+    <string name="mozo_view_address_title">Your MozoX Offchain Wallet Address</string>
     <string name="mozo_view_text_hint">…</string>
     <string name="mozo_view_text_to">To</string>
     <string name="mozo_view_text_from">From</string>
@@ -126,5 +126,5 @@
     <string name="mozo_view_text_tx_failed">Failed</string>
     <string name="mozo_view_text_tx_success">Success</string>
     <string name="mozo_view_text_view_all">View All</string>
-    <string name="mozo_view_text_total_mozo">Total Mozo Coin</string>
+    <string name="mozo_view_text_total_mozo">Total MozoX Tokens</string>
 </resources>

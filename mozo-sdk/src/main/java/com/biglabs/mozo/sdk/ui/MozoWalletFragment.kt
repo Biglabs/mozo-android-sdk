@@ -20,10 +20,10 @@ import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.core.MozoService
-import com.biglabs.mozo.sdk.transaction.payment.PaymentRequestActivity
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryRecyclerAdapter
+import com.biglabs.mozo.sdk.transaction.payment.PaymentRequestActivity
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_mozo_wallet.*
@@ -121,6 +121,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             profileLiveData.observe(this@MozoWalletFragment, profileObserver)
             balanceAndRateLiveData.observeForever(balanceAndRateObserver)
         }
+        MozoSDK.getInstance().profileViewModel.fetchBalance(context ?: return)
     }
 
     override fun onPause() {

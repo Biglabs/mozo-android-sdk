@@ -57,18 +57,20 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         null
                     }
 
-                    message?.getData()?.run {
+                    message?.getData()?.let { broadcast ->
+                        broadcast.event ?: return@let
+
                         /* Save notification to local storage */
-                        MozoNotification.save(this)
+                        MozoNotification.save(broadcast)
 
                         /* Reload balance */
-                        if (event.equals(Constant.NOTIFY_EVENT_BALANCE_CHANGED, ignoreCase = true)) {
+                        if (Constant.NOTIFY_EVENT_BALANCE_CHANGED.equals(broadcast.event, ignoreCase = true)) {
                             @Suppress("DeferredResultUnused")
                             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                         }
 
                         /* Do show notification on system tray */
-                        showNotification(this)
+                        showNotification(broadcast)
                     }
                 }
             }
@@ -91,7 +93,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         val context = MozoSDK.getInstance().context
         val notification = MozoNotification.prepareNotification(context, message)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event!!)) {
             createChannel(message.event).await()
         }
 
@@ -101,7 +103,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 MozoNotification.prepareDataIntent(message),
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val builder = NotificationCompat.Builder(context, message.event)
+        val builder = NotificationCompat.Builder(context, message.event!!)
                 .setSmallIcon(R.drawable.ic_mozo_notification)
                 .setLargeIcon(context.bitmap(notification.icon))
                 .setColor(context.color(R.color.mozo_color_primary))

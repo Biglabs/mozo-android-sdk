@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/screen_title"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
@@ -19,6 +19,9 @@
         android:textColor="@color/mozo_color_title"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
