@@ -28,7 +28,9 @@ internal abstract class MozoDatabase : RoomDatabase() {
         private var instance: MozoDatabase? = null
 
         fun getInstance(context: Context) = instance ?: synchronized(this) {
-            instance = Room.databaseBuilder(context.applicationContext, MozoDatabase::class.java, "mozo.db").build()
+            instance = Room.databaseBuilder(context.applicationContext, MozoDatabase::class.java, "mozo.db")
+                    .fallbackToDestructiveMigration()
+                    .build()
             return@synchronized instance!!
         }
 

@@ -79,7 +79,11 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
         "close [code: $code, reason: $reason]".logAsInfo(TAG)
-        instance = null
+        if (code == 1000) {
+            connect()
+        } else {
+            instance = null
+        }
     }
 
     override fun onError(e: Exception?) {
@@ -161,7 +165,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
         fun disconnect() {
             try {
-                instance?.closeConnection(1000, "disconnect socket")
+                instance?.closeConnection(-1, "proactive disconnect")
             } finally {
                 instance = null
             }
