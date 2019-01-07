@@ -140,7 +140,7 @@
         android:lines="1"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/mozo_button_payment_request"
+        android:text="@string/mozo_button_request_list"
         app:autoSizeMinTextSize="12sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toStartOf="@id/wallet_fragment_btn_send"

@@ -27,7 +27,7 @@
     <string name="mozo_button_transfer">Send MozoX</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
     <string name="mozo_button_withdraw">Withdraw</string>
-    <string name="mozo_button_payment_request">Payment Request</string>
+    <string name="mozo_button_request_list">Requested List</string>
     <string name="mozo_button_pay">Pay</string>
 
     <string name="mozo_button_back">Back</string>
@@ -78,9 +78,9 @@
     <string name="mozo_payment_request_tab_list">Requested List</string>
     <string name="mozo_payment_request_tab_create">Create Request</string>
     <string name="mozo_payment_request_explain">You can ask another user to send MozoX to your wallet address, just by create Payment Request.</string>
-    <string name="mozo_payment_request_btn_create">Create Payment Request</string>
-    <string name="mozo_payment_request_btn_send">Send Payment Request</string>
-    <string name="mozo_payment_request_btn_scan">Scan To Pay</string>
+    <string name="mozo_payment_request_btn_create">Create Request</string>
+    <string name="mozo_payment_request_btn_send">Send Request</string>
+    <string name="mozo_payment_request_btn_scan">Scan To Send MozoX</string>
     <string name="mozo_payment_request_text_scan_to_transfer">Scan to transfer:</string>
     <string name="mozo_payment_request_text_send_to">Send request to</string>
     <string name="mozo_payment_request_text_send_success">Send Payment Request Successful</string>
