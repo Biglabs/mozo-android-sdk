@@ -86,7 +86,7 @@
     </style>
 
     <style name="MozoWalletInfoButton">
-        <item name="android:layout_height">37dp</item>
+        <item name="android:layout_height">45dp</item>
         <item name="android:background">@drawable/mozo_bg_border_primary</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
         <item name="android:gravity">center</item>

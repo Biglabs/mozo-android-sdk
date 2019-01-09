@@ -277,9 +277,10 @@ internal class TransactionFormActivity : BaseActivity() {
     private fun showResultUI(txResponse: Models.TransactionResponse?) = GlobalScope.launch(Dispatchers.Main) {
         if (txResponse != null) {
             setContentView(R.layout.view_transaction_sent)
-            button_close_transfer.click { finishAndRemoveTask() }
 
-            text_send_complete_msg.text = txResponse.tx.hash
+            text_preview_amount_sent.text = history.amountDisplay()
+            text_preview_address_sent.text = history.addressTo
+            text_preview_rate_sent.text = String.format(Locale.US, "(₩%s)", history.amountInDecimal().multiply(currentRate).displayString())
 
             button_save_address?.apply {
                 if (selectedContact != null) gone() else visible()
@@ -317,8 +318,8 @@ internal class TransactionFormActivity : BaseActivity() {
                 launch(Dispatchers.Main) {
                     when {
                         txStatus.isSuccess() -> {
-                            text_tx_status_icon.setImageResource(R.drawable.ic_check_green)
-                            text_tx_status_label.setText(R.string.mozo_view_text_tx_success)
+                            transfer_info_container.visible()
+                            transfer_status_container.gone()
                             button_transaction_detail.visible()
                             pendingStatus = false
                             updateTxStatusJob = null

@@ -91,7 +91,7 @@
         style="@style/MozoButtonStyle.Floating"
         android:layout_width="0dp"
         android:enabled="false"
-        android:text="@string/mozo_payment_request_btn_create"
+        android:text="@string/mozo_payment_request_tab_create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

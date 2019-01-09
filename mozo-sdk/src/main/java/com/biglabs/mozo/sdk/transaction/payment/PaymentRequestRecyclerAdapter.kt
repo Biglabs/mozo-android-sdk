@@ -13,7 +13,6 @@ import com.biglabs.mozo.sdk.utils.gone
 import com.biglabs.mozo.sdk.utils.visible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_payment_request.*
-import java.util.*
 
 class PaymentRequestRecyclerAdapter(
         private val requests: List<Models.PaymentRequest>,
@@ -48,7 +47,7 @@ class PaymentRequestRecyclerAdapter(
                     receiver = MozoSDK.getInstance().contactViewModel.findByAddress(receiver)?.name
                 }
                 item_payment_address.text = receiver
-                item_payment_amount.text = String.format(Locale.US, "%s Mozo", param.lastOrNull())
+                item_payment_amount.text = containerView.context.getString(R.string.mozo_payment_request_item_amount, param.lastOrNull())
             }
 
             item_payment_time.text = Support.getDisplayDate(request.timeInSec * 1000, "h:mm aa MMM dd, yyyy")

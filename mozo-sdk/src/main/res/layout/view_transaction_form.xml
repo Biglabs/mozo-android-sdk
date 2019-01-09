@@ -389,7 +389,7 @@
 
     <Button
         android:id="@+id/button_submit"
-        style="@style/MozoButtonStyle"
+        style="@style/MozoButtonStyle.Floating"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/mozo_dr_btn_no_radius"

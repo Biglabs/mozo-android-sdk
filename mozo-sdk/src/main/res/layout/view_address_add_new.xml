@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/mozo_address_add_title" />
+        app:title="@string/mozo_button_save_address" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -141,6 +141,7 @@
 
     <Button
         android:id="@+id/button_save"
+        style="@style/MozoButtonStyle.Floating"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/mozo_dr_btn_no_radius"

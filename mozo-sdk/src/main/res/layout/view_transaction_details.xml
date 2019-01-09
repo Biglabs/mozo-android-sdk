@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
         android:id="@+id/tx_detail_toolbar"
@@ -233,7 +234,6 @@
         android:id="@+id/button_save_address"
         style="@style/MozoWalletInfoButton"
         android:layout_width="0dp"
-        android:layout_height="45dp"
         android:layout_marginTop="62dp"
         android:background="@drawable/mozo_dr_btn_rounded_border"
         android:foreground="@android:color/transparent"
@@ -255,7 +255,7 @@
         android:id="@+id/button_pay"
         style="@style/MozoButtonStyle.Floating"
         android:layout_width="0dp"
-        android:text="@string/mozo_button_pay"
+        android:text="@string/mozo_button_confirm"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

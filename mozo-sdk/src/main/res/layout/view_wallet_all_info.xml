@@ -115,7 +115,7 @@
 
     <TextView
         android:id="@+id/mozo_wallet_qr_image_button"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
