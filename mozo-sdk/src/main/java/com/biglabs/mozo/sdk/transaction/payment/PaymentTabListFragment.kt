@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.Constant
+import com.biglabs.mozo.sdk.common.model.PaymentRequest
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
@@ -23,13 +23,10 @@ import com.biglabs.mozo.sdk.utils.click
 import com.biglabs.mozo.sdk.utils.mozoSetup
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.fragment_payment_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    private val requests = arrayListOf<Models.PaymentRequest>()
+    private val requests = arrayListOf<PaymentRequest>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_payment_list, container, false)
@@ -68,7 +65,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
                     if (param.isNotEmpty()) {
                         TransactionDetails.start(
                                 this.context!!,
-                                Models.PaymentRequest(content = it)
+                                PaymentRequest(content = it)
                         )
                     } else {
                         MessageDialog.show(this.context!!, R.string.mozo_dialog_error_scan_invalid_msg)
@@ -79,16 +76,18 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
     }
 
     private fun fetchData() {
-        GlobalScope.launch {
-            val response = MozoService.getInstance(MozoSDK.getInstance().context)
-                    .getPaymentRequests(0, 100, onTryAgain = { fetchData() })
-                    .await()
+        MozoService.getInstance().getPaymentRequests(
+                context ?: return,
+                Constant.PAGING_START_INDEX,
+                100
+        ) { data, _ ->
+            data ?: return@getPaymentRequests
+            data.items ?: return@getPaymentRequests
+
             requests.clear()
-            requests.addAll(response)
-            launch(Dispatchers.Main) {
-                payment_request_swipe_refresh?.isRefreshing = false
-                payment_request_recycler?.adapter?.notifyDataSetChanged()
-            }
+            requests.addAll(data.items!!)
+            payment_request_swipe_refresh?.isRefreshing = false
+            payment_request_recycler?.adapter?.notifyDataSetChanged()
         }
     }
 
@@ -97,14 +96,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         itemId ?: return
         requests.removeAt(position)
         payment_request_recycler?.adapter?.notifyItemRemoved(position)
-
-        GlobalScope.launch {
-            MozoService.getInstance(MozoSDK.getInstance().context)
-                    .deletePaymentRequest(itemId) {
-                        deleteRequest(position)
-                    }
-                    .await()
-        }
+        MozoService.getInstance().deletePaymentRequest(context ?: return, itemId)
     }
 
     private val onItemClickListener: (position: Int) -> Unit = {

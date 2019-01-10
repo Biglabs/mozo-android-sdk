@@ -232,14 +232,13 @@ internal class SecurityActivity : BaseActivity() {
 
             when (mRequestCode) {
                 KEY_CREATE_PIN -> {
-                    val isSuccess = MozoWallet.getInstance()
-                            .executeSaveWallet(mPIN, this@SecurityActivity) { submitForResult() }
-                            .await()
-                    if (!isSuccess) {
-                        showErrorAndRetryUI()
-                        return@launch
+                    MozoWallet.getInstance().executeSaveWallet(this@SecurityActivity, mPIN) {
+                        if (!it) {
+                            showErrorAndRetryUI()
+                            return@executeSaveWallet
+                        }
+                        showPinCreatedUI()
                     }
-                    showPinCreatedUI()
                 }
                 KEY_ENTER_PIN -> {
                     mPIN = input_pin.text.toString()

@@ -14,9 +14,11 @@ import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.MozoTx
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Models
-import com.biglabs.mozo.sdk.common.Models.TransactionHistory.CREATOR.MY_ADDRESS
 import com.biglabs.mozo.sdk.common.ViewModels
+import com.biglabs.mozo.sdk.common.model.Contact
+import com.biglabs.mozo.sdk.common.model.TransactionHistory
+import com.biglabs.mozo.sdk.common.model.TransactionHistory.CREATOR.MY_ADDRESS
+import com.biglabs.mozo.sdk.common.model.TransactionResponse
 import com.biglabs.mozo.sdk.contact.AddressAddActivity
 import com.biglabs.mozo.sdk.contact.AddressBookActivity
 import com.biglabs.mozo.sdk.ui.BaseActivity
@@ -35,8 +37,8 @@ internal class TransactionFormActivity : BaseActivity() {
 
     private var currentBalance = BigDecimal.ZERO
     private var currentRate = BigDecimal.ZERO
-    private var selectedContact: Models.Contact? = null
-    private val history = Models.TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
+    private var selectedContact: Contact? = null
+    private val history = TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
     private var updateTxStatusJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +52,6 @@ internal class TransactionFormActivity : BaseActivity() {
             balanceAndRateLiveData.observe(this@TransactionFormActivity, balanceAndRateObserver)
             fetchBalance(this@TransactionFormActivity)
         }
-        MozoSDK.getInstance().contactViewModel.contactsLiveData.observe(this, contactsObserver)
 
         val address = intent?.getStringExtra(KEY_DATA_ADDRESS)
         val amount = intent?.getStringExtra(KEY_DATA_AMOUNT)
@@ -104,17 +105,14 @@ internal class TransactionFormActivity : BaseActivity() {
         if (pin == null) return
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         val amount = output_amount.text.toString()
-        GlobalScope.launch {
-            showLoading()
-            val txResponse = MozoTx.getInstance()
-                    .createTransaction(this@TransactionFormActivity, address, amount, pin) {
-                        sendTx(pin)
-                    }.await()
+
+        showLoading()
+        MozoTx.getInstance().createTransaction(this, address, amount, pin) {
+            hideLoading()
             history.addressTo = address
             history.amount = MozoTx.getInstance().amountWithDecimal(amount)
             history.time = Calendar.getInstance().timeInMillis / 1000L
-            showResultUI(txResponse)
-            hideLoading()
+            showResultUI(it)
         }
     }
 
@@ -194,12 +192,6 @@ internal class TransactionFormActivity : BaseActivity() {
         }
     }
 
-    private val contactsObserver = Observer<List<Models.Contact>> {
-        it?.run {
-
-        }
-    }
-
     private fun showInputUI() {
         output_receiver_address.isEnabled = true
         output_amount.isEnabled = true
@@ -274,7 +266,7 @@ internal class TransactionFormActivity : BaseActivity() {
         button_submit.setText(R.string.mozo_button_send)
     }
 
-    private fun showResultUI(txResponse: Models.TransactionResponse?) = GlobalScope.launch(Dispatchers.Main) {
+    private fun showResultUI(txResponse: TransactionResponse?) = GlobalScope.launch(Dispatchers.Main) {
         if (txResponse != null) {
             setContentView(R.layout.view_transaction_sent)
 
@@ -303,42 +295,29 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun updateTxStatus() {
-        updateTxStatusJob?.cancel()
-        updateTxStatusJob = GlobalScope.launch {
-            var pendingStatus = true
-            while (pendingStatus) {
-
-                val txStatus = MozoTx.getInstance().getTransactionStatus(
-                        this@TransactionFormActivity,
-                        history.txHash ?: ""
-                ) {
-                    updateTxStatus()
-                }.await() ?: break
-
-                launch(Dispatchers.Main) {
-                    when {
-                        txStatus.isSuccess() -> {
-                            transfer_info_container.visible()
-                            transfer_status_container.gone()
-                            button_transaction_detail.visible()
-                            pendingStatus = false
-                            updateTxStatusJob = null
-                        }
-                        txStatus.isFailed() -> {
-                            text_tx_status_icon.setImageResource(R.drawable.ic_error)
-                            text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
-                            pendingStatus = false
-                            updateTxStatusJob = null
-                        }
-                    }
-
-                    if (!pendingStatus) {
-                        text_tx_status_loading.gone()
-                        text_tx_status_icon.visible()
-                    }
+        MozoTx.getInstance().getTransactionStatus(this, history.txHash ?: return) {
+            when {
+                it.isSuccess() -> {
+                    transfer_info_container.visible()
+                    transfer_status_container.gone()
+                    button_transaction_detail.visible()
                 }
+                it.isFailed() -> {
+                    text_tx_status_icon.setImageResource(R.drawable.ic_error)
+                    text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
+                }
+            }
 
-                delay(1500)
+            updateTxStatusJob = if (it.isSuccess() || it.isFailed()) {
+                text_tx_status_loading.gone()
+                text_tx_status_icon.visible()
+                null
+            } else /* PENDING */ {
+                updateTxStatusJob?.cancel()
+                GlobalScope.launch {
+                    delay(1500)
+                    updateTxStatus()
+                }
             }
         }
     }

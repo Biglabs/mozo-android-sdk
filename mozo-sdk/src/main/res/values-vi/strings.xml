@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mozo_address_book_title">Danh bạ</string>
+    <string name="mozo_address_book_pick_title">Chọn địa chỉ</string>
+    <string name="mozo_address_book_pick_btn">Chọn từ danh bạ</string>
+    <string name="mozo_address_book_no_result">Không có kết quả trùng khớp</string>
+    <string name="mozo_address_book_search_hint">Tìm địa chỉ</string>
+
+    <string name="mozo_address_add_label">Địa chỉ ví</string>
+    <string name="mozo_address_add_input_name_label">Tên</string>
+    <string name="mozo_address_add_input_name_hint">Nhập tên người nhận</string>
+    <string name="mozo_address_add_msg_saved">Đã lưu địa chỉ</string>
+    <string name="mozo_address_add_msg_error">Địa chỉ đã tồn tại</string>
+
+    <string name="mozo_dialog_qr_code">Địa chỉ ví MozoX của bạn</string>
+    <string name="mozo_dialog_loading_msg">Đang khởi tạo giao diện</string>
+    <string name="mozo_dialog_copied_msg">Đã sao chép!</string>
+
+    <string name="mozo_dialog_error_network_msg">Mất kết nối Internet!</string>
+    <string name="mozo_dialog_error_scan_invalid_msg">Thông tin quét được không hợp lệ.</string>
+    <string name="mozo_dialog_error_msg">Có lỗi xảy ra.</string>
+    <string name="mozo_dialog_error_not_enough_msg">Số dư không đủ để gửi</string>
+
+    <string name="mozo_button_deposit">Gửi vào</string>
+    <string name="mozo_button_login">Đăng nhập Mozo X</string>
+    <string name="mozo_button_logout">Đăng xuất Mozo X</string>
+    <string name="mozo_button_transfer">Gửi MozoX</string>
+    <string name="mozo_button_transaction_history">Lịch sử giao dịch</string>
+    <string name="mozo_button_withdraw">Rút tiền</string>
+    <string name="mozo_button_request_list">Yêu cầu nhận MozoX</string>
+    <string name="mozo_button_confirm">Xác nhận</string>
+
+    <string name="mozo_button_back">Trở lại</string>
+    <string name="mozo_button_cancel">Thoát</string>
+    <string name="mozo_button_copy">Sao chép</string>
+    <string name="mozo_button_continue">Tiếp tục</string>
+    <string name="mozo_button_close">Đóng</string>
+    <string name="mozo_button_clear">Xóa</string>
+    <string name="mozo_button_scan_qr_code">Quét QR Code</string>
+    <string name="mozo_button_scan">Quét</string>
+    <string name="mozo_button_show_qr_code">Phóng to QR Code</string>
+    <string name="mozo_button_send">Gửi</string>
+    <string name="mozo_button_save">Lưu</string>
+    <string name="mozo_button_save_address">Lưu địa chỉ ví</string>
+    <string name="mozo_button_retry">Thử lại</string>
+    <string name="mozo_button_refresh">Làm mới</string>
+    <string name="mozo_button_try_again">Thử lại</string>
+
+    <string name="mozo_backup_title">Sao lưu ví</string>
+    <string name="mozo_backup_sub_title">Lưu Recovery Phrase</string>
+    <string name="mozo_backup_content">Ghi lại những từ này và cất ở nơi an toàn.</string>
+    <string name="mozo_backup_warning">*Nếu mất Recovery Phrase, ví của bạn sẽ không thể khôi phục.</string>
+    <string name="mozo_backup_confirm_msg">Tôi đã lưu trữ Recovery Phrase</string>
+
+    <string name="mozo_pin_title">Tạo mã PIN</string>
+    <string name="mozo_pin_title_restore">Khôi phục lại ví</string>
+    <string name="mozo_pin_title_verify">Xác nhận mã PIN</string>
+    <string name="mozo_pin_sub_title">Nhập mã PIN</string>
+    <string name="mozo_pin_sub_title_restore">Nhập mã PIN\nđể khôi phục lại ví</string>
+    <string name="mozo_pin_sub_title_send">Nhập mã PIN\nđể gửi MozoX</string>
+    <string name="mozo_pin_content">Mã PIN phải đủ 6 số</string>
+    <string name="mozo_pin_confirm_sub_title">Xác nhận mã PIN</string>
+    <string name="mozo_pin_confirm_content">Nhập lại mã PIN</string>
+    <string name="mozo_pin_msg_create_success">Tạo mã PIN thành công</string>
+    <string name="mozo_pin_msg_enter_correct">Mã PIN chính xác</string>
+    <string name="mozo_pin_msg_enter_incorrect">Sai mã PIN</string>
+    <string name="mozo_pin_msg_error">Tạo ví thất bại</string>
+
+    <string name="mozo_notify_title_come_in">Khách vào cửa hàng</string>
+    <string name="mozo_notify_title_just_left">Khách vừa đi khỏi</string>
+    <string name="mozo_notify_title_received">Đã nhận %s MozoX</string>
+    <string name="mozo_notify_title_sent">Đã gửi %s MozoX</string>
+    <string name="mozo_notify_content_from">Từ %s</string>
+    <string name="mozo_notify_content_to">Đến %s</string>
+
+    <string name="mozo_payment_request_title">Yêu cầu MozoX</string>
+    <string name="mozo_payment_request_amount">Tổng nhận</string>
+    <string name="mozo_payment_request_tab_list">Danh sách được yêu cầu</string>
+    <string name="mozo_payment_request_tab_create">Tạo yêu cầu</string>
+    <string name="mozo_payment_request_explain">Bạn có thể yêu cầu một người dùng khác gửi MozoX đến ví của mình bằng việc tạo một yêu cầu nhận MozoX</string>
+    <string name="mozo_payment_request_btn_send">Gửi yêu cầu</string>
+    <string name="mozo_payment_request_btn_scan">Quét để gửi MozoX</string>
+    <string name="mozo_payment_request_text_scan_to_transfer">Quét để gửi:</string>
+    <string name="mozo_payment_request_text_send_to">Gửi yêu cầu đến</string>
+    <string name="mozo_payment_request_text_send_success">Gửi yêu cầu thành công</string>
+    <string name="mozo_payment_request_text_sent">Bạn đã gửi yêu cầu nhận MozoX đến:</string>
+    <string name="mozo_payment_request_text_empty">Danh sách trống</string>
+    <string name="mozo_payment_request_item_label_from">Từ:</string>
+    <string name="mozo_payment_request_item_label_amount">Yêu cầu:</string>
+    <string name="mozo_payment_request_item_amount">%s MozoX</string>
+
+    <string name="mozo_transfer_title">Gửi MozoX</string>
+    <string name="mozo_transfer_confirmation">Xác nhận</string>
+    <string name="mozo_transfer_from">Từ ví MozoX Offchain</string>
+    <string name="mozo_transfer_receiver_address">Địa chỉ người nhận</string>
+    <string name="mozo_transfer_receiver_address_hint">Điền địa chỉ ví người nhận</string>
+    <string name="mozo_transfer_receiver_address_error">Lỗi: Địa chỉ người nhận không hợp lệ</string>
+    <string name="mozo_transfer_amount">Số lượng</string>
+    <string name="mozo_transfer_amount_hint">Điền giá trị bằng số thập phân</string>
+    <string name="mozo_transfer_amount_error_not_enough">Lỗi: Số dư khả dụng không đủ</string>
+    <string name="mozo_transfer_amount_error_too_low">Lỗi: Số lượng quá nhỏ, vui lòng nhập số hợp lệ</string>
+    <string name="mozo_transfer_amount_error">Lỗi: Vui lòng nhập giá trị bằng số thập phân</string>
+    <string name="mozo_transfer_spendable">Số dư khả dụng: %s MozoX</string>
+    <string name="mozo_transfer_send_complete">Gửi thành công</string>
+    <string name="mozo_transfer_send_complete_msg">Bạn vừa gửi:</string>
+
+    <string name="mozo_transaction_detail_title">Chi tiết giao dịch</string>
+    <string name="mozo_transaction_detail_wallet_address">Địa chỉ ví</string>
+    <string name="mozo_transaction_view_button">Xem chi tiết giao dịch</string>
+    <string name="mozo_transaction_history_title">Lịch sử giao dịch</string>
+    <string name="mozo_transaction_history_offchain_text">Ví MozoX Offchain</string>
+    <string name="mozo_transaction_history_empty">Danh sách trống</string>
+
+    <string name="mozo_view_balance_title">Tổng MozoX Offchain</string>
+    <string name="mozo_view_address_title">Địa chỉ ví MozoX Offchain của bạn</string>
+    <string name="mozo_view_text_hint">…</string>
+    <string name="mozo_view_text_to">Đến</string>
+    <string name="mozo_view_text_send_to">Đến:</string>
+    <string name="mozo_view_text_from">Từ</string>
+    <string name="mozo_view_text_login_require_prefix">Bạn phải</string>
+    <string name="mozo_view_text_login_require_btn"><u>Đăng nhập</u></string>
+    <string name="mozo_view_text_login_require_suffix">để dùng chức năng này</string>
+    <string name="mozo_view_text_tx_all">Tất cả</string>
+    <string name="mozo_view_text_tx_received">Đã nhận</string>
+    <string name="mozo_view_text_tx_sent">Đã gửi</string>
+    <string name="mozo_view_text_tx_pending">Đang xử lý</string>
+    <string name="mozo_view_text_tx_failed">Thất bại</string>
+    <string name="mozo_view_text_tx_success">Thành công</string>
+    <string name="mozo_view_text_view_all">Xem toàn bộ</string>
+    <string name="mozo_view_text_total_mozo">Tổng số MozoX</string>
+</resources>

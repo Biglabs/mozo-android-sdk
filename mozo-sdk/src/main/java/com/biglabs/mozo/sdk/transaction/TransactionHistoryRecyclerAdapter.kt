@@ -13,8 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
-import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.OnLoadMoreListener
+import com.biglabs.mozo.sdk.common.model.TransactionHistory
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.click
 import com.biglabs.mozo.sdk.utils.gone
@@ -28,13 +28,13 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 internal class TransactionHistoryRecyclerAdapter(
-        private val histories: List<Models.TransactionHistory>,
-        private val itemClick: ((history: Models.TransactionHistory) -> Unit)? = null,
+        private val histories: List<TransactionHistory>,
+        private val itemClick: ((history: TransactionHistory) -> Unit)? = null,
         private val loadMoreListener: OnLoadMoreListener? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var address: String? = null
-    private var dataFilter: List<Models.TransactionHistory>? = null
+    private var dataFilter: List<TransactionHistory>? = null
     private var dataFilterJob: Job? = null
 
     private var totalItemCount = 0
@@ -131,7 +131,7 @@ internal class TransactionHistoryRecyclerAdapter(
     }
 
     private class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(history: Models.TransactionHistory, isSentType: Boolean, dateTime: String, lastItem: Boolean) {
+        fun bind(history: TransactionHistory, isSentType: Boolean, dateTime: String, lastItem: Boolean) {
 
             val amountSign: String
             val amountColor: Int

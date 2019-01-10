@@ -5,20 +5,18 @@ import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.authentication.AuthenticationListener
 import com.biglabs.mozo.sdk.authentication.MozoAuthActivity
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.common.Models
-import com.biglabs.mozo.sdk.common.Models.AnonymousUserInfo
+import com.biglabs.mozo.sdk.common.model.UserInfo
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.core.MozoSocketClient
 import com.biglabs.mozo.sdk.utils.logAsError
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import java.util.*
 
 @Suppress("RedundantSuspendModifier", "unused")
 class MozoAuth private constructor() {
@@ -69,18 +67,6 @@ class MozoAuth private constructor() {
 
     fun getAccessToken() = authStateManager.current.accessToken
 
-    private suspend fun initAnonymousUser(): AnonymousUserInfo {
-        var anonymousUser = mozoDB.anonymousUserInfo().get()
-        if (anonymousUser == null) {
-            val userId = UUID.randomUUID().toString()
-            anonymousUser = AnonymousUserInfo(userId = userId)
-
-            mozoDB.anonymousUserInfo().save(anonymousUser)
-        }
-
-        return anonymousUser
-    }
-
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
         EventBus.getDefault().unregister(this@MozoAuth)
@@ -99,26 +85,27 @@ class MozoAuth private constructor() {
         }
     }
 
-    internal fun syncProfile(context: Context, retryCallback: () -> Unit) = GlobalScope.async {
-        val response = MozoService.getInstance(context).fetchProfile(retryCallback).await()
-        if (response != null) {
+    @ExperimentalCoroutinesApi
+    internal fun syncProfile(context: Context) {
+        MozoService.getInstance().fetchProfile(context) { data, _ ->
+            data ?: return@fetchProfile
 
-            /* save User info first */
-            mozoDB.userInfo().save(Models.UserInfo(
-                    userId = response.userId
-            ))
-            val profile = MozoSDK.getInstance().profileViewModel.fetchData(context).await()
-            if (profile == null) {
-                /* update local profile to match with server profile */
-                mozoDB.profile().save(response)
-                launch(Dispatchers.Main) {
-                    MozoSDK.getInstance().profileViewModel.updateProfile(response)
+            GlobalScope.launch {
+                /* save User info first */
+                mozoDB.userInfo().save(UserInfo(
+                        userId = data.userId
+                ))
+            }
+            MozoSDK.getInstance().profileViewModel.fetchData(context) {
+                if (it == null) {
+                    MozoSDK.getInstance().profileViewModel.updateProfile(context, data)
+                    GlobalScope.launch {
+                        /* update local profile to match with server profile */
+                        mozoDB.profile().save(data)
+                    }
                 }
             }
-        } else {
-            // TODO handle fetch profile error
         }
-        return@async response
     }
 
     private fun doRefreshToken() {

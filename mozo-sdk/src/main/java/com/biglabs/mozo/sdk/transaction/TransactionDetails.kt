@@ -8,7 +8,9 @@ import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
-import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.model.Contact
+import com.biglabs.mozo.sdk.common.model.PaymentRequest
+import com.biglabs.mozo.sdk.common.model.TransactionHistory
 import com.biglabs.mozo.sdk.contact.AddressAddActivity
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
@@ -23,8 +25,8 @@ import java.util.*
 
 internal class TransactionDetails : BaseActivity() {
 
-    private var mHistory: Models.TransactionHistory? = null
-    private var mPaymentRequest: Models.PaymentRequest? = null
+    private var mHistory: TransactionHistory? = null
+    private var mPaymentRequest: PaymentRequest? = null
 
     private var findContactJob: Job? = null
     private var targetAddress: String? = null
@@ -70,7 +72,7 @@ internal class TransactionDetails : BaseActivity() {
 
         bindData(MozoWallet.getInstance().getAddress() ?: "")
 
-        MozoSDK.getInstance().contactViewModel.contactsLiveData.observe(this, Observer<List<Models.Contact>> {
+        MozoSDK.getInstance().contactViewModel.contactsLiveData.observe(this, Observer<List<Contact>> {
             it?.run {
                 displayContact()
             }
@@ -169,14 +171,14 @@ internal class TransactionDetails : BaseActivity() {
         private const val KEY_DATA = "KEY_DATA"
         private const val KEY_DATA_PAYMENT = "KEY_DATA_PAYMENT"
 
-        fun start(context: Context, history: Models.TransactionHistory) {
+        fun start(context: Context, history: TransactionHistory) {
             Intent(context, TransactionDetails::class.java).apply {
                 putExtra(KEY_DATA, history)
                 context.startActivity(this)
             }
         }
 
-        fun start(context: Context, paymentRequest: Models.PaymentRequest) {
+        fun start(context: Context, paymentRequest: PaymentRequest) {
             Intent(context, TransactionDetails::class.java).apply {
                 putExtra(KEY_DATA_PAYMENT, paymentRequest)
                 context.startActivity(this)

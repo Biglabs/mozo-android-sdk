@@ -3,17 +3,15 @@ package com.biglabs.mozo.sdk
 import android.content.Context
 import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
+import com.biglabs.mozo.sdk.common.model.*
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.transaction.TransactionFormActivity
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.utils.CryptoUtils
-import com.biglabs.mozo.sdk.utils.logAsInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -43,51 +41,46 @@ class MozoTx private constructor() {
         }
     }
 
-    internal fun createTransaction(context: Context, output: String, amount: String, pin: String, retryCallback: (request: Models.TransactionResponse?) -> Unit) = GlobalScope.async {
-        val myAddress = MozoWallet.getInstance().getAddress() ?: return@async null
-        val response = MozoService
-                .getInstance(context)
-                .createTransaction(
-                        prepareRequest(myAddress, output, amount)
-                ) {
-                    retryCallback(null)
-                }
-                .await()
-        if (response != null) {
+    private fun prepareRequest(inAdd: String, outAdd: String, amount: String): TransactionRequest {
+        val finalAmount = amountWithDecimal(amount)
+        return TransactionRequest(
+                arrayListOf(TransactionAddress(arrayListOf(inAdd))),
+                arrayListOf(TransactionAddressOutput(arrayListOf(outAdd), finalAmount))
+        )
+    }
+
+    internal fun createTransaction(context: Context, output: String, amount: String, pin: String, callback: (request: TransactionResponse?) -> Unit) {
+        val myAddress = MozoWallet.getInstance().getAddress()
+        if (myAddress == null) {
+            callback.invoke(null)
+            return
+        }
+        MozoService.getInstance().createTx(context, prepareRequest(myAddress, output, amount)) { data, _ ->
+            data ?: return@createTx
             val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted()
             val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, pin)
 
-            val toSign = response.toSign[0]
+            val toSign = data.toSign[0]
             val credentials = Credentials.create(privateKey)
             val signatureData = Sign.signMessage(Numeric.hexStringToByteArray(toSign), credentials.ecKeyPair, false)
 
             val signature = CryptoUtils.serializeSignature(signatureData)
             val pubKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
-            response.signatures = arrayListOf(signature)
-            response.publicKeys = arrayListOf(pubKey)
-            return@async sendTransaction(context, response) { retryCallback(response) }.await()
-        } else {
-            "create transaction failed".logAsInfo(TAG)
-            return@async null
+            data.signatures = arrayListOf(signature)
+            data.publicKeys = arrayListOf(pubKey)
+
+            MozoService.getInstance().sendTransaction(context, data) { txResponse, _ ->
+                callback.invoke(txResponse)
+            }
         }
     }
 
-    private fun sendTransaction(context: Context, request: Models.TransactionResponse, callback: () -> Unit) = GlobalScope.async {
-        return@async MozoService
-                .getInstance(context)
-                .sendTransaction(request, callback)
-                .await()
+    internal fun getTransactionStatus(context: Context, txHash: String, callback: (status: TransactionStatus) -> Unit) {
+        MozoService.getInstance().getTxStatus(context, txHash) { data, _ ->
+            data ?: return@getTxStatus
+            callback.invoke(data)
+        }
     }
-
-    private fun prepareRequest(inAdd: String, outAdd: String, amount: String): Models.TransactionRequest {
-        val finalAmount = amountWithDecimal(amount)
-        return Models.TransactionRequest(
-                arrayListOf(Models.TransactionAddress(arrayListOf(inAdd))),
-                arrayListOf(Models.TransactionAddressOutput(arrayListOf(outAdd), finalAmount))
-        )
-    }
-
-    internal fun getTransactionStatus(context: Context, txHash: String, retry: () -> Unit) = MozoService.getInstance(context).getTransactionStatus(txHash, retry)
 
     @SuppressWarnings("unused")
     @Subscribe

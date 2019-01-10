@@ -51,4 +51,4 @@
 }
 
 #Mozo
--keep class com.biglabs.mozo.sdk.common.Models** { *; }
+-keep class com.biglabs.mozo.sdk.common.model** { *; }

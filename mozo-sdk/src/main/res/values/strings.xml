@@ -7,7 +7,7 @@
 
     <string name="mozo_address_add_label">Wallet Address</string>
     <string name="mozo_address_add_input_name_label">Name</string>
-    <string name="mozo_address_add_input_name_hint">Enter contact name</string>
+    <string name="mozo_address_add_input_name_hint">Enter Contact Name</string>
     <string name="mozo_address_add_msg_saved">Address Saved</string>
     <string name="mozo_address_add_msg_error">This address already exists in your Address Book</string>
 
@@ -17,12 +17,12 @@
 
     <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
     <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
-    <string name="mozo_dialog_error_msg">There is an error occurred.</string>
-    <string name="mozo_dialog_error_not_enough_msg">Your balance is not enough for this.</string>
+    <string name="mozo_dialog_error_msg">An error has occurred.</string>
+    <string name="mozo_dialog_error_not_enough_msg">Your balance is not insufficient for this transfer amount.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
-    <string name="mozo_button_login">Sign In to MozoX</string>
-    <string name="mozo_button_logout">Log Out MozoX</string>
+    <string name="mozo_button_login">Sign In to Mozo X</string>
+    <string name="mozo_button_logout">Log Out Mozo X</string>
     <string name="mozo_button_transfer">Send MozoX</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
     <string name="mozo_button_withdraw">Withdraw</string>
@@ -48,25 +48,25 @@
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">Stored Recovery Phrase</string>
     <string name="mozo_backup_content">Please write it down on paper and keep it in a safe place as you would with money</string>
-    <string name="mozo_backup_warning">*If you lose your recovery phase, your wallet cannot be recovered.</string>
-    <string name="mozo_backup_confirm_msg">I have safely stored recovery phrase</string>
+    <string name="mozo_backup_warning">*If you lose your Recovery Phrase, your wallet cannot be recovered.</string>
+    <string name="mozo_backup_confirm_msg">I have safely stored Recovery Phrase</string>
 
     <string name="mozo_pin_title">Create Security PIN</string>
     <string name="mozo_pin_title_restore">Restore Wallet</string>
-    <string name="mozo_pin_title_verify">Security PIN Confirm</string>
-    <string name="mozo_pin_sub_title">Enter your security pin</string>
-    <string name="mozo_pin_sub_title_restore">Enter your security pin\nto restore wallet</string>
-    <string name="mozo_pin_sub_title_send">Enter your security pin\nto send MozoX</string>
-    <string name="mozo_pin_content">Security PIN should be 6 digit numbers</string>
+    <string name="mozo_pin_title_verify">Security PIN Confirmation</string>
+    <string name="mozo_pin_sub_title">Enter your Security PIN</string>
+    <string name="mozo_pin_sub_title_restore">Enter your Security PIN\nto restore wallet</string>
+    <string name="mozo_pin_sub_title_send">Enter your Security PIN\nto send MozoX</string>
+    <string name="mozo_pin_content">Security PIN must be 6 digits</string>
     <string name="mozo_pin_confirm_sub_title">Confirm Security PIN</string>
     <string name="mozo_pin_confirm_content">Re-enter your PIN</string>
     <string name="mozo_pin_msg_create_success">Create Security PIN successful</string>
     <string name="mozo_pin_msg_enter_correct">Security PIN is correct</string>
-    <string name="mozo_pin_msg_enter_incorrect">Incorrect PIN</string>
+    <string name="mozo_pin_msg_enter_incorrect">Incorrect Security PIN</string>
     <string name="mozo_pin_msg_error">Create Wallet failed</string>
 
-    <string name="mozo_notify_title_come_in">Customer come in</string>
-    <string name="mozo_notify_title_just_left">Customer has just left</string>
+    <string name="mozo_notify_title_come_in">Customer has entered</string>
+    <string name="mozo_notify_title_just_left">Customer has left</string>
     <string name="mozo_notify_title_received">Received %s MozoX</string>
     <string name="mozo_notify_title_sent">Sent %s MozoX</string>
     <string name="mozo_notify_content_from">From %s</string>
@@ -76,13 +76,13 @@
     <string name="mozo_payment_request_amount">Receive Amount</string>
     <string name="mozo_payment_request_tab_list">Requested List</string>
     <string name="mozo_payment_request_tab_create">Create Request</string>
-    <string name="mozo_payment_request_explain">You can ask another user to send MozoX to your wallet address by creating a request.</string>
+    <string name="mozo_payment_request_explain">You can ask another user to send MozoX to your wallet address by creating a Request.</string>
     <string name="mozo_payment_request_btn_send">Send Request</string>
     <string name="mozo_payment_request_btn_scan">Scan To Send MozoX</string>
     <string name="mozo_payment_request_text_scan_to_transfer">Scan to send:</string>
     <string name="mozo_payment_request_text_send_to">Send request to</string>
     <string name="mozo_payment_request_text_send_success">Send Request Successful</string>
-    <string name="mozo_payment_request_text_sent">You sent request for:</string>
+    <string name="mozo_payment_request_text_sent">You sent Request MozoX to:</string>
     <string name="mozo_payment_request_text_empty">Requested list is empty</string>
     <string name="mozo_payment_request_item_label_from">From:</string>
     <string name="mozo_payment_request_item_label_amount">Request:</string>

@@ -12,8 +12,9 @@ import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
+import com.biglabs.mozo.sdk.common.model.Contact
+import com.biglabs.mozo.sdk.common.model.PaymentRequest
 import com.biglabs.mozo.sdk.contact.AddressBookActivity
 import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.*
@@ -32,7 +33,7 @@ class PaymentRequestSendFragment : Fragment() {
     private var mListener: PaymentRequestInteractionListener? = null
     private var generateQRJob: Job? = null
     private var amountBigDecimal = BigDecimal.ZERO
-    private var selectedContact: Models.Contact? = null
+    private var selectedContact: Contact? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -78,7 +79,7 @@ class PaymentRequestSendFragment : Fragment() {
                     amount,
                     (selectedContact?.soloAddress
                             ?: output_receiver_address.text.toString()).toLowerCase(),
-                    Models.PaymentRequest(content = content)
+                    PaymentRequest(content = content)
             )
         }
 

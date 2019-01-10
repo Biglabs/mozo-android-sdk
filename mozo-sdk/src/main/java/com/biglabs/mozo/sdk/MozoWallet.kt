@@ -2,7 +2,8 @@ package com.biglabs.mozo.sdk
 
 import android.content.Context
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.model.Profile
+import com.biglabs.mozo.sdk.common.model.WalletInfo
 import com.biglabs.mozo.sdk.contact.AddressBookActivity
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
@@ -27,7 +28,7 @@ class MozoWallet private constructor() {
     private var forSaveAddress: String? = null
     private var forSavePrivateKey: String? = null
 
-    private var mProfile: Models.Profile? = null
+    private var mProfile: Profile? = null
 
     init {
         MozoSDK.getInstance().profileViewModel.profileLiveData.observeForever {
@@ -91,10 +92,13 @@ class MozoWallet private constructor() {
         return@async 0
     }
 
-    internal fun executeSaveWallet(pin: String, context: Context, retry: () -> Unit) = GlobalScope.async {
-        mProfile ?: return@async false
+    internal fun executeSaveWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+        if (mProfile == null) {
+            callback?.invoke(false)
+            return
+        }
 
-        val wallet = Models.WalletInfo().apply {
+        val wallet = WalletInfo().apply {
             encryptSeedPhrase = CryptoUtils.encrypt(this@MozoWallet.forSaveSeed!!, pin)
             offchainAddress = this@MozoWallet.forSaveAddress!!
             privateKey = CryptoUtils.encrypt(this@MozoWallet.forSavePrivateKey!!, pin)
@@ -102,29 +106,27 @@ class MozoWallet private constructor() {
         mProfile!!.apply { walletInfo = wallet }
 
         /* save wallet info to server */
-        val isSuccess = syncWalletInfo(wallet, context, retry).await()
+        syncWalletInfo(wallet, context) {
+            if (it) {
+                /* save wallet info to local */
+                mozoDB.profile().save(mProfile!!)
+                MozoSDK.getInstance().profileViewModel.updateProfile(context, mProfile!!)
 
-        if (!isSuccess) {
-            return@async false
+                clearVariables()
+            }
+            callback?.invoke(it)
         }
-
-        /* save wallet info to local */
-        mozoDB.profile().save(mProfile!!)
-        MozoSDK.getInstance().profileViewModel.updateProfile(mProfile!!)
-
-        clearVariables()
-        return@async true
     }
 
-    private fun syncWalletInfo(walletInfo: Models.WalletInfo, context: Context, retry: () -> Unit) = GlobalScope.async {
-        val response = MozoService.getInstance(context).saveWallet(walletInfo, retry).await()
-        val success = response != null
-        PreferenceUtils.getInstance(context).setFlag(
-                PreferenceUtils.FLAG_SYNC_WALLET_INFO,
-                !success
-        )
-
-        return@async success
+    private fun syncWalletInfo(walletInfo: WalletInfo, context: Context, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+        MozoService.getInstance().saveWallet(context, walletInfo) { _, errorCode ->
+            val isSuccess = errorCode.isNullOrEmpty()
+            PreferenceUtils.getInstance(context).setFlag(
+                    PreferenceUtils.FLAG_SYNC_WALLET_INFO,
+                    !isSuccess
+            )
+            callback?.invoke(isSuccess)
+        }
     }
 
     @Suppress("UNUSED_VALUE")

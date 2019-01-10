@@ -10,7 +10,7 @@ import android.util.TypedValue
 import android.view.View
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.model.Profile
 
 internal open class BaseButton : AppCompatButton {
     constructor(context: Context) : this(context, null)
@@ -51,7 +51,7 @@ internal open class BaseButton : AppCompatButton {
         }
     }
 
-    private val profileObserver = Observer<Models.Profile?> {
+    private val profileObserver = Observer<Profile?> {
         authorizeChanged(it?.walletInfo != null)
     }
 

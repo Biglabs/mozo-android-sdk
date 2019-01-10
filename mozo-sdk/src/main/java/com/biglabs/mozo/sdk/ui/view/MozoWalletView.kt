@@ -10,11 +10,12 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.doOnLayout
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
+import com.biglabs.mozo.sdk.common.model.Profile
 import com.biglabs.mozo.sdk.ui.dialog.QRCodeDialog
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.coroutines.Dispatchers
@@ -91,7 +92,17 @@ class MozoWalletView : ConstraintLayout {
         imageAddressQRView = find(R.id.mozo_wallet_qr_image)
         buttonShowQRCode = find(R.id.mozo_wallet_qr_image_button)
 
-        find<TextView>(R.id.button_copy)?.click { context.copyWithToast(mAddress) }
+        find<TextView>(R.id.button_copy)?.apply {
+            click { context.copyWithToast(mAddress) }
+            doOnLayout { btn ->
+                textAddressView?.let {
+                    val layoutParams = it.layoutParams as ConstraintLayout.LayoutParams
+                    layoutParams.marginEnd = btn.width
+                    layoutParams.goneEndMargin = btn.width
+                    it.layoutParams = layoutParams
+                }
+            }
+        }
         find<View>(R.id.button_login)?.click { MozoAuth.getInstance().signIn() }
         find<View>(R.id.button_refresh)?.click {
             hideErrorStateUI()
@@ -128,7 +139,7 @@ class MozoWalletView : ConstraintLayout {
         generateQRJob = null
     }
 
-    private val profileObserver = Observer<Models.Profile?> {
+    private val profileObserver = Observer<Profile?> {
         if (it?.walletInfo != null) {
             mAddress = it.walletInfo!!.offchainAddress
             hideLoginRequireUI()

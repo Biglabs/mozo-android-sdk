@@ -4,24 +4,25 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.biglabs.mozo.sdk.common.Models
-import com.biglabs.mozo.sdk.common.dao.AnonymousUserInfoDao
 import com.biglabs.mozo.sdk.common.dao.NotificationDao
 import com.biglabs.mozo.sdk.common.dao.ProfileDao
 import com.biglabs.mozo.sdk.common.dao.UserInfoDao
 import com.biglabs.mozo.sdk.common.model.Notification
+import com.biglabs.mozo.sdk.common.model.Profile
+import com.biglabs.mozo.sdk.common.model.UserInfo
 
-@Database(entities = [Models.AnonymousUserInfo::class, Models.UserInfo::class, Models.Profile::class, Notification::class], version = 1, exportSchema = false)
+@Database(entities = [UserInfo::class, Profile::class, Notification::class], version = 2, exportSchema = false)
 internal abstract class MozoDatabase : RoomDatabase() {
 
-    abstract fun anonymousUserInfo(): AnonymousUserInfoDao
     abstract fun userInfo(): UserInfoDao
     abstract fun profile(): ProfileDao
     abstract fun notifications(): NotificationDao
 
     fun clear() {
-        userInfo().deleteAll()
-        notifications().deleteAll()
+        if (isOpen) {
+            userInfo().deleteAll()
+            notifications().deleteAll()
+        }
     }
 
     companion object {

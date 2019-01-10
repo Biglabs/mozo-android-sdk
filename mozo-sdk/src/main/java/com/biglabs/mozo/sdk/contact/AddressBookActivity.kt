@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.model.Contact
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.view_address_book.*
@@ -20,9 +20,9 @@ import kotlinx.coroutines.*
 
 internal class AddressBookActivity : BaseActivity() {
 
-    private val contacts: ArrayList<Models.Contact> = arrayListOf()
-    private val contactsBackup: ArrayList<Models.Contact> = arrayListOf()
-    private val onItemClick = { contact: Models.Contact ->
+    private val contacts: ArrayList<Contact> = arrayListOf()
+    private val contactsBackup: ArrayList<Contact> = arrayListOf()
+    private val onItemClick = { contact: Contact ->
         if (isStartForResult) {
             val result = Intent()
             result.putExtra(KEY_SELECTED_ADDRESS, contact)
@@ -103,7 +103,7 @@ internal class AddressBookActivity : BaseActivity() {
         }
     }
 
-    private val contactsObserver = Observer<List<Models.Contact>> {
+    private val contactsObserver = Observer<List<Contact>> {
         it?.run {
             contacts.clear()
             contacts.addAll(this)

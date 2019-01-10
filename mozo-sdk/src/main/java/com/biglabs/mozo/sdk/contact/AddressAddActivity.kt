@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.model.Contact
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.*
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 internal class AddressAddActivity : BaseActivity() {
 
-    private val mozoService by lazy { MozoService.getInstance(this) }
+    private val mozoService by lazy { MozoService.getInstance() }
 
     private var mShowMessageDuration = 0L
 
@@ -39,16 +39,13 @@ internal class AddressAddActivity : BaseActivity() {
     private fun executeSaveContact() {
         showLoading()
 
-        val contact = Models.Contact(0, input_contact_name.text.toString().trim(), text_contact_address.text.toString())
-        GlobalScope.launch {
-            val response = mozoService.saveContact(contact, arrayOf(DUPLICATED_ERROR_CODE)) {
-                executeSaveContact()
-            }.await()
-
+        val contact = Contact(0, input_contact_name.text.toString().trim(), text_contact_address.text.toString())
+        mozoService.saveContact(this, contact) { data, errorCode ->
             hideLoading()
-            if (response?.body() != null) {
-                showDoneMsg()
-            } else if (response?.code() == DUPLICATED_ERROR_CODE) {
+
+            if (data != null) showDoneMsg()
+
+            if (errorCode == "DUPLICATED_ERROR_CODE") {
                 showErrorMsg()
             }
         }

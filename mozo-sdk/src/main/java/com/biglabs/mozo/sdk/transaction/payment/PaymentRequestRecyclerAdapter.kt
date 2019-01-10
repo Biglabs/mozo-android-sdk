@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.model.PaymentRequest
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.click
 import com.biglabs.mozo.sdk.utils.gone
@@ -15,7 +15,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_payment_request.*
 
 class PaymentRequestRecyclerAdapter(
-        private val requests: List<Models.PaymentRequest>,
+        private val requests: List<PaymentRequest>,
         private val emptyView: View? = null,
         private val itemClick: ((position: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<PaymentRequestRecyclerAdapter.ItemPaymentViewHolder>() {
@@ -39,7 +39,7 @@ class PaymentRequestRecyclerAdapter(
     }
 
     class ItemPaymentViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(request: Models.PaymentRequest) {
+        fun bind(request: PaymentRequest) {
             request.content?.let {
                 val param = Support.parsePaymentRequest(it)
                 var receiver = param.firstOrNull()

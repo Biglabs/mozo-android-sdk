@@ -14,7 +14,8 @@ import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.authentication.AuthStateManager
 import com.biglabs.mozo.sdk.common.Constant
-import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.model.BroadcastData
+import com.biglabs.mozo.sdk.common.model.BroadcastDataContent
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.bitmap
 import com.biglabs.mozo.sdk.utils.color
@@ -52,7 +53,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 val messages = split("|")
                 if (messages.size > 1) {
                     val message = try {
-                        Gson().fromJson(messages[1], Models.BroadcastData::class.java)
+                        Gson().fromJson(messages[1], BroadcastData::class.java)
                     } catch (e: Exception) {
                         null
                     }
@@ -65,7 +66,6 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
                         /* Reload balance */
                         if (Constant.NOTIFY_EVENT_BALANCE_CHANGED.equals(broadcast.event, ignoreCase = true)) {
-                            @Suppress("DeferredResultUnused")
                             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                         }
 
@@ -91,7 +91,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         disconnect()
     }
 
-    private fun showNotification(message: Models.BroadcastDataContent) = GlobalScope.launch {
+    private fun showNotification(message: BroadcastDataContent) = GlobalScope.launch {
         MozoSDK.getInstance().notifyActivityClass ?: return@launch
 
         val context = MozoSDK.getInstance().context

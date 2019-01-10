@@ -1,7 +1,7 @@
 package com.biglabs.mozo.sdk.common.dao
 
 import androidx.room.*
-import com.biglabs.mozo.sdk.common.Models.Profile
+import com.biglabs.mozo.sdk.common.model.Profile
 
 @Dao
 interface ProfileDao {

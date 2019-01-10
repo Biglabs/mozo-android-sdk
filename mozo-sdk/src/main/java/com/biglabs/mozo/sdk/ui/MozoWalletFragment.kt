@@ -17,8 +17,9 @@ import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.MozoTx
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
-import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.ViewModels
+import com.biglabs.mozo.sdk.common.model.Profile
+import com.biglabs.mozo.sdk.common.model.TransactionHistory
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
@@ -34,8 +35,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
-    private val histories = arrayListOf<Models.TransactionHistory>()
-    private val onItemClick = { history: Models.TransactionHistory ->
+    private val histories = arrayListOf<TransactionHistory>()
+    private val onItemClick = { history: TransactionHistory ->
         if (context != null) {
             TransactionDetails.start(context!!, history)
         }
@@ -142,7 +143,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         fetchData()
     }
 
-    private val profileObserver = Observer<Models.Profile?> {
+    private val profileObserver = Observer<Profile?> {
         if (it?.walletInfo != null) {
             currentAddress = it.walletInfo!!.offchainAddress
             historyAdapter.address = currentAddress
@@ -166,29 +167,30 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun fetchData() {
-        fetchDataJob?.cancel()
-        fetchDataJob = GlobalScope.launch {
-            if (currentAddress == null || context == null) return@launch
+        MozoService.getInstance().getTransactionHistory(
+                context ?: return,
+                currentAddress ?: return,
+                page = Constant.PAGING_START_INDEX,
+                size = 10
+        ) { data, _ ->
+            data ?: return@getTransactionHistory
+            data.items ?: return@getTransactionHistory
 
-            val response = MozoService.getInstance(context!!)
-                    .getTransactionHistory(currentAddress!!, page = Constant.PAGING_START_INDEX, size = 10) {
-                        fetchData()
-                    }.await()
-
-            histories.clear()
-
-            response.map {
-                val contact = MozoSDK.getInstance().contactViewModel.findByAddress(if (it.type(currentAddress)) it.addressTo else it.addressFrom)
-                if (contact?.name != null) {
-                    it.contactName = contact.name
+            fetchDataJob?.cancel()
+            fetchDataJob = GlobalScope.launch {
+                histories.clear()
+                histories.addAll(data.items!!.map {
+                    it.apply {
+                        contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
+                                if (it.type(currentAddress)) it.addressTo else it.addressFrom
+                        )?.name
+                    }
+                })
+                launch(Dispatchers.Main) {
+                    wallet_fragment_refresh_layout?.isRefreshing = false
+                    historyAdapter.setCanLoadMore(false)
+                    historyAdapter.notifyData()
                 }
-            }
-            histories.addAll(response)
-            historyAdapter.setCanLoadMore(false)
-
-            launch(Dispatchers.Main) {
-                wallet_fragment_refresh_layout?.isRefreshing = false
-                historyAdapter.notifyData()
             }
         }
     }

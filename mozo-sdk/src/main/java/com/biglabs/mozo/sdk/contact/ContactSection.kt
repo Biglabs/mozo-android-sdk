@@ -3,7 +3,7 @@ package com.biglabs.mozo.sdk.contact
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Models
+import com.biglabs.mozo.sdk.common.model.Contact
 import com.biglabs.mozo.sdk.utils.click
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.item_contact_header.*
 
 internal class ContactSection(
         private val title: String,
-        private val contacts: List<Models.Contact>,
-        private val itemClick: ((contact: Models.Contact) -> Unit)? = null
+        private val contacts: List<Contact>,
+        private val itemClick: ((contact: Contact) -> Unit)? = null
 ) : StatelessSection(
         SectionParameters.builder()
                 .itemResourceId(R.layout.item_contact)
@@ -48,7 +48,7 @@ internal class ContactSection(
     }
 
     class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(contact: Models.Contact) {
+        fun bind(contact: Contact) {
             item_title.text = contact.name
             item_content.text = contact.soloAddress
         }

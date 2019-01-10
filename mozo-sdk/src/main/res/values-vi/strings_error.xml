@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_internal">Không thể kết nối máy chủ MozoX. Liên hệ tư vấn viên để biết thêm thông tin (email + phone)</string>
+    <string name="error_invalid_token">Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại</string>
+
+</resources>

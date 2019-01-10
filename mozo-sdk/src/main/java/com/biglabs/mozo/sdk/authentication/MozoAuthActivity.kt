@@ -1,7 +1,6 @@
 package com.biglabs.mozo.sdk.authentication
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -14,21 +13,18 @@ import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.ui.SecurityActivity
-import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.logAsError
 import com.biglabs.mozo.sdk.utils.setMatchParent
 import com.biglabs.mozo.sdk.utils.string
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import net.openid.appauth.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
+@ExperimentalCoroutinesApi
 internal class MozoAuthActivity : FragmentActivity() {
 
     private var mAuthService: AuthorizationService? = null
@@ -250,23 +246,20 @@ internal class MozoAuthActivity : FragmentActivity() {
         mAuthService!!.performTokenRequest(request, clientAuthentication, callback)
     }
 
+    @ExperimentalCoroutinesApi
     private fun handleResult(exception: Exception? = null) {
         handleJob?.cancel()
         handleJob = GlobalScope.launch {
             if (modeSignIn) {
                 if (exception == null) {
-                    val response = MozoAuth.getInstance()
-                            .syncProfile(this@MozoAuthActivity) {
-                                handleResult()
-                            }
-                            .await()
-                    if (response == null) {
-                        ErrorDialog.onCancel(DialogInterface.OnCancelListener {
-                            isSignOutWhenError = true
-                            doSignOutFirst()
-                        })
-                        return@launch
-                    }
+                    MozoAuth.getInstance().syncProfile(this@MozoAuthActivity)
+//                    if (response == null) {
+//                        ErrorDialog.onCancel(DialogInterface.OnCancelListener {
+//                            isSignOutWhenError = true
+//                            doSignOutFirst()
+//                        })
+//                        return@launch
+//                    }
 
                     val flag = MozoWallet.getInstance().initWallet(this@MozoAuthActivity).await()
                     SecurityActivity.start(this@MozoAuthActivity, flag, KEY_DO_ENTER_PIN)

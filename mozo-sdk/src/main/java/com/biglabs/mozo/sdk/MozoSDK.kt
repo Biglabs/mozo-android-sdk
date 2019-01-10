@@ -36,8 +36,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     internal var onNotificationReceiveListener: OnNotificationReceiveListener? = null
 
-    init {
-        /* register network changes */
+    override fun getViewModelStore(): ViewModelStore = mViewModelStore
+
+    private fun registerNetworkCallback() {
         val networkRequest = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network?) {
@@ -55,8 +56,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
             }
         })
     }
-
-    override fun getViewModelStore(): ViewModelStore = mViewModelStore
 
     @Suppress("unused")
     companion object {
@@ -97,6 +96,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 MozoWallet.getInstance()
                 /* initialize Transaction Service */
                 MozoTx.getInstance()
+
+                /* register network changes */
+                instance?.registerNetworkCallback()
             }
         }
 

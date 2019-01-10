@@ -3,9 +3,10 @@ package com.biglabs.mozo.sdk
 import android.content.Context
 import android.content.Intent
 import com.biglabs.mozo.sdk.common.Constant
-import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.OnNotificationReceiveListener
+import com.biglabs.mozo.sdk.common.model.BroadcastDataContent
 import com.biglabs.mozo.sdk.common.model.Notification
+import com.biglabs.mozo.sdk.common.model.TransactionHistory
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.utils.Support
@@ -26,14 +27,14 @@ class MozoNotification {
         private const val KEY_DATA = "mozo_notification_data"
 
         @Synchronized
-        internal fun prepareDataIntent(message: Models.BroadcastDataContent): Intent = Intent(
+        internal fun prepareDataIntent(message: BroadcastDataContent): Intent = Intent(
                 MozoSDK.getInstance().context,
                 MozoSDK.getInstance().notifyActivityClass
         ).apply {
             putExtra(KEY_DATA, Gson().toJson(message))
         }
 
-        internal fun prepareNotification(context: Context, message: Models.BroadcastDataContent): Notification {
+        internal fun prepareNotification(context: Context, message: BroadcastDataContent): Notification {
             val isSendType = message.from.equals(
                     MozoWallet.getInstance().getAddress() ?: "",
                     ignoreCase = true
@@ -74,7 +75,7 @@ class MozoNotification {
         }
 
         @Synchronized
-        internal fun save(data: Models.BroadcastDataContent) {
+        internal fun save(data: BroadcastDataContent) {
             GlobalScope.launch {
                 val itemId = MozoDatabase.getInstance(MozoSDK.getInstance().context)
                         .notifications()
@@ -93,14 +94,14 @@ class MozoNotification {
         @Synchronized
         internal fun openDetails(context: Context, data: String) {
             try {
-                Gson().fromJson(data, Models.BroadcastDataContent::class.java)
+                Gson().fromJson(data, BroadcastDataContent::class.java)
             } catch (e: Exception) {
                 null
             }?.let {
                 when (it.event) {
                     Constant.NOTIFY_EVENT_AIRDROPPED,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
-                        val txHistory = Models.TransactionHistory(
+                        val txHistory = TransactionHistory(
                                 null,
                                 0L,
                                 null,

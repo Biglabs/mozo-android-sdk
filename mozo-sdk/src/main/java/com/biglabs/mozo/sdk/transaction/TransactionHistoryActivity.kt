@@ -1,30 +1,28 @@
 package com.biglabs.mozo.sdk.transaction
 
-import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
-import com.biglabs.mozo.sdk.common.Models
 import com.biglabs.mozo.sdk.common.OnLoadMoreListener
+import com.biglabs.mozo.sdk.common.model.Profile
+import com.biglabs.mozo.sdk.common.model.TransactionHistory
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.mozoSetup
 import kotlinx.android.synthetic.main.view_transaction_history.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private val histories = arrayListOf<Models.TransactionHistory>()
-    private val onItemClick = { history: Models.TransactionHistory ->
+    private val histories = arrayListOf<TransactionHistory>()
+    private val onItemClick = { history: TransactionHistory ->
         TransactionDetails.start(this@TransactionHistoryActivity, history)
     }
     private var historyAdapter = TransactionHistoryRecyclerAdapter(histories, onItemClick, this)
@@ -74,7 +72,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
         }
     }
 
-    private val profileObserver = Observer<Models.Profile?> {
+    private val profileObserver = Observer<Profile?> {
         currentAddress = it?.walletInfo?.offchainAddress
         historyAdapter.address = currentAddress
         if (!loadFirstPage && currentPage == Constant.PAGING_START_INDEX) {
@@ -83,28 +81,30 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
     }
 
     private fun fetchData() {
-        fetchDataJob?.cancel()
-        fetchDataJob = GlobalScope.launch {
-            if (currentAddress == null) return@launch
+        MozoService.getInstance().getTransactionHistory(
+                this,
+                currentAddress ?: return,
+                page = currentPage
+        ) { data, _ ->
+            list_history_refresh?.isRefreshing = false
 
-            val response = MozoService.getInstance(this@TransactionHistoryActivity)
-                    .getTransactionHistory(currentAddress!!, page = currentPage) { fetchData() }
-                    .await()
+            data ?: return@getTransactionHistory
+            data.items ?: return@getTransactionHistory
 
-            if (currentPage <= Constant.PAGING_START_INDEX) histories.clear()
-
-            response.map {
-                val contact = MozoSDK.getInstance().contactViewModel.findByAddress(if (it.type(currentAddress)) it.addressTo else it.addressFrom)
-                if (contact?.name != null) {
-                    it.contactName = contact.name
+            fetchDataJob?.cancel()
+            fetchDataJob = GlobalScope.launch {
+                if (currentPage <= Constant.PAGING_START_INDEX) histories.clear()
+                histories.addAll(data.items!!.map {
+                    it.apply {
+                        contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
+                                if (it.type(currentAddress)) it.addressTo else it.addressFrom
+                        )?.name
+                    }
+                })
+                launch(Dispatchers.Main) {
+                    historyAdapter.setCanLoadMore(data.items!!.size == Constant.PAGING_SIZE)
+                    historyAdapter.notifyData()
                 }
-            }
-            histories.addAll(response)
-            historyAdapter.setCanLoadMore(response.size == Constant.PAGING_SIZE)
-
-            launch(Dispatchers.Main) {
-                list_history_refresh.isRefreshing = false
-                historyAdapter.notifyData()
             }
         }
     }
