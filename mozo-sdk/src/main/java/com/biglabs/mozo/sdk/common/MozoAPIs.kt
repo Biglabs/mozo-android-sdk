@@ -11,6 +11,9 @@ internal interface MozoAPIs {
     @POST("contacts")
     fun saveContact(@Body contact: Contact): Call<Base<Contact>>
 
+    @GET("store-book")
+    fun getStoreBook(): Call<Base<BaseData<Contact>>>
+
     @GET("user-profile")
     fun fetchProfile(): Call<Base<Profile>>
 

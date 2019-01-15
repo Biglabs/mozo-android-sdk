@@ -19,6 +19,7 @@ class Constant {
         const val NOTIFY_EVENT_AIRDROPPED = "airdropped"
         const val NOTIFY_EVENT_BALANCE_CHANGED = "balance_changed"
         const val NOTIFY_EVENT_CUSTOMER_CAME = "customer_came"
+        const val NOTIFY_EVENT_STORE_BOOK_ADDED = "store_book_added"
 
         internal const val DOMAIN_API_DEV = "dev.gateway.mozocoin.io"
         internal const val DOMAIN_API_STAGING = "staging.gateway.mozocoin.io"

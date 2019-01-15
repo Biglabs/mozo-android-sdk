@@ -74,6 +74,10 @@ internal class MozoService private constructor() {
         execute(context, mozoAPIs.saveContact(contact), callback, handleError = false)
     }
 
+    fun getStoreBook(context: Context, callback: ((data: BaseData<Contact>?, errorCode: String?) -> Unit)? = null) {
+        execute(context, mozoAPIs.getStoreBook(), callback)
+    }
+
     /**
      * Payment Request APIs
      */

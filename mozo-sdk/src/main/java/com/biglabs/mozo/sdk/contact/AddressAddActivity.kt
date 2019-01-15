@@ -39,7 +39,7 @@ internal class AddressAddActivity : BaseActivity() {
     private fun executeSaveContact() {
         showLoading()
 
-        val contact = Contact(0, input_contact_name.text.toString().trim(), text_contact_address.text.toString())
+        val contact = Contact(0, input_contact_name.text.toString().trim(), null, text_contact_address.text.toString())
         mozoService.saveContact(this, contact) { data, errorCode ->
             hideLoading()
 
@@ -82,7 +82,6 @@ internal class AddressAddActivity : BaseActivity() {
     }
 
     companion object {
-        private const val DUPLICATED_ERROR_CODE = 400
         private const val FLAG_ADDRESS = "FLAG_ADDRESS"
 
         fun start(context: Context, address: String?) {

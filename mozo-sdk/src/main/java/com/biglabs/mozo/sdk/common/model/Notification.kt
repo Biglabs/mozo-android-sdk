@@ -30,7 +30,7 @@ class Notification(
         set(0, length, StyleSpan(Typeface.BOLD))
         if (!Constant.NOTIFY_EVENT_CUSTOMER_CAME.equals(type, ignoreCase = true))
             set(
-                    indexOf(" "),
+                    Math.max(indexOfFirst { it.isDigit() }, 0),
                     length,
                     ForegroundColorSpan(MozoSDK.getInstance().context.color(R.color.mozo_color_primary))
             )

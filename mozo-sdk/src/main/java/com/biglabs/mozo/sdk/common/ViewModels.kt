@@ -104,6 +104,6 @@ internal object ViewModels {
             }
         }
 
-        fun findByAddress(address: String?) = contactsLiveData.value?.find { it.soloAddress.equals(address, ignoreCase = true) }
+        fun findByAddress(address: String?) = contactsLiveData.value?.find { it.walletAddress.equals(address, ignoreCase = true) }
     }
 }

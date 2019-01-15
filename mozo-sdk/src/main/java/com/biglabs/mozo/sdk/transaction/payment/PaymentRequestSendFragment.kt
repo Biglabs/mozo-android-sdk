@@ -77,7 +77,7 @@ class PaymentRequestSendFragment : Fragment() {
         button_send.click {
             mListener?.onSendRequestClicked(
                     amount,
-                    (selectedContact?.soloAddress
+                    (selectedContact?.walletAddress
                             ?: output_receiver_address.text.toString()).toLowerCase(),
                     PaymentRequest(content = content)
             )
@@ -129,7 +129,7 @@ class PaymentRequestSendFragment : Fragment() {
     private fun showContactInfoUI() {
         selectedContact ?: return
 
-        output_receiver_address.setText(selectedContact?.soloAddress)
+        output_receiver_address.setText(selectedContact?.walletAddress)
     }
 
     private fun showInputUI() {

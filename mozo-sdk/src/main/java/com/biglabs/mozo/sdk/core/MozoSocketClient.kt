@@ -64,13 +64,20 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         /* Save notification to local storage */
                         MozoNotification.save(broadcast)
 
-                        /* Reload balance */
-                        if (Constant.NOTIFY_EVENT_BALANCE_CHANGED.equals(broadcast.event, ignoreCase = true)) {
-                            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+                        when (broadcast.event.toLowerCase()) {
+                            /* Reload balance */
+                            Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
+                                MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+                            }
+                            Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
+
+                            }
                         }
 
                         /* Do show notification on system tray */
-                        showNotification(broadcast)
+                        if (MozoNotification.shouldShowNotification(broadcast.event)) {
+                            showNotification(broadcast)
+                        }
                     }
                 }
             }

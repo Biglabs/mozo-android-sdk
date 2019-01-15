@@ -26,6 +26,12 @@ class MozoNotification {
         const val REQUEST_CODE = 0x3020
         private const val KEY_DATA = "mozo_notification_data"
 
+        internal fun shouldShowNotification(event: String?) = arrayOf(
+                Constant.NOTIFY_EVENT_AIRDROPPED,
+                Constant.NOTIFY_EVENT_BALANCE_CHANGED,
+                Constant.NOTIFY_EVENT_CUSTOMER_CAME
+        ).contains(event?.toLowerCase())
+
         @Synchronized
         internal fun prepareDataIntent(message: BroadcastDataContent): Intent = Intent(
                 MozoSDK.getInstance().context,
@@ -59,6 +65,8 @@ class MozoNotification {
                     }
                     largeIcon = R.drawable.im_notification_customer_came
                 }
+                Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
+                }
                 else -> {
                     val address = if (isSendType) message.to else message.from
                     val contact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
@@ -76,6 +84,9 @@ class MozoNotification {
 
         @Synchronized
         internal fun save(data: BroadcastDataContent) {
+            if (!shouldShowNotification(data.event)) {
+                return
+            }
             GlobalScope.launch {
                 val itemId = MozoDatabase.getInstance(MozoSDK.getInstance().context)
                         .notifications()

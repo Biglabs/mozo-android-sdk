@@ -10,6 +10,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.text.set
 import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.MozoTx
@@ -103,7 +104,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
     private fun sendTx(pin: String?) {
         if (pin == null) return
-        val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
+        val address = selectedContact?.walletAddress ?: output_receiver_address.text.toString()
         val amount = output_amount.text.toString()
 
         showLoading()
@@ -176,18 +177,13 @@ internal class TransactionFormActivity : BaseActivity() {
         }
     }
 
-    private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
-        it?.run {
+    private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> { bar ->
+        bar?.run {
             currentBalance = balanceInDecimal
             currentRate = rate
-            val str = SpannableString(getString(R.string.mozo_transfer_spendable, currentBalance.displayString()))
-            str.setSpan(
-                    ForegroundColorSpan(color(R.color.mozo_color_primary)),
-                    10,
-                    str.length,
-                    SpannableString.SPAN_INCLUSIVE_EXCLUSIVE
-            )
-            text_spendable.text = str
+            text_spendable.text = SpannableString(getString(R.string.mozo_transfer_spendable, currentBalance.displayString())).apply {
+                set(indexOfFirst { it.isDigit() }..length, ForegroundColorSpan(color(R.color.mozo_color_primary)))
+            }
             output_amount.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, decimal))
         }
     }
@@ -229,7 +225,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
             output_receiver_address_user.visible()
             text_receiver_user_name.text = name
-            text_receiver_user_address.text = soloAddress
+            text_receiver_user_address.text = walletAddress
 
             button_clear.apply {
                 visible()
@@ -366,7 +362,7 @@ internal class TransactionFormActivity : BaseActivity() {
     @SuppressLint("SetTextI18n")
     private fun validateInput(): Boolean {
         var isValidAddress = true
-        val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
+        val address = selectedContact?.walletAddress ?: output_receiver_address.text.toString()
         if (!WalletUtils.isValidAddress(address)) {
             showErrorAddressUI()
             isValidAddress = false
