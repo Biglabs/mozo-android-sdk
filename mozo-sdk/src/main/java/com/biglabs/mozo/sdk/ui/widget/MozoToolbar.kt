@@ -2,15 +2,14 @@ package com.biglabs.mozo.sdk.ui.widget
 
 import android.app.Activity
 import android.content.Context
-import androidx.annotation.StringRes
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
-import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.click
 import org.greenrobot.eventbus.EventBus
 
@@ -31,14 +30,13 @@ internal class MozoToolbar : ConstraintLayout {
     constructor(context: Context) : this(context, null, 0)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        context.theme.obtainStyledAttributes(attrs, R.styleable.MozoToolbar, defStyleAttr, 0).apply {
-            try {
-                mTitle = getString(R.styleable.MozoToolbar_title)
-                mShowBack = getBoolean(R.styleable.MozoToolbar_buttonBack, mShowBack)
-                mShowClose = getBoolean(R.styleable.MozoToolbar_buttonClose, mShowClose)
-            } finally {
-                recycle()
-            }
+        val typeArray = context.obtainStyledAttributes(attrs, R.styleable.MozoToolbar, defStyleAttr, 0)
+        try {
+            mTitle = typeArray.getString(R.styleable.MozoToolbar_title)
+            mShowBack = typeArray.getBoolean(R.styleable.MozoToolbar_buttonBack, mShowBack)
+            mShowClose = typeArray.getBoolean(R.styleable.MozoToolbar_buttonClose, mShowClose)
+        } finally {
+            typeArray.recycle()
         }
 
         inflate(context, R.layout.view_toolbar, this)

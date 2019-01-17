@@ -54,7 +54,7 @@ class Support {
             return emptyArray()
         }
 
-        fun getDisplayDate(time: Long, pattern: String): String = SimpleDateFormat(pattern, Locale.US).format(Date(time))
+        fun getDisplayDate(time: Long, pattern: String): String = SimpleDateFormat(pattern, Locale.getDefault()).format(Date(time))
 
         internal fun domainAPI() = when (MozoSDK.serviceEnvironment) {
             MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_API_DEV

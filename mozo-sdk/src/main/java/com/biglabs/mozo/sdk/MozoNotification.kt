@@ -97,7 +97,7 @@ class MozoNotification {
                         .get(itemId)
 
                 launch(Dispatchers.Main) {
-                    MozoSDK.getInstance().onNotificationReceiveListener?.onReveiced(result)
+                    MozoSDK.getInstance().onNotificationReceiveListener?.onReceived(result)
                 }
             }
         }

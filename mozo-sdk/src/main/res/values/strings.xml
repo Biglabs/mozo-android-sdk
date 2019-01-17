@@ -100,7 +100,7 @@
     <string name="mozo_transfer_amount_error_too_low">Error: Amount is too low, please input valid amount.</string>
     <string name="mozo_transfer_amount_error">Error: Please input value in decimal format.</string>
     <string name="mozo_transfer_spendable">Spendable: %s MozoX</string>
-    <string name="mozo_transfer_send_complete">Send Complete</string>
+    <string name="mozo_transfer_send_complete">Send Completed</string>
     <string name="mozo_transfer_send_complete_msg">You have just sent:</string>
 
     <string name="mozo_transaction_detail_title">Transaction Detail</string>

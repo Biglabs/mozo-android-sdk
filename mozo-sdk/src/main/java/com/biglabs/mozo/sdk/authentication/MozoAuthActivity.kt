@@ -24,7 +24,6 @@ import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
-@ExperimentalCoroutinesApi
 internal class MozoAuthActivity : FragmentActivity() {
 
     private var mAuthService: AuthorizationService? = null
@@ -41,6 +40,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
     private var handleJob: Job? = null
 
+    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_loading)
@@ -183,6 +183,7 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
     }
 
+    @ExperimentalCoroutinesApi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when {
             requestCode == KEY_DO_AUTHENTICATION && modeSignIn -> {
@@ -227,6 +228,7 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
     }
 
+    @ExperimentalCoroutinesApi
     private fun exchangeAuthorizationCode(response: AuthorizationResponse) {
         performTokenRequest(response.createTokenExchangeRequest(), AuthorizationService.TokenResponseCallback { tokenResponse, authException ->
             mAuthStateManager!!.updateAfterTokenResponse(tokenResponse, authException)
@@ -234,6 +236,7 @@ internal class MozoAuthActivity : FragmentActivity() {
         })
     }
 
+    @ExperimentalCoroutinesApi
     private fun performTokenRequest(request: TokenRequest, callback: AuthorizationService.TokenResponseCallback) {
         val clientAuthentication: ClientAuthentication
         try {

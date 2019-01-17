@@ -48,7 +48,7 @@ class NotificationFragment : Fragment() {
         }
 
         MozoNotification.setNotificationReceiveListener(object : OnNotificationReceiveListener {
-            override fun onReveiced(notification: Notification) {
+            override fun onReceived(notification: Notification) {
                 notifications.add(0, notification)
                 adapter.notifyDataSetChanged()
             }

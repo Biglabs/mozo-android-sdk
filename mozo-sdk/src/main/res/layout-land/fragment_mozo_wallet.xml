@@ -137,7 +137,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/wallet_fragment_btn_payment_request"
         style="@style/MozoButtonStyle.Rounded"
         android:layout_width="0dp"
@@ -149,42 +149,38 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:text="@string/mozo_button_request_list"
-        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="@dimen/mozo_text_size"
         app:autoSizeTextType="uniform"
+        app:icon="@drawable/ic_action_receive"
+        app:iconGravity="textStart"
+        app:iconPadding="5dp"
+        app:iconSize="15dp"
+        app:iconTint="@android:color/white"
         app:layout_constraintEnd_toStartOf="@id/wallet_fragment_btn_send"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/wallet_info_container"
         app:layout_constraintWidth_max="165dp" />
 
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/wallet_fragment_btn_send"
         style="@style/MozoButtonStyle.Rounded"
         android:layout_width="0dp"
         android:layout_marginEnd="@dimen/mozo_screen_margin"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/mozo_button_transfer"
+        app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+        app:autoSizeTextType="uniform"
+        app:icon="@drawable/ic_action_send"
+        app:iconGravity="textStart"
+        app:iconPadding="5dp"
+        app:iconSize="15dp"
+        app:iconTint="@android:color/white"
         app:layout_constraintEnd_toEndOf="@id/guide_center"
         app:layout_constraintStart_toEndOf="@id/wallet_fragment_btn_payment_request"
         app:layout_constraintTop_toTopOf="@id/wallet_fragment_btn_payment_request"
         app:layout_constraintWidth_max="165dp"
-        app:layout_goneMarginTop="20dp"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:contentDescription="@string/mozo_button_transfer"
-            android:src="@drawable/ic_btn_send" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mozo_button_transfer"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/mozo_text_size"
-            android:textStyle="bold" />
-    </LinearLayout>
+        app:layout_goneMarginTop="20dp" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/wallet_fragment_refresh_layout"
