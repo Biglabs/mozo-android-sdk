@@ -1,5 +1,7 @@
 package com.biglabs.mozo.sdk.common
 
+import java.util.*
+
 class Constant {
     companion object {
         const val PAGING_START_INDEX = 0
@@ -35,5 +37,10 @@ class Constant {
 
         internal const val SOCKET_CHANNEL_SHOPPER = "shopper"
         internal const val SOCKET_CHANNEL_RETAILER = "retailer"
+
+        private val ALPHABETS = charArrayOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#')
+        private val ALPHABETS_KOREA = charArrayOf('ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ', *ALPHABETS)
+
+        fun getAlphabets() = if (Locale.getDefault().language == Locale.KOREA.language) Constant.ALPHABETS_KOREA else Constant.ALPHABETS
     }
 }

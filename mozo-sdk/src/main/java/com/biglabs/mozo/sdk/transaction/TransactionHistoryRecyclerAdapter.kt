@@ -5,12 +5,12 @@ import androidx.annotation.IntDef
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.set
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.OnLoadMoreListener
@@ -156,11 +156,13 @@ internal class TransactionHistoryRecyclerAdapter(
             if (history.contactName.isNullOrEmpty())
                 item_history_time.text = dateTime
             else {
-                val prefix = if (isSentType) "To" else "From"
-                val content = SpannableString(String.format(Locale.US, "%s %s - %s", prefix, history.contactName, dateTime))
-                val start = prefix.length + 1
-                content.setSpan(StyleSpan(BOLD), start, start + history.contactName!!.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                item_history_time.text = content
+                item_history_time.text = SpannableString(containerView.context.getString(
+                        if (isSentType) R.string.mozo_notify_content_to else R.string.mozo_notify_content_from,
+                        history.contactName
+                ) + " - $dateTime").apply {
+                    val start = indexOf(history.contactName!!, ignoreCase = true)
+                    set(start..start + history.contactName!!.length, StyleSpan(BOLD))
+                }
             }
 
             if (lastItem)

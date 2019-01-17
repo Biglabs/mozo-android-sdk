@@ -1,5 +1,6 @@
 package com.biglabs.mozo.sdk.contact
 
+import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.model.Contact
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
@@ -12,19 +13,17 @@ internal class ContactRecyclerAdapter(
     fun notifyData(hideEmptySection: Boolean = false) {
         removeAllSections()
 
-        var alphabet = 'A'
-        while (alphabet <= 'Z') {
+        Constant.getAlphabets().map {
             val sec = arrayListOf<Contact>()
             contacts.map { c ->
-                if (c.name != null && c.name[0].equals(alphabet, ignoreCase = true)) {
+                if (c.name?.startsWith(it, ignoreCase = true) == true) {
                     sec.add(c)
                 }
             }
 
             if (!hideEmptySection || sec.isNotEmpty()) {
-                addSection(alphabet.toString(), ContactSection(alphabet.toString(), sec, itemClick))
+                addSection(it.toString(), ContactSection(it.toString(), sec, itemClick))
             }
-            alphabet++
         }
 
         val otherContact = arrayListOf<Contact>()
