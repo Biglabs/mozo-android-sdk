@@ -37,7 +37,7 @@
     <string name="mozo_button_clear">Clear</string>
     <string name="mozo_button_scan_qr_code">Scan QR Code</string>
     <string name="mozo_button_scan">Scan</string>
-    <string name="mozo_button_show_qr_code">Enlarge My QR Code</string>
+    <string name="mozo_button_show_qr_code">Enlarge QR Code</string>
     <string name="mozo_button_send">Send</string>
     <string name="mozo_button_save">Save</string>
     <string name="mozo_button_save_address">Save Wallet Address</string>

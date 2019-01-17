@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@android:id/icon"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -43,10 +43,10 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/mozo_bg_icon_send"
                 android:contentDescription="@string/mozo_button_send"
-                android:padding="5dp"
-                android:src="@drawable/ic_btn_send"
+                android:padding="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_action_send" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -171,7 +171,8 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:background="@drawable/ic_user"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_receiver_user_name"
@@ -184,6 +185,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="An Tran" />
 
             <TextView

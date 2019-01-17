@@ -10,16 +10,16 @@
     android:paddingStart="@dimen/mozo_screen_margin"
     android:paddingEnd="@dimen/mozo_screen_margin">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_history_type_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:contentDescription="@string/mozo_button_send"
-        android:padding="4dp"
-        android:src="@drawable/ic_btn_send"
+        android:padding="8.5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_action_send"
         tools:background="@drawable/mozo_bg_icon_send" />
 
     <TextView
