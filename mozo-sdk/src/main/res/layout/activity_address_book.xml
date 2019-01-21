@@ -22,7 +22,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/mozo_address_book_title" />
+        app:title="@string/mozo_address_book_title"
+        tools:layout_height="84dp" />
 
     <EditText
         android:id="@+id/input_search"
@@ -67,6 +68,43 @@
         app:layout_constraintTop_toTopOf="@id/input_search"
         tools:visibility="visible" />
 
+    <RadioGroup
+        android:id="@+id/address_book_tabs"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:checkedButton="@id/address_book_tab_user"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/input_search">
+
+        <RadioButton
+            android:id="@+id/address_book_tab_user"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/mozo_check_tab_left"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/mozo_address_book_tab_user"
+            android:textColor="@color/mozo_check_btn_text_color"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/address_book_tab_store"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/mozo_check_tab_right"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/mozo_address_book_tab_store"
+            android:textColor="@color/mozo_check_btn_text_color" />
+    </RadioGroup>
+
     <TextView
         android:id="@+id/view_empty_state"
         android:layout_width="wrap_content"
@@ -81,7 +119,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_search"
+        app:layout_constraintTop_toBottomOf="@id/address_book_tabs"
         app:layout_constraintVertical_bias="0.35"
         tools:visibility="visible" />
 
@@ -92,7 +130,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_search">
+        app:layout_constraintTop_toBottomOf="@+id/address_book_tabs">
 
         <com.biglabs.mozo.sdk.ui.view.MozoRecyclerView
             android:id="@+id/list_contacts"
@@ -119,5 +157,5 @@
         android:stateListAnimator="@animator/top_bar_hover"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_search" />
+        app:layout_constraintTop_toTopOf="@id/list_contacts_refresh" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,9 +4,11 @@ import android.app.Activity
 import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +17,7 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.model.Contact
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.*
-import kotlinx.android.synthetic.main.view_address_book.*
+import kotlinx.android.synthetic.main.activity_address_book.*
 import kotlinx.coroutines.*
 
 internal class AddressBookActivity : BaseActivity() {
@@ -41,7 +43,7 @@ internal class AddressBookActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.view_address_book)
+        setContentView(R.layout.activity_address_book)
         onNewIntent(intent)
 
         input_search?.apply {
@@ -52,6 +54,21 @@ internal class AddressBookActivity : BaseActivity() {
         }
 
         button_clear.click { input_search.setText("") }
+
+        address_book_tabs?.apply {
+            isVisible = !MozoSDK.isRetailerApp
+            setOnCheckedChangeListener { group, checkedId ->
+                group.hideKeyboard()
+                // TODO fetch data
+            }
+        }
+
+        address_book_tab_user.setOnCheckedChangeListener { buttonView, isChecked ->
+            buttonView.typeface = if (isChecked) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+        }
+        address_book_tab_store.setOnCheckedChangeListener { buttonView, isChecked ->
+            buttonView.typeface = if (isChecked) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+        }
 
         list_contacts?.apply {
             setHasFixedSize(true)

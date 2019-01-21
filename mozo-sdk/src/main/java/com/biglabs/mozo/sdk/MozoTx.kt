@@ -85,6 +85,7 @@ class MozoTx private constructor() {
     @SuppressWarnings("unused")
     @Subscribe
     internal fun onUserCancel(event: MessageEvent.UserCancel) {
+        checkNotNull(event)
         EventBus.getDefault().unregister(this)
         messagesToSign = null
         callbackToSign = null

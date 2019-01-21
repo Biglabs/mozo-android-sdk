@@ -5,6 +5,8 @@
     <string name="mozo_address_book_pick_btn">Chọn từ danh bạ</string>
     <string name="mozo_address_book_no_result">Không có kết quả trùng khớp</string>
     <string name="mozo_address_book_search_hint">Tìm địa chỉ</string>
+    <string name="mozo_address_book_tab_user">Địa chỉ ví</string>
+    <string name="mozo_address_book_tab_store">Địa chỉ cửa hàng</string>
 
     <string name="mozo_address_add_label">Địa chỉ ví</string>
     <string name="mozo_address_add_input_name_label">Tên</string>
@@ -22,8 +24,8 @@
     <string name="mozo_dialog_error_not_enough_msg">Số dư không đủ để gửi</string>
 
     <string name="mozo_button_deposit">Gửi vào</string>
-    <string name="mozo_button_login">Đăng nhập Mozo X</string>
-    <string name="mozo_button_logout">Đăng xuất Mozo X</string>
+    <string name="mozo_button_login">Đăng nhập MozoX</string>
+    <string name="mozo_button_logout">Đăng xuất MozoX</string>
     <string name="mozo_button_transfer">Gửi MozoX</string>
     <string name="mozo_button_transaction_history">Lịch sử giao dịch</string>
     <string name="mozo_button_withdraw">Rút tiền</string>

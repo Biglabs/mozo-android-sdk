@@ -4,6 +4,8 @@
     <string name="mozo_address_book_pick_btn">Select from Address Book</string>
     <string name="mozo_address_book_no_result">Results not found</string>
     <string name="mozo_address_book_search_hint">Search Address</string>
+    <string name="mozo_address_book_tab_user">User Address</string>
+    <string name="mozo_address_book_tab_store">Store Address</string>
 
     <string name="mozo_address_add_label">Wallet Address</string>
     <string name="mozo_address_add_input_name_label">Name</string>
