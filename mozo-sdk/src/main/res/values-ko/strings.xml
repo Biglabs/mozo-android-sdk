@@ -22,8 +22,8 @@
     <string name="mozo_dialog_error_not_enough_msg">금액을 이송하도록 밸런스가 부족되어있습니다.</string>
 
     <string name="mozo_button_deposit">예금</string>
-    <string name="mozo_button_login">Mozo X에 로그인</string>
-    <string name="mozo_button_logout">Mozo X 로그 아웃</string>
+    <string name="mozo_button_login">MozoX에 로그인</string>
+    <string name="mozo_button_logout">MozoX 로그 아웃</string>
     <string name="mozo_button_transfer">MozoX 코인 보내기</string>
     <string name="mozo_button_transaction_history">거래 내역</string>
     <string name="mozo_button_withdraw">철수</string>
@@ -49,8 +49,8 @@
     <string name="mozo_backup_title">월렛 백업</string>
     <string name="mozo_backup_sub_title">복구 데이터 프레이즈 저장</string>
     <string name="mozo_backup_content">이 프레이즈를 적어 안전한 장소에 보관하십시오.</string>
-    <string name="mozo_backup_warning">* 복구 데이터 프레이즈를 분실하면 월렛을 복구 할 수 없습니다.</string>
-    <string name="mozo_backup_confirm_msg">복구 프레이즈를 안전하게 저장했습니다</string>
+    <string name="mozo_backup_warning">* 복구 데이터 문구를 분실하면 월렛을 복구 할 수 없습니다.</string>
+    <string name="mozo_backup_confirm_msg">복구 문구를 안전하게 저장했습니다.</string>
 
     <string name="mozo_pin_title">보안 PIN 생성</string>
     <string name="mozo_pin_title_restore">월렛 복구</string>
@@ -66,10 +66,10 @@
     <string name="mozo_pin_msg_enter_incorrect">PIN 코드가 잘못되었습니다</string>
     <string name="mozo_pin_msg_error">월렛 생성에 실패했습니다</string>
 
-    <string name="mozo_notify_title_come_in">고객이 상점에 있습니다</string>
+    <string name="mozo_notify_title_come_in">고객이 상점에 방문하였습니다.</string>
     <string name="mozo_notify_title_just_left">고객이 떠났습니다</string>
-    <string name="mozo_notify_title_received">MozoX가 %s 받았습니다</string>
-    <string name="mozo_notify_title_sent">MozoX가 %s 보냈습니다</string>
+    <string name="mozo_notify_title_received">MozoX %s 를 받았습니다.</string>
+    <string name="mozo_notify_title_sent">MozoX %s 를 보냈습니다.</string>
     <string name="mozo_notify_content_from">%s 부터</string>
     <string name="mozo_notify_content_to">%s 까지</string>
 
@@ -77,13 +77,13 @@
     <string name="mozo_payment_request_amount">수신 금액</string>
     <string name="mozo_payment_request_tab_list">요청한 리스트</string>
     <string name="mozo_payment_request_tab_create">요청 만들기</string>
-    <string name="mozo_payment_request_explain">MozoX를 수신 요청하는 방식으로 다른 사용자에게 자기의 월렛에 보내도록 MozoX 를 요청할 수 있습니다.</string>
+    <string name="mozo_payment_request_explain">MozoX를 수신 요청하는 방식으로 다른 사용자에게 MozoX 를 자신의 월렛으로 보내도록 요청할 수 있습니다.</string>
     <string name="mozo_payment_request_btn_send">요청 보내기</string>
     <string name="mozo_payment_request_btn_scan">MozoX를 보내도록 스캔하십시오</string>
     <string name="mozo_payment_request_text_scan_to_transfer">보낼 스캔:</string>
     <string name="mozo_payment_request_text_send_to">요청 보내기</string>
     <string name="mozo_payment_request_text_send_success">요청을 성공적으로 보냈습니다</string>
-    <string name="mozo_payment_request_text_sent">에게 MozoX를 수신 요청을 보냈습니다:</string>
+    <string name="mozo_payment_request_text_sent">에게 MozoX를 보내달라고 요청을 보냈습니다:</string>
     <string name="mozo_payment_request_text_empty">요청한 리스트가 비어 있습니다</string>
     <string name="mozo_payment_request_item_label_from">부터:</string>
     <string name="mozo_payment_request_item_label_amount">요청하기:</string>
@@ -111,8 +111,8 @@
     <string name="mozo_transaction_history_offchain_text">MozoX Offchain 월렛</string>
     <string name="mozo_transaction_history_empty">거래 내역 리스트가 비어 있습니다</string>
 
-    <string name="mozo_view_balance_title">총 MozoX Offchain 밸런스</string>
-    <string name="mozo_view_address_title">MozoX Offchain 월렛 주소</string>
+    <string name="mozo_view_balance_title">MozoX Offchain 밸런스</string>
+    <string name="mozo_view_address_title">귀하의 MozoX Offchain 월렛 주소</string>
     <string name="mozo_view_text_hint">…</string>
     <string name="mozo_view_text_to">까지</string>
     <string name="mozo_view_text_send_to">까지:</string>

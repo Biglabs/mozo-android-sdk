@@ -21,8 +21,8 @@
     <string name="mozo_dialog_error_not_enough_msg">Your balance is not insufficient for this transfer amount.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
-    <string name="mozo_button_login">Sign In to Mozo X</string>
-    <string name="mozo_button_logout">Log Out Mozo X</string>
+    <string name="mozo_button_login">Sign In to MozoX</string>
+    <string name="mozo_button_logout">Log Out MozoX</string>
     <string name="mozo_button_transfer">Send MozoX</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
     <string name="mozo_button_withdraw">Withdraw</string>
