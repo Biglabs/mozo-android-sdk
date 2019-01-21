@@ -72,7 +72,7 @@ internal class TransactionDetails : BaseActivity() {
 
         bindData(MozoWallet.getInstance().getAddress() ?: "")
 
-        MozoSDK.getInstance().contactViewModel.contactsLiveData.observe(this, Observer<List<Contact>> {
+        MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this, Observer<List<Contact>> {
             it?.run {
                 displayContact()
             }

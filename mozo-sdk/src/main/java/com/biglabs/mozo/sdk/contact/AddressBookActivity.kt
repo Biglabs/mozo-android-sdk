@@ -1,7 +1,6 @@
 package com.biglabs.mozo.sdk.contact
 
 import android.app.Activity
-import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
@@ -57,9 +56,9 @@ internal class AddressBookActivity : BaseActivity() {
 
         address_book_tabs?.apply {
             isVisible = !MozoSDK.isRetailerApp
-            setOnCheckedChangeListener { group, checkedId ->
+            setOnCheckedChangeListener { group, _ ->
                 group.hideKeyboard()
-                // TODO fetch data
+                loadData()
             }
         }
 
@@ -100,9 +99,7 @@ internal class AddressBookActivity : BaseActivity() {
             }
         }
 
-        MozoSDK.getInstance().contactViewModel.run {
-            contactsLiveData.observeForever(contactsObserver)
-        }
+        loadData()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -113,24 +110,22 @@ internal class AddressBookActivity : BaseActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        MozoSDK.getInstance().contactViewModel.run {
-            contactsLiveData.removeObserver(contactsObserver)
+    private fun loadData() {
+        contacts.clear()
+        contactsBackup.clear()
+        when (address_book_tabs?.checkedRadioButtonId ?: R.id.address_book_tab_user) {
+            R.id.address_book_tab_user -> {
+                contacts.addAll(MozoSDK.getInstance().contactViewModel.users())
+                contactsBackup.addAll(MozoSDK.getInstance().contactViewModel.users())
+            }
+            R.id.address_book_tab_store -> {
+                contacts.addAll(MozoSDK.getInstance().contactViewModel.stores())
+                contactsBackup.addAll(MozoSDK.getInstance().contactViewModel.stores())
+            }
         }
-    }
 
-    private val contactsObserver = Observer<List<Contact>> {
-        it?.run {
-            contacts.clear()
-            contacts.addAll(this)
-
-            contactsBackup.clear()
-            contactsBackup.addAll(this)
-
-            list_contacts_refresh.isRefreshing = false
-            mAdapter.notifyData()
-        }
+        list_contacts_refresh.isRefreshing = false
+        mAdapter.notifyData()
     }
 
     private fun searchByName(name: String) {

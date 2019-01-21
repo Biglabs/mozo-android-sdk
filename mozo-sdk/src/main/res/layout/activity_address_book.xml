@@ -14,6 +14,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/view_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/im_search_empty"
+        android:drawablePadding="15dp"
+        android:gravity="center"
+        android:text="@string/mozo_address_book_no_result"
+        android:textColor="@color/mozo_color_line"
+        android:textStyle="italic"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/address_book_tabs"
+        app:layout_constraintVertical_bias="0.4"
+        tools:visibility="visible" />
+
     <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
         android:id="@+id/address_book_toolbar"
         android:layout_width="0dp"
@@ -104,24 +122,6 @@
             android:text="@string/mozo_address_book_tab_store"
             android:textColor="@color/mozo_check_btn_text_color" />
     </RadioGroup>
-
-    <TextView
-        android:id="@+id/view_empty_state"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/im_search_empty"
-        android:drawablePadding="15dp"
-        android:gravity="center"
-        android:text="@string/mozo_address_book_no_result"
-        android:textColor="@color/mozo_color_line"
-        android:textStyle="italic"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/address_book_tabs"
-        app:layout_constraintVertical_bias="0.35"
-        tools:visibility="visible" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/list_contacts_refresh"

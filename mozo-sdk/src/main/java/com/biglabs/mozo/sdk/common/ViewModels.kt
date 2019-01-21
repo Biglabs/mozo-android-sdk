@@ -94,16 +94,33 @@ internal object ViewModels {
     }
 
     class ContactViewModel : ViewModel() {
-        val contactsLiveData = MutableLiveData<List<Contact>>()
+        val usersLiveData = MutableLiveData<List<Contact>>()
+        private val storesLiveData = MutableLiveData<List<Contact>>()
 
-        fun fetchData(context: Context) {
-            MozoService.getInstance().getContacts(context) { data, _ ->
-                data ?: return@getContacts
-                data.items ?: return@getContacts
-                contactsLiveData.value = data.items!!.sortedBy { it.name }
+        fun fetchUser(context: Context) {
+            MozoService.getInstance().getContactUsers(context) { data, _ ->
+                data ?: return@getContactUsers
+                data.items ?: return@getContactUsers
+                usersLiveData.value = data.items!!.sortedBy { it.name }
             }
         }
 
-        fun findByAddress(address: String?) = contactsLiveData.value?.find { it.walletAddress.equals(address, ignoreCase = true) }
+        fun fetchStore(context: Context) {
+            MozoService.getInstance().getContactStores(context) { data, _ ->
+                data ?: return@getContactStores
+                data.items ?: return@getContactStores
+                storesLiveData.value = data.items!!.sortedBy { it.name }
+            }
+        }
+
+        fun fetchData(context: Context) {
+            fetchUser(context)
+            fetchStore(context)
+        }
+
+        fun findByAddress(address: String?) = usersLiveData.value?.find { it.walletAddress.equals(address, ignoreCase = true) }
+
+        fun users(): List<Contact> = usersLiveData.value ?: emptyList()
+        fun stores(): List<Contact> = storesLiveData.value ?: emptyList()
     }
 }
