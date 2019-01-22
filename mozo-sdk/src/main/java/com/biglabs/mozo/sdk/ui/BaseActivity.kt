@@ -34,6 +34,7 @@ internal open class BaseActivity : AppCompatActivity() {
     @Suppress("unused")
     @Subscribe
     fun onReceiveSignal(event: MessageEvent.CloseActivities) {
+        checkNotNull(event)
         finishAndRemoveTask()
     }
 }

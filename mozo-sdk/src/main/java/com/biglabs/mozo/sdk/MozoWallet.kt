@@ -156,6 +156,7 @@ class MozoWallet private constructor() {
 
     @Subscribe
     internal fun onReceivePin(event: MessageEvent.Pin) {
+        checkNotNull(event)
         EventBus.getDefault().unregister(this@MozoWallet)
         /* load data to variables */
         MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
