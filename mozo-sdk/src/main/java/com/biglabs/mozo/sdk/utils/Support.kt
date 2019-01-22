@@ -1,9 +1,11 @@
 package com.biglabs.mozo.sdk.utils
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 import com.biglabs.mozo.sdk.MozoSDK
+import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.ui.ScannerQRActivity
 import com.google.zxing.BarcodeFormat
@@ -54,7 +56,10 @@ class Support {
             return emptyArray()
         }
 
-        fun getDisplayDate(time: Long, pattern: String): String = SimpleDateFormat(pattern, Locale.getDefault()).format(Date(time))
+        fun getDisplayDate(context: Context, time: Long, pattern: String): String = if (time <= 0)
+            context.getString(R.string.mozo_view_text_just_now)
+        else
+            SimpleDateFormat(pattern, Locale.getDefault()).format(Date(time))
 
         internal fun domainAPI() = when (MozoSDK.serviceEnvironment) {
             MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_API_DEV

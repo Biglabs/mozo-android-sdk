@@ -227,6 +227,11 @@ internal class TransactionFormActivity : BaseActivity() {
             button_scan_qr.visibility = View.INVISIBLE
 
             output_receiver_address_user.visible()
+            output_receiver_icon.setImageResource(if (isStore) R.drawable.ic_content_store else R.drawable.ic_content_user)
+            text_receiver_user_physical_address.text = physicalAddress
+            text_receiver_user_address_label.isVisible = false
+            text_receiver_user_physical_address.isVisible = false
+
             text_receiver_user_name.text = name
             text_receiver_user_address.text = soloAddress
 
@@ -243,7 +248,11 @@ internal class TransactionFormActivity : BaseActivity() {
 
     private fun showConfirmationUI() {
         output_receiver_address.isEnabled = false
+        output_receiver_address.setSelection(0)
+
         output_amount.isEnabled = false
+        text_receiver_user_address_label.isVisible = selectedContact?.isStore == true
+        text_receiver_user_physical_address.isVisible = selectedContact?.isStore == true
         gone(arrayOf(
                 output_receiver_address_underline,
                 button_address_book,

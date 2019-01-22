@@ -15,7 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/mozo_transaction_detail_title" />
+        app:title="@string/mozo_transaction_detail_title"
+        tools:layout_height="84dp" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image_tx_type"
@@ -85,16 +86,17 @@
         app:layout_constraintTop_toBottomOf="@id/text_detail_balance_underline"
         tools:visibility="visible" />
 
-    <View
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/text_detail_receiver_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="11dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/ic_user"
+        android:padding="4dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_detail_to_label"
+        app:srcCompat="@drawable/ic_content_user"
         tools:visibility="visible" />
 
     <TextView
@@ -115,6 +117,22 @@
         tools:visibility="visible" />
 
     <TextView
+        android:id="@+id/text_detail_receiver_user_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_section_text"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_detail_receiver_icon"
+        tools:text="04564 253, Jangchungdan-ro, Jung-gu, Seoul, Korea." />
+
+    <TextView
         android:id="@+id/text_detail_receiver_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -125,7 +143,7 @@
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/image_tx_type"
-        app:layout_constraintTop_toBottomOf="@id/text_detail_receiver_user_name" />
+        app:layout_constraintTop_toBottomOf="@id/text_detail_receiver_user_address" />
 
     <TextView
         android:id="@+id/text_detail_receiver_address"

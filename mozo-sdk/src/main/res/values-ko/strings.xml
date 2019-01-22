@@ -130,4 +130,5 @@
     <string name="mozo_view_text_tx_success">성공</string>
     <string name="mozo_view_text_view_all">전체보기</string>
     <string name="mozo_view_text_total_mozo">총 MozoX 수</string>
+    <string name="mozo_view_text_just_now">지금</string>
 </resources>

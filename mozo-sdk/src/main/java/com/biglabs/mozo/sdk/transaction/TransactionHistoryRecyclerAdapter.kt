@@ -1,16 +1,16 @@
 package com.biglabs.mozo.sdk.transaction
 
 import android.graphics.Typeface.BOLD
-import androidx.annotation.IntDef
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IntDef
+import androidx.core.content.ContextCompat
 import androidx.core.text.set
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.OnLoadMoreListener
@@ -87,7 +87,7 @@ internal class TransactionHistoryRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
             val history = getData()[position]
-            holder.bind(history, history.type(address), Support.getDisplayDate(history.time * 1000L, Constant.HISTORY_TIME_FORMAT), position == itemCount - 1)
+            holder.bind(history, history.type(address), Support.getDisplayDate(holder.itemView.context, history.time * 1000L, Constant.HISTORY_TIME_FORMAT), position == itemCount - 1)
             holder.itemView.click { itemClick?.invoke(history) }
         }
     }

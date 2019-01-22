@@ -50,7 +50,7 @@ class PaymentRequestRecyclerAdapter(
                 item_payment_amount.text = containerView.context.getString(R.string.mozo_payment_request_item_amount, param.lastOrNull())
             }
 
-            item_payment_time.text = Support.getDisplayDate(request.timeInSec * 1000, "h:mm aa MMM dd, yyyy")
+            item_payment_time.text = Support.getDisplayDate(itemView.context, request.timeInSec * 1000, "h:mm aa MMM dd, yyyy")
         }
     }
 }

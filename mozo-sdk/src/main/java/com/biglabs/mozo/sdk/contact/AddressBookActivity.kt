@@ -25,10 +25,7 @@ internal class AddressBookActivity : BaseActivity() {
     private val contactsBackup: ArrayList<Contact> = arrayListOf()
     private val onItemClick = { contact: Contact ->
         if (isStartForResult) {
-            val result = Intent()
-            result.putExtra(KEY_SELECTED_ADDRESS, contact)
-
-            setResult(RESULT_OK, result)
+            setResult(RESULT_OK, Intent().putExtra(KEY_SELECTED_ADDRESS, contact))
             finishAndRemoveTask()
         } else {
             //TODO open details

@@ -129,4 +129,5 @@
     <string name="mozo_view_text_tx_success">Success</string>
     <string name="mozo_view_text_view_all">View All</string>
     <string name="mozo_view_text_total_mozo">Total MozoX Tokens</string>
+    <string name="mozo_view_text_just_now">Just now</string>
 </resources>

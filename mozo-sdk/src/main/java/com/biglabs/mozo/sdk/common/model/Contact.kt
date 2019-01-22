@@ -5,23 +5,28 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class Contact(
+        @Transient
         val id: Long,
         val name: String?,
         val physicalAddress: String?,
         @SerializedName(value = "soloAddress", alternate = ["offchainAddress"])
-        val soloAddress: String?
+        val soloAddress: String?,
+        @Transient
+        var isStore: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readLong(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readString())
+            parcel.readString(),
+            parcel.readByte() != 0.toByte())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
         parcel.writeString(name)
         parcel.writeString(physicalAddress)
         parcel.writeString(soloAddress)
+        parcel.writeByte(if (isStore) 1 else 0)
     }
 
     override fun describeContents(): Int {

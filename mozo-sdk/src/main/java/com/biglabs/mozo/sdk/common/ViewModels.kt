@@ -109,7 +109,10 @@ internal object ViewModels {
         fun fetchStore(context: Context, callback: (() -> Unit)? = null) {
             MozoService.getInstance().getContactStores(context) { data, _ ->
                 if (data?.items != null) {
-                    storesLiveData.value = data.items!!.sortedBy { it.name }
+//                    storesLiveData.value = data.items!!.sortedBy { it.apply { isStore = true }.name }
+                    storesLiveData.value = arrayListOf(Contact(0L, "Minh Store", "107 Nguyen Dinh Chieu", "0xc5e57b5ba4797b9983c9e0814210c85ec0cb5f40", true)).apply {
+                        addAll(data.items!!.sortedBy { it.apply { isStore = true }.name })
+                    }
                 }
                 callback?.invoke()
             }
@@ -120,7 +123,11 @@ internal object ViewModels {
             fetchStore(context)
         }
 
-        fun findByAddress(address: String?) = usersLiveData.value?.find { it.soloAddress.equals(address, ignoreCase = true) }
+        fun findByAddress(address: String?) = usersLiveData.value?.find {
+            it.soloAddress.equals(address, ignoreCase = true)
+        } ?: storesLiveData.value?.find {
+            it.soloAddress.equals(address, ignoreCase = true)
+        }
 
         fun users(): List<Contact> = usersLiveData.value ?: emptyList()
         fun stores(): List<Contact> = storesLiveData.value ?: emptyList()

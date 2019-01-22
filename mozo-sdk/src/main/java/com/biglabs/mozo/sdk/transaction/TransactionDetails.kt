@@ -3,6 +3,7 @@ package com.biglabs.mozo.sdk.transaction
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.MozoWallet
@@ -117,18 +118,20 @@ internal class TransactionDetails : BaseActivity() {
             }
         }
         if (sendType) {
+            text_detail_to_label.setText(R.string.mozo_view_text_to)
             image_tx_type.setBackgroundResource(R.drawable.mozo_bg_icon_send)
             text_detail_receiver_label.setText(R.string.mozo_transfer_receiver_address)
 
         } else {
+            text_detail_to_label.setText(R.string.mozo_view_text_from)
             image_tx_type.setBackgroundResource(R.drawable.mozo_bg_icon_received)
             image_tx_type.rotation = 180f
-            text_detail_receiver_label.setText(R.string.mozo_view_text_from)
+            text_detail_receiver_label.setText(R.string.mozo_transaction_detail_wallet_address)
         }
 
         text_detail_receiver_address.text = targetAddress
 
-        text_detail_time.text = if (detailTime > 0) Support.getDisplayDate(detailTime, Constant.HISTORY_TIME_FORMAT) else ""
+        text_detail_time.text = Support.getDisplayDate(this, detailTime, Constant.HISTORY_TIME_FORMAT)
         text_detail_amount_value.text = amountDisplay
 
         displayContact()
@@ -140,7 +143,10 @@ internal class TransactionDetails : BaseActivity() {
             val contact = MozoSDK.getInstance().contactViewModel.findByAddress(targetAddress)
             launch(Dispatchers.Main) {
                 if (contact != null) {
+                    text_detail_receiver_icon.setImageResource(if (contact.isStore) R.drawable.ic_content_store else R.drawable.ic_content_user)
                     text_detail_receiver_user_name.text = contact.name
+                    text_detail_receiver_user_address.isVisible = contact.isStore
+                    text_detail_receiver_user_address.text = contact.physicalAddress
                     visible(arrayOf(
                             text_detail_to_label,
                             text_detail_receiver_icon,
