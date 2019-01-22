@@ -8,8 +8,8 @@ data class Contact(
         val id: Long,
         val name: String?,
         val physicalAddress: String?,
-        @SerializedName(value="walletAddress", alternate= ["offchainAddress", "soloAddress"])
-        val walletAddress: String?
+        @SerializedName(value = "soloAddress", alternate = ["offchainAddress"])
+        val soloAddress: String?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readLong(),
@@ -21,7 +21,7 @@ data class Contact(
         parcel.writeLong(id)
         parcel.writeString(name)
         parcel.writeString(physicalAddress)
-        parcel.writeString(walletAddress)
+        parcel.writeString(soloAddress)
     }
 
     override fun describeContents(): Int {

@@ -92,9 +92,22 @@ internal class AddressBookActivity : BaseActivity() {
             mozoSetup()
             isRefreshing = true
             setOnRefreshListener {
-                if (input_search.length() == 0)
-                    MozoSDK.getInstance().contactViewModel.fetchData(this@AddressBookActivity)
-                else
+                if (input_search.length() == 0) {
+                    when (address_book_tabs?.checkedRadioButtonId ?: R.id.address_book_tab_user) {
+                        R.id.address_book_tab_user -> {
+                            MozoSDK.getInstance().contactViewModel.fetchUser(context) {
+                                isRefreshing = false
+                                loadData()
+                            }
+                        }
+                        R.id.address_book_tab_store -> {
+                            MozoSDK.getInstance().contactViewModel.fetchStore(context) {
+                                isRefreshing = false
+                                loadData()
+                            }
+                        }
+                    }
+                } else
                     isRefreshing = false
             }
         }

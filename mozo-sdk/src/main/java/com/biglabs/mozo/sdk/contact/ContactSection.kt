@@ -50,7 +50,7 @@ internal class ContactSection(
     class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(contact: Contact) {
             item_title.text = contact.name
-            item_content.text = contact.walletAddress
+            item_content.text = contact.soloAddress
         }
     }
 }

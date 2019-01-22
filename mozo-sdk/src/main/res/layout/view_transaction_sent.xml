@@ -16,7 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/mozo_transfer_title" />
+        app:title="@string/mozo_transfer_title"
+        tools:layout_height="84dp" />
 
     <ImageView
         android:id="@android:id/icon"

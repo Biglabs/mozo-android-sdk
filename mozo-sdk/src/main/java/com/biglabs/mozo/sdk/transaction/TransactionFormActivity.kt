@@ -11,6 +11,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.text.set
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.MozoTx
@@ -67,6 +68,8 @@ internal class TransactionFormActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        MozoSDK.getInstance().contactViewModel.usersLiveData.removeObserver(userContactsObserver)
+        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
         selectedContact = null
         updateTxStatusJob?.cancel()
     }
@@ -104,7 +107,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
     private fun sendTx(pin: String?) {
         if (pin == null) return
-        val address = selectedContact?.walletAddress ?: output_receiver_address.text.toString()
+        val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         val amount = output_amount.text.toString()
 
         showLoading()
@@ -225,7 +228,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
             output_receiver_address_user.visible()
             text_receiver_user_name.text = name
-            text_receiver_user_address.text = walletAddress
+            text_receiver_user_address.text = soloAddress
 
             button_clear.apply {
                 visible()
@@ -262,16 +265,23 @@ internal class TransactionFormActivity : BaseActivity() {
         button_submit.setText(R.string.mozo_button_send)
     }
 
+    private val userContactsObserver = Observer<List<Contact>?> {
+        selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(history.addressTo)
+        button_save_address?.isVisible = selectedContact == null
+        text_preview_address_sent?.text = selectedContact?.name ?: history.addressTo
+    }
+
     private fun showResultUI(txResponse: TransactionResponse?) = GlobalScope.launch(Dispatchers.Main) {
         if (txResponse != null) {
+            MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this@TransactionFormActivity, userContactsObserver)
             setContentView(R.layout.view_transaction_sent)
 
             text_preview_amount_sent.text = history.amountDisplay()
-            text_preview_address_sent.text = history.addressTo
+            text_preview_address_sent.text = selectedContact?.name ?: history.addressTo
             text_preview_rate_sent.text = String.format(Locale.US, "(₩%s)", history.amountInDecimal().multiply(currentRate).displayString())
 
             button_save_address?.apply {
-                if (selectedContact != null) gone() else visible()
+                isVisible = selectedContact == null
                 click {
                     AddressAddActivity.start(this@TransactionFormActivity, history.addressTo)
                 }
@@ -362,7 +372,7 @@ internal class TransactionFormActivity : BaseActivity() {
     @SuppressLint("SetTextI18n")
     private fun validateInput(): Boolean {
         var isValidAddress = true
-        val address = selectedContact?.walletAddress ?: output_receiver_address.text.toString()
+        val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         if (!WalletUtils.isValidAddress(address)) {
             showErrorAddressUI()
             isValidAddress = false
