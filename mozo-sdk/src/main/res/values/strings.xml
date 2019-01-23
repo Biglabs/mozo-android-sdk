@@ -30,6 +30,7 @@
     <string name="mozo_button_withdraw">Withdraw</string>
     <string name="mozo_button_request_list">Request MozoX</string>
     <string name="mozo_button_confirm">Confirm</string>
+    <string name="mozo_button_restore">Restore</string>
 
     <string name="mozo_button_back">Back</string>
     <string name="mozo_button_cancel">Cancel</string>

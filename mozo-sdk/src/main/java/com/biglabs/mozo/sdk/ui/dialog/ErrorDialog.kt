@@ -6,8 +6,10 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.annotation.IntDef
 import com.biglabs.mozo.sdk.R
+import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.utils.click
 import kotlinx.android.synthetic.main.dialog_error.*
+import org.greenrobot.eventbus.EventBus
 
 class ErrorDialog(context: Context, private val argument: Bundle, private val onTryAgain: (() -> Unit)? = null) : BaseDialog(context) {
 
@@ -39,6 +41,7 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
     override fun cancel() {
         super.cancel()
         cancelCallback?.onCancel(this)
+        EventBus.getDefault().post(MessageEvent.UserCancelErrorDialog())
     }
 
     override fun dismiss() {
@@ -72,15 +75,16 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
         @Volatile
         private var cancelCallback: DialogInterface.OnCancelListener? = null
 
-        fun generalError(context: Context?, onTryAgain: (() -> Unit)? = null) {
-            show(context, TYPE_GENERAL, onTryAgain)
+        fun generalError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_GENERAL, forceShow, onTryAgain)
         }
 
-        fun networkError(context: Context?, onTryAgain: (() -> Unit)? = null) {
-            show(context, TYPE_NETWORK, onTryAgain)
+        fun networkError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_NETWORK, forceShow, onTryAgain)
         }
 
-        fun show(context: Context?, @ErrorType type: Int, onTryAgain: (() -> Unit)? = null) = synchronized(this) {
+        fun show(context: Context?, @ErrorType type: Int, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) = synchronized(this) {
+            if (!forceShow && isShowing()) return
             context?.run {
                 if (this is Activity && (isFinishing || isDestroyed)) return@synchronized
                 instance?.apply {
@@ -102,5 +106,7 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
         fun onCancel(callback: DialogInterface.OnCancelListener) {
             cancelCallback = callback
         }
+
+        fun isShowing() = instance?.isShowing == true
     }
 }

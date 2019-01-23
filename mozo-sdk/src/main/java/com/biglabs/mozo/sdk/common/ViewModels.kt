@@ -13,6 +13,7 @@ import com.biglabs.mozo.sdk.utils.displayString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.util.*
 
@@ -34,10 +35,12 @@ internal object ViewModels {
 
         val balanceAndRateLiveData = MutableLiveData<BalanceAndRate>()
 
-        fun fetchData(context: Context, callback: ((p: Profile?) -> Unit)? = null) {
+        fun fetchData(context: Context, userId: String? = null, callback: ((p: Profile?) -> Unit)? = null) {
             GlobalScope.launch {
-                val profile = MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
-                launch(Dispatchers.Main) {
+                val profile = if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
+                else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
+
+                withContext(Dispatchers.Main) {
                     profileLiveData.value = profile
                     callback?.invoke(profile)
                     fetchBalance(context)
@@ -63,6 +66,8 @@ internal object ViewModels {
                 updateBalanceAndRate()
             }
         }
+
+        fun getProfile() = profileLiveData.value
 
         fun getBalance() = balanceInfoLiveData.value
 

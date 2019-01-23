@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_internal">Can not connect to MozoX servers. Contact your agency for more information (email + phone)</string>
-    <string name="error_invalid_token">Your session is expired. Please login again</string>
+    <string name="error_fatal">Can not connect to MozoX servers. Contact your agency for more information (email + phone)</string>
+    <string name="error_required_login">Your session is expired. Please login again</string>
+
+    <string name="error_wallet_different">Your wallet was updated but did not sync with your current device. Please restore your wallet first.</string>
 </resources>

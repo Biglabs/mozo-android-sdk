@@ -108,8 +108,14 @@ internal class SecurityActivity : BaseActivity() {
                                     mPIN = this
                                     showPinInputConfirmUI()
                                 }
-                                mPIN == this -> submitForResult()
-                                else -> showPinInputWrongUI()
+                                mPIN == this -> {
+                                    input_pin_checker_status.isSelected = true
+                                    submitForResult()
+                                }
+                                else -> {
+                                    input_pin_checker_status.isSelected = false
+                                    showPinInputWrongUI()
+                                }
                             }
                         }
                         else -> submitForResult()
@@ -125,17 +131,17 @@ internal class SecurityActivity : BaseActivity() {
         input_pin_checker_status.gone()
     }
 
-    private fun showPinInputRestoreUI() {
+    private fun showPinInputRestoreUI() = GlobalScope.launch(Dispatchers.Main) {
         showPinInputUI()
         initRestoreUI()
     }
 
-    private fun showPinVerifyUI() {
+    private fun showPinVerifyUI() = GlobalScope.launch(Dispatchers.Main) {
         showPinInputUI()
         initVerifyUI(true)
     }
 
-    private fun initRestoreUI(clearPin: Boolean = false) {
+    private fun initRestoreUI(clearPin: Boolean = false) = GlobalScope.launch(Dispatchers.Main) {
         pin_toolbar.screen_title.setText(R.string.mozo_pin_title_restore)
         sub_title_pin.setText(R.string.mozo_pin_sub_title_restore)
 
@@ -149,7 +155,7 @@ internal class SecurityActivity : BaseActivity() {
         hideLoadingUI()
     }
 
-    private fun initVerifyUI(clearPin: Boolean = false) {
+    private fun initVerifyUI(clearPin: Boolean = false) = GlobalScope.launch(Dispatchers.Main) {
         initRestoreUI(clearPin)
         if (mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
             pin_toolbar.screen_title.setText(R.string.mozo_transfer_title)
@@ -160,7 +166,7 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
-    private fun showPinInputConfirmUI() {
+    private fun showPinInputConfirmUI() = GlobalScope.launch(Dispatchers.Main) {
         sub_title_pin.setText(R.string.mozo_pin_confirm_sub_title)
         text_content_pin.setText(R.string.mozo_pin_confirm_content)
 
@@ -170,7 +176,7 @@ internal class SecurityActivity : BaseActivity() {
         input_pin_checker_status.isSelected = false
     }
 
-    private fun showPinCreatedUI() {
+    private fun showPinCreatedUI() = GlobalScope.launch(Dispatchers.Main) {
         text_correct_pin.setText(R.string.mozo_pin_msg_create_success)
         text_correct_pin.visible()
         input_pin_checker_status.isSelected = true
@@ -180,12 +186,12 @@ internal class SecurityActivity : BaseActivity() {
         hideLoadingUI()
     }
 
-    private fun showPinInputCorrectUI() {
+    private fun showPinInputCorrectUI() = GlobalScope.launch(Dispatchers.Main) {
         showPinCreatedUI()
         text_correct_pin.setText(R.string.mozo_pin_msg_enter_correct)
     }
 
-    private fun showPinInputWrongUI() {
+    private fun showPinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {
         text_incorrect_pin.visible()
     }
 
@@ -195,7 +201,7 @@ internal class SecurityActivity : BaseActivity() {
             text_incorrect_pin.gone()
     }
 
-    private fun showLoadingUI() {
+    private fun showLoadingUI() = GlobalScope.launch(Dispatchers.Main) {
         gone(arrayOf(
                 text_correct_pin,
                 text_incorrect_pin,
@@ -227,7 +233,8 @@ internal class SecurityActivity : BaseActivity() {
     }
 
     private fun submitForResult() {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch {
+            delay(500)
             showLoadingUI()
 
             when (mRequestCode) {
@@ -238,7 +245,9 @@ internal class SecurityActivity : BaseActivity() {
                             return@executeSaveWallet
                         }
                         showPinCreatedUI()
+                        finishResult()
                     }
+                    return@launch
                 }
                 KEY_ENTER_PIN -> {
                     mPIN = input_pin.text.toString()
@@ -263,16 +272,17 @@ internal class SecurityActivity : BaseActivity() {
                     }
                 }
             }
-            delay(mShowMessageDuration)
-
-            EventBus.getDefault().post(MessageEvent.Pin(mPIN, mRequestCode))
-
-            val intent = Intent()
-            intent.putExtra(KEY_DATA, mPIN)
-            setResult(RESULT_OK, intent)
-            willReturnsResult = true
-            finishAndRemoveTask()
+            finishResult()
         }
+    }
+
+    private fun finishResult() = GlobalScope.launch(Dispatchers.Main) {
+        delay(mShowMessageDuration)
+        EventBus.getDefault().post(MessageEvent.Pin(mPIN, mRequestCode))
+
+        setResult(RESULT_OK, Intent().putExtra(KEY_DATA, mPIN))
+        willReturnsResult = true
+        finishAndRemoveTask()
     }
 
     companion object {
