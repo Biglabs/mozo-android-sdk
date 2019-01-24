@@ -151,7 +151,7 @@ internal class MozoAPIsService private constructor() {
                 ))
 
         return Retrofit.Builder()
-                .baseUrl("https://${Support.domainAPI()}/solomon/api/app/")
+                .baseUrl("https://${Support.domainAPI()}/")
                 .client(client.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
@@ -159,6 +159,9 @@ internal class MozoAPIsService private constructor() {
     }
 
     companion object {
+
+        const val APIS_SOLOMON = "solomon/api/app"
+        const val APIS_STORE = "store/api/app"
 
         @Volatile
         private var instance: MozoAPIsService? = null

@@ -2,6 +2,7 @@ package com.biglabs.mozo.sdk.contact
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.core.view.isVisible
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.model.Contact
 import com.biglabs.mozo.sdk.utils.click
@@ -50,6 +51,8 @@ internal class ContactSection(
     class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(contact: Contact) {
             item_title.text = contact.name
+            item_physical_address.text = contact.physicalAddress
+            item_physical_address.isVisible = contact.isStore
             item_content.text = contact.soloAddress
         }
     }

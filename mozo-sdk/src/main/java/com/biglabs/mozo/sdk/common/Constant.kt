@@ -8,8 +8,6 @@ class Constant {
         const val PAGING_SIZE = 15
         const val LIST_VISIBLE_THRESHOLD = 5
 
-        const val HISTORY_TIME_FORMAT = "HH:mm MMM dd, yyyy"
-
         const val SYMBOL_MOZO = "MOZOX"
 
         const val CURRENCY_KOREA = "KRW"
