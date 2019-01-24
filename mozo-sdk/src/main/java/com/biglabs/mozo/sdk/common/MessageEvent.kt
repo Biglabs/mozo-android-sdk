@@ -5,4 +5,5 @@ internal object MessageEvent {
     class Auth(val isSignedIn: Boolean, val exception: Exception? = null)
     class CloseActivities
     class UserCancel
+    class UserCancelErrorDialog
 }

@@ -31,6 +31,7 @@
     <string name="mozo_button_withdraw">Rút tiền</string>
     <string name="mozo_button_request_list">Yêu cầu nhận MozoX</string>
     <string name="mozo_button_confirm">Xác nhận</string>
+    <string name="mozo_button_restore">Khôi phục</string>
 
     <string name="mozo_button_back">Trở lại</string>
     <string name="mozo_button_cancel">Thoát</string>

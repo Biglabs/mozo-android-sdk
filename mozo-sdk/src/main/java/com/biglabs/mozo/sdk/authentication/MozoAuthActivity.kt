@@ -9,7 +9,6 @@ import androidx.core.net.toUri
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.FragmentActivity
 import com.biglabs.mozo.sdk.MozoAuth
-import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.ui.SecurityActivity
@@ -40,7 +39,6 @@ internal class MozoAuthActivity : FragmentActivity() {
 
     private var handleJob: Job? = null
 
-    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_loading)
@@ -152,45 +150,19 @@ internal class MozoAuthActivity : FragmentActivity() {
 
         val intent = mAuthService!!.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get())
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
         GlobalScope.launch(Dispatchers.Main) {
             startActivityForResult(intent, KEY_DO_AUTHENTICATION)
         }
     }
 
-    private fun doSignOutFirst() {
-        isSignOutBeforeIn = true
-        val redirectUrl = getString(R.string.auth_redirect_uri, String.format(Locale.US, "com.biglabs.mozosdk.%s", applicationInfo.packageName))
-        val authRequestBuilder = AuthorizationRequest.Builder(signOutConfiguration!!, string(R.string.auth_client_id), ResponseTypeValues.CODE, Uri.parse(redirectUrl))
-
-        val authRequest = authRequestBuilder.build()
-        val intentBuilder = mAuthService!!.createCustomTabsIntentBuilder(authRequest.toUri())
-        val customTabs = intentBuilder.setShowTitle(true).setInstantAppsEnabled(false).build()
-
-        val extras = Bundle()
-        extras.putBinder(CustomTabsIntent.EXTRA_SESSION, null)
-        extras.putBoolean(CustomTabsIntent.EXTRA_DEFAULT_SHARE_MENU_ITEM, false)
-        extras.putParcelableArrayList(CustomTabsIntent.EXTRA_MENU_ITEMS, null)
-        customTabs.intent.putExtras(extras)
-
-        try {
-            val intent = mAuthService!!.getAuthorizationRequestIntent(authRequest, customTabs)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-            startActivityForResult(intent, KEY_DO_AUTHENTICATION)
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-    }
-
-    @ExperimentalCoroutinesApi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when {
             requestCode == KEY_DO_AUTHENTICATION && modeSignIn -> {
                 if (isSignOutWhenError) {
                     mAuthStateManager?.clearSession()
-                    EventBus.getDefault().post(MessageEvent.Auth(modeSignIn))
-                    finish()
+                    finishAuth()
                     return
                 }
                 if (isSignOutBeforeIn) {
@@ -218,8 +190,12 @@ internal class MozoAuthActivity : FragmentActivity() {
                 }
             }
             requestCode == KEY_DO_ENTER_PIN -> {
-                EventBus.getDefault().post(MessageEvent.Auth(modeSignIn))
-                finish()
+                if (resultCode == RESULT_OK) {
+                    finishAuth()
+                } else {
+                    modeSignIn = false
+                    initializeAppAuth()
+                }
             }
             !modeSignIn -> {
                 handleResult()
@@ -228,7 +204,6 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
     }
 
-    @ExperimentalCoroutinesApi
     private fun exchangeAuthorizationCode(response: AuthorizationResponse) {
         performTokenRequest(response.createTokenExchangeRequest(), AuthorizationService.TokenResponseCallback { tokenResponse, authException ->
             mAuthStateManager!!.updateAfterTokenResponse(tokenResponse, authException)
@@ -236,7 +211,6 @@ internal class MozoAuthActivity : FragmentActivity() {
         })
     }
 
-    @ExperimentalCoroutinesApi
     private fun performTokenRequest(request: TokenRequest, callback: AuthorizationService.TokenResponseCallback) {
         val clientAuthentication: ClientAuthentication
         try {
@@ -249,23 +223,18 @@ internal class MozoAuthActivity : FragmentActivity() {
         mAuthService!!.performTokenRequest(request, clientAuthentication, callback)
     }
 
-    @ExperimentalCoroutinesApi
     private fun handleResult(exception: Exception? = null) {
         handleJob?.cancel()
         handleJob = GlobalScope.launch {
             if (modeSignIn) {
                 if (exception == null) {
-                    MozoAuth.getInstance().syncProfile(this@MozoAuthActivity)
-//                    if (response == null) {
-//                        ErrorDialog.onCancel(DialogInterface.OnCancelListener {
-//                            isSignOutWhenError = true
-//                            doSignOutFirst()
-//                        })
-//                        return@launch
-//                    }
-
-                    val flag = MozoWallet.getInstance().initWallet(this@MozoAuthActivity).await()
-                    SecurityActivity.start(this@MozoAuthActivity, flag, KEY_DO_ENTER_PIN)
+                    MozoAuth.getInstance().syncProfile(this@MozoAuthActivity) {
+                        if (it <= 0) {
+                            // This user already logged in before, so bypass confirm PIN
+                            finishAuth(exception)
+                        } else
+                            SecurityActivity.start(this@MozoAuthActivity, it, KEY_DO_ENTER_PIN)
+                    }
                 } else {
                     //TODO handle authentication error
                     exception.message?.logAsError("authentication")
@@ -274,11 +243,13 @@ internal class MozoAuthActivity : FragmentActivity() {
             } else
                 signOutCallBack?.invoke()
 
-            launch(Dispatchers.Main) {
-                EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, exception))
-                finish()
-            }
+            finishAuth(exception)
         }
+    }
+
+    private fun finishAuth(exception: Exception? = null) = GlobalScope.launch(Dispatchers.Main) {
+        EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, exception))
+        finish()
     }
 
     companion object {

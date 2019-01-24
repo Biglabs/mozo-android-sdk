@@ -9,11 +9,9 @@ import com.biglabs.mozo.sdk.common.model.UserInfo
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.core.MozoSocketClient
+import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.utils.logAsError
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import net.openid.appauth.AuthorizationService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -35,20 +33,23 @@ class MozoAuth private constructor() {
         }
     }
 
+    fun isSignedIn() = authStateManager.current.isAuthorized
+
+    fun isSignUpCompleted() = authStateManager.current.isAuthorized && walletService.isHasWallet()
+
     fun signIn() {
         walletService.clear()
         if (!EventBus.getDefault().isRegistered(this@MozoAuth)) {
             EventBus.getDefault().register(this@MozoAuth)
         }
         MozoAuthActivity.signIn(MozoSDK.getInstance().context)
-        return
     }
 
-    fun isSignedIn() = authStateManager.current.isAuthorized
-
-    fun isSignUpCompleted() = authStateManager.current.isAuthorized && walletService.isHasWallet()
-
     fun signOut() {
+        signOut(false)
+    }
+
+    fun signOut(reSignIn: Boolean = false) {
         walletService.clear()
         MozoAuthActivity.signOut(MozoSDK.getInstance().context) {
 
@@ -57,6 +58,11 @@ class MozoAuth private constructor() {
             GlobalScope.launch {
                 mozoDB.clear()
                 authStateManager.clearSession()
+
+                if (reSignIn) {
+                    delay(1000)
+                    signIn()
+                }
             }
         }
     }
@@ -85,8 +91,7 @@ class MozoAuth private constructor() {
         }
     }
 
-    @ExperimentalCoroutinesApi
-    internal fun syncProfile(context: Context) {
+    internal fun syncProfile(context: Context, callback: ((flag: Int) -> Unit)? = null) {
         MozoService.getInstance().fetchProfile(context) { data, _ ->
             data ?: return@fetchProfile
 
@@ -96,15 +101,36 @@ class MozoAuth private constructor() {
                         userId = data.userId
                 ))
             }
-            MozoSDK.getInstance().profileViewModel.fetchData(context) {
-                if (it == null) {
+
+            if (data.walletInfo?.offchainAddress.isNullOrEmpty() || data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
+                GlobalScope.launch {
                     MozoSDK.getInstance().profileViewModel.updateProfile(context, data)
+                    delay(100)
+                    MozoWallet.getInstance().initWallet(context).await()
+                    callback?.invoke(SecurityActivity.KEY_CREATE_PIN)
+                }
+                return@fetchProfile
+            }
+
+            MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
+                if (
+                        it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
+                        it?.walletInfo?.offchainAddress == data.walletInfo?.offchainAddress
+                ) {
+                    callback?.invoke(-1) // No need recover wallet
+                } else {
                     GlobalScope.launch {
                         /* update local profile to match with server profile */
                         mozoDB.profile().save(data)
+
+                        MozoSDK.getInstance().profileViewModel.updateProfile(context, data)
+
+                        val flag = MozoWallet.getInstance().initWallet(context).await()
+                        callback?.invoke(flag)
                     }
                 }
             }
+
         }
     }
 

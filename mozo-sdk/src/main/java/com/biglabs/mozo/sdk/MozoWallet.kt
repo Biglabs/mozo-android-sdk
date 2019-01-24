@@ -1,6 +1,7 @@
 package com.biglabs.mozo.sdk
 
 import android.content.Context
+import com.biglabs.mozo.sdk.common.ErrorCode
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.common.model.Profile
 import com.biglabs.mozo.sdk.common.model.WalletInfo
@@ -8,10 +9,13 @@ import com.biglabs.mozo.sdk.contact.AddressBookActivity
 import com.biglabs.mozo.sdk.core.MozoDatabase
 import com.biglabs.mozo.sdk.core.MozoService
 import com.biglabs.mozo.sdk.ui.SecurityActivity
+import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.CryptoUtils
 import com.biglabs.mozo.sdk.utils.PreferenceUtils
+import com.biglabs.mozo.sdk.utils.string
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.web3j.crypto.Credentials
@@ -63,33 +67,34 @@ class MozoWallet private constructor() {
     }
 
     internal fun initWallet(context: Context) = GlobalScope.async {
-        mProfile?.run {
-            if (walletInfo == null || walletInfo!!.encryptSeedPhrase.isNullOrEmpty()) {
-                /* Server wallet is NOT existing, create a new one at local */
-                clearVariables()
-                val mnemonic = MnemonicUtils.generateMnemonic(
-                        SecureRandom().generateSeed(16)
-                )
-                this@MozoWallet.forSaveSeed = mnemonic
-                this@MozoWallet.forSavePrivateKey = CryptoUtils.getFirstAddressPrivateKey(mnemonic)
+        mProfile = MozoSDK.getInstance().profileViewModel.getProfile()
+        mProfile ?: return@async 0
+        if (mProfile!!.walletInfo == null || mProfile!!.walletInfo!!.encryptSeedPhrase.isNullOrEmpty()) {
+            /* Server wallet is NOT existing, create a new one at local */
+            clearVariables()
+            val mnemonic = MnemonicUtils.generateMnemonic(
+                    SecureRandom().generateSeed(16)
+            )
+            this@MozoWallet.forSaveSeed = mnemonic
+            this@MozoWallet.forSavePrivateKey = CryptoUtils.getFirstAddressPrivateKey(mnemonic)
 
-                val credentials = Credentials.create(forSavePrivateKey)
-                this@MozoWallet.forSaveAddress = credentials.address
+            val credentials = Credentials.create(forSavePrivateKey)
+            this@MozoWallet.forSaveAddress = credentials.address
 
-                /* Required input new PIN */
-                return@async SecurityActivity.KEY_CREATE_PIN
-            } else {
-                if (PreferenceUtils.getInstance(context).getFlag(PreferenceUtils.FLAG_SYNC_WALLET_INFO)) {
-                    syncWalletInfo(walletInfo!!, context) {}
-                }
-                if (walletInfo?.privateKey.isNullOrEmpty()) {
-                    /* Local wallet is existing but no private Key */
-                    /* Required input previous PIN */
-                    return@async SecurityActivity.KEY_ENTER_PIN
+            /* Required input new PIN */
+            return@async SecurityActivity.KEY_CREATE_PIN
+        } else {
+            if (PreferenceUtils.getInstance(context).getFlag(PreferenceUtils.FLAG_SYNC_WALLET_INFO)) {
+                syncWalletInfo(mProfile!!.walletInfo!!, context) {
+
                 }
             }
+            if (mProfile!!.walletInfo?.privateKey.isNullOrEmpty()) {
+                /* Local wallet is existing but no private Key */
+                /* Required input previous PIN */
+                return@async SecurityActivity.KEY_ENTER_PIN
+            } else return@async 0
         }
-        return@async 0
     }
 
     internal fun executeSaveWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {
@@ -108,10 +113,11 @@ class MozoWallet private constructor() {
         /* save wallet info to server */
         syncWalletInfo(wallet, context) {
             if (it) {
-                /* save wallet info to local */
-                mozoDB.profile().save(mProfile!!)
+                GlobalScope.launch {
+                    /* save wallet info to local */
+                    mozoDB.profile().save(mProfile!!)
+                }
                 MozoSDK.getInstance().profileViewModel.updateProfile(context, mProfile!!)
-
                 clearVariables()
             }
             callback?.invoke(it)
@@ -119,7 +125,22 @@ class MozoWallet private constructor() {
     }
 
     private fun syncWalletInfo(walletInfo: WalletInfo, context: Context, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
         MozoService.getInstance().saveWallet(context, walletInfo) { _, errorCode ->
+            when (errorCode) {
+                ErrorCode.ERROR_WALLET_DIFFERENT.key -> {
+                    MessageDialog(context, context.string(ErrorCode.ERROR_WALLET_DIFFERENT.message))
+                            .setAction(R.string.mozo_button_restore) {
+                                EventBus.getDefault().post(MessageEvent.CloseActivities())
+                                MozoAuth.getInstance().signOut(true)
+                            }
+                            .cancelable(false)
+                            .show()
+                }
+            }
+
             val isSuccess = errorCode.isNullOrEmpty()
             PreferenceUtils.getInstance(context).setFlag(
                     PreferenceUtils.FLAG_SYNC_WALLET_INFO,
@@ -127,6 +148,14 @@ class MozoWallet private constructor() {
             )
             callback?.invoke(isSuccess)
         }
+    }
+
+    @Subscribe
+    internal fun onUserCancelErrorDialog(event: MessageEvent.UserCancelErrorDialog) {
+        checkNotNull(event)
+        EventBus.getDefault().unregister(this@MozoWallet)
+
+        MozoAuth.getInstance().signOut()
     }
 
     @Suppress("UNUSED_VALUE")

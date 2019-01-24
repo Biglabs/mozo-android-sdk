@@ -99,13 +99,8 @@ internal class MozoService private constructor() {
     ) {
         call.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
-                if (response.isSuccessful /*200..<300*/) {
-
-                    val body = response.body() as? Base<V>
-                    if (body == null) {
-                        ErrorDialog.generalError(context, null)
-                        return
-                    }
+                val body = response.body() as? Base<V>
+                if (response.isSuccessful /*200..<300*/ && body != null) {
 
                     if (!body.isSuccess && handleError) {
                         // TODO show error with body.errorCode
@@ -116,16 +111,20 @@ internal class MozoService private constructor() {
                     }
 
                 } else /*300..500*/ {
-
+                    onFailure(call, Throwable())
                 }
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
                 if (context is BaseActivity || context is MozoAuthActivity) {
                     if (t is IOException) {
-                        ErrorDialog.networkError(context, null)
+                        ErrorDialog.networkError(context) {
+
+                        }
                     } else {
-                        ErrorDialog.generalError(context, null)
+                        ErrorDialog.generalError(context) {
+
+                        }
                     }
                 }
             }

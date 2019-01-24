@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true">
 
     <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
         android:id="@+id/pin_toolbar"
@@ -13,7 +14,9 @@
         app:buttonClose="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:title="@string/mozo_pin_title" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/mozo_pin_title"
+        tools:layout_height="84dp" />
 
     <TextView
         android:id="@+id/sub_title_pin"

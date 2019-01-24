@@ -13,6 +13,7 @@ import com.biglabs.mozo.sdk.utils.displayString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.util.*
 
@@ -34,10 +35,12 @@ internal object ViewModels {
 
         val balanceAndRateLiveData = MutableLiveData<BalanceAndRate>()
 
-        fun fetchData(context: Context, callback: ((p: Profile?) -> Unit)? = null) {
+        fun fetchData(context: Context, userId: String? = null, callback: ((p: Profile?) -> Unit)? = null) {
             GlobalScope.launch {
-                val profile = MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
-                launch(Dispatchers.Main) {
+                val profile = if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
+                else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
+
+                withContext(Dispatchers.Main) {
                     profileLiveData.value = profile
                     callback?.invoke(profile)
                     fetchBalance(context)
@@ -63,6 +66,8 @@ internal object ViewModels {
                 updateBalanceAndRate()
             }
         }
+
+        fun getProfile() = profileLiveData.value
 
         fun getBalance() = balanceInfoLiveData.value
 
@@ -109,10 +114,7 @@ internal object ViewModels {
         fun fetchStore(context: Context, callback: (() -> Unit)? = null) {
             MozoService.getInstance().getContactStores(context) { data, _ ->
                 if (data?.items != null) {
-//                    storesLiveData.value = data.items!!.sortedBy { it.apply { isStore = true }.name }
-                    storesLiveData.value = arrayListOf(Contact(0L, "Minh Store", "107 Nguyen Dinh Chieu", "0xc5e57b5ba4797b9983c9e0814210c85ec0cb5f40", true)).apply {
-                        addAll(data.items!!.sortedBy { it.apply { isStore = true }.name })
-                    }
+                    storesLiveData.value = data.items!!.sortedBy { it.apply { isStore = true }.name }
                 }
                 callback?.invoke()
             }
