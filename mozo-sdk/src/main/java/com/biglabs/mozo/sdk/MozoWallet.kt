@@ -130,6 +130,8 @@ class MozoWallet private constructor() {
         }
         MozoAPIsService.getInstance().saveWallet(context, walletInfo) { _, errorCode ->
             when (errorCode) {
+                ErrorCode.ERROR_WALLET_ADDRESS_IN_USED.key,
+                ErrorCode.ERROR_WALLET_ADDRESS_EXISTING.key,
                 ErrorCode.ERROR_WALLET_DIFFERENT.key -> {
                     MessageDialog(context, context.string(ErrorCode.ERROR_WALLET_DIFFERENT.message))
                             .setAction(R.string.mozo_button_restore) {
