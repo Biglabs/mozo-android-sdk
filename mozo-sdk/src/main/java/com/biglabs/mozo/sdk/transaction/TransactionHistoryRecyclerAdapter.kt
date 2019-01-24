@@ -87,7 +87,16 @@ internal class TransactionHistoryRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
             val history = getData()[position]
-            holder.bind(history, history.type(address), Support.getDisplayDate(holder.itemView.context, history.time * 1000L, Constant.HISTORY_TIME_FORMAT), position == itemCount - 1)
+            holder.bind(
+                    history,
+                    history.type(address),
+                    Support.getDisplayDate(
+                            holder.itemView.context,
+                            history.time * 1000L,
+                            holder.itemView.context.getString(R.string.mozo_format_date_time)
+                    ),
+                    position == itemCount - 1
+            )
             holder.itemView.click { itemClick?.invoke(history) }
         }
     }

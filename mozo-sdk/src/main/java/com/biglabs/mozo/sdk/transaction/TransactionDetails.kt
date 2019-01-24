@@ -131,7 +131,7 @@ internal class TransactionDetails : BaseActivity() {
 
         text_detail_receiver_address.text = targetAddress
 
-        text_detail_time.text = Support.getDisplayDate(this, detailTime, Constant.HISTORY_TIME_FORMAT)
+        text_detail_time.text = Support.getDisplayDate(this, detailTime, string(R.string.mozo_format_date_time))
         text_detail_amount_value.text = amountDisplay
 
         displayContact()

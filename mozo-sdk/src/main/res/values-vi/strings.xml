@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="mozo_format_date">d/M/yyyy</string>
+    <string name="mozo_format_date_time">HH:mm d/M/yyyy</string>
+
     <string name="mozo_address_book_title">Danh bạ</string>
     <string name="mozo_address_book_pick_title">Chọn địa chỉ</string>
     <string name="mozo_address_book_pick_btn">Chọn từ danh bạ</string>

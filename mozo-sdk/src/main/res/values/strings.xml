@@ -1,4 +1,7 @@
 <resources>
+    <string name="mozo_format_date">MMM d, yyyy</string>
+    <string name="mozo_format_date_time">HH:mm MMM d, yyyy</string>
+
     <string name="mozo_address_book_title">Address Book</string>
     <string name="mozo_address_book_pick_title">Select Address</string>
     <string name="mozo_address_book_pick_btn">Select from Address Book</string>

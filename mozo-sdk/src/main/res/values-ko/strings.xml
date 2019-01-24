@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="mozo_format_date">yyyy년 M월 d일</string>
+    <string name="mozo_format_date_time">HH:mm yyyy년 M월 d일</string>
+
     <string name="mozo_address_book_title">주소록</string>
     <string name="mozo_address_book_pick_title">주소 선택</string>
     <string name="mozo_address_book_pick_btn">주소록에서 선택</string>
