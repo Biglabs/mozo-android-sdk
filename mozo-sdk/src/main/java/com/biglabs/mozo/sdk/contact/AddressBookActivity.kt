@@ -135,7 +135,7 @@ internal class AddressBookActivity : BaseActivity() {
         }
 
         list_contacts_refresh.isRefreshing = false
-        mAdapter.notifyData()
+        mAdapter.notifyData(true)
     }
 
     private fun searchByName(name: String) {
@@ -150,7 +150,7 @@ internal class AddressBookActivity : BaseActivity() {
             })
             launch(Dispatchers.Main) {
                 if (contacts.isEmpty()) view_empty_state.visible() else view_empty_state.gone()
-                mAdapter.notifyData(name.isNotEmpty())
+                mAdapter.notifyData(true)
             }
         }
     }
