@@ -1,11 +1,10 @@
-package com.biglabs.mozo.sdk.core
+package com.biglabs.mozo.sdk.common.service
 
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.authentication.MozoAuthActivity
 import com.biglabs.mozo.sdk.common.Constant
-import com.biglabs.mozo.sdk.common.MozoAPIs
 import com.biglabs.mozo.sdk.common.model.*
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
@@ -20,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-internal class MozoService private constructor() {
+internal class MozoAPIsService private constructor() {
 
     private val mozoAPIs: MozoAPIs by lazy { createService() }
 
@@ -162,11 +161,11 @@ internal class MozoService private constructor() {
     companion object {
 
         @Volatile
-        private var instance: MozoService? = null
+        private var instance: MozoAPIsService? = null
 
         fun getInstance() = synchronized(this) {
             if (instance == null) {
-                instance = MozoService()
+                instance = MozoAPIsService()
             }
             return@synchronized instance!!
         }

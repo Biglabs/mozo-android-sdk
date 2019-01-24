@@ -20,7 +20,7 @@ import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.common.model.Profile
 import com.biglabs.mozo.sdk.common.model.TransactionHistory
-import com.biglabs.mozo.sdk.core.MozoService
+import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryRecyclerAdapter
@@ -167,7 +167,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun fetchData() {
-        MozoService.getInstance().getTransactionHistory(
+        MozoAPIsService.getInstance().getTransactionHistory(
                 context ?: return,
                 currentAddress ?: return,
                 page = Constant.PAGING_START_INDEX,

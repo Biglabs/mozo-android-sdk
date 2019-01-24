@@ -7,8 +7,8 @@ import com.biglabs.mozo.sdk.common.model.BalanceInfo
 import com.biglabs.mozo.sdk.common.model.Contact
 import com.biglabs.mozo.sdk.common.model.ExchangeRate
 import com.biglabs.mozo.sdk.common.model.Profile
-import com.biglabs.mozo.sdk.core.MozoDatabase
-import com.biglabs.mozo.sdk.core.MozoService
+import com.biglabs.mozo.sdk.common.service.MozoDatabase
+import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.utils.displayString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -50,7 +50,7 @@ internal object ViewModels {
 
         fun fetchBalance(context: Context, callback: ((balanceInfo: BalanceInfo?) -> Unit)? = null) {
             profileLiveData.value?.walletInfo?.offchainAddress?.run {
-                MozoService.getInstance().getBalance(context, this) { data, _ ->
+                MozoAPIsService.getInstance().getBalance(context, this) { data, _ ->
                     data ?: return@getBalance
                     balanceInfoLiveData.value = data
                     callback?.invoke(data)
@@ -60,7 +60,7 @@ internal object ViewModels {
         }
 
         fun fetchExchangeRate(context: Context) {
-            MozoService.getInstance().getExchangeRate(context, Constant.CURRENCY_KOREA, Constant.SYMBOL_MOZO) { data, _ ->
+            MozoAPIsService.getInstance().getExchangeRate(context, Constant.CURRENCY_KOREA, Constant.SYMBOL_MOZO) { data, _ ->
                 data ?: return@getExchangeRate
                 exchangeRateLiveData.value = data
                 updateBalanceAndRate()
@@ -103,7 +103,7 @@ internal object ViewModels {
         private val storesLiveData = MutableLiveData<List<Contact>>()
 
         fun fetchUser(context: Context, callback: (() -> Unit)? = null) {
-            MozoService.getInstance().getContactUsers(context) { data, _ ->
+            MozoAPIsService.getInstance().getContactUsers(context) { data, _ ->
                 if (data?.items != null) {
                     usersLiveData.value = data.items!!.sortedBy { it.name }
                 }
@@ -112,7 +112,7 @@ internal object ViewModels {
         }
 
         fun fetchStore(context: Context, callback: (() -> Unit)? = null) {
-            MozoService.getInstance().getContactStores(context) { data, _ ->
+            MozoAPIsService.getInstance().getContactStores(context) { data, _ ->
                 if (data?.items != null) {
                     storesLiveData.value = data.items!!.sortedBy { it.apply { isStore = true }.name }
                 }

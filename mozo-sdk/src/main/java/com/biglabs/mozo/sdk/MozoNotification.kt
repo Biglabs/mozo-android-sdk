@@ -7,7 +7,7 @@ import com.biglabs.mozo.sdk.common.OnNotificationReceiveListener
 import com.biglabs.mozo.sdk.common.model.BroadcastDataContent
 import com.biglabs.mozo.sdk.common.model.Notification
 import com.biglabs.mozo.sdk.common.model.TransactionHistory
-import com.biglabs.mozo.sdk.core.MozoDatabase
+import com.biglabs.mozo.sdk.common.service.MozoDatabase
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.censor

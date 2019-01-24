@@ -7,10 +7,9 @@ import com.google.gson.annotations.SerializedName
 data class Contact(
         @Transient
         val id: Long,
-        val name: String?,
-        val physicalAddress: String?,
-        @SerializedName(value = "soloAddress", alternate = ["offchainAddress"])
-        val soloAddress: String?,
+        @SerializedName(value = "name", alternate = ["storeName"]) val name: String?,
+        @SerializedName("storePhysicalAddress") val physicalAddress: String?,
+        @SerializedName(value = "soloAddress", alternate = ["storeOffchainAddress"]) val soloAddress: String?,
         @Transient
         var isStore: Boolean = false
 ) : Parcelable {

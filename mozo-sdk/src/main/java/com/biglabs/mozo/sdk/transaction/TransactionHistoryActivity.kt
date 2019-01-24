@@ -13,7 +13,7 @@ import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.OnLoadMoreListener
 import com.biglabs.mozo.sdk.common.model.Profile
 import com.biglabs.mozo.sdk.common.model.TransactionHistory
-import com.biglabs.mozo.sdk.core.MozoService
+import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.mozoSetup
 import kotlinx.android.synthetic.main.view_transaction_history.*
@@ -81,7 +81,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
     }
 
     private fun fetchData() {
-        MozoService.getInstance().getTransactionHistory(
+        MozoAPIsService.getInstance().getTransactionHistory(
                 this,
                 currentAddress ?: return,
                 page = currentPage

@@ -6,8 +6,8 @@ import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.common.model.Profile
 import com.biglabs.mozo.sdk.common.model.WalletInfo
 import com.biglabs.mozo.sdk.contact.AddressBookActivity
-import com.biglabs.mozo.sdk.core.MozoDatabase
-import com.biglabs.mozo.sdk.core.MozoService
+import com.biglabs.mozo.sdk.common.service.MozoDatabase
+import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.CryptoUtils
@@ -128,7 +128,7 @@ class MozoWallet private constructor() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-        MozoService.getInstance().saveWallet(context, walletInfo) { _, errorCode ->
+        MozoAPIsService.getInstance().saveWallet(context, walletInfo) { _, errorCode ->
             when (errorCode) {
                 ErrorCode.ERROR_WALLET_DIFFERENT.key -> {
                     MessageDialog(context, context.string(ErrorCode.ERROR_WALLET_DIFFERENT.message))

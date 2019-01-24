@@ -1,4 +1,4 @@
-package com.biglabs.mozo.sdk.common
+package com.biglabs.mozo.sdk.common.service
 
 import com.biglabs.mozo.sdk.common.model.*
 import retrofit2.Call

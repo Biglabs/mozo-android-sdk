@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.model.Contact
-import com.biglabs.mozo.sdk.core.MozoService
+import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.utils.*
 import kotlinx.android.synthetic.main.view_address_add_new.*
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 internal class AddressAddActivity : BaseActivity() {
 
-    private val mozoService by lazy { MozoService.getInstance() }
+    private val mozoService by lazy { MozoAPIsService.getInstance() }
 
     private var mShowMessageDuration = 0L
 

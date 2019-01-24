@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.common.model.*
-import com.biglabs.mozo.sdk.core.MozoService
+import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.transaction.TransactionFormActivity
 import com.biglabs.mozo.sdk.transaction.TransactionHistoryActivity
 import com.biglabs.mozo.sdk.ui.SecurityActivity
@@ -55,7 +55,7 @@ class MozoTx private constructor() {
             callback.invoke(null)
             return
         }
-        MozoService.getInstance().createTx(context, prepareRequest(myAddress, output, amount)) { data, _ ->
+        MozoAPIsService.getInstance().createTx(context, prepareRequest(myAddress, output, amount)) { data, _ ->
             data ?: return@createTx
             val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted()
             val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, pin)
@@ -69,14 +69,14 @@ class MozoTx private constructor() {
             data.signatures = arrayListOf(signature)
             data.publicKeys = arrayListOf(pubKey)
 
-            MozoService.getInstance().sendTransaction(context, data) { txResponse, _ ->
+            MozoAPIsService.getInstance().sendTransaction(context, data) { txResponse, _ ->
                 callback.invoke(txResponse)
             }
         }
     }
 
     internal fun getTransactionStatus(context: Context, txHash: String, callback: (status: TransactionStatus) -> Unit) {
-        MozoService.getInstance().getTxStatus(context, txHash) { data, _ ->
+        MozoAPIsService.getInstance().getTxStatus(context, txHash) { data, _ ->
             data ?: return@getTxStatus
             callback.invoke(data)
         }

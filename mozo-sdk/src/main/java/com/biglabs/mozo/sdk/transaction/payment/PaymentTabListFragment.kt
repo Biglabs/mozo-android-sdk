@@ -14,7 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.model.PaymentRequest
-import com.biglabs.mozo.sdk.core.MozoService
+import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.transaction.TransactionDetails
 import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.Support
@@ -76,7 +76,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
     }
 
     private fun fetchData() {
-        MozoService.getInstance().getPaymentRequests(
+        MozoAPIsService.getInstance().getPaymentRequests(
                 context ?: return,
                 Constant.PAGING_START_INDEX,
                 100
@@ -96,7 +96,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         itemId ?: return
         requests.removeAt(position)
         payment_request_recycler?.adapter?.notifyItemRemoved(position)
-        MozoService.getInstance().deletePaymentRequest(context ?: return, itemId)
+        MozoAPIsService.getInstance().deletePaymentRequest(context ?: return, itemId)
     }
 
     private val onItemClickListener: (position: Int) -> Unit = {

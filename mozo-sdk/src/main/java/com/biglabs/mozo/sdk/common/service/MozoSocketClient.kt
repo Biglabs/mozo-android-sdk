@@ -1,4 +1,4 @@
-package com.biglabs.mozo.sdk.core
+package com.biglabs.mozo.sdk.common.service
 
 import android.app.Notification
 import android.app.NotificationChannel

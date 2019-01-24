@@ -1,4 +1,4 @@
-package com.biglabs.mozo.sdk.core
+package com.biglabs.mozo.sdk.common.service
 
 import android.content.Context
 import androidx.room.Database
@@ -28,7 +28,8 @@ internal abstract class MozoDatabase : RoomDatabase() {
     companion object {
         private var instance: MozoDatabase? = null
 
-        fun getInstance(context: Context) = instance ?: synchronized(this) {
+        fun getInstance(context: Context) = instance
+                ?: synchronized(this) {
             instance = Room.databaseBuilder(context.applicationContext, MozoDatabase::class.java, "mozo.db")
                     .fallbackToDestructiveMigration()
                     .build()

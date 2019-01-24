@@ -6,9 +6,9 @@ import com.biglabs.mozo.sdk.authentication.AuthenticationListener
 import com.biglabs.mozo.sdk.authentication.MozoAuthActivity
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.common.model.UserInfo
-import com.biglabs.mozo.sdk.core.MozoDatabase
-import com.biglabs.mozo.sdk.core.MozoService
-import com.biglabs.mozo.sdk.core.MozoSocketClient
+import com.biglabs.mozo.sdk.common.service.MozoDatabase
+import com.biglabs.mozo.sdk.common.service.MozoAPIsService
+import com.biglabs.mozo.sdk.common.service.MozoSocketClient
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.utils.logAsError
 import kotlinx.coroutines.*
@@ -92,7 +92,7 @@ class MozoAuth private constructor() {
     }
 
     internal fun syncProfile(context: Context, callback: ((flag: Int) -> Unit)? = null) {
-        MozoService.getInstance().fetchProfile(context) { data, _ ->
+        MozoAPIsService.getInstance().fetchProfile(context) { data, _ ->
             data ?: return@fetchProfile
 
             GlobalScope.launch {

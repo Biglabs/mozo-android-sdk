@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import com.biglabs.mozo.sdk.common.OnNotificationReceiveListener
 import com.biglabs.mozo.sdk.common.ViewModels
-import com.biglabs.mozo.sdk.core.MozoSocketClient
+import com.biglabs.mozo.sdk.common.service.MozoSocketClient
 import com.biglabs.mozo.sdk.utils.logAsInfo
 
 class MozoSDK private constructor(internal val context: Context) : ViewModelStoreOwner {
