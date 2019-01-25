@@ -4,4 +4,5 @@
     <string name="error_required_login">Your session is expired. Please login again</string>
 
     <string name="error_wallet_different">Your wallet was updated but did not sync with your current device. Please restore your wallet first.</string>
+    <string name="error_wallet_not_found">The destination wallet was not found. Please recheck the wallet address or try another wallet address</string>
 </resources>

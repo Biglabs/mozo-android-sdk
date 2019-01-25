@@ -88,6 +88,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             setOnRefreshListener(this@MozoWalletFragment)
         }
 
+        historyAdapter.setEmptyView(wallet_fragment_history_empty_view)
         wallet_fragment_history_recycler?.apply {
             setHasFixedSize(true)
             itemAnimator = DefaultItemAnimator()

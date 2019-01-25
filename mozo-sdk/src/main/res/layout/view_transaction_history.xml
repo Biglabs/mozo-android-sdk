@@ -15,7 +15,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/mozo_transaction_history_title"
-        tools:background="#5ccc" />
+        tools:background="#5ccc"
+        tools:layout_height="84dp" />
 
     <RadioGroup
         android:id="@+id/history_filter_group"
@@ -69,6 +70,25 @@
             android:text="@string/mozo_view_text_tx_sent"
             android:textColor="@color/mozo_check_btn_text_color" />
     </RadioGroup>
+
+    <com.biglabs.mozo.sdk.ui.view.MozoEmptyView
+        android:id="@+id/list_history_empty_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/im_empty_box"
+        android:drawablePadding="20dp"
+        android:gravity="center"
+        android:text="@string/mozo_transaction_history_empty"
+        android:textColor="@color/mozo_color_line"
+        android:textStyle="italic"
+        android:visibility="gone"
+        app:drawableSize="@dimen/mozo_view_empty_height"
+        app:layout_constraintBottom_toBottomOf="@id/list_history_refresh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/list_history_refresh"
+        app:layout_constraintVertical_bias="0.4"
+        tools:visibility="visible" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/list_history_refresh"

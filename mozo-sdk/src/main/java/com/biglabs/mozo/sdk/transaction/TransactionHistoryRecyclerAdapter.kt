@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.IntDef
 import androidx.core.content.ContextCompat
 import androidx.core.text.set
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.biglabs.mozo.sdk.R
@@ -55,6 +56,7 @@ internal class TransactionHistoryRecyclerAdapter(
             }
         }
     }
+    private var mEmptyView: View? = null
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -101,7 +103,10 @@ internal class TransactionHistoryRecyclerAdapter(
         }
     }
 
-    override fun getItemCount(): Int = getData().size + if (isCanLoadMode && dataFilter == null) 1 else 0
+    override fun getItemCount(): Int {
+        mEmptyView?.isVisible = getData().isEmpty()
+        return getData().size + if (isCanLoadMode && dataFilter == null) 1 else 0
+    }
 
     override fun getItemViewType(position: Int): Int {
         return if (position < getData().size) VIEW_ITEM else VIEW_LOADING
@@ -131,6 +136,10 @@ internal class TransactionHistoryRecyclerAdapter(
 
     fun setCanLoadMore(loadMore: Boolean) {
         isCanLoadMode = loadMore
+    }
+
+    fun setEmptyView(view: View) {
+        mEmptyView = view
     }
 
     fun notifyData() {

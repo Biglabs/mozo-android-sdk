@@ -20,10 +20,7 @@ import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.*
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.fragment_payment_send.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
 import java.util.*
@@ -58,13 +55,17 @@ class PaymentRequestSendFragment : Fragment() {
         generateQRJob = GlobalScope.launch {
             val size = view.context.resources.dp2Px(177f).toInt()
             val qrImage = Support.generateQRCode(content, size)
-            launch(Dispatchers.Main) {
-                payment_request_qr_image.setImageBitmap(qrImage)
+            withContext(Dispatchers.Main) {
+                payment_request_qr_image?.setImageBitmap(qrImage)
             }
         }
 
         amountBigDecimal = amount.toBigDecimal()
         payment_request_amount.text = amountBigDecimal.displayString()
+
+        output_receiver_address.onTextChanged {
+            updateSubmitButton()
+        }
 
         button_scan_qr.click {
             Support.scanQRCode(this@PaymentRequestSendFragment)

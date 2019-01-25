@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.biglabs.mozo.sdk.R
+import com.biglabs.mozo.sdk.common.ErrorCode
 import com.biglabs.mozo.sdk.common.model.PaymentRequest
 import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.ui.BaseActivity
+import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.replace
 import kotlinx.android.synthetic.main.activity_payment_request.*
 
@@ -39,7 +41,13 @@ internal class PaymentRequestActivity : BaseActivity(), PaymentRequestInteractio
     }
 
     override fun onSendRequestClicked(amount: String, toAddress: String, request: PaymentRequest) {
-        MozoAPIsService.getInstance().sendPaymentRequest(this, toAddress, request) { data, _ ->
+        MozoAPIsService.getInstance().sendPaymentRequest(this, toAddress, request) { data, errorCode ->
+            when (errorCode) {
+                ErrorCode.ERROR_WALLET_ADDRESS_NOT_EXIST.key -> {
+                    MessageDialog.show(this, R.string.error_wallet_not_found)
+                    return@sendPaymentRequest
+                }
+            }
             data?.let {
                 isSendCompleted = true
                 payment_request_toolbar.showBackButton(false)

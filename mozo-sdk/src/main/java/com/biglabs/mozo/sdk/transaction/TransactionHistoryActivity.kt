@@ -46,6 +46,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
             setOnRefreshListener(this@TransactionHistoryActivity)
         }
 
+        historyAdapter.setEmptyView(list_history_empty_view)
         list_history.setHasFixedSize(true)
         list_history.itemAnimator = DefaultItemAnimator()
         list_history.adapter = historyAdapter

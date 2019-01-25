@@ -111,7 +111,7 @@ internal class TransactionDetails : BaseActivity() {
                 targetAddress = data.firstOrNull()
 
                 text_detail_status.setText(R.string.mozo_button_transfer)
-                detailTime = mPaymentRequest!!.timeInSec * 1000
+                //detailTime = mPaymentRequest!!.timeInSec * 1000
                 data.lastOrNull()?.let {
                     amountDisplay = it.toBigDecimal().displayString()
                 }
@@ -131,7 +131,11 @@ internal class TransactionDetails : BaseActivity() {
 
         text_detail_receiver_address.text = targetAddress
 
-        text_detail_time.text = Support.getDisplayDate(this, detailTime, string(R.string.mozo_format_date_time))
+        if (detailTime > 0) {
+            text_detail_time.text = Support.getDisplayDate(this, detailTime, string(R.string.mozo_format_date_time))
+            text_detail_time.isVisible = true
+        } else text_detail_time.isVisible = false
+
         text_detail_amount_value.text = amountDisplay
 
         displayContact()
