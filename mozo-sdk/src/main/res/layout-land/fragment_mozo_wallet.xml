@@ -182,6 +182,24 @@
         app:layout_constraintWidth_max="165dp"
         app:layout_goneMarginTop="20dp" />
 
+    <com.biglabs.mozo.sdk.ui.view.MozoEmptyView
+        android:id="@+id/wallet_fragment_history_empty_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/im_empty_box"
+        android:drawablePadding="20dp"
+        android:gravity="center"
+        android:text="@string/mozo_transaction_history_empty"
+        android:textColor="@color/mozo_color_line"
+        android:textStyle="italic"
+        android:visibility="gone"
+        app:drawableSize="@dimen/mozo_view_empty_height"
+        app:layout_constraintBottom_toBottomOf="@id/wallet_fragment_refresh_layout"
+        app:layout_constraintEnd_toEndOf="@id/wallet_fragment_refresh_layout"
+        app:layout_constraintStart_toStartOf="@id/wallet_fragment_refresh_layout"
+        app:layout_constraintTop_toTopOf="@id/wallet_fragment_refresh_layout"
+        tools:visibility="visible" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/wallet_fragment_refresh_layout"
         android:layout_width="0dp"
