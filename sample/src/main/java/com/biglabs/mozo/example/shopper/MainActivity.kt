@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.MozoNotification
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
 
                 Log.i("MozoSDK", "Authentication changed, signed in: $isSinged")
                 Log.i("MozoSDK", "My Mozo address: ${MozoWallet.getInstance().getAddress()}")
+            }
+
+            override fun onCanceled() {
+                Toast.makeText(this@MainActivity, "User canceled", Toast.LENGTH_SHORT).show()
             }
         })
 

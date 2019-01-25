@@ -111,12 +111,17 @@ internal class TransactionFormActivity : BaseActivity() {
         val amount = output_amount.text.toString()
 
         showLoading()
-        MozoTx.getInstance().createTransaction(this, address, amount, pin) {
-            hideLoading()
-            history.addressTo = address
-            history.amount = MozoTx.getInstance().amountWithDecimal(amount)
-            history.time = Calendar.getInstance().timeInMillis / 1000L
-            showResultUI(it)
+        MozoTx.getInstance().createTransaction(this, address, amount, pin) { response, doRetry ->
+            if (doRetry) {
+                showLoading()
+                sendTx(pin)
+            } else {
+                hideLoading()
+                history.addressTo = address
+                history.amount = MozoTx.getInstance().amountWithDecimal(amount)
+                history.time = Calendar.getInstance().timeInMillis / 1000L
+                showResultUI(response)
+            }
         }
     }
 
@@ -285,6 +290,7 @@ internal class TransactionFormActivity : BaseActivity() {
             MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this@TransactionFormActivity, userContactsObserver)
             setContentView(R.layout.view_transaction_sent)
 
+            transfer_completed_title.setText(R.string.mozo_transfer_action_complete)
             text_preview_amount_sent.text = history.amountDisplay()
             text_preview_address_sent.text = selectedContact?.name ?: history.addressTo
             text_preview_rate_sent.text = String.format(Locale.US, "(₩%s)", history.amountInDecimal().multiply(currentRate).displayString())
@@ -313,6 +319,7 @@ internal class TransactionFormActivity : BaseActivity() {
         MozoTx.getInstance().getTransactionStatus(this, history.txHash ?: return) {
             when {
                 it.isSuccess() -> {
+                    transfer_completed_title.setText(R.string.mozo_transfer_send_complete)
                     transfer_info_container.visible()
                     transfer_status_container.gone()
                     button_transaction_detail.visible()

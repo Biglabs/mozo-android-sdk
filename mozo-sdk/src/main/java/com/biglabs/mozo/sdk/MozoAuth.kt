@@ -10,6 +10,7 @@ import com.biglabs.mozo.sdk.common.service.MozoDatabase
 import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.common.service.MozoSocketClient
 import com.biglabs.mozo.sdk.ui.SecurityActivity
+import com.biglabs.mozo.sdk.utils.UserCancelException
 import com.biglabs.mozo.sdk.utils.logAsError
 import kotlinx.coroutines.*
 import net.openid.appauth.AuthorizationService
@@ -76,6 +77,11 @@ class MozoAuth private constructor() {
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
         EventBus.getDefault().unregister(this@MozoAuth)
+
+        if (auth.exception is UserCancelException) {
+            mAuthListener?.onCanceled()
+            return
+        }
 
         if (auth.isSignedIn) {
             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {

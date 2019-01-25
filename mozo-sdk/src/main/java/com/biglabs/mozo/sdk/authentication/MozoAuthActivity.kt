@@ -12,11 +12,11 @@ import com.biglabs.mozo.sdk.MozoAuth
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.ui.SecurityActivity
-import com.biglabs.mozo.sdk.utils.Support
-import com.biglabs.mozo.sdk.utils.logAsError
-import com.biglabs.mozo.sdk.utils.setMatchParent
-import com.biglabs.mozo.sdk.utils.string
-import kotlinx.coroutines.*
+import com.biglabs.mozo.sdk.utils.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import net.openid.appauth.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -38,6 +38,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     private var isSignOutWhenError = false
 
     private var handleJob: Job? = null
+    private var isAuthInProgress = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +60,11 @@ internal class MozoAuthActivity : FragmentActivity() {
         super.onDestroy()
         mAuthService?.dispose()
         authenticationInProgress = false
+
+        if (isAuthInProgress) {
+            isAuthInProgress = false
+            EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, UserCancelException()))
+        }
     }
 
     /**
@@ -142,22 +148,25 @@ internal class MozoAuthActivity : FragmentActivity() {
      * Performs the authorization request, using the browser selected in the spinner,
      * and a user-provided `login_hint` if available.
      */
-    private fun doAuth() {
+    private fun doAuth() = GlobalScope.launch(Dispatchers.Main) {
         try {
             mAuthIntentLatch.await()
         } catch (ex: InterruptedException) {
         }
 
-        val intent = mAuthService!!.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get())
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-        GlobalScope.launch(Dispatchers.Main) {
-            startActivityForResult(intent, KEY_DO_AUTHENTICATION)
-        }
+        isAuthInProgress = true
+        startActivityForResult(
+                mAuthService!!.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get()).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                },
+                KEY_DO_AUTHENTICATION
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        isAuthInProgress = false
         when {
             requestCode == KEY_DO_AUTHENTICATION && modeSignIn -> {
                 if (isSignOutWhenError) {
@@ -184,6 +193,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                         mAuthStateManager!!.updateAfterAuthorization(response, ex)
                         exchangeAuthorizationCode(response)
                     }
+                    resultCode == RESULT_CANCELED -> finishAuth(UserCancelException())
                     else -> {
                         finish()
                     }

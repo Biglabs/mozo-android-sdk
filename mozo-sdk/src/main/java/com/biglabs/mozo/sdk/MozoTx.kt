@@ -49,10 +49,10 @@ class MozoTx private constructor() {
         )
     }
 
-    internal fun createTransaction(context: Context, output: String, amount: String, pin: String, callback: (request: TransactionResponse?) -> Unit) {
+    internal fun createTransaction(context: Context, output: String, amount: String, pin: String, callback: (response: TransactionResponse?, doRetry: Boolean) -> Unit) {
         val myAddress = MozoWallet.getInstance().getAddress()
         if (myAddress == null) {
-            callback.invoke(null)
+            callback.invoke(null, false)
             return
         }
         MozoAPIsService.getInstance().createTx(context, prepareRequest(myAddress, output, amount)) { data, _ ->
@@ -69,9 +69,11 @@ class MozoTx private constructor() {
             data.signatures = arrayListOf(signature)
             data.publicKeys = arrayListOf(pubKey)
 
-            MozoAPIsService.getInstance().sendTransaction(context, data) { txResponse, _ ->
-                callback.invoke(txResponse)
-            }
+            MozoAPIsService.getInstance().sendTransaction(context, data, { txResponse, _ ->
+                callback.invoke(txResponse, false)
+            }, {
+                callback.invoke(null, true)
+            })
         }
     }
 

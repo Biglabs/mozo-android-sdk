@@ -45,7 +45,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustNothing" />
 
         <activity
             android:name=".transaction.payment.PaymentRequestActivity"

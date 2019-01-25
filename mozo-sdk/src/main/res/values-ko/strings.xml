@@ -107,6 +107,7 @@
     <string name="mozo_transfer_amount_error_too_low">오류 : 금액이 너무 적습니다. 유효한 금액을 입력하십시오.</string>
     <string name="mozo_transfer_amount_error">오류 :십진수로 값을 입력하십시오.</string>
     <string name="mozo_transfer_spendable">가용 잔액: %s MozoX</string>
+    <string name="mozo_transfer_action_complete">Action Complete</string>
     <string name="mozo_transfer_send_complete">보내기 완료</string>
     <string name="mozo_transfer_send_complete_msg">방금 보낸 내용:</string>
 

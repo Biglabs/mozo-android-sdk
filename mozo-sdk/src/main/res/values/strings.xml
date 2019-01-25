@@ -63,7 +63,7 @@
     <string name="mozo_pin_sub_title">Enter your Security PIN</string>
     <string name="mozo_pin_sub_title_restore">Enter your Security PIN\nto restore wallet</string>
     <string name="mozo_pin_sub_title_send">Enter your Security PIN\nto send MozoX</string>
-    <string name="mozo_pin_content">Security PIN must be 6 digits</string>
+    <string name="mozo_pin_content">Security PIN must be 6 digit numbers</string>
     <string name="mozo_pin_confirm_sub_title">Confirm Security PIN</string>
     <string name="mozo_pin_confirm_content">Re-enter your PIN</string>
     <string name="mozo_pin_msg_create_success">Create Security PIN successful</string>
@@ -106,6 +106,7 @@
     <string name="mozo_transfer_amount_error_too_low">Error: Amount is too low, please input valid amount.</string>
     <string name="mozo_transfer_amount_error">Error: Please input value in decimal format.</string>
     <string name="mozo_transfer_spendable">Spendable: %s MozoX</string>
+    <string name="mozo_transfer_action_complete">Action Complete</string>
     <string name="mozo_transfer_send_complete">Send Completed</string>
     <string name="mozo_transfer_send_complete_msg">You have just sent:</string>
 

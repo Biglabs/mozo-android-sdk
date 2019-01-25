@@ -3,11 +3,14 @@ package com.biglabs.mozo.sdk.common.service
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.MozoAuth
+import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.authentication.MozoAuthActivity
 import com.biglabs.mozo.sdk.common.Constant
+import com.biglabs.mozo.sdk.common.ErrorCode
 import com.biglabs.mozo.sdk.common.model.*
 import com.biglabs.mozo.sdk.ui.BaseActivity
 import com.biglabs.mozo.sdk.ui.dialog.ErrorDialog
+import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.Support
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -49,8 +52,8 @@ internal class MozoAPIsService private constructor() {
         execute(context, mozoAPIs.createTx(request), callback)
     }
 
-    fun sendTransaction(context: Context, request: TransactionResponse, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.sendTx(request), callback)
+    fun sendTransaction(context: Context, request: TransactionResponse, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
+        execute(context, mozoAPIs.sendTx(request), callback, retry)
     }
 
     fun getTransactionHistory(context: Context, address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, callback: ((data: BaseData<TransactionHistory>?, errorCode: String?) -> Unit)? = null) {
@@ -84,7 +87,7 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun sendPaymentRequest(context: Context, toAddress: String, request: PaymentRequest, callback: ((data: PaymentRequest?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.sendPaymentRequest(toAddress, request), callback)
+        execute(context, mozoAPIs.sendPaymentRequest(toAddress, request), callback, handleError = false)
     }
 
     fun deletePaymentRequest(context: Context, id: Long, callback: ((data: Any?, errorCode: String?) -> Unit)? = null) {
@@ -93,7 +96,9 @@ internal class MozoAPIsService private constructor() {
 
     private fun <V, T : Base<V>> execute(
             context: Context,
-            call: Call<T>, callback: ((data: V?, errorCode: String?) -> Unit)?,
+            call: Call<T>,
+            callback: ((data: V?, errorCode: String?) -> Unit)?,
+            retry: (() -> Unit)? = null,
             handleError: Boolean = true
     ) {
         call.enqueue(object : Callback<T> {
@@ -102,8 +107,11 @@ internal class MozoAPIsService private constructor() {
                 if (response.isSuccessful /*200..<300*/ && body != null) {
 
                     if (!body.isSuccess && handleError) {
-                        // TODO show error with body.errorCode
-
+                        ErrorCode.findByKey(body.errorCode)?.let {
+                            MessageDialog(context, context.getString(it.message))
+                                    .setAction(R.string.mozo_button_retry, retry)
+                                    .show()
+                        }
                         callback?.invoke(null, body.errorCode)
                     } else {
                         callback?.invoke(body.data, body.errorCode)
@@ -117,13 +125,9 @@ internal class MozoAPIsService private constructor() {
             override fun onFailure(call: Call<T>, t: Throwable) {
                 if (context is BaseActivity || context is MozoAuthActivity) {
                     if (t is IOException) {
-                        ErrorDialog.networkError(context) {
-
-                        }
+                        ErrorDialog.networkError(context, onTryAgain = retry)
                     } else {
-                        ErrorDialog.generalError(context) {
-
-                        }
+                        ErrorDialog.generalError(context, onTryAgain = retry)
                     }
                 }
             }

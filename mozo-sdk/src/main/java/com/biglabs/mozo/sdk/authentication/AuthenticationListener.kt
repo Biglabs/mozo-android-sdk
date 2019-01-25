@@ -10,4 +10,5 @@ abstract class AuthenticationListener {
 
     open fun onSignedIn() {}
     open fun onSignedOut() {}
+    open fun onCanceled() {}
 }

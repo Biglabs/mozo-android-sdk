@@ -53,10 +53,10 @@
     <string name="mozo_button_try_again">Thử lại</string>
 
     <string name="mozo_backup_title">Sao lưu ví</string>
-    <string name="mozo_backup_sub_title">Lưu Recovery Phrase</string>
-    <string name="mozo_backup_content">Ghi lại những từ này và cất ở nơi an toàn.</string>
-    <string name="mozo_backup_warning">*Nếu mất Recovery Phrase, ví của bạn sẽ không thể khôi phục.</string>
-    <string name="mozo_backup_confirm_msg">Tôi đã lưu trữ Recovery Phrase</string>
+    <string name="mozo_backup_sub_title">Kí tự dùng khôi phục ví</string>
+    <string name="mozo_backup_content">Ghi lại những từ này và cất giữ ở nơi an toàn để khôi phục lại ví khi cần thiết.</string>
+    <string name="mozo_backup_warning">*Nếu mất bản ghi này, ví của bạn sẽ không thể khôi phục.</string>
+    <string name="mozo_backup_confirm_msg">Tôi đã ghi lại xong</string>
 
     <string name="mozo_pin_title">Tạo mã PIN</string>
     <string name="mozo_pin_title_restore">Khôi phục lại ví</string>
@@ -89,7 +89,7 @@
     <string name="mozo_payment_request_text_scan_to_transfer">Quét để gửi:</string>
     <string name="mozo_payment_request_text_send_to">Gửi yêu cầu đến</string>
     <string name="mozo_payment_request_text_send_success">Gửi yêu cầu thành công</string>
-    <string name="mozo_payment_request_text_sent">Bạn đã gửi yêu cầu nhận MozoX đến:</string>
+    <string name="mozo_payment_request_text_sent">Đã gửi yêu cầu nhận:</string>
     <string name="mozo_payment_request_text_empty">Danh sách trống</string>
     <string name="mozo_payment_request_item_label_from">Từ:</string>
     <string name="mozo_payment_request_item_label_amount">Yêu cầu:</string>
@@ -107,6 +107,7 @@
     <string name="mozo_transfer_amount_error_too_low">Lỗi: Số lượng quá nhỏ, vui lòng nhập số hợp lệ</string>
     <string name="mozo_transfer_amount_error">Lỗi: Vui lòng nhập giá trị bằng số thập phân</string>
     <string name="mozo_transfer_spendable">Số dư khả dụng: %s MozoX</string>
+    <string name="mozo_transfer_action_complete">Thao tác hoàn tất</string>
     <string name="mozo_transfer_send_complete">Gửi thành công</string>
     <string name="mozo_transfer_send_complete_msg">Bạn vừa gửi:</string>
 

@@ -45,12 +45,13 @@ class PaymentRequestRecyclerAdapter(
                 var receiver = param.firstOrNull()
                 if (!receiver.isNullOrEmpty()) {
                     receiver = MozoSDK.getInstance().contactViewModel.findByAddress(receiver)?.name
+                            ?: receiver
                 }
                 item_payment_address.text = receiver
                 item_payment_amount.text = containerView.context.getString(R.string.mozo_payment_request_item_amount, param.lastOrNull())
             }
 
-            item_payment_time.text = Support.getDisplayDate(itemView.context, request.timeInSec * 1000, "h:mm aa MMM dd, yyyy")
+            item_payment_time.text = Support.getDisplayDate(itemView.context, request.timeInSec * 1000, itemView.context.getString(R.string.mozo_format_date_time))
         }
     }
 }

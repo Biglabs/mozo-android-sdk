@@ -28,7 +28,7 @@ internal class ContactRecyclerAdapter(
 
         val otherContact = arrayListOf<Contact>()
         contacts.map { c ->
-            if (c.name == null || c.name[0].toUpperCase() < 'A' || c.name[0].toUpperCase() > 'Z') {
+            if (c.name.isNullOrEmpty() || c.name[0].toUpperCase() < 'A' || c.name[0].toUpperCase() > 'Z') {
                 otherContact.add(c)
             }
         }

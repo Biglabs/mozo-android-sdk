@@ -156,7 +156,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
                 val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
                 instance = MozoSocketClient(
-                        URI("ws://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
+                        URI("wss://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
                         mutableMapOf(
                                 "Authorization" to "bearer $accessToken",
                                 "Content-Type" to "application/json",

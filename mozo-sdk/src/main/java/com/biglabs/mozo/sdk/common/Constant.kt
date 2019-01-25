@@ -29,9 +29,9 @@ class Constant {
         internal const val DOMAIN_AUTH_STAGING = "staging.keycloak.mozocoin.io"
         internal const val DOMAIN_AUTH_PRODUCTION = "staging.keycloak.mozocoin.io"
 
-        internal const val DOMAIN_SOCKET_DEV = "18.136.38.11:8089"
-        internal const val DOMAIN_SOCKET_STAGING = "52.76.238.125:8089"
-        internal const val DOMAIN_SOCKET_PRODUCTION = "52.76.238.125:8089"
+        internal const val DOMAIN_SOCKET_DEV = "dev.noti.mozocoin.io"
+        internal const val DOMAIN_SOCKET_STAGING = "staging.noti.mozocoin.io"
+        internal const val DOMAIN_SOCKET_PRODUCTION = "noti.mozocoin.io"
 
         internal const val SOCKET_CHANNEL_SHOPPER = "shopper"
         internal const val SOCKET_CHANNEL_RETAILER = "retailer"
