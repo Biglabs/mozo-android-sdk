@@ -7,7 +7,6 @@ import android.graphics.Typeface
 import android.os.Bundle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,7 +51,7 @@ internal class AddressBookActivity : BaseActivity() {
         button_clear.click { input_search.setText("") }
 
         address_book_tabs?.apply {
-            isVisible = !MozoSDK.isRetailerApp
+            //isVisible = !MozoSDK.isRetailerApp
             setOnCheckedChangeListener { group, _ ->
                 group.hideKeyboard()
                 loadData()
