@@ -58,7 +58,7 @@ class MozoWallet private constructor() {
         }
 
         MozoSDK.getInstance().profileViewModel.fetchBalance(MozoSDK.getInstance().context) {
-            callback.invoke(it?.balanceNonDecimal() ?: BigDecimal.ZERO)
+            callback.invoke(it?.balanceNonDecimal() ?: BigDecimal(-1))
         }
     }
 

@@ -13,7 +13,6 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.ViewModels
 import com.biglabs.mozo.sdk.utils.DecimalDigitsInputFilter
 import com.biglabs.mozo.sdk.utils.click
-import com.biglabs.mozo.sdk.utils.displayString
 import com.biglabs.mozo.sdk.utils.onTextChanged
 import kotlinx.android.synthetic.main.fragment_payment_create.*
 import kotlinx.coroutines.Dispatchers
@@ -64,8 +63,8 @@ class PaymentTabCreateFragment : Fragment() {
                 }
                 GlobalScope.launch(Dispatchers.Main) {
                     val amount = BigDecimal(this@run)
-                    val rate = String.format(Locale.US, "₩%s", amount.multiply(currentRate).displayString())
-                    output_amount_rate.text = rate
+                    output_amount_rate.text = MozoSDK.getInstance().profileViewModel
+                            .formatCurrencyDisplay(amount.multiply(currentRate))
                 }
                 updateSubmitButton()
             }

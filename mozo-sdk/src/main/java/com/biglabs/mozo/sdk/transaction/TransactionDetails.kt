@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
-import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.model.Contact
 import com.biglabs.mozo.sdk.common.model.PaymentRequest
 import com.biglabs.mozo.sdk.common.model.TransactionHistory
@@ -22,7 +21,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import java.util.*
 
 internal class TransactionDetails : BaseActivity() {
 
@@ -81,7 +79,8 @@ internal class TransactionDetails : BaseActivity() {
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this, Observer {
             currentBalance = it.balanceInDecimal
             it?.rate?.run {
-                text_detail_amount_rate_side.text = String.format(Locale.US, "(₩%s)", amount.multiply(this).displayString())
+                text_detail_amount_rate_side.text = MozoSDK.getInstance().profileViewModel
+                        .formatCurrencyDisplay(amount.multiply(this), true)
             }
         })
     }

@@ -30,7 +30,7 @@ internal interface MozoAPIs {
     fun getBalance(@Path("address") address: String): Call<Base<BalanceInfo>>
 
     @GET("${MozoAPIsService.APIS_SOLOMON}/exchange/rate")
-    fun getExchangeRate(@Query("currency") currency: String, @Query("symbol") symbol: String): Call<Base<ExchangeRate>>
+    fun getExchangeRate(@Query("locale") locale: String): Call<Base<ExchangeRate>>
 
     @POST("${MozoAPIsService.APIS_SOLOMON}/solo/contract/solo-token/transfer")
     fun createTx(@Body request: TransactionRequest): Call<Base<TransactionResponse>>

@@ -1,5 +1,6 @@
 package com.biglabs.mozo.sdk.common.service
 
+import android.app.Activity
 import android.content.Context
 import com.biglabs.mozo.sdk.BuildConfig
 import com.biglabs.mozo.sdk.MozoAuth
@@ -41,8 +42,8 @@ internal class MozoAPIsService private constructor() {
         execute(context, mozoAPIs.getBalance(address), callback)
     }
 
-    fun getExchangeRate(context: Context, currency: String, symbol: String = Constant.SYMBOL_MOZO, callback: ((data: ExchangeRate?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.getExchangeRate(currency, symbol), callback)
+    fun getExchangeRate(context: Context, locale: String, callback: ((data: ExchangeRate?, errorCode: String?) -> Unit)? = null) {
+        execute(context, mozoAPIs.getExchangeRate(locale), callback)
     }
 
     /**
@@ -105,25 +106,36 @@ internal class MozoAPIsService private constructor() {
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val body = response.body() as? Base<V>
                 if (response.isSuccessful /*200..<300*/ && body != null) {
-
                     if (!body.isSuccess && handleError) {
-                        ErrorCode.findByKey(body.errorCode)?.let {
-                            MessageDialog(context, context.getString(it.message))
-                                    .setAction(R.string.mozo_button_retry, retry)
-                                    .show()
+
+                        if (context is Activity && !context.isFinishing && !context.isDestroyed) {
+                            ErrorCode.findByKey(body.errorCode)?.let {
+                                MessageDialog(context, context.getString(it.message))
+                                        .setAction(R.string.mozo_button_retry, retry)
+                                        .show()
+                            }
                         }
+
                         callback?.invoke(null, body.errorCode)
                     } else {
                         callback?.invoke(body.data, body.errorCode)
                     }
 
                 } else /*300..500*/ {
+                    val error = response.errorBody()?.string()
+                    if (error != null && error.contains("invalid_token", ignoreCase = true)) {
+                        MozoAuth.getInstance().signOut()
+                        return
+                    }
                     onFailure(call, Throwable())
                 }
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
                 if (context is BaseActivity || context is MozoAuthActivity) {
+                    if (context is Activity && (context.isFinishing || context.isDestroyed)) {
+                        return
+                    }
                     if (t is IOException) {
                         ErrorDialog.networkError(context, onTryAgain = retry)
                     } else {

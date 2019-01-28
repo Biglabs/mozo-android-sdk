@@ -156,7 +156,7 @@ internal class SecurityActivity : BaseActivity() {
     }
 
     private fun initVerifyUI(clearPin: Boolean = false) = GlobalScope.launch(Dispatchers.Main) {
-        initRestoreUI(clearPin)
+        initRestoreUI(clearPin).join()
         if (mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
             pin_toolbar.screen_title.setText(R.string.mozo_transfer_title)
             sub_title_pin.setText(R.string.mozo_pin_sub_title_send)
@@ -187,7 +187,7 @@ internal class SecurityActivity : BaseActivity() {
     }
 
     private fun showPinInputCorrectUI() = GlobalScope.launch(Dispatchers.Main) {
-        showPinCreatedUI()
+        showPinCreatedUI().join()
         text_correct_pin.setText(R.string.mozo_pin_msg_enter_correct)
     }
 
@@ -235,7 +235,7 @@ internal class SecurityActivity : BaseActivity() {
     private fun submitForResult() {
         GlobalScope.launch {
             delay(500)
-            showLoadingUI()
+            showLoadingUI().join()
 
             when (mRequestCode) {
                 KEY_CREATE_PIN -> {

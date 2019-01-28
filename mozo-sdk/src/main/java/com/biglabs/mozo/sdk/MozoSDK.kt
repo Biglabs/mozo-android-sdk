@@ -48,7 +48,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                     contactViewModel.fetchData(context)
                 }
 
-                MozoSocketClient.connect(context)
+                MozoSocketClient.connect()
             }
 
             override fun onLost(network: Network?) {

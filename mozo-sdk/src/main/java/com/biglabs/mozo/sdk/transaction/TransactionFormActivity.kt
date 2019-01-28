@@ -160,9 +160,8 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
                 GlobalScope.launch(Dispatchers.Main) {
                     val amount = BigDecimal(this@run)
-                    val rate = String.format(Locale.US, "₩%s", amount.multiply(currentRate).displayString())
-                    output_amount_rate.text = rate
-                    text_preview_rate.text = String.format(Locale.US, "(%s)", rate)
+                    output_amount_rate.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(currentRate))
+                    text_preview_rate.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(currentRate), true)
                 }
             }
         }
@@ -293,7 +292,7 @@ internal class TransactionFormActivity : BaseActivity() {
             transfer_completed_title.setText(R.string.mozo_transfer_action_complete)
             text_preview_amount_sent.text = history.amountDisplay()
             text_preview_address_sent.text = selectedContact?.name ?: history.addressTo
-            text_preview_rate_sent.text = String.format(Locale.US, "(₩%s)", history.amountInDecimal().multiply(currentRate).displayString())
+            text_preview_rate_sent.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(history.amountInDecimal().multiply(currentRate), true)
 
             button_save_address?.apply {
                 isVisible = selectedContact == null

@@ -51,16 +51,16 @@ internal object ViewModels {
         fun fetchBalance(context: Context, callback: ((balanceInfo: BalanceInfo?) -> Unit)? = null) {
             profileLiveData.value?.walletInfo?.offchainAddress?.run {
                 MozoAPIsService.getInstance().getBalance(context, this) { data, _ ->
+                    callback?.invoke(data)
                     data ?: return@getBalance
                     balanceInfoLiveData.value = data
-                    callback?.invoke(data)
                     fetchExchangeRate(context)
                 }
             }
         }
 
         fun fetchExchangeRate(context: Context) {
-            MozoAPIsService.getInstance().getExchangeRate(context, Constant.CURRENCY_KOREA, Constant.SYMBOL_MOZO) { data, _ ->
+            MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().language) { data, _ ->
                 data ?: return@getExchangeRate
                 exchangeRateLiveData.value = data
                 updateBalanceAndRate()
@@ -76,14 +76,22 @@ internal object ViewModels {
                     ?: BigDecimal.ZERO
             val rate = (exchangeRateLiveData.value?.rate ?: 0.0).toBigDecimal()
             val balanceInCurrency = balanceNonDecimal.multiply(rate)
+
             balanceAndRateLiveData.value = BalanceAndRate(
                     balanceNonDecimal,
                     balanceInCurrency,
-                    String.format(Locale.US, "₩%s", balanceInCurrency.displayString()),
-                    balanceInfoLiveData.value?.decimals ?: 0,
+                    formatCurrencyDisplay(balanceInCurrency),
+                    balanceInfoLiveData.value?.decimals ?: Constant.DEFAULT_DECIMAL,
                     rate
             )
         }
+
+        fun formatCurrencyDisplay(amount: BigDecimal, withBracket: Boolean = false) = StringBuilder().apply {
+            if (withBracket) append("(")
+            append(exchangeRateLiveData.value?.currencySymbol ?: Constant.DEFAULT_CURRENCY_SYMBOL)
+            append(amount.displayString())
+            if (withBracket) append(")")
+        }.toString()
 
         fun updateProfile(context: Context, p: Profile) = GlobalScope.launch(Dispatchers.Main) {
             profileLiveData.value = p

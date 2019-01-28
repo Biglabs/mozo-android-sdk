@@ -4,14 +4,14 @@ import java.util.*
 
 class Constant {
     companion object {
+
+        internal const val DEFAULT_DECIMAL = 2
+        internal const val DEFAULT_CURRENCY_SYMBOL = "$"
+        internal const val DEFAULT_CURRENCY_RATE = 0.0000689063059272
+
         const val PAGING_START_INDEX = 0
         const val PAGING_SIZE = 15
         const val LIST_VISIBLE_THRESHOLD = 5
-
-        const val SYMBOL_MOZO = "MOZOX"
-
-        const val CURRENCY_KOREA = "KRW"
-        const val CURRENCY_USA = "USD"
 
         const val STATUS_SUCCESS = "SUCCESS"
         const val STATUS_FAILED = "FAILED"
@@ -35,6 +35,7 @@ class Constant {
 
         internal const val SOCKET_CHANNEL_SHOPPER = "shopper"
         internal const val SOCKET_CHANNEL_RETAILER = "retailer"
+        internal const val SOCKET_RETRY_START_TIME = 5000L
 
         private val ALPHABETS = charArrayOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#')
         private val ALPHABETS_KOREA = charArrayOf('ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ', *ALPHABETS)

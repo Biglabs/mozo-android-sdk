@@ -11,7 +11,6 @@ import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.utils.displayString
 import kotlinx.android.synthetic.main.fragment_payment_sent.*
 import java.math.BigDecimal
-import java.util.*
 
 class PaymentRequestSentFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -29,7 +28,11 @@ class PaymentRequestSentFragment : Fragment() {
         payment_request_amount.text = amount.displayString()
 
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this, Observer {
-            payment_request_rate.text = String.format(Locale.US, "(₩%s)", amount.multiply(it.rate).displayString())
+            payment_request_rate.text = MozoSDK.getInstance().profileViewModel
+                    .formatCurrencyDisplay(
+                            amount.multiply(it.rate),
+                            true
+                    )
         })
     }
 

@@ -21,10 +21,7 @@ import com.biglabs.mozo.sdk.utils.bitmap
 import com.biglabs.mozo.sdk.utils.color
 import com.biglabs.mozo.sdk.utils.logAsInfo
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
@@ -42,6 +39,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     override fun onOpen(serverHandshake: ServerHandshake?) {
         "open [status: ${serverHandshake?.httpStatus}, url: $uri]".logAsInfo(TAG)
+        stopRetryConnect()
     }
 
     override fun onMessage(s: String?) {
@@ -70,7 +68,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                             }
                             Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
-
+                                MozoSDK.getInstance().contactViewModel.fetchStore(MozoSDK.getInstance().context)
                             }
                         }
 
@@ -86,16 +84,16 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
         "close [code: $code, reason: $reason]".logAsInfo(TAG)
-        if (code == 1000) {
-            connect()
-        } else {
-            instance = null
+        if (code != -1) {
+            disconnect()
+            doRetryConnect()
         }
     }
 
     override fun onError(e: Exception?) {
         "error [message: ${e?.message}]".logAsInfo(TAG)
         disconnect()
+        doRetryConnect()
     }
 
     private fun showNotification(message: BroadcastDataContent) = GlobalScope.launch {
@@ -105,7 +103,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         val notification = MozoNotification.prepareNotification(context, message)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event!!)) {
-            createChannel(message.event).await()
+            createChannel(message.event).join()
         }
 
         val pendingIntent = PendingIntent.getActivity(
@@ -123,7 +121,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
-        launch(Dispatchers.Main) {
+        withContext(Dispatchers.Main) {
             NotificationManagerCompat
                     .from(context)
                     .notify(System.currentTimeMillis().toInt(), builder.build())
@@ -131,7 +129,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel(channel: String) = GlobalScope.async(Dispatchers.Main) {
+    private fun createChannel(channel: String) = GlobalScope.launch(Dispatchers.Main) {
         var channelName = channel.split("_")[0]
         channelName = channelName.substring(0, 1).toUpperCase() + channelName.substring(1)
 
@@ -150,10 +148,17 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         @Volatile
         private var instance: MozoSocketClient? = null
 
+        @Volatile
+        private var retryConnectJob: Job? = null
+
+        @Volatile
+        private var retryConnectTime = Constant.SOCKET_RETRY_START_TIME
+
         @Synchronized
-        fun connect(context: Context): MozoSocketClient {
+        fun connect(): MozoSocketClient {
             if (instance == null) {
-                val accessToken = AuthStateManager.getInstance(context).current.accessToken ?: ""
+                val accessToken = AuthStateManager.getInstance(MozoSDK.getInstance().context).current.accessToken
+                        ?: ""
                 val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
                 instance = MozoSocketClient(
                         URI("wss://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
@@ -176,6 +181,28 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             } finally {
                 instance = null
             }
+        }
+
+        private fun doRetryConnect() {
+            "start retry connect".logAsInfo(TAG)
+            retryConnectJob?.cancel()
+            retryConnectJob = GlobalScope.launch {
+                delay(retryConnectTime)
+
+                "retry connect time: $retryConnectTime".logAsInfo(TAG)
+                connect()
+                retryConnectTime *= 2
+                if (retryConnectTime > Constant.SOCKET_RETRY_START_TIME * Math.pow(2.0, 8.0)) {
+                    retryConnectTime = Constant.SOCKET_RETRY_START_TIME
+                }
+            }
+        }
+
+        private fun stopRetryConnect() {
+            retryConnectTime = Constant.SOCKET_RETRY_START_TIME
+            retryConnectJob?.cancel()
+            retryConnectJob = null
+            "stop retry connect".logAsInfo(TAG)
         }
     }
 }

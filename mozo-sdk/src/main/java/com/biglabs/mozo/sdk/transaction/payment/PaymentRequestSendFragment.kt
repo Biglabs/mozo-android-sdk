@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.fragment_payment_send.*
 import kotlinx.coroutines.*
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
-import java.util.*
 
 class PaymentRequestSendFragment : Fragment() {
 
@@ -88,7 +87,11 @@ class PaymentRequestSendFragment : Fragment() {
                 this,
                 Observer<ViewModels.BalanceAndRate?> {
                     it ?: return@Observer
-                    payment_request_rate.text = String.format(Locale.US, "(₩%s)", amountBigDecimal.multiply(it.rate).displayString())
+                    payment_request_rate.text = MozoSDK.getInstance().profileViewModel
+                            .formatCurrencyDisplay(
+                                    amountBigDecimal.multiply(it.rate),
+                                    true
+                            )
                 }
         )
     }
