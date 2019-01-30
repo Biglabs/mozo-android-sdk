@@ -73,7 +73,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         private var instance: MozoSDK? = null
 
         @Volatile
-        internal var serviceEnvironment = ENVIRONMENT_PRODUCTION
+        internal var serviceEnvironment = ENVIRONMENT_STAGING
 
         @Volatile
         internal var isRetailerApp = false
@@ -83,7 +83,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @JvmStatic
         @Synchronized
-        fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_PRODUCTION, isRetailerApp: Boolean = false) {
+        fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_STAGING, isRetailerApp: Boolean = false) {
             if (instance == null) {
                 checkNotNull(context)
 
