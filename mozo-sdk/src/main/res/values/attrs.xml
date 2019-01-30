@@ -32,7 +32,7 @@
         <attr name="lettersBarTextLineHeight" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="MozoEmptyView">
+    <declare-styleable name="MozoIconTextView">
         <attr name="drawableSize" format="dimension" />
     </declare-styleable>
 

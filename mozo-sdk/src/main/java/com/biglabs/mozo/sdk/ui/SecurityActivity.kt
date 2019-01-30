@@ -138,7 +138,7 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showPinVerifyUI() = GlobalScope.launch(Dispatchers.Main) {
         showPinInputUI()
-        initVerifyUI(true)
+        initVerifyUI(true).join()
     }
 
     private fun initRestoreUI(clearPin: Boolean = false) = GlobalScope.launch(Dispatchers.Main) {
@@ -195,7 +195,7 @@ internal class SecurityActivity : BaseActivity() {
         text_incorrect_pin.visible()
     }
 
-    private fun hidePinInputWrongUI() {
+    private fun hidePinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {
         input_pin_checker_status.isSelected = false
         if (text_incorrect_pin.visibility != View.GONE)
             text_incorrect_pin.gone()
@@ -252,10 +252,10 @@ internal class SecurityActivity : BaseActivity() {
                 KEY_ENTER_PIN -> {
                     mPIN = input_pin.text.toString()
                     val isCorrect = MozoWallet.getInstance().validatePin(mPIN).await()
-                    initRestoreUI(!isCorrect)
-                    if (isCorrect) showPinInputCorrectUI()
+                    initRestoreUI(!isCorrect).join()
+                    if (isCorrect) showPinInputCorrectUI().join()
                     else {
-                        showPinInputWrongUI()
+                        showPinInputWrongUI().join()
                         return@launch
                     }
                 }
@@ -263,10 +263,10 @@ internal class SecurityActivity : BaseActivity() {
                     if (mRequestCode == KEY_VERIFY_PIN || mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
                         mPIN = input_pin.text.toString()
                         val isCorrect = MozoWallet.getInstance().validatePin(mPIN).await()
-                        initVerifyUI(!isCorrect)
-                        if (isCorrect) showPinInputCorrectUI()
+                        initVerifyUI(!isCorrect).join()
+                        if (isCorrect) showPinInputCorrectUI().join()
                         else {
-                            showPinInputWrongUI()
+                            showPinInputWrongUI().join()
                             return@launch
                         }
                     }

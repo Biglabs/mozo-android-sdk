@@ -186,13 +186,13 @@
         app:layout_constraintStart_toStartOf="@id/text_detail_address_underline"
         app:layout_constraintTop_toBottomOf="@id/text_detail_address_underline" />
 
-    <View
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="@drawable/ic_mozo_offchain"
         app:layout_constraintBottom_toTopOf="@id/text_detail_amount_value"
         app:layout_constraintStart_toStartOf="@id/text_detail_amount_value"
-        app:layout_constraintTop_toBottomOf="@id/text_detail_amount_value" />
+        app:layout_constraintTop_toBottomOf="@id/text_detail_amount_value"
+        app:srcCompat="@drawable/ic_mozo_offchain" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_detail_amount_value"

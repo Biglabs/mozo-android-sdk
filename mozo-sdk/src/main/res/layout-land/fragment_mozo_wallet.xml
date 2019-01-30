@@ -57,16 +57,16 @@
                 app:layout_constraintBottom_toTopOf="@android:id/icon"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <View
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@android:id/icon"
                 android:layout_width="30dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="69dp"
-                android:background="@drawable/ic_mozo_offchain"
                 app:layout_constraintDimensionRatio="w,1:1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_mozo_offchain" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/wallet_fragment_balance_value"
