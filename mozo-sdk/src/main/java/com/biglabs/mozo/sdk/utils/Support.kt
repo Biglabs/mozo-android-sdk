@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.biglabs.mozo.sdk.MozoSDK
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
+import com.biglabs.mozo.sdk.common.model.ExchangeRate
 import com.biglabs.mozo.sdk.ui.ScannerQRActivity
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -78,5 +79,7 @@ class Support {
             MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_SOCKET_STAGING
             else -> Constant.DOMAIN_SOCKET_PRODUCTION
         }
+
+        internal fun getDefaultCurrency() = ExchangeRate(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, SharedPrefsUtils.getDefaultCurrencyRate())
     }
 }

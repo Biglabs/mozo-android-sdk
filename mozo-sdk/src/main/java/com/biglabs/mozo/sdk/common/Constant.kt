@@ -6,8 +6,9 @@ class Constant {
     companion object {
 
         internal const val DEFAULT_DECIMAL = 2
+        internal const val DEFAULT_CURRENCY = "USD"
         internal const val DEFAULT_CURRENCY_SYMBOL = "$"
-        internal const val DEFAULT_CURRENCY_RATE = 0.0000689063059272
+        internal const val DEFAULT_CURRENCY_RATE = 0.0000691440330774
 
         const val PAGING_START_INDEX = 0
         const val PAGING_SIZE = 15

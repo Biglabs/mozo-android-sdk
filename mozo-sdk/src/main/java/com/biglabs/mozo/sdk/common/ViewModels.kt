@@ -9,6 +9,8 @@ import com.biglabs.mozo.sdk.common.model.ExchangeRate
 import com.biglabs.mozo.sdk.common.model.Profile
 import com.biglabs.mozo.sdk.common.service.MozoDatabase
 import com.biglabs.mozo.sdk.common.service.MozoAPIsService
+import com.biglabs.mozo.sdk.utils.SharedPrefsUtils
+import com.biglabs.mozo.sdk.utils.Support
 import com.biglabs.mozo.sdk.utils.displayString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -60,9 +62,19 @@ internal object ViewModels {
         }
 
         fun fetchExchangeRate(context: Context) {
+            exchangeRateLiveData.value = Support.getDefaultCurrency()
+            updateBalanceAndRate()
+
             MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().language) { data, _ ->
-                data ?: return@getExchangeRate
-                exchangeRateLiveData.value = data
+                if (data != null) {
+                    exchangeRateLiveData.value = data
+                    if (data.currency == Constant.DEFAULT_CURRENCY) {
+                        SharedPrefsUtils.setDefaultCurrencyRate(data.rate)
+                    }
+                } else {
+                    exchangeRateLiveData.value = Support.getDefaultCurrency()
+                }
+
                 updateBalanceAndRate()
             }
         }

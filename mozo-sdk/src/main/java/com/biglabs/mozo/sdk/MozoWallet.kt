@@ -11,7 +11,7 @@ import com.biglabs.mozo.sdk.common.service.MozoAPIsService
 import com.biglabs.mozo.sdk.ui.SecurityActivity
 import com.biglabs.mozo.sdk.ui.dialog.MessageDialog
 import com.biglabs.mozo.sdk.utils.CryptoUtils
-import com.biglabs.mozo.sdk.utils.PreferenceUtils
+import com.biglabs.mozo.sdk.utils.SharedPrefsUtils
 import com.biglabs.mozo.sdk.utils.string
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -84,7 +84,7 @@ class MozoWallet private constructor() {
             /* Required input new PIN */
             return@async SecurityActivity.KEY_CREATE_PIN
         } else {
-            if (PreferenceUtils.getInstance(context).getFlag(PreferenceUtils.FLAG_SYNC_WALLET_INFO)) {
+            if (SharedPrefsUtils.isNeedSyncWallet()) {
                 syncWalletInfo(mProfile!!.walletInfo!!, context) {
 
                 }
@@ -144,10 +144,7 @@ class MozoWallet private constructor() {
             }
 
             val isSuccess = errorCode.isNullOrEmpty()
-            PreferenceUtils.getInstance(context).setFlag(
-                    PreferenceUtils.FLAG_SYNC_WALLET_INFO,
-                    !isSuccess
-            )
+            SharedPrefsUtils.setNeedSyncWallet(!isSuccess)
             callback?.invoke(isSuccess)
         }
     }
