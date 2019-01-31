@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 import com.biglabs.mozo.sdk.MozoSDK
+import com.biglabs.mozo.sdk.MozoWallet
 import com.biglabs.mozo.sdk.R
 import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.model.ExchangeRate
@@ -14,6 +15,7 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,7 +54,11 @@ class Support {
         fun parsePaymentRequest(content: String): Array<String> {
             // mozox:0xbc049e92d22a6e544d1032b243310ac167ac2f9a?amount=1028
             if (content.startsWith("mozox:")) {
-                return content.trimStart(*"mozox:".toCharArray()).split("?amount=").toTypedArray()
+                val r = content.trimStart(*"mozox:".toCharArray()).split("?amount=").toTypedArray()
+                r.lastOrNull()?.let {
+                    r[r.lastIndex] = BigDecimal(it).setScale(MozoWallet.getInstance().getDecimal(), RoundingMode.HALF_EVEN).toString()
+                }
+                return r
             }
             return emptyArray()
         }

@@ -1,6 +1,7 @@
 package com.biglabs.mozo.sdk
 
 import android.content.Context
+import com.biglabs.mozo.sdk.common.Constant
 import com.biglabs.mozo.sdk.common.ErrorCode
 import com.biglabs.mozo.sdk.common.MessageEvent
 import com.biglabs.mozo.sdk.common.model.Profile
@@ -61,6 +62,9 @@ class MozoWallet private constructor() {
             callback.invoke(it?.balanceNonDecimal() ?: BigDecimal(-1))
         }
     }
+
+    fun getDecimal() = MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.value?.decimal
+            ?: Constant.DEFAULT_DECIMAL
 
     fun openAddressBook() {
         AddressBookActivity.start(MozoSDK.getInstance().context)

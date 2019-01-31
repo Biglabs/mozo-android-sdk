@@ -61,8 +61,8 @@ dependencies {
     // Other
     api 'org.bitcoinj:bitcoinj-core:0.14.7'
     api 'org.cryptonode.jncryptor:jncryptor:1.2.0'
-    api 'org.greenrobot:eventbus:3.1.1'
     api 'org.web3j:core:3.5.0' //4.1.0
+    api 'org.greenrobot:eventbus:3.1.1'
     api 'com.journeyapps:zxing-android-embedded:3.6.0'
     api 'net.openid:appauth:0.7.1'
 
