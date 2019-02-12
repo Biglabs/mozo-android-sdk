@@ -1,7 +1,7 @@
 # Mozo Android SDK
 [ ![Download](https://api.bintray.com/packages/mozocoin/MozoSDK/mozo-sdk/images/download.svg) ](https://bintray.com/mozocoin/MozoSDK/mozo-sdk/_latestVersion)
 
-MozoSDK for Android by Big Labs Pte. Ltd.
+MozoSDK for Android by MozoX Pte. Ltd.
 For more information please see [the website][1].
 
 ## Adding to project
@@ -22,12 +22,12 @@ allprojects {
 * Add this library as a dependency in your `app/build.gradle` file.
 ```
 dependencies {
-    implementation 'com.biglabs:mozo-sdk:0.0.2'
+    implementation 'com.biglabs:mozo-sdk:0.0.6-alpha3'
 }
 ```
 
 ## Setting up
-* First, in your module Gradle file (usually the `app/build.gradle`), add the `packagingOptions` and `compileOptions` to remove dupllicate files and make sure your project compiling by Java 8:
+* First, in your module Gradle file (usually the `app/build.gradle`), add the `packagingOptions` and `compileOptions` to remove duplicate files and make sure your project compiling by Java 8:
 ```
 apply plugin: 'com.android.application'
 android {
