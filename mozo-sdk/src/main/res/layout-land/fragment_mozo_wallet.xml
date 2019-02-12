@@ -182,7 +182,7 @@
         app:layout_constraintWidth_max="165dp"
         app:layout_goneMarginTop="20dp" />
 
-    <com.biglabs.mozo.sdk.ui.view.MozoEmptyView
+    <io.mozocoin.sdk.ui.view.MozoEmptyView
         android:id="@+id/wallet_fragment_history_empty_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

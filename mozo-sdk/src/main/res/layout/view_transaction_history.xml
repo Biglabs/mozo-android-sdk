@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+    <io.mozocoin.sdk.ui.widget.MozoToolbar
         android:id="@+id/history_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
             android:textColor="@color/mozo_check_btn_text_color" />
     </RadioGroup>
 
-    <com.biglabs.mozo.sdk.ui.view.MozoEmptyView
+    <io.mozocoin.sdk.ui.view.MozoEmptyView
         android:id="@+id/list_history_empty_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

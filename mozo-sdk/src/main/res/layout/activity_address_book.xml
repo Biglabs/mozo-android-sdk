@@ -32,7 +32,7 @@
         app:layout_constraintVertical_bias="0.4"
         tools:visibility="visible" />
 
-    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+    <io.mozocoin.sdk.ui.widget.MozoToolbar
         android:id="@+id/address_book_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/address_book_tabs">
 
-        <com.biglabs.mozo.sdk.ui.view.MozoRecyclerView
+        <io.mozocoin.sdk.ui.view.MozoRecyclerView
             android:id="@+id/list_contacts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

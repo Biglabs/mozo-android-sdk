@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+    <io.mozocoin.sdk.ui.widget.MozoToolbar
         android:id="@+id/transfer_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -399,7 +399,7 @@
             app:layout_constraintTop_toBottomOf="@id/output_amount_label"
             tools:visibility="visible">
 
-            <com.biglabs.mozo.sdk.ui.view.MozoIconTextView
+            <io.mozocoin.sdk.ui.view.MozoIconTextView
                 android:id="@+id/text_preview_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

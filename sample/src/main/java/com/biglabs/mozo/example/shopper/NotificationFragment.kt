@@ -10,9 +10,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
-import com.biglabs.mozo.sdk.MozoNotification
-import com.biglabs.mozo.sdk.common.OnNotificationReceiveListener
-import com.biglabs.mozo.sdk.common.model.Notification
+import io.mozocoin.sdk.MozoNotification
+import io.mozocoin.sdk.common.OnNotificationReceiveListener
+import io.mozocoin.sdk.common.model.Notification
 import kotlinx.android.synthetic.main.fragment_notification.*
 import java.text.SimpleDateFormat
 import java.util.*

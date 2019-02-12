@@ -1,7 +1,7 @@
 package com.biglabs.mozo.example.shopper
 
 import android.app.Application
-import com.biglabs.mozo.sdk.MozoSDK
+import io.mozocoin.sdk.MozoSDK
 
 class MyApplication : Application() {
 

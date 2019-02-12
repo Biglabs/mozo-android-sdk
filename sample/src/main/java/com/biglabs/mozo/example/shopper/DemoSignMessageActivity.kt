@@ -2,7 +2,7 @@ package com.biglabs.mozo.example.shopper
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.biglabs.mozo.sdk.MozoTx
+import io.mozocoin.sdk.MozoTx
 import kotlinx.android.synthetic.main.activity_demo_sign_message.*
 
 class DemoSignMessageActivity : AppCompatActivity() {

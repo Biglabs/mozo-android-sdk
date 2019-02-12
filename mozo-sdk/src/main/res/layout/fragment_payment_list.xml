@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <com.biglabs.mozo.sdk.ui.view.MozoEmptyView
+    <io.mozocoin.sdk.ui.view.MozoEmptyView
         android:id="@+id/payment_request_empty_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -4,9 +4,9 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-def groupProjectId = 'com.biglabs'
+def groupProjectId = 'io.mozocoin'
 def artifactProjectId = 'mozo-sdk'
-def versionDecs = "MozoSDK v$mozo_sdk_version_name release: " + new Date()
+def versionDecs = "MozoSDK v$mozo_sdk_version_name released: " + new Date()
 logger.quiet(versionDecs)
 
 publishing {
@@ -46,10 +46,10 @@ bintray {
         userOrg = 'mozocoin'
         repo = 'MozoSDK'
         name = 'mozo-sdk'
-        desc = "Mozo SDK for Android"
+        desc = "MozoSDK for Android"
         publicDownloadNumbers = true
         licenses = ['Apache-2.0']
-        labels = ['MozoSDK', 'mozocoin.io']
+        labels = ['MozoSDK', 'mozocoin.io', 'MozoX']
         vcsUrl = 'https://github.com/Biglabs/mozo-android-sdk.git'
         githubRepo = 'Biglabs/mozo-android-sdk' //Optional Github repository
         githubReleaseNotesFile = 'README.md' //Optional Github readme file

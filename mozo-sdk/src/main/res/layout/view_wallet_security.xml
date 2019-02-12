@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true">
 
-    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+    <io.mozocoin.sdk.ui.widget.MozoToolbar
         android:id="@+id/pin_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
             android:text="@string/mozo_button_retry" />
     </LinearLayout>
 
-    <com.biglabs.mozo.sdk.ui.widget.PinEntryEditText
+    <io.mozocoin.sdk.ui.widget.PinEntryEditText
         android:id="@+id/input_pin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
         tools:text="000000">
 
         <requestFocus />
-    </com.biglabs.mozo.sdk.ui.widget.PinEntryEditText>
+    </io.mozocoin.sdk.ui.widget.PinEntryEditText>
 
     <View
         android:id="@+id/input_pin_checker_status"

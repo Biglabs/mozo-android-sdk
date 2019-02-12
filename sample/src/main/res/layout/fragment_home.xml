@@ -14,16 +14,16 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <com.biglabs.mozo.sdk.ui.widget.TransactionHistoryButton
+        <io.mozocoin.sdk.ui.widget.TransactionHistoryButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <com.biglabs.mozo.sdk.ui.widget.SendButton
+        <io.mozocoin.sdk.ui.widget.SendButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp" />
 
-        <com.biglabs.mozo.sdk.ui.widget.LoginButton
+        <io.mozocoin.sdk.ui.widget.LoginButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -36,7 +36,7 @@
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
+        <io.mozocoin.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:viewMode="onlyBalance" />
@@ -50,7 +50,7 @@
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
+        <io.mozocoin.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:showQRCode="false"
@@ -65,7 +65,7 @@
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
+        <io.mozocoin.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -78,7 +78,7 @@
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
+        <io.mozocoin.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:viewMode="onlyAddress" />
@@ -92,7 +92,7 @@
             android:textColor="#141a22"
             android:textStyle="bold" />
 
-        <com.biglabs.mozo.sdk.ui.view.MozoWalletView
+        <io.mozocoin.sdk.ui.view.MozoWalletView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:showQRCode="false" />

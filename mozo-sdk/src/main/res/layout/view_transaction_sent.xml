@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true">
 
-    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+    <io.mozocoin.sdk.ui.widget.MozoToolbar
         android:id="@+id/transfer_completed_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

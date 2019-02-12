@@ -2,7 +2,7 @@ package com.biglabs.mozo.sdk;
 
 import android.util.Log;
 
-import com.biglabs.mozo.sdk.utils.CryptoUtils;
+import io.mozocoin.sdk.utils.CryptoUtils;
 
 import org.junit.Test;
 import org.web3j.crypto.MnemonicUtils;

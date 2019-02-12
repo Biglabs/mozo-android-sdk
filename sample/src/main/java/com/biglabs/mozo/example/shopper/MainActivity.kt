@@ -7,11 +7,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.biglabs.mozo.sdk.MozoAuth
-import com.biglabs.mozo.sdk.MozoNotification
-import com.biglabs.mozo.sdk.MozoWallet
-import com.biglabs.mozo.sdk.authentication.AuthenticationListener
-import com.biglabs.mozo.sdk.ui.MozoWalletFragment
+import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoNotification
+import io.mozocoin.sdk.MozoWallet
+import io.mozocoin.sdk.authentication.AuthenticationListener
+import io.mozocoin.sdk.ui.MozoWalletFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
