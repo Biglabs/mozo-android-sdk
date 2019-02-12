@@ -5,22 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:background="@drawable/mozo_bg_component"
-    tools:parentTag="android.support.constraint.ConstraintLayout">
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <View
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/ic_mozo_offchain"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <android.support.v7.widget.AppCompatTextView
+    <io.mozocoin.sdk.ui.view.MozoIconTextView
         android:id="@+id/mozo_wallet_balance_value"
         android:layout_width="0dp"
         android:layout_height="24dp"
-        android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="20dp"
+        android:drawableStart="@drawable/ic_mozo_offchain"
+        android:drawablePadding="8dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:gravity="start|center_vertical"
@@ -31,6 +25,7 @@
         android:textSize="20sp"
         app:autoSizeMinTextSize="14sp"
         app:autoSizeTextType="uniform"
+        app:drawableSize="24dp"
         app:layout_constraintEnd_toStartOf="@id/mozo_wallet_currency_balance"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

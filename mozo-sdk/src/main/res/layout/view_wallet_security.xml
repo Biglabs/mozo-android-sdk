@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true">
 
-    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+    <io.mozocoin.sdk.ui.widget.MozoToolbar
         android:id="@+id/pin_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingTop="24dp"
         app:buttonClose="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:title="@string/mozo_pin_title" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/mozo_pin_title"
+        tools:layout_height="84dp" />
 
     <TextView
         android:id="@+id/sub_title_pin"
@@ -114,10 +118,11 @@
             android:text="@string/mozo_button_retry" />
     </LinearLayout>
 
-    <com.biglabs.mozo.sdk.ui.widget.PinEntryEditText
+    <io.mozocoin.sdk.ui.widget.PinEntryEditText
         android:id="@+id/input_pin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:focusable="true"
         android:imeOptions="actionNext"
         android:inputType="numberPassword"
         android:maxLength="@integer/security_pin_length"
@@ -126,17 +131,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.42"
+        app:layout_constraintVertical_bias="0.45"
         app:layout_constraintWidth_percent="0.6"
         app:pinAnimationType="fromBottom"
-        app:pinLineColors="@drawable/mozo_dr_pin_input"
+        app:pinLineColors="@color/mozo_color_pin_input"
         app:pinLineStroke="1dp"
         app:pinLineStrokeSelected="2dp"
         app:pinTextBottomPadding="10dp"
         tools:text="000000">
 
         <requestFocus />
-    </com.biglabs.mozo.sdk.ui.widget.PinEntryEditText>
+    </io.mozocoin.sdk.ui.widget.PinEntryEditText>
 
     <View
         android:id="@+id/input_pin_checker_status"
@@ -171,4 +176,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/input_loading_indicator" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mozo_format_date">yyyy년 M월 d일</string>
+    <string name="mozo_format_date_time">HH:mm yyyy년 M월 d일</string>
+
+    <string name="mozo_address_book_title">주소록</string>
+    <string name="mozo_address_book_pick_title">주소 선택</string>
+    <string name="mozo_address_book_pick_btn">주소록에서 선택</string>
+    <string name="mozo_address_book_no_result">결과를 찾을 수 없습니다</string>
+    <string name="mozo_address_book_search_hint">주소 검색</string>
+    <string name="mozo_address_book_tab_user">사용자 주소</string>
+    <string name="mozo_address_book_tab_store">상점 주소</string>
+
+    <string name="mozo_address_add_label">월렛 주소</string>
+    <string name="mozo_address_add_input_name_label">이름</string>
+    <string name="mozo_address_add_input_name_hint">담당자 이름 입력</string>
+    <string name="mozo_address_add_msg_saved">저장된 주소</string>
+    <string name="mozo_address_add_msg_error">이 주소는 이미 주소록에 있습니다</string>
+
+    <string name="mozo_dialog_qr_code">MozoX 월렛 주소</string>
+    <string name="mozo_dialog_loading_msg">인터페이스 만들기</string>
+    <string name="mozo_dialog_copied_msg">복사 됨!</string>
+
+    <string name="mozo_dialog_error_network_msg">인터넷에 연결되어 있지 않습니다!</string>
+    <string name="mozo_dialog_error_scan_invalid_msg">스캔 한 값이 유효하지 않습니다.</string>
+    <string name="mozo_dialog_error_msg">오류가 발생했습니다.</string>
+    <string name="mozo_dialog_error_not_enough_msg">금액을 이송하도록 밸런스가 부족되어있습니다.</string>
+
+    <string name="mozo_button_deposit">예금</string>
+    <string name="mozo_button_login">MozoX에 로그인</string>
+    <string name="mozo_button_logout">MozoX 로그 아웃</string>
+    <string name="mozo_button_transfer">MozoX 코인 보내기</string>
+    <string name="mozo_button_transaction_history">거래 내역</string>
+    <string name="mozo_button_withdraw">철수</string>
+    <string name="mozo_button_request_list">MozoX 코인 요청</string>
+    <string name="mozo_button_confirm">확인</string>
+    <string name="mozo_button_restore">복구</string>
+
+    <string name="mozo_button_back">돌아가기</string>
+    <string name="mozo_button_cancel">취소</string>
+    <string name="mozo_button_copy">복사</string>
+    <string name="mozo_button_continue">계속</string>
+    <string name="mozo_button_close">닫기</string>
+    <string name="mozo_button_clear">지우기</string>
+    <string name="mozo_button_scan_qr_code">QR 코드 스캔</string>
+    <string name="mozo_button_scan">스캔</string>
+    <string name="mozo_button_show_qr_code">내 QR 코드 확대</string>
+    <string name="mozo_button_send">보내기</string>
+    <string name="mozo_button_save">저장</string>
+    <string name="mozo_button_save_address">월렛 주소 저장</string>
+    <string name="mozo_button_retry">재시도</string>
+    <string name="mozo_button_refresh">새로 고침</string>
+    <string name="mozo_button_try_again">다시 시도하십시오</string>
+
+    <string name="mozo_backup_title">월렛 백업</string>
+    <string name="mozo_backup_sub_title">복구 데이터 프레이즈 저장</string>
+    <string name="mozo_backup_content">이 프레이즈를 적어 안전한 장소에 보관하십시오.</string>
+    <string name="mozo_backup_warning">* 복구 데이터 문구를 분실하면 월렛을 복구 할 수 없습니다.</string>
+    <string name="mozo_backup_confirm_msg">복구 문구를 안전하게 저장했습니다.</string>
+
+    <string name="mozo_pin_title">보안 PIN 생성</string>
+    <string name="mozo_pin_title_restore">월렛 복구</string>
+    <string name="mozo_pin_title_verify">PIN 코드 확인</string>
+    <string name="mozo_pin_sub_title">PIN 코드 입력</string>
+    <string name="mozo_pin_sub_title_restore">월렛을 복구할 PIN 코드를\n입력하십시오</string>
+    <string name="mozo_pin_sub_title_send">MozoX를 보내도록 보안 PIN을\n입력하십시오</string>
+    <string name="mozo_pin_content">PIN은 최소 6 자리 숫자 여야 합니다</string>
+    <string name="mozo_pin_confirm_sub_title">보안 PIN 확인</string>
+    <string name="mozo_pin_confirm_content">PIN 코드를 다시 입력하십시오</string>
+    <string name="mozo_pin_msg_create_success">보안 PIN을 성공적으로  생성합니다</string>
+    <string name="mozo_pin_msg_enter_correct">정확한 PIN 코드입니다</string>
+    <string name="mozo_pin_msg_enter_incorrect">PIN 코드가 잘못되었습니다</string>
+    <string name="mozo_pin_msg_error">월렛 생성에 실패했습니다</string>
+
+    <string name="mozo_notify_title_come_in">고객이 상점에 방문하였습니다.</string>
+    <string name="mozo_notify_title_just_left">고객이 떠났습니다</string>
+    <string name="mozo_notify_title_received">MozoX %s 를 받았습니다.</string>
+    <string name="mozo_notify_title_sent">MozoX %s 를 보냈습니다.</string>
+    <string name="mozo_notify_content_from">%s 부터</string>
+    <string name="mozo_notify_content_to">%s 까지</string>
+
+    <string name="mozo_payment_request_title">MozoX 요청</string>
+    <string name="mozo_payment_request_amount">수신 금액</string>
+    <string name="mozo_payment_request_tab_list">요청한 리스트</string>
+    <string name="mozo_payment_request_tab_create">요청 만들기</string>
+    <string name="mozo_payment_request_explain">MozoX를 수신 요청하는 방식으로 다른 사용자에게 MozoX 를 자신의 월렛으로 보내도록 요청할 수 있습니다.</string>
+    <string name="mozo_payment_request_btn_send">요청 보내기</string>
+    <string name="mozo_payment_request_btn_scan">MozoX를 보내도록 스캔하십시오</string>
+    <string name="mozo_payment_request_text_scan_to_transfer">보낼 스캔:</string>
+    <string name="mozo_payment_request_text_send_to">요청 보내기</string>
+    <string name="mozo_payment_request_text_send_success">요청을 성공적으로 보냈습니다</string>
+    <string name="mozo_payment_request_text_sent">에게 MozoX를 보내달라고 요청을 보냈습니다:</string>
+    <string name="mozo_payment_request_text_empty">요청한 리스트가 비어 있습니다</string>
+    <string name="mozo_payment_request_item_label_from">부터:</string>
+    <string name="mozo_payment_request_item_label_amount">요청하기:</string>
+    <string name="mozo_payment_request_item_amount">%s MozoX</string>
+
+    <string name="mozo_transfer_title">MozoX 보내기</string>
+    <string name="mozo_transfer_confirmation">확인</string>
+    <string name="mozo_transfer_from">MozoX Offchain 월렛에서</string>
+    <string name="mozo_transfer_receiver_address">수신자 주소</string>
+    <string name="mozo_transfer_receiver_address_hint">수신자의 월렛 주소를 입력하십시오</string>
+    <string name="mozo_transfer_receiver_address_error">오류 : 수신자 주소가 유효하지 않습니다.</string>
+    <string name="mozo_transfer_amount">금액</string>
+    <string name="mozo_transfer_amount_hint">십진수로 값을 입력하십시오</string>
+    <string name="mozo_transfer_amount_error_not_enough">오류 : 잔액만으로는 충분하지 않습니다.</string>
+    <string name="mozo_transfer_amount_error_too_low">오류 : 금액이 너무 적습니다. 유효한 금액을 입력하십시오.</string>
+    <string name="mozo_transfer_amount_error">오류 :십진수로 값을 입력하십시오.</string>
+    <string name="mozo_transfer_spendable">가용 잔액: %s MozoX</string>
+    <string name="mozo_transfer_action_complete">액션 완료</string>
+    <string name="mozo_transfer_send_complete">보내기 완료</string>
+    <string name="mozo_transfer_send_complete_msg">방금 보낸 내용:</string>
+
+    <string name="mozo_transaction_detail_title">거래 세부 정보</string>
+    <string name="mozo_transaction_detail_wallet_address">월렛 주소</string>
+    <string name="mozo_transaction_view_button">거래 세부 정보를 보기</string>
+    <string name="mozo_transaction_history_title">거래 내역</string>
+    <string name="mozo_transaction_history_offchain_text">MozoX Offchain 월렛</string>
+    <string name="mozo_transaction_history_empty">거래 내역 리스트가 비어 있습니다</string>
+
+    <string name="mozo_view_balance_title">MozoX Offchain 밸런스</string>
+    <string name="mozo_view_address_title">귀하의 MozoX Offchain 월렛 주소</string>
+    <string name="mozo_view_text_hint">…</string>
+    <string name="mozo_view_text_to">까지</string>
+    <string name="mozo_view_text_send_to">까지:</string>
+    <string name="mozo_view_text_from">에서</string>
+    <string name="mozo_view_text_login_require_prefix">이 기능을 사용하려면</string>
+    <string name="mozo_view_text_login_require_btn"><u>로그인</u></string>
+    <string name="mozo_view_text_login_require_suffix">해야합니다</string>
+    <string name="mozo_view_text_tx_all">모두</string>
+    <string name="mozo_view_text_tx_received">수신됨</string>
+    <string name="mozo_view_text_tx_sent">보냈음</string>
+    <string name="mozo_view_text_tx_pending">처리중</string>
+    <string name="mozo_view_text_tx_failed">실패</string>
+    <string name="mozo_view_text_tx_success">성공</string>
+    <string name="mozo_view_text_view_all">전체보기</string>
+    <string name="mozo_view_text_total_mozo">총 MozoX 수</string>
+    <string name="mozo_view_text_just_now">지금</string>
+</resources>

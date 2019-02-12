@@ -20,12 +20,22 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+#Retrofit
 -keepattributes Signature, InternalClasses, Exceptions
--keep class com.estimote.proximity_sdk.internals.proximity.cloud.model.**
--dontwarn okio.**
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn javax.annotation.**
+-dontwarn kotlin.Unit
+-dontwarn retrofit2.-KotlinExtensions
 -dontwarn retrofit2.Platform$Java8
+-dontwarn okio.**
+
+#Kotlin
 -dontwarn kotlin.**
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
@@ -41,4 +51,4 @@
 }
 
 #Mozo
--keep class com.biglabs.mozo.sdk.common.Models** { *; }
+-keep class io.mozocoin.sdk.common.model.** { *; }

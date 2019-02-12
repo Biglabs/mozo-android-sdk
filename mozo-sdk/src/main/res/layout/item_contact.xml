@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
@@ -14,11 +14,13 @@
         android:id="@+id/item_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false"
+        android:maxLines="3"
         android:textColor="@color/mozo_color_text_main"
         android:textSize="@dimen/mozo_text_size"
-        app:layout_constraintBottom_toTopOf="@id/item_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,16 +28,39 @@
         tools:text="Vu Nguyen" />
 
     <TextView
-        android:id="@+id/item_content"
+        android:id="@+id/item_physical_address"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:drawableStart="@drawable/ic_content_pin"
+        android:drawablePadding="6dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="2"
         android:textColor="@color/mozo_color_section_text"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="12sp"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_title"
-        tools:ignore="SmallSp"
+        tools:text="04564 253, Jangchungdan-ro, Jung-gu, Seoul, Korea." />
+
+    <TextView
+        android:id="@+id/item_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="15dp"
+        android:ellipsize="middle"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:textColor="#4a4a4a"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_physical_address"
+        app:layout_goneMarginTop="4dp"
         tools:text="0x327b993ce7201a6e8b1df02256910c9ea6bc4865" />
 
     <View
@@ -45,4 +70,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

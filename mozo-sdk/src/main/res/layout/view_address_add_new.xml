@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <com.biglabs.mozo.sdk.ui.widget.MozoToolbar
+    <io.mozocoin.sdk.ui.widget.MozoToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/mozo_address_add_title" />
+        app:title="@string/mozo_button_save_address" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
         app:layout_constraintBottom_toTopOf="@id/text_contact_address"
         app:layout_constraintStart_toStartOf="@id/input_contact_name" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_contact_address"
         android:layout_width="0dp"
         android:layout_height="45dp"
@@ -87,7 +87,7 @@
         app:layout_constraintStart_toStartOf="@id/input_contact_name"
         app:layout_constraintTop_toBottomOf="@id/text_contact_address" />
 
-    <android.support.v4.widget.ContentLoadingProgressBar
+    <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/loading_container"
         style="?android:attr/progressBarStyle"
         android:layout_width="32dp"
@@ -141,6 +141,7 @@
 
     <Button
         android:id="@+id/button_save"
+        style="@style/MozoButtonStyle.Floating"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/mozo_dr_btn_no_radius"
@@ -149,4 +150,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
