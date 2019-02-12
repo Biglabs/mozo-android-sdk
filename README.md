@@ -22,7 +22,7 @@ allprojects {
 * Add this library as a dependency in your `app/build.gradle` file.
 ```
 dependencies {
-    implementation 'com.biglabs:mozo-sdk:0.0.6-alpha3'
+    implementation 'io.mozocoin:mozo-sdk:0.0.7'
 }
 ```
 
