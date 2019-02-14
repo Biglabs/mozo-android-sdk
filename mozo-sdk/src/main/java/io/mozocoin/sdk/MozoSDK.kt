@@ -44,11 +44,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         connectivityManager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network?) {
                 if (MozoAuth.getInstance().isSignUpCompleted()) {
-                    profileViewModel.fetchData(context)
+                    profileViewModel.fetchData(context, callback = {
+                        MozoSocketClient.connect()
+                    })
                     contactViewModel.fetchData(context)
                 }
-
-                MozoSocketClient.connect()
             }
 
             override fun onLost(network: Network?) {

@@ -86,9 +86,9 @@ class MozoAuth private constructor() {
         if (auth.isSignedIn) {
             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
                 mAuthListener?.onChanged(true)
+                MozoSocketClient.connect()
             }
             MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
-            MozoSocketClient.connect()
         } else {
             MozoSDK.getInstance().profileViewModel.clear()
             MozoSocketClient.disconnect()

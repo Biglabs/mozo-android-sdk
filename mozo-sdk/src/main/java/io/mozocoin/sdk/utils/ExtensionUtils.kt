@@ -96,22 +96,6 @@ internal fun Resources.dp2Px(value: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, displayMetrics)
 }
 
-internal fun String?.logAsError(prefix: String? = null) {
-    if (BuildConfig.DEBUG || MozoSDK.isEnableDebugLogging) {
-        Log.e("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
-    }
-}
-
-internal fun String?.logAsInfo(prefix: String? = null) {
-    if (BuildConfig.DEBUG || MozoSDK.isEnableDebugLogging) {
-        Log.i("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
-    }
-}
-
-fun String.censor(paddingStart: Int, paddingEnd: Int, mask: Char = '*'): String = toCharArray().mapIndexed { i, c ->
-    if (i >= paddingStart && i < length - paddingEnd && !c.isWhitespace()) mask else c
-}.joinToString(separator = "")
-
 /**
  * Extension method to show a keyboard for View.
  */

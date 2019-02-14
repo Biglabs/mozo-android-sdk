@@ -2,7 +2,6 @@ package io.mozocoin.sdk
 
 import android.content.Context
 import android.content.Intent
-import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.OnNotificationReceiveListener
 import io.mozocoin.sdk.common.model.BroadcastDataContent
