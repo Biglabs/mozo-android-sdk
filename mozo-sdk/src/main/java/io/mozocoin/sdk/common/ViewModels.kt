@@ -83,6 +83,8 @@ internal object ViewModels {
 
         fun getBalance() = balanceInfoLiveData.value
 
+        fun getBalanceInCurrencyDisplay() = balanceAndRateLiveData.value?.balanceInCurrencyDisplay
+
         private fun updateBalanceAndRate() {
             val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal()
                     ?: BigDecimal.ZERO
