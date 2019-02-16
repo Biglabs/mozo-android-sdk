@@ -74,6 +74,10 @@ class MozoAuth private constructor() {
 
     fun getAccessToken() = authStateManager.current.accessToken
 
+    fun getUserInfo(callback: (userInfo: UserInfo?) -> Unit) {
+        callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
+    }
+    
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
         EventBus.getDefault().unregister(this@MozoAuth)
@@ -102,10 +106,18 @@ class MozoAuth private constructor() {
             data ?: return@fetchProfile
 
             GlobalScope.launch {
+                val userInfo = UserInfo(
+                        userId = data.userId ?: "",
+                        avatarUrl = data.avatarUrl,
+                        fullName = data.fullName,
+                        phoneNumber = data.phoneNumber,
+                        birthday = data.birthday,
+                        email = data.email,
+                        gender = data.gender
+                )
                 /* save User info first */
-                mozoDB.userInfo().save(UserInfo(
-                        userId = data.userId
-                ))
+                mozoDB.userInfo().save(userInfo)
+                MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
             }
 
             if (data.walletInfo?.offchainAddress.isNullOrEmpty() || data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {

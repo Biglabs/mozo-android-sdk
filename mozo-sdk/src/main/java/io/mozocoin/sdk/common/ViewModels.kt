@@ -3,10 +3,7 @@ package io.mozocoin.sdk.common
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.mozocoin.sdk.common.model.BalanceInfo
-import io.mozocoin.sdk.common.model.Contact
-import io.mozocoin.sdk.common.model.ExchangeRate
-import io.mozocoin.sdk.common.model.Profile
+import io.mozocoin.sdk.common.model.*
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.utils.SharedPrefsUtils
@@ -31,6 +28,7 @@ internal object ViewModels {
 
     class ProfileViewModel : ViewModel() {
 
+        var userInfoLiveData = MutableLiveData<UserInfo?>()
         var profileLiveData = MutableLiveData<Profile?>()
         var balanceInfoLiveData = MutableLiveData<BalanceInfo?>()
         var exchangeRateLiveData = MutableLiveData<ExchangeRate?>()
@@ -42,7 +40,10 @@ internal object ViewModels {
                 val profile = if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
                 else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
 
+                val userInfo = MozoDatabase.getInstance(context).userInfo().get()
+
                 withContext(Dispatchers.Main) {
+                    userInfoLiveData.value = userInfo
                     profileLiveData.value = profile
                     callback?.invoke(profile)
                     fetchBalance(context)
@@ -111,6 +112,10 @@ internal object ViewModels {
         fun updateProfile(context: Context, p: Profile) = GlobalScope.launch(Dispatchers.Main) {
             profileLiveData.value = p
             fetchBalance(context)
+        }
+
+        fun updateUserInfo(u: UserInfo) = GlobalScope.launch(Dispatchers.Main) {
+            userInfoLiveData.value = u
         }
 
         fun hasWallet() = profileLiveData.value?.walletInfo != null
