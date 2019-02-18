@@ -6,14 +6,16 @@ import io.mozocoin.sdk.authentication.AuthenticationListener
 import io.mozocoin.sdk.authentication.MozoAuthActivity
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.UserInfo
-import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoSocketClient
+import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.UserCancelException
-import io.mozocoin.sdk.utils.logAsError
-import kotlinx.coroutines.*
-import net.openid.appauth.AuthorizationService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
@@ -24,8 +26,6 @@ class MozoAuth private constructor() {
     private val walletService: MozoWallet by lazy { MozoWallet.getInstance() }
 
     private val authStateManager: AuthStateManager by lazy { AuthStateManager.getInstance(MozoSDK.getInstance().context) }
-    private val mAuthService: AuthorizationService by lazy { AuthorizationService(MozoSDK.getInstance().context) }
-
     private var mAuthListener: AuthenticationListener? = null
 
     init {
@@ -77,7 +77,23 @@ class MozoAuth private constructor() {
     fun getUserInfo(callback: (userInfo: UserInfo?) -> Unit) {
         callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
     }
-    
+
+    fun checkSession(context: Context, callback: (isExpired: Boolean) -> Unit) {
+        val tokenService = MozoTokenService.newInstance()
+        tokenService.checkSession(context, {
+
+            if (it) {
+                /* Token has expired, try to request the new token */
+                tokenService.refreshToken { token ->
+                    callback.invoke(token.isNullOrEmpty())
+                }
+            } else /* Token is working */
+                callback.invoke(false)
+        }, {
+            checkSession(context, callback)
+        })
+    }
+
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
         EventBus.getDefault().unregister(this@MozoAuth)
@@ -148,26 +164,6 @@ class MozoAuth private constructor() {
                     }
                 }
             }
-
-        }
-    }
-
-    private fun doRefreshToken() {
-        try {
-            mAuthService.performTokenRequest(
-                    authStateManager.current.createTokenRefreshRequest(),
-                    authStateManager.current.clientAuthentication
-            ) { response, ex ->
-                authStateManager.updateAfterTokenResponse(response, ex)
-                response?.run {
-                    "Refresh token successful: $accessToken".logAsError()
-                }
-                ex?.run {
-                    "Refresh token failed: $message".logAsError()
-                }
-            }
-        } catch (ex: Exception) {
-            "Fail to refresh token: ${ex.message}".logAsError("MozoAuth")
         }
     }
 
