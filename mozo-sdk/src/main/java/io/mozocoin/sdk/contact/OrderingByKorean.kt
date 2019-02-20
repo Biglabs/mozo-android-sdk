@@ -10,7 +10,7 @@ object OrderingByKorean {
     private val comparator: Comparator<String>
         get() = Comparator { left, right -> OrderingByKorean.compare(left, right) }
 
-    fun compare(l: String, r: String): Int {
+    private fun compare(l: String, r: String): Int {
         val left = l.toUpperCase().replace(" ", "")
         val right = r.toUpperCase().replace(" ", "")
 
