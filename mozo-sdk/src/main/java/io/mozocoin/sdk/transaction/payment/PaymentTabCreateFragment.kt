@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import io.mozocoin.sdk.MozoSDK
+import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.utils.DecimalDigitsInputFilter
@@ -24,7 +25,6 @@ import java.util.*
 class PaymentTabCreateFragment : Fragment() {
 
     private var mListener: PaymentRequestInteractionListener? = null
-    private var currentRate = BigDecimal.ZERO
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -63,8 +63,7 @@ class PaymentTabCreateFragment : Fragment() {
                 }
                 GlobalScope.launch(Dispatchers.Main) {
                     val amount = BigDecimal(this@run)
-                    output_amount_rate.text = MozoSDK.getInstance().profileViewModel
-                            .formatCurrencyDisplay(amount.multiply(currentRate))
+                    output_amount_rate.text = MozoWallet.getInstance().amountInCurrency(amount)
                 }
                 updateSubmitButton()
             }
@@ -77,7 +76,6 @@ class PaymentTabCreateFragment : Fragment() {
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
         it?.run {
-            currentRate = rate
             output_amount.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, decimal))
         }
     }

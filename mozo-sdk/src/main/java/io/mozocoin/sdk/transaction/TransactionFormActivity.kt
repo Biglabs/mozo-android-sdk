@@ -13,8 +13,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.set
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.google.zxing.integration.android.IntentIntegrator
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoTx
+import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.Contact
@@ -25,7 +27,6 @@ import io.mozocoin.sdk.contact.AddressAddActivity
 import io.mozocoin.sdk.contact.AddressBookActivity
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.SecurityActivity
-import com.google.zxing.integration.android.IntentIntegrator
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.view_transaction_form.*
 import kotlinx.android.synthetic.main.view_transaction_sent.*
@@ -160,7 +161,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
                 GlobalScope.launch(Dispatchers.Main) {
                     val amount = BigDecimal(this@run)
-                    output_amount_rate.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(currentRate))
+                    output_amount_rate.text = MozoWallet.getInstance().amountInCurrency(amount)
                     text_preview_rate.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(currentRate), true)
                 }
             }

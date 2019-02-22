@@ -106,7 +106,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         val pendingIntent = PendingIntent.getActivity(
                 context,
                 MozoNotification.REQUEST_CODE,
-                MozoNotification.prepareDataIntent(message),
+                MozoNotification.prepareDataIntent(notification),
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
         val builder = NotificationCompat.Builder(context, message.event!!)

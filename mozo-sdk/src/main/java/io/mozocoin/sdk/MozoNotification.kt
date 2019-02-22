@@ -2,6 +2,7 @@ package io.mozocoin.sdk
 
 import android.content.Context
 import android.content.Intent
+import com.google.gson.Gson
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.OnNotificationReceiveListener
 import io.mozocoin.sdk.common.model.BroadcastDataContent
@@ -13,7 +14,6 @@ import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.censor
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.string
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class MozoNotification {
     companion object {
 
         const val REQUEST_CODE = 0x3020
-        private const val KEY_DATA = "mozo_notification_data"
+        const val KEY_DATA = "mozo_notification_data"
 
         internal fun shouldShowNotification(event: String?) = arrayOf(
                 Constant.NOTIFY_EVENT_AIRDROPPED,
@@ -33,7 +33,7 @@ class MozoNotification {
         ).contains(event?.toLowerCase())
 
         @Synchronized
-        internal fun prepareDataIntent(message: BroadcastDataContent): Intent = Intent(
+        internal fun prepareDataIntent(message: Notification): Intent = Intent(
                 MozoSDK.getInstance().context,
                 MozoSDK.getInstance().notifyActivityClass
         ).apply {
@@ -105,9 +105,15 @@ class MozoNotification {
         @Synchronized
         internal fun openDetails(context: Context, data: String) {
             try {
-                Gson().fromJson(data, BroadcastDataContent::class.java)
+                Gson().run {
+                    fromJson(fromJson(data, Notification::class.java).raw, BroadcastDataContent::class.java)
+                }
             } catch (e: Exception) {
-                null
+                try {
+                    Gson().fromJson(data, BroadcastDataContent::class.java)
+                } catch (ignore: Exception) {
+                    null
+                }
             }?.let {
                 when (it.event) {
                     Constant.NOTIFY_EVENT_AIRDROPPED,
@@ -144,6 +150,20 @@ class MozoNotification {
         @JvmStatic
         fun setNotificationReceiveListener(listener: OnNotificationReceiveListener) {
             MozoSDK.getInstance().onNotificationReceiveListener = listener
+        }
+
+        @Synchronized
+        @JvmStatic
+        fun markAsRead(intent: Intent, callback: (notification: Notification) -> Unit) {
+            intent.getStringExtra(KEY_DATA)?.let { data ->
+                try {
+                    Gson().fromJson(data, Notification::class.java)
+                } catch (ignore: Exception) {
+                    null
+                }?.let {
+                    markAsRead(it, callback)
+                }
+            }
         }
 
         @Synchronized

@@ -72,6 +72,8 @@ class MozoWallet private constructor() {
     fun getDecimal() = MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.value?.decimal
             ?: Constant.DEFAULT_DECIMAL
 
+    fun amountInCurrency(amount: BigDecimal) = MozoSDK.getInstance().profileViewModel.calculateAmountInCurrency(amount)
+
     fun openAddressBook() {
         AddressBookActivity.start(MozoSDK.getInstance().context)
     }

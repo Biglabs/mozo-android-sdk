@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.mozocoin.sdk.common.model.*
-import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.displayString
@@ -80,12 +80,6 @@ internal object ViewModels {
             }
         }
 
-        fun getProfile() = profileLiveData.value
-
-        fun getBalance() = balanceInfoLiveData.value
-
-        fun getBalanceInCurrencyDisplay() = balanceAndRateLiveData.value?.balanceInCurrencyDisplay
-
         private fun updateBalanceAndRate() {
             val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal()
                     ?: BigDecimal.ZERO
@@ -102,13 +96,6 @@ internal object ViewModels {
             )
         }
 
-        fun formatCurrencyDisplay(amount: BigDecimal, withBracket: Boolean = false) = StringBuilder().apply {
-            if (withBracket) append("(")
-            append(exchangeRateLiveData.value?.currencySymbol ?: Constant.DEFAULT_CURRENCY_SYMBOL)
-            append(amount.displayString())
-            if (withBracket) append(")")
-        }.toString()
-
         fun updateProfile(context: Context, p: Profile) = GlobalScope.launch(Dispatchers.Main) {
             profileLiveData.value = p
             fetchBalance(context)
@@ -119,6 +106,23 @@ internal object ViewModels {
         }
 
         fun hasWallet() = profileLiveData.value?.walletInfo != null
+
+        fun getProfile() = profileLiveData.value
+
+        fun getBalance() = balanceInfoLiveData.value
+
+        fun getBalanceInCurrencyDisplay() = balanceAndRateLiveData.value?.balanceInCurrencyDisplay
+
+        fun formatCurrencyDisplay(amount: BigDecimal, withBracket: Boolean = false) = StringBuilder().apply {
+            if (withBracket) append("(")
+            append(exchangeRateLiveData.value?.currencySymbol ?: Constant.DEFAULT_CURRENCY_SYMBOL)
+            append(amount.displayString())
+            if (withBracket) append(")")
+        }.toString()
+
+        fun calculateAmountInCurrency(amount: BigDecimal) = formatCurrencyDisplay(
+                amount.multiply(balanceAndRateLiveData.value?.rate ?: BigDecimal.ZERO)
+        )
 
         fun clear() = GlobalScope.launch(Dispatchers.Main) {
             profileLiveData.value = null
