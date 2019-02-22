@@ -32,7 +32,7 @@
                 android:contentDescription="@string/mozo_button_refresh"
                 android:focusable="true"
                 android:padding="10dp"
-                android:src="@drawable/ic_action_sync"
+                android:src="@drawable/mozo_dr_sync"
                 app:layout_constraintDimensionRatio="w,1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

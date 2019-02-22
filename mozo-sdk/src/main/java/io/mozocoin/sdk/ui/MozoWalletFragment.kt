@@ -29,10 +29,7 @@ import io.mozocoin.sdk.ui.dialog.QRCodeDialog
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_mozo_wallet.*
 import kotlinx.android.synthetic.main.view_wallet_state_not_login.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val histories = arrayListOf<TransactionHistory>()
@@ -49,6 +46,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var currentAddress: String? = null
     private var fetchDataJob: Job? = null
     private var generateQRJob: Job? = null
+    private var animationJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_mozo_wallet, container, false)
@@ -57,6 +55,14 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         super.onViewCreated(view, savedInstanceState)
 
         wallet_fragment_btn_refresh_balance?.click {
+            it.isSelected = true
+            animationJob?.cancel()
+            animationJob = GlobalScope.launch {
+                delay(30000)
+                withContext(Dispatchers.Main) {
+                    wallet_fragment_btn_refresh_balance?.isSelected = false
+                }
+            }
             if (context != null) MozoSDK.getInstance().profileViewModel.fetchBalance(context!!)
         }
         wallet_fragment_btn_payment_request?.apply {
@@ -138,6 +144,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         super.onDestroyView()
         fetchDataJob?.cancel()
         generateQRJob?.cancel()
+        animationJob?.cancel()
     }
 
     override fun onRefresh() {
@@ -157,6 +164,9 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
+        wallet_fragment_btn_refresh_balance?.isSelected = false
+        animationJob?.cancel()
+
         it?.run {
             view?.find<TextView>(R.id.wallet_fragment_balance_value)?.apply {
                 text = balanceInDecimal.displayString()
