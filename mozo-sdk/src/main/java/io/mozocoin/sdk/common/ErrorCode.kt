@@ -5,6 +5,7 @@ import io.mozocoin.sdk.R
 
 enum class ErrorCode(val key: String, @StringRes val message: Int) {
     ERROR_FATAL("INTERNAL_ERROR", R.string.error_fatal),
+    ERROR_INVALID_REQUEST("INVALID_REQUEST", R.string.error_fatal),
     ERROR_REQUIRED_LOGIN("INVALID_USER_TOKEN", R.string.error_required_login),
 
     ERROR_TX_NONCE_TOO_LOW("TRANSACTION_ERROR_NONCE_TOO_LOW", R.string.error_common),

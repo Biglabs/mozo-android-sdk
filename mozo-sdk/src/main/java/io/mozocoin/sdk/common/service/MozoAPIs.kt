@@ -15,7 +15,10 @@ internal interface MozoAPIs {
     fun getStoreBook(): Call<Base<BaseData<Contact>>>
 
     @GET("${MozoAPIsService.APIS_SOLOMON}/user-profile")
-    fun fetchProfile(): Call<Base<Profile>>
+    fun getProfile(): Call<Base<Profile>>
+
+    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile")
+    fun updateProfile(@Body profile: Profile): Call<Base<Profile>>
 
     @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/exchange-info")
     fun saveExchangeInfo(exchangeInfo: Profile): Call<Base<Profile>>

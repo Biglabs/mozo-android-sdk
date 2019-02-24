@@ -78,7 +78,7 @@ class NotificationFragment : Fragment() {
 
         class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
             fun bind(notification: Notification) {
-                view.findViewById<ImageView>(R.id.item_icon)?.setImageResource(notification.icon)
+                view.findViewById<ImageView>(R.id.item_icon)?.setImageResource(notification.icon())
                 view.findViewById<TextView>(R.id.item_title)?.text = notification.titleDisplay()
                 view.findViewById<TextView>(R.id.item_content)?.text = notification.contentDisplay()
 

@@ -111,7 +111,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         )
         val builder = NotificationCompat.Builder(context, message.event!!)
                 .setSmallIcon(R.drawable.ic_mozo_notification)
-                .setLargeIcon(context.bitmap(notification.icon))
+                .setLargeIcon(context.bitmap(notification.icon()))
                 .setColor(context.color(R.color.mozo_color_primary))
                 .setContentTitle(notification.titleDisplay())
                 .setContentText(notification.contentDisplay())

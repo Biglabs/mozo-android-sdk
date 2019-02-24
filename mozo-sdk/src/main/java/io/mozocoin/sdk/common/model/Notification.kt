@@ -7,6 +7,7 @@ import android.text.style.StyleSpan
 import androidx.core.text.set
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import io.mozocoin.sdk.MozoNotification
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
@@ -18,7 +19,6 @@ class Notification(
         val id: Long = 0L,
         var read: Boolean = false,
         val isSend: Boolean = false,
-        val icon: Int,
         val title: String,
         val content: String,
         val type: String,
@@ -40,4 +40,6 @@ class Notification(
         set(0, length, StyleSpan(Typeface.ITALIC))
         set(0, length, ForegroundColorSpan(MozoSDK.getInstance().context.color(R.color.mozo_color_section_text)))
     }
+
+    fun icon() = MozoNotification.getNotificationIcon(type)
 }

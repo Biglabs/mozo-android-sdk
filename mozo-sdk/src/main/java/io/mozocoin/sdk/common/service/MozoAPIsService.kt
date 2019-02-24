@@ -27,8 +27,12 @@ internal class MozoAPIsService private constructor() {
 
     private val mozoAPIs: MozoAPIs by lazy { createService() }
 
-    fun fetchProfile(context: Context, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.fetchProfile(), callback)
+    fun getProfile(context: Context, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
+        execute(context, mozoAPIs.getProfile(), callback)
+    }
+
+    fun updateProfile(context: Context, profile: Profile, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
+        execute(context, mozoAPIs.updateProfile(profile), callback)
     }
 
     /**

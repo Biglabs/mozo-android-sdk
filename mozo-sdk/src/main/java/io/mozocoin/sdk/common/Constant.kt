@@ -4,12 +4,6 @@ import java.util.*
 
 class Constant {
     companion object {
-
-        internal const val DEFAULT_DECIMAL = 2
-        internal const val DEFAULT_CURRENCY = "USD"
-        internal const val DEFAULT_CURRENCY_SYMBOL = "$"
-        internal const val DEFAULT_CURRENCY_RATE = 0.0000691440330774
-
         const val PAGING_START_INDEX = 0
         const val PAGING_SIZE = 15
         const val LIST_VISIBLE_THRESHOLD = 5
@@ -21,6 +15,14 @@ class Constant {
         const val NOTIFY_EVENT_BALANCE_CHANGED = "balance_changed"
         const val NOTIFY_EVENT_CUSTOMER_CAME = "customer_came"
         const val NOTIFY_EVENT_STORE_BOOK_ADDED = "store_book_added"
+
+        internal const val DEFAULT_DECIMAL = 2
+        internal const val DEFAULT_CURRENCY = "USD"
+        internal const val DEFAULT_CURRENCY_SYMBOL = "$"
+        internal const val DEFAULT_CURRENCY_RATE = 0.00011535323856
+
+        internal const val CURRENCY_SYMBOL_KRW = "₩"
+        internal const val CURRENCY_SYMBOL_VND = "₫"
 
         internal const val DOMAIN_API_DEV = "dev.gateway.mozocoin.io"
         internal const val DOMAIN_API_STAGING = "staging.gateway.mozocoin.io"

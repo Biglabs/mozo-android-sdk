@@ -51,19 +51,16 @@ class MozoNotification {
                     Support.toAmountNonDecimal(message.amount, message.decimal).displayString()
             ) else ""
             var content = ""
-            var largeIcon = R.drawable.im_notification_received_sent
 
             when (message.event ?: "") {
                 Constant.NOTIFY_EVENT_AIRDROPPED -> {
                     content = context.getString(R.string.mozo_notify_content_from, message.storeName)
-                    largeIcon = R.drawable.im_notification_airdrop
                 }
                 Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
                     title = context.string(if (message.isComeIn) R.string.mozo_notify_title_come_in else R.string.mozo_notify_title_just_left)
                     message.phoneNo?.let {
                         content = it.censor(3, 4)
                     }
-                    largeIcon = R.drawable.im_notification_customer_came
                 }
                 Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
                 }
@@ -76,10 +73,16 @@ class MozoNotification {
                     )
                 }
             }
-            return Notification(isSend = isSendType, icon = largeIcon, title = title, content = content, type = message.event
+            return Notification(isSend = isSendType, title = title, content = content, type = message.event
                     ?: "", time = message.time).apply {
                 raw = Gson().toJson(message)
             }
+        }
+
+        internal fun getNotificationIcon(type: String?) = when (type ?: "") {
+            Constant.NOTIFY_EVENT_AIRDROPPED -> R.drawable.im_notification_airdrop
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came
+            else -> R.drawable.im_notification_received_sent
         }
 
         @Synchronized

@@ -4,7 +4,9 @@ import android.content.Context
 import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.authentication.AuthenticationListener
 import io.mozocoin.sdk.authentication.MozoAuthActivity
+import io.mozocoin.sdk.common.Gender
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.UserInfo
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.common.service.MozoDatabase
@@ -74,11 +76,15 @@ class MozoAuth private constructor() {
 
     fun getAccessToken() = authStateManager.current.accessToken
 
-    fun getUserInfo(context: Context, callback: (userInfo: UserInfo?) -> Unit) {
-        MozoAPIsService.getInstance().fetchProfile(context) { data, _ ->
+    fun getUserInfo(context: Context, fromCache: Boolean = true, callback: (userInfo: UserInfo?) -> Unit) {
+        if (fromCache) {
+            callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
+            return
+        }
+        MozoAPIsService.getInstance().getProfile(context) { data, _ ->
             if (data == null) {
                 callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
-                return@fetchProfile
+                return@getProfile
             }
 
             val userInfo = UserInfo(
@@ -86,7 +92,46 @@ class MozoAuth private constructor() {
                     avatarUrl = data.avatarUrl,
                     fullName = data.fullName,
                     phoneNumber = data.phoneNumber,
-                    birthday = data.birthday,
+                    birthday = data.birthday ?: 0L,
+                    email = data.email,
+                    gender = data.gender
+            )
+            callback.invoke(userInfo)
+
+            GlobalScope.launch {
+                /* save User info first */
+                mozoDB.userInfo().save(userInfo)
+                MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
+            }
+        }
+    }
+
+    fun updateUserInfo(
+            context: Context,
+            avatar: String? = null,
+            fullName: String? = null,
+            birthday: Long? = null,
+            email: String? = null,
+            gender: Gender? = null,
+            callback: (userInfo: UserInfo?) -> Unit
+    ) {
+        val finalEmail = if (email.isNullOrEmpty()) null else email
+        MozoAPIsService.getInstance().updateProfile(
+                context,
+                Profile(avatarUrl = avatar, fullName = fullName, birthday = birthday, email = finalEmail, gender = gender?.key)
+        ) { data, _ ->
+
+            if (data == null) {
+                callback.invoke(null)
+                return@updateProfile
+            }
+
+            val userInfo = UserInfo(
+                    userId = data.userId ?: "",
+                    avatarUrl = data.avatarUrl,
+                    fullName = data.fullName,
+                    phoneNumber = data.phoneNumber,
+                    birthday = data.birthday ?: 0L,
                     email = data.email,
                     gender = data.gender
             )
@@ -140,8 +185,8 @@ class MozoAuth private constructor() {
     }
 
     internal fun syncProfile(context: Context, callback: ((flag: Int) -> Unit)? = null) {
-        MozoAPIsService.getInstance().fetchProfile(context) { data, _ ->
-            data ?: return@fetchProfile
+        MozoAPIsService.getInstance().getProfile(context) { data, _ ->
+            data ?: return@getProfile
 
             GlobalScope.launch {
                 val userInfo = UserInfo(
@@ -149,7 +194,7 @@ class MozoAuth private constructor() {
                         avatarUrl = data.avatarUrl,
                         fullName = data.fullName,
                         phoneNumber = data.phoneNumber,
-                        birthday = data.birthday,
+                        birthday = data.birthday ?: 0L,
                         email = data.email,
                         gender = data.gender
                 )
@@ -165,7 +210,7 @@ class MozoAuth private constructor() {
                     MozoWallet.getInstance().initWallet(context).await()
                     callback?.invoke(SecurityActivity.KEY_CREATE_PIN)
                 }
-                return@fetchProfile
+                return@getProfile
             }
 
             MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {

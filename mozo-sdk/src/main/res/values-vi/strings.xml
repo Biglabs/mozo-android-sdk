@@ -118,6 +118,10 @@
     <string name="mozo_transaction_history_offchain_text">Ví MozoX Offchain</string>
     <string name="mozo_transaction_history_empty">Danh sách trống</string>
 
+    <string name="mozo_text_gender_none">Không</string>
+    <string name="mozo_text_gender_male">Nam</string>
+    <string name="mozo_text_gender_female">Nữ</string>
+
     <string name="mozo_view_balance_title">Tổng MozoX Offchain</string>
     <string name="mozo_view_address_title">Địa chỉ ví MozoX Offchain của bạn</string>
     <string name="mozo_view_text_hint">…</string>

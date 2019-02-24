@@ -117,6 +117,10 @@
     <string name="mozo_transaction_history_offchain_text">MozoX Offchain Wallet</string>
     <string name="mozo_transaction_history_empty">Transaction history list is empty</string>
 
+    <string name="mozo_text_gender_none">None</string>
+    <string name="mozo_text_gender_male">Male</string>
+    <string name="mozo_text_gender_female">Female</string>
+
     <string name="mozo_view_balance_title">MozoX Offchain Balance</string>
     <string name="mozo_view_address_title">Your MozoX Offchain Wallet Address</string>
     <string name="mozo_view_text_hint">…</string>

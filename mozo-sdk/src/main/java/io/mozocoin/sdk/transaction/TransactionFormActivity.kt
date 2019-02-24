@@ -136,6 +136,9 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun initUI() {
+        transfer_container.click {
+            it.hideKeyboard()
+        }
         output_receiver_address.onTextChanged {
             hideErrorAddressUI()
             updateSubmitButton()
