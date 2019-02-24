@@ -74,8 +74,30 @@ class MozoAuth private constructor() {
 
     fun getAccessToken() = authStateManager.current.accessToken
 
-    fun getUserInfo(callback: (userInfo: UserInfo?) -> Unit) {
-        callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
+    fun getUserInfo(context: Context, callback: (userInfo: UserInfo?) -> Unit) {
+        MozoAPIsService.getInstance().fetchProfile(context) { data, _ ->
+            if (data == null) {
+                callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
+                return@fetchProfile
+            }
+
+            val userInfo = UserInfo(
+                    userId = data.userId ?: "",
+                    avatarUrl = data.avatarUrl,
+                    fullName = data.fullName,
+                    phoneNumber = data.phoneNumber,
+                    birthday = data.birthday,
+                    email = data.email,
+                    gender = data.gender
+            )
+            callback.invoke(userInfo)
+
+            GlobalScope.launch {
+                /* save User info first */
+                mozoDB.userInfo().save(userInfo)
+                MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
+            }
+        }
     }
 
     fun checkSession(context: Context, callback: (isExpired: Boolean) -> Unit) {
