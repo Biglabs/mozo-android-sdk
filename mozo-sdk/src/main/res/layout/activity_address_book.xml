@@ -95,6 +95,7 @@
         android:layout_marginEnd="@dimen/mozo_screen_margin"
         android:checkedButton="@id/address_book_tab_user"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/input_search">
