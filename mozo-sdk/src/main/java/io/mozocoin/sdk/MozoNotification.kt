@@ -2,7 +2,7 @@ package io.mozocoin.sdk
 
 import android.content.Context
 import android.content.Intent
-import io.mozocoin.sdk.R
+import com.google.gson.Gson
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.OnNotificationReceiveListener
 import io.mozocoin.sdk.common.model.BroadcastDataContent
@@ -14,7 +14,6 @@ import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.censor
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.string
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -25,7 +24,7 @@ class MozoNotification {
     companion object {
 
         const val REQUEST_CODE = 0x3020
-        private const val KEY_DATA = "mozo_notification_data"
+        const val KEY_DATA = "mozo_notification_data"
 
         internal fun shouldShowNotification(event: String?) = arrayOf(
                 Constant.NOTIFY_EVENT_AIRDROPPED,
@@ -34,7 +33,7 @@ class MozoNotification {
         ).contains(event?.toLowerCase())
 
         @Synchronized
-        internal fun prepareDataIntent(message: BroadcastDataContent): Intent = Intent(
+        internal fun prepareDataIntent(message: Notification): Intent = Intent(
                 MozoSDK.getInstance().context,
                 MozoSDK.getInstance().notifyActivityClass
         ).apply {
@@ -52,19 +51,16 @@ class MozoNotification {
                     Support.toAmountNonDecimal(message.amount, message.decimal).displayString()
             ) else ""
             var content = ""
-            var largeIcon = R.drawable.im_notification_received_sent
 
             when (message.event ?: "") {
                 Constant.NOTIFY_EVENT_AIRDROPPED -> {
                     content = context.getString(R.string.mozo_notify_content_from, message.storeName)
-                    largeIcon = R.drawable.im_notification_airdrop
                 }
                 Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
                     title = context.string(if (message.isComeIn) R.string.mozo_notify_title_come_in else R.string.mozo_notify_title_just_left)
                     message.phoneNo?.let {
                         content = it.censor(3, 4)
                     }
-                    largeIcon = R.drawable.im_notification_customer_came
                 }
                 Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
                 }
@@ -77,10 +73,16 @@ class MozoNotification {
                     )
                 }
             }
-            return Notification(isSend = isSendType, icon = largeIcon, title = title, content = content, type = message.event
+            return Notification(isSend = isSendType, title = title, content = content, type = message.event
                     ?: "", time = message.time).apply {
                 raw = Gson().toJson(message)
             }
+        }
+
+        internal fun getNotificationIcon(type: String?) = when (type ?: "") {
+            Constant.NOTIFY_EVENT_AIRDROPPED -> R.drawable.im_notification_airdrop
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came
+            else -> R.drawable.im_notification_received_sent
         }
 
         @Synchronized
@@ -106,9 +108,15 @@ class MozoNotification {
         @Synchronized
         internal fun openDetails(context: Context, data: String) {
             try {
-                Gson().fromJson(data, BroadcastDataContent::class.java)
+                Gson().run {
+                    fromJson(fromJson(data, Notification::class.java).raw, BroadcastDataContent::class.java)
+                }
             } catch (e: Exception) {
-                null
+                try {
+                    Gson().fromJson(data, BroadcastDataContent::class.java)
+                } catch (ignore: Exception) {
+                    null
+                }
             }?.let {
                 when (it.event) {
                     Constant.NOTIFY_EVENT_AIRDROPPED,
@@ -145,6 +153,20 @@ class MozoNotification {
         @JvmStatic
         fun setNotificationReceiveListener(listener: OnNotificationReceiveListener) {
             MozoSDK.getInstance().onNotificationReceiveListener = listener
+        }
+
+        @Synchronized
+        @JvmStatic
+        fun markAsRead(intent: Intent, callback: (notification: Notification) -> Unit) {
+            intent.getStringExtra(KEY_DATA)?.let { data ->
+                try {
+                    Gson().fromJson(data, Notification::class.java)
+                } catch (ignore: Exception) {
+                    null
+                }?.let {
+                    markAsRead(it, callback)
+                }
+            }
         }
 
         @Synchronized

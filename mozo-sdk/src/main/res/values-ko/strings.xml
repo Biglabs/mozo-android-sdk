@@ -118,6 +118,10 @@
     <string name="mozo_transaction_history_offchain_text">MozoX Offchain 월렛</string>
     <string name="mozo_transaction_history_empty">거래 내역 리스트가 비어 있습니다</string>
 
+    <string name="mozo_text_gender_none">아니요</string>
+    <string name="mozo_text_gender_male">남성</string>
+    <string name="mozo_text_gender_female">여성</string>
+
     <string name="mozo_view_balance_title">MozoX Offchain 밸런스</string>
     <string name="mozo_view_address_title">귀하의 MozoX Offchain 월렛 주소</string>
     <string name="mozo_view_text_hint">…</string>

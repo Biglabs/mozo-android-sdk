@@ -1,15 +1,14 @@
 package io.mozocoin.sdk
 
 import android.content.Context
-import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.ErrorCode
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.WalletInfo
-import io.mozocoin.sdk.contact.AddressBookActivity
-import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.common.service.MozoDatabase
+import io.mozocoin.sdk.contact.AddressBookActivity
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.CryptoUtils
@@ -53,19 +52,27 @@ class MozoWallet private constructor() {
      * @param  callback     The listener to receive balance value
      * @return              The balance of current wallet
      */
-    fun getBalance(fromCache: Boolean = true, callback: (balance: BigDecimal) -> Unit) {
+    fun getBalance(fromCache: Boolean = true, callback: (balance: BigDecimal, displayInCurrency: String?) -> Unit) {
         if (fromCache && MozoSDK.getInstance().profileViewModel.getBalance() != null) {
-            callback.invoke(MozoSDK.getInstance().profileViewModel.getBalance()!!.balanceNonDecimal())
+            callback.invoke(
+                    MozoSDK.getInstance().profileViewModel.getBalance()!!.balanceNonDecimal(),
+                    MozoSDK.getInstance().profileViewModel.getBalanceInCurrencyDisplay()
+            )
             return
         }
 
         MozoSDK.getInstance().profileViewModel.fetchBalance(MozoSDK.getInstance().context) {
-            callback.invoke(it?.balanceNonDecimal() ?: BigDecimal(-1))
+            callback.invoke(
+                    it?.balanceNonDecimal() ?: BigDecimal(-1),
+                    MozoSDK.getInstance().profileViewModel.getBalanceInCurrencyDisplay()
+            )
         }
     }
 
     fun getDecimal() = MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.value?.decimal
             ?: Constant.DEFAULT_DECIMAL
+
+    fun amountInCurrency(amount: BigDecimal) = MozoSDK.getInstance().profileViewModel.calculateAmountInCurrency(amount)
 
     fun openAddressBook() {
         AddressBookActivity.start(MozoSDK.getInstance().context)

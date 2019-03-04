@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -22,8 +21,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import io.mozocoin.sdk.BuildConfig
-import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -66,19 +63,19 @@ internal fun Context.copyWithToast(text: String?) = apply {
 /**
  * Extension method to Get Integer resource for Context.
  */
-internal fun Context.getInteger(@IntegerRes id: Int) = resources.getInteger(id)
+fun Context.getInteger(@IntegerRes id: Int) = resources.getInteger(id)
 
-internal fun Context.string(@StringRes id: Int, @StringRes idRef: Int = 0): String {
+fun Context.string(@StringRes id: Int, @StringRes idRef: Int = 0): String {
     return if (idRef != 0) getString(id, string(idRef)) else getString(id)
 }
 
-internal fun Context.color(@ColorRes id: Int): Int {
+fun Context.color(@ColorRes id: Int): Int {
     return ContextCompat.getColor(this, id)
 }
 
 fun Context.dimen(@DimenRes id: Int): Int = resources.getDimensionPixelSize(id)
 
-internal fun Context.bitmap(@DrawableRes icon: Int) = AppCompatResources.getDrawable(this, icon)?.toBitmap()
+fun Context.bitmap(@DrawableRes icon: Int) = AppCompatResources.getDrawable(this, icon)?.toBitmap()
 
 fun visible(views: Array<View>) {
     views.map {
@@ -92,25 +89,9 @@ fun gone(views: Array<View>) {
     }
 }
 
-internal fun Resources.dp2Px(value: Float): Float {
+fun Resources.dp2Px(value: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, displayMetrics)
 }
-
-internal fun String?.logAsError(prefix: String? = null) {
-    if (BuildConfig.DEBUG || MozoSDK.isEnableDebugLogging) {
-        Log.e("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
-    }
-}
-
-internal fun String?.logAsInfo(prefix: String? = null) {
-    if (BuildConfig.DEBUG || MozoSDK.isEnableDebugLogging) {
-        Log.i("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
-    }
-}
-
-fun String.censor(paddingStart: Int, paddingEnd: Int, mask: Char = '*'): String = toCharArray().mapIndexed { i, c ->
-    if (i >= paddingStart && i < length - paddingEnd && !c.isWhitespace()) mask else c
-}.joinToString(separator = "")
 
 /**
  * Extension method to show a keyboard for View.
@@ -140,7 +121,7 @@ fun View.hideKeyboard(): Boolean {
 @Suppress("UNCHECKED_CAST")
 fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener { block(it as T) }
 
-internal inline fun <reified T : View> View.find(@IdRes id: Int): T? = findViewById(id) as? T
+inline fun <reified T : View> View.find(@IdRes id: Int): T? = findViewById(id) as? T
 
 fun View.visible() {
     visibility = View.VISIBLE
@@ -153,7 +134,7 @@ fun View.gone() {
 internal fun TextView.copyText() = apply { context.copyText(text.toString()) }
 internal fun TextView.copyWithToast() = apply { context.copyWithToast(text.toString()) }
 
-internal fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
+fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
     addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
 
@@ -165,7 +146,7 @@ internal fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
     })
 }
 
-internal fun SwipeRefreshLayout.mozoSetup() {
+fun SwipeRefreshLayout.mozoSetup() {
     val offset = resources.getDimensionPixelSize(R.dimen.mozo_refresh_progress_offset)
     setProgressViewOffset(true, progressViewStartOffset + offset, progressViewEndOffset + offset / 3)
     setColorSchemeResources(R.color.mozo_color_primary)

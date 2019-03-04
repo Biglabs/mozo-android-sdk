@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.google.gson.Gson
 import io.mozocoin.sdk.MozoNotification
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
@@ -16,11 +17,7 @@ import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.BroadcastData
 import io.mozocoin.sdk.common.model.BroadcastDataContent
-import io.mozocoin.sdk.utils.Support
-import io.mozocoin.sdk.utils.bitmap
-import io.mozocoin.sdk.utils.color
-import io.mozocoin.sdk.utils.logAsInfo
-import com.google.gson.Gson
+import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
@@ -109,12 +106,12 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         val pendingIntent = PendingIntent.getActivity(
                 context,
                 MozoNotification.REQUEST_CODE,
-                MozoNotification.prepareDataIntent(message),
+                MozoNotification.prepareDataIntent(notification),
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
         val builder = NotificationCompat.Builder(context, message.event!!)
                 .setSmallIcon(R.drawable.ic_mozo_notification)
-                .setLargeIcon(context.bitmap(notification.icon))
+                .setLargeIcon(context.bitmap(notification.icon()))
                 .setColor(context.color(R.color.mozo_color_primary))
                 .setContentTitle(notification.titleDisplay())
                 .setContentText(notification.contentDisplay())
@@ -156,12 +153,23 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
         @Synchronized
         fun connect(): MozoSocketClient {
+            if (instance?.isOpen == true) {
+                disconnect()
+            }
             if (instance == null) {
-                val accessToken = AuthStateManager.getInstance(MozoSDK.getInstance().context).current.accessToken
-                        ?: ""
+                val accessToken = AuthStateManager.getInstance(MozoSDK.getInstance().context)
+                        .current.accessToken ?: ""
                 val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
+                val userId = MozoSDK.getInstance().profileViewModel.getProfile()?.userId
+                val uuid = StringBuilder()
+                        .append(UUID.randomUUID())
+                        .append("-")
+                        .append(userId)
+                        .append("-")
+                        .append(channel).toString().md5()
+
                 instance = MozoSocketClient(
-                        URI("wss://${Support.domainSocket()}/websocket/user/${UUID.randomUUID()}/$channel"),
+                        URI("wss://${Support.domainSocket()}/websocket/user/$uuid/$channel"),
                         mutableMapOf(
                                 "Authorization" to "bearer $accessToken",
                                 "Content-Type" to "application/json",

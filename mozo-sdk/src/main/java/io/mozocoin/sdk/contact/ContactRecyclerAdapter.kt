@@ -1,8 +1,9 @@
 package io.mozocoin.sdk.contact
 
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.Contact
-import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
+import java.util.*
 
 internal class ContactRecyclerAdapter(
         private val contacts: List<Contact>,
@@ -16,7 +17,11 @@ internal class ContactRecyclerAdapter(
         Constant.getAlphabets().map {
             val sec = arrayListOf<Contact>()
             contacts.map { c ->
-                if (c.name?.startsWith(it, ignoreCase = true) == true) {
+                val ch = if (OrderingByKorean.isKorean(c.name?.getOrNull(0)))
+                    KoreanChar.getCompatChoseong(c.name?.getOrNull(0))
+                else c.name?.getOrNull(0)
+
+                if (ch == it) {
                     sec.add(c)
                 }
             }
@@ -29,6 +34,9 @@ internal class ContactRecyclerAdapter(
         val otherContact = arrayListOf<Contact>()
         contacts.map { c ->
             if (c.name.isNullOrEmpty() || c.name[0].toUpperCase() < 'A' || c.name[0].toUpperCase() > 'Z') {
+                if (Locale.getDefault().language == Locale.KOREA.language && OrderingByKorean.isKorean(c.name?.getOrNull(0)))
+                    return@map
+
                 otherContact.add(c)
             }
         }
