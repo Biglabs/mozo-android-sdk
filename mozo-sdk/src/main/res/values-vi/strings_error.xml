@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_common">Có lỗi xảy ra. Xin thử lại</string>
-    <string name="error_fatal">Không thể kết nối máy chủ MozoX. Liên hệ tư vấn viên để biết thêm thông tin (email + phone)</string>
+    <string name="error_fatal">Không thể kết nối máy chủ MozoX. Liên hệ tư vấn viên để biết thêm thông tin</string>
     <string name="error_required_login">Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại</string>
 
     <string name="error_wallet_different">Tài khoản ví đã được cập nhật nhưng chưa đồng bộ với thiết bị đang dùng. Xin khôi phục lại ví trước khi bắt đầu.</string>

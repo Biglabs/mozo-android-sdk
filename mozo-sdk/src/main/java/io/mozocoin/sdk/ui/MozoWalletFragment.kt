@@ -182,28 +182,33 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 context ?: return,
                 currentAddress ?: return,
                 page = Constant.PAGING_START_INDEX,
-                size = 10
-        ) { data, _ ->
-            data ?: return@getTransactionHistory
-            data.items ?: return@getTransactionHistory
-
-            fetchDataJob?.cancel()
-            fetchDataJob = GlobalScope.launch {
-                histories.clear()
-                histories.addAll(data.items!!.map {
-                    it.apply {
-                        contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
-                                if (it.type(currentAddress)) it.addressTo else it.addressFrom
-                        )?.name
-                    }
-                })
-                launch(Dispatchers.Main) {
+                size = 10,
+                callback = { data, _ ->
                     wallet_fragment_refresh_layout?.isRefreshing = false
-                    historyAdapter.setCanLoadMore(false)
-                    historyAdapter.notifyData()
-                }
-            }
-        }
+
+                    if (data?.items == null) {
+                        historyAdapter.setCanLoadMore(false)
+                        historyAdapter.notifyData()
+                        return@getTransactionHistory
+                    }
+
+                    fetchDataJob?.cancel()
+                    fetchDataJob = GlobalScope.launch {
+                        histories.clear()
+                        histories.addAll(data.items!!.map {
+                            it.apply {
+                                contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
+                                        if (it.type(currentAddress)) it.addressTo else it.addressFrom
+                                )?.name
+                            }
+                        })
+                        withContext(Dispatchers.Main) {
+                            historyAdapter.setCanLoadMore(false)
+                            historyAdapter.notifyData()
+                        }
+                    }
+                },
+                retry = this::fetchData)
     }
 
     private fun generateQRImage() = GlobalScope.launch {

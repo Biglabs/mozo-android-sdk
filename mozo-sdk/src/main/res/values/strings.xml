@@ -50,6 +50,9 @@
     <string name="mozo_button_retry">Retry</string>
     <string name="mozo_button_refresh">Refresh</string>
     <string name="mozo_button_try_again">Try Again</string>
+    <string name="mozo_button_contact_telegram" translatable="false">Telegram</string>
+    <string name="mozo_button_contact_kakao" translatable="false">KakaoTalk</string>
+    <string name="mozo_button_contact_zalo" translatable="false">Zalo</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">Store Recovery Phrase</string>

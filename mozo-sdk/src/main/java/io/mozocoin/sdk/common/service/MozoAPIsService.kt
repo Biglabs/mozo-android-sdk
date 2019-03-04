@@ -61,8 +61,15 @@ internal class MozoAPIsService private constructor() {
         execute(context, mozoAPIs.sendTx(request), callback, retry)
     }
 
-    fun getTransactionHistory(context: Context, address: String, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, callback: ((data: BaseData<TransactionHistory>?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.getTransactionHistory(address, page, size), callback)
+    fun getTransactionHistory(
+            context: Context,
+            address: String,
+            page: Int = Constant.PAGING_START_INDEX,
+            size: Int = Constant.PAGING_SIZE,
+            callback: ((data: BaseData<TransactionHistory>?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
+    ) {
+        execute(context, mozoAPIs.getTransactionHistory(address, page, size), callback, retry)
     }
 
     fun getTxStatus(context: Context, txHash: String, callback: ((data: TransactionStatus?, errorCode: String?) -> Unit)? = null) {
@@ -114,9 +121,13 @@ internal class MozoAPIsService private constructor() {
 
                         if (context is Activity && !context.isFinishing && !context.isDestroyed) {
                             ErrorCode.findByKey(body.errorCode)?.let {
-                                MessageDialog(context, context.getString(it.message))
-                                        .setAction(R.string.mozo_button_retry, retry)
-                                        .show()
+                                if (it.shouldShowContactMessage()) {
+                                    ErrorDialog.withContactError(context)
+
+                                } else
+                                    MessageDialog(context, context.getString(it.message))
+                                            .setAction(R.string.mozo_button_retry, retry)
+                                            .show()
                             }
                         }
 
@@ -136,6 +147,8 @@ internal class MozoAPIsService private constructor() {
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
+                callback?.invoke(null, null)
+
                 if (context is BaseActivity || context is MozoAuthActivity) {
                     if (context is Activity && (context.isFinishing || context.isDestroyed)) {
                         return

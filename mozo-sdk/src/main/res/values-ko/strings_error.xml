@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_common">오류가 발생했습니다. 다시 시도하십시오.</string>
-    <string name="error_fatal">MozoX 서버에 연결할 수 없습니다. 자세한 내용은 문의하십시오 (이메일 + 전화).</string>
+    <string name="error_fatal">MozoX 서버에 연결할 수 없습니다. 자세한 내용은 문의하십시오</string>
     <string name="error_required_login">기간이 만료되었습니다. 다시 로그인하십시오.</string>
 
     <string name="error_wallet_different">월렛 계정이 업데이트되었지만 사용중인 장치와 동기화되지 않았습니다. 시작하기 전에 월렛을 복구하십시오.</string>
