@@ -17,12 +17,14 @@ import org.greenrobot.eventbus.EventBus
 class ErrorDialog(context: Context, private val argument: Bundle, private val onTryAgain: (() -> Unit)? = null) : BaseDialog(context) {
 
     private var errorType = TYPE_GENERAL
+    private var errorMessage: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_error)
 
         errorType = argument.getInt(ERROR_TYPE, errorType)
+        errorMessage = argument.getString(ERROR_MESSAGE)
 
         image_error_type.visible()
         gone(arrayOf(
@@ -51,6 +53,10 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
                 text_msg_error.setText(R.string.error_fatal)
                 button_try_again.setText(android.R.string.ok)
             }
+        }
+
+        errorMessage?.let {
+            text_msg_error?.text = it
         }
 
         button_contact_telegram.click {
@@ -99,6 +105,7 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
         const val TYPE_WITH_CONTACT = 2
 
         private const val ERROR_TYPE = "ERROR_TYPE"
+        private const val ERROR_MESSAGE = "ERROR_MESSAGE"
 
         @Volatile
         private var instance: ErrorDialog? = null
