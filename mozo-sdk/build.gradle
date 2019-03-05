@@ -63,7 +63,6 @@ dependencies {
     api 'org.web3j:core:4.1.0-android'
     api 'org.greenrobot:eventbus:3.1.1'
     api 'com.journeyapps:zxing-android-embedded:3.6.0'
-    api 'net.openid:appauth:0.7.1'
 
     // test
     testImplementation 'junit:junit:4.12'
