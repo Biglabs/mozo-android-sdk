@@ -104,8 +104,8 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
         const val TYPE_NETWORK = 1
         const val TYPE_WITH_CONTACT = 2
 
-        private const val ERROR_TYPE = "ERROR_TYPE"
-        private const val ERROR_MESSAGE = "ERROR_MESSAGE"
+        const val ERROR_TYPE = "ERROR_TYPE"
+        const val ERROR_MESSAGE = "ERROR_MESSAGE"
 
         @Volatile
         private var instance: ErrorDialog? = null
