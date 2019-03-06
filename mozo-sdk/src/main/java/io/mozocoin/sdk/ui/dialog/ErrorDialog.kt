@@ -43,6 +43,10 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
                 image_error_type.setImageResource(R.drawable.ic_error_network)
                 text_msg_error.setText(R.string.mozo_dialog_error_network_msg)
             }
+            TYPE_TIMEOUT -> {
+                image_error_type.setImageResource(R.drawable.ic_error_timeout)
+                text_msg_error.setText(R.string.mozo_dialog_error_timeout_msg)
+            }
             TYPE_WITH_CONTACT -> {
                 image_error_type.gone()
                 visible(arrayOf(
@@ -97,12 +101,13 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
 
     companion object {
         @Retention(AnnotationRetention.SOURCE)
-        @IntDef(TYPE_GENERAL, TYPE_NETWORK, TYPE_WITH_CONTACT)
+        @IntDef(TYPE_GENERAL, TYPE_NETWORK, TYPE_TIMEOUT, TYPE_WITH_CONTACT)
         annotation class ErrorType
 
         const val TYPE_GENERAL = 0
         const val TYPE_NETWORK = 1
-        const val TYPE_WITH_CONTACT = 2
+        const val TYPE_TIMEOUT = 2
+        const val TYPE_WITH_CONTACT = 3
 
         const val ERROR_TYPE = "ERROR_TYPE"
         const val ERROR_MESSAGE = "ERROR_MESSAGE"
@@ -122,6 +127,10 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
 
         fun networkError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
             show(context, TYPE_NETWORK, forceShow, onTryAgain)
+        }
+
+        fun timeoutError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_TIMEOUT, forceShow, onTryAgain)
         }
 
         fun withContactError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
@@ -153,5 +162,9 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
         }
 
         fun isShowing() = instance?.isShowing == true
+
+        fun setCancelable(cancel: Boolean) {
+            instance?.setCancelable(cancel)
+        }
     }
 }

@@ -62,6 +62,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mAuthService?.dispose()
+        mAuthService = null
         authenticationInProgress = false
 
         if (isAuthInProgress) {
@@ -75,7 +76,6 @@ internal class MozoAuthActivity : FragmentActivity() {
      * static values or by retrieving an OpenID discovery document.
      */
     private fun initializeAppAuth() = GlobalScope.launch {
-        mAuthService?.dispose()
         mAuthService = AuthorizationService(this@MozoAuthActivity)
         mAuthRequest.set(null)
         mAuthIntent.set(null)
@@ -158,7 +158,8 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun doAuth() = GlobalScope.launch(Dispatchers.Main) {
         try {
             mAuthIntentLatch.await()
-        } catch (ex: InterruptedException) {
+        } catch (ex: Exception) {
+            finishAuth(ex)
         }
 
         isAuthInProgress = true
