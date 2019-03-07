@@ -109,14 +109,14 @@ class MozoNotification {
         internal fun openDetails(context: Context, data: String) {
             try {
                 Gson().run {
-                    fromJson(fromJson(data, Notification::class.java).raw, BroadcastDataContent::class.java)
+                    if (data.contains("raw", ignoreCase = true)) {
+                        fromJson(fromJson(data, Notification::class.java).raw, BroadcastDataContent::class.java)
+                    } else {
+                        fromJson(data, BroadcastDataContent::class.java)
+                    }
                 }
             } catch (e: Exception) {
-                try {
-                    Gson().fromJson(data, BroadcastDataContent::class.java)
-                } catch (ignore: Exception) {
-                    null
-                }
+                null
             }?.let {
                 when (it.event) {
                     Constant.NOTIFY_EVENT_AIRDROPPED,
