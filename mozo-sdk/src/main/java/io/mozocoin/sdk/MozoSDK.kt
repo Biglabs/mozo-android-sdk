@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ComponentCallbacks
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
+import android.net.Uri
 import androidx.annotation.IntDef
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
@@ -47,7 +49,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         val networkRequest = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network?) {
-                if (MozoAuth.getInstance().isSignUpCompleted()) {
+                if (MozoAuth.getInstance().isInitialized && MozoAuth.getInstance().isSignUpCompleted()) {
                     profileViewModel.fetchData(context, callback = {
                         MozoSocketClient.connect()
                     })
@@ -154,6 +156,21 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         internal fun isNetworkAvailable(): Boolean {
             val activeNetwork = getInstance().connectivityManager.activeNetworkInfo
             return activeNetwork?.isConnected == true
+        }
+
+        @JvmStatic
+        fun contactTelegram(context: Context) {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/mozotoken")))
+        }
+
+        @JvmStatic
+        fun contactZalo(context: Context) {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://zalo.me/428563224447178063")))
+        }
+
+        @JvmStatic
+        fun contactKaKaoTalk(context: Context) {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://open.kakao.com/o/g6tvra5")))
         }
     }
 }

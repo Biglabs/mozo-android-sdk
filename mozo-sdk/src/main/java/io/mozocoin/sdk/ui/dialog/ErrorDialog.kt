@@ -5,21 +5,34 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.annotation.IntDef
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.utils.click
+import io.mozocoin.sdk.utils.gone
+import io.mozocoin.sdk.utils.visible
 import kotlinx.android.synthetic.main.dialog_error.*
 import org.greenrobot.eventbus.EventBus
 
 class ErrorDialog(context: Context, private val argument: Bundle, private val onTryAgain: (() -> Unit)? = null) : BaseDialog(context) {
 
     private var errorType = TYPE_GENERAL
+    private var errorMessage: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_error)
 
         errorType = argument.getInt(ERROR_TYPE, errorType)
+        errorMessage = argument.getString(ERROR_MESSAGE)
+
+        image_error_type.visible()
+        gone(arrayOf(
+                button_contact_telegram,
+                button_contact_zalo,
+                button_contact_kakao
+        ))
+        button_try_again.setText(R.string.mozo_button_try_again)
 
         when (errorType) {
             TYPE_GENERAL -> {
@@ -30,6 +43,36 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
                 image_error_type.setImageResource(R.drawable.ic_error_network)
                 text_msg_error.setText(R.string.mozo_dialog_error_network_msg)
             }
+            TYPE_TIMEOUT -> {
+                image_error_type.setImageResource(R.drawable.ic_error_timeout)
+                text_msg_error.setText(R.string.mozo_dialog_error_timeout_msg)
+            }
+            TYPE_WITH_CONTACT -> {
+                image_error_type.gone()
+                visible(arrayOf(
+                        button_contact_telegram,
+                        button_contact_zalo,
+                        button_contact_kakao
+                ))
+                text_msg_error.setText(R.string.error_fatal)
+                button_try_again.setText(android.R.string.ok)
+            }
+        }
+
+        errorMessage?.let {
+            text_msg_error?.text = it
+        }
+
+        button_contact_telegram.click {
+            MozoSDK.contactTelegram(context)
+        }
+
+        button_contact_zalo.click {
+            MozoSDK.contactZalo(context)
+        }
+
+        button_contact_kakao.click {
+            MozoSDK.contactKaKaoTalk(context)
         }
 
         button_try_again.click {
@@ -58,13 +101,16 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
 
     companion object {
         @Retention(AnnotationRetention.SOURCE)
-        @IntDef(TYPE_GENERAL, TYPE_NETWORK)
+        @IntDef(TYPE_GENERAL, TYPE_NETWORK, TYPE_TIMEOUT, TYPE_WITH_CONTACT)
         annotation class ErrorType
 
         const val TYPE_GENERAL = 0
         const val TYPE_NETWORK = 1
+        const val TYPE_TIMEOUT = 2
+        const val TYPE_WITH_CONTACT = 3
 
-        private const val ERROR_TYPE = "ERROR_TYPE"
+        const val ERROR_TYPE = "ERROR_TYPE"
+        const val ERROR_MESSAGE = "ERROR_MESSAGE"
 
         @Volatile
         private var instance: ErrorDialog? = null
@@ -81,6 +127,14 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
 
         fun networkError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
             show(context, TYPE_NETWORK, forceShow, onTryAgain)
+        }
+
+        fun timeoutError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_TIMEOUT, forceShow, onTryAgain)
+        }
+
+        fun withContactError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_WITH_CONTACT, forceShow, onTryAgain)
         }
 
         fun show(context: Context?, @ErrorType type: Int, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) = synchronized(this) {
@@ -108,5 +162,9 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
         }
 
         fun isShowing() = instance?.isShowing == true
+
+        fun setCancelable(cancel: Boolean) {
+            instance?.setCancelable(cancel)
+        }
     }
 }

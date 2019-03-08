@@ -4,42 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:paddingStart="40dp"
+    android:paddingEnd="40dp"
     tools:background="#3ccc">
 
     <ImageView
         android:id="@+id/image_error_type"
         android:layout_width="102dp"
-        android:layout_height="102dp"
-        android:layout_marginStart="99dp"
+        android:layout_height="0dp"
         android:layout_marginTop="42dp"
-        android:layout_marginEnd="99dp"
         android:contentDescription="@string/mozo_dialog_error_msg"
         android:src="@drawable/ic_error_general"
+        app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_msg_error"
-        android:layout_width="wrap_content"
+        android:layout_width="215dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:gravity="center"
         android:text="@string/mozo_dialog_error_msg"
         android:textColor="@color/mozo_color_text_main"
         android:textSize="@dimen/mozo_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_error_type" />
+        app:layout_constraintTop_toBottomOf="@id/image_error_type"
+        app:layout_goneMarginTop="40dp" />
+
+    <io.mozocoin.sdk.ui.view.MozoIconTextView
+        android:id="@+id/button_contact_telegram"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:drawableTop="@drawable/ic_action_contact_telegram"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/mozo_button_contact_telegram"
+        android:textColor="@color/mozo_color_text_main"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:drawableSize="44dp"
+        app:layout_constraintEnd_toStartOf="@id/button_contact_zalo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_msg_error"
+        tools:visibility="visible" />
+
+    <io.mozocoin.sdk.ui.view.MozoIconTextView
+        android:id="@+id/button_contact_zalo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
+        android:drawableTop="@drawable/ic_action_contact_zalo"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:paddingStart="14dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="10dp"
+        android:text="@string/mozo_button_contact_zalo"
+        android:textColor="@color/mozo_color_text_main"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:drawableSize="44dp"
+        app:layout_constraintEnd_toStartOf="@id/button_contact_kakao"
+        app:layout_constraintStart_toEndOf="@id/button_contact_telegram"
+        app:layout_constraintTop_toTopOf="@id/button_contact_telegram"
+        tools:visibility="visible" />
+
+    <io.mozocoin.sdk.ui.view.MozoIconTextView
+        android:id="@+id/button_contact_kakao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
+        android:drawableTop="@drawable/ic_action_contact_kakao"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/mozo_button_contact_kakao"
+        android:textColor="@color/mozo_color_text_main"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:drawableSize="44dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_contact_zalo"
+        app:layout_constraintTop_toTopOf="@id/button_contact_telegram"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/button_try_again"
         style="@style/MozoButtonStyle.Rounded"
         android:layout_width="wrap_content"
         android:layout_marginTop="27dp"
-        android:layout_marginBottom="57dp"
+        android:layout_marginBottom="40dp"
         android:text="@string/mozo_button_try_again"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_msg_error" />
+        app:layout_constraintTop_toBottomOf="@id/button_contact_telegram" />
 </androidx.constraintlayout.widget.ConstraintLayout>

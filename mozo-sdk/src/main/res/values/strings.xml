@@ -21,6 +21,7 @@
     <string name="mozo_dialog_copied_msg">Copied!</string>
 
     <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
+    <string name="mozo_dialog_error_timeout_msg" translatable="false">Time out, please try again.</string>
     <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
     <string name="mozo_dialog_error_msg">An error has occurred.</string>
     <string name="mozo_dialog_error_not_enough_msg">Your balance is not insufficient for this transfer amount.</string>
@@ -50,6 +51,9 @@
     <string name="mozo_button_retry">Retry</string>
     <string name="mozo_button_refresh">Refresh</string>
     <string name="mozo_button_try_again">Try Again</string>
+    <string name="mozo_button_contact_telegram" translatable="false">Telegram</string>
+    <string name="mozo_button_contact_kakao" translatable="false">KakaoTalk</string>
+    <string name="mozo_button_contact_zalo" translatable="false">Zalo</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">Store Recovery Phrase</string>

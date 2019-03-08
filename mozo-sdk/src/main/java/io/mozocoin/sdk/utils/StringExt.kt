@@ -8,12 +8,14 @@ import java.security.MessageDigest
 internal fun String?.logAsError(prefix: String? = null) {
     if (BuildConfig.DEBUG || MozoSDK.isEnableDebugLogging) {
         Log.e("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
+        Log.e("MozoSDK", " ")
     }
 }
 
 internal fun String?.logAsInfo(prefix: String? = null) {
     if (BuildConfig.DEBUG || MozoSDK.isEnableDebugLogging) {
         Log.i("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
+        Log.i("MozoSDK", " ")
     }
 }
 

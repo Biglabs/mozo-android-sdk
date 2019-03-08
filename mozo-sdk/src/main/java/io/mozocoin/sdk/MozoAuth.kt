@@ -14,12 +14,12 @@ import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.UserCancelException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.util.*
 
 @Suppress("RedundantSuspendModifier", "unused")
 class MozoAuth private constructor() {
@@ -30,8 +30,20 @@ class MozoAuth private constructor() {
     private val authStateManager: AuthStateManager by lazy { AuthStateManager.getInstance(MozoSDK.getInstance().context) }
     private var mAuthListener: AuthenticationListener? = null
 
+    internal var isInitialized = false
+
     init {
-        GlobalScope.launch(Dispatchers.Main) {
+        if (isSignedIn() && authStateManager.current.accessTokenExpirationTime ?: 0 > 0) {
+            val expirationTime = Calendar.getInstance()
+            expirationTime.timeInMillis = authStateManager.current.accessTokenExpirationTime ?: 0
+            expirationTime.add(Calendar.DAY_OF_MONTH, -2)
+
+            if (Calendar.getInstance().after(expirationTime)) {
+                MozoTokenService.newInstance().refreshToken {
+                    onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
+                }
+            }
+        } else {
             onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
         }
     }
@@ -147,9 +159,9 @@ class MozoAuth private constructor() {
 
     fun checkSession(context: Context, callback: (isExpired: Boolean) -> Unit) {
         val tokenService = MozoTokenService.newInstance()
-        tokenService.checkSession(context, {
+        tokenService.checkSession(context, { isExpired ->
 
-            if (it) {
+            if (isExpired) {
                 /* Token has expired, try to request the new token */
                 tokenService.refreshToken { token ->
                     callback.invoke(token.isNullOrEmpty())
@@ -163,6 +175,7 @@ class MozoAuth private constructor() {
 
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
+        isInitialized = true
         EventBus.getDefault().unregister(this@MozoAuth)
 
         if (auth.exception is UserCancelException) {
@@ -170,7 +183,7 @@ class MozoAuth private constructor() {
             return
         }
 
-        if (auth.isSignedIn) {
+        if (isSignedIn()) {
             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
                 mAuthListener?.onChanged(true)
                 MozoSocketClient.connect()

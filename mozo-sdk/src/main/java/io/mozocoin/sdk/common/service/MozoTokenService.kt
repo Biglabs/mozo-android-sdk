@@ -9,6 +9,7 @@ import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.logAsError
+import io.mozocoin.sdk.utils.logAsInfo
 import net.openid.appauth.AuthorizationService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -37,10 +38,10 @@ internal class MozoTokenService private constructor() {
                 authStateManager.updateAfterTokenResponse(response, ex)
 
                 response?.run {
-                    "Refresh token successful: $accessToken".logAsError()
+                    "Refresh token successful: $accessToken".logAsInfo()
                 }
                 ex?.run {
-                    "Refresh token failed: $message".logAsError()
+                    "Refresh token failed: $message".logAsInfo()
                 }
 
                 callback?.invoke(response?.accessToken)

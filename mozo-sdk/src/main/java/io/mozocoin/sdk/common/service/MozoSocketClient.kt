@@ -10,10 +10,10 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.gson.Gson
+import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoNotification
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
-import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.BroadcastData
 import io.mozocoin.sdk.common.model.BroadcastDataContent
@@ -152,13 +152,16 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         private var retryConnectTime = Constant.SOCKET_RETRY_START_TIME
 
         @Synchronized
-        fun connect(): MozoSocketClient {
+        fun connect() {
             if (instance?.isOpen == true) {
                 disconnect()
             }
-            if (instance == null) {
-                val accessToken = AuthStateManager.getInstance(MozoSDK.getInstance().context)
-                        .current.accessToken ?: ""
+            instance = null
+
+            MozoTokenService.newInstance().checkSession(MozoSDK.getInstance().context, { isExpired ->
+                val accessToken = MozoAuth.getInstance().getAccessToken()
+                if (isExpired || accessToken.isNullOrEmpty()) return@checkSession
+
                 val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
                 val userId = MozoSDK.getInstance().profileViewModel.getProfile()?.userId
                 val uuid = StringBuilder()
@@ -179,8 +182,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                                 "X-Atmosphere-Transport" to "websocket"
                         )
                 )
-            }
-            return instance!!
+            })
         }
 
         fun disconnect() {

@@ -85,29 +85,33 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
         MozoAPIsService.getInstance().getTransactionHistory(
                 this,
                 currentAddress ?: return,
-                page = currentPage
-        ) { data, _ ->
-            list_history_refresh?.isRefreshing = false
+                page = currentPage,
+                callback = { data, _ ->
+                    list_history_refresh?.isRefreshing = false
 
-            data ?: return@getTransactionHistory
-            data.items ?: return@getTransactionHistory
-
-            fetchDataJob?.cancel()
-            fetchDataJob = GlobalScope.launch {
-                if (currentPage <= Constant.PAGING_START_INDEX) histories.clear()
-                histories.addAll(data.items!!.map {
-                    it.apply {
-                        contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
-                                if (it.type(currentAddress)) it.addressTo else it.addressFrom
-                        )?.name
+                    if (data?.items == null) {
+                        historyAdapter.setCanLoadMore(false)
+                        historyAdapter.notifyData()
+                        return@getTransactionHistory
                     }
-                })
-                launch(Dispatchers.Main) {
-                    historyAdapter.setCanLoadMore(data.items!!.size == Constant.PAGING_SIZE)
-                    historyAdapter.notifyData()
-                }
-            }
-        }
+
+                    fetchDataJob?.cancel()
+                    fetchDataJob = GlobalScope.launch {
+                        if (currentPage <= Constant.PAGING_START_INDEX) histories.clear()
+                        histories.addAll(data.items!!.map {
+                            it.apply {
+                                contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
+                                        if (it.type(currentAddress)) it.addressTo else it.addressFrom
+                                )?.name
+                            }
+                        })
+                        withContext(Dispatchers.Main) {
+                            historyAdapter.setCanLoadMore(data.items!!.size == Constant.PAGING_SIZE)
+                            historyAdapter.notifyData()
+                        }
+                    }
+                },
+                retry = this::fetchData)
     }
 
     override fun onLoadMore() {

@@ -2,7 +2,7 @@
 <resources>
     <string name="error_common">Something is wrong with your account status. Please try again.</string>
 
-    <string name="error_fatal">Can not connect to MozoX servers. Contact your agency for more information (email + phone)</string>
+    <string name="error_fatal">Can not connect to MozoX servers. Contact your agency for more information</string>
     <string name="error_required_login">Your session is expired. Please login again</string>
 
     <string name="error_wallet_different">Your wallet was updated but did not sync with your current device. Please restore your wallet first.</string>

@@ -9,17 +9,20 @@ import androidx.core.net.toUri
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.FragmentActivity
 import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.ui.SecurityActivity
-import io.mozocoin.sdk.utils.*
+import io.mozocoin.sdk.utils.Support
+import io.mozocoin.sdk.utils.UserCancelException
+import io.mozocoin.sdk.utils.logAsError
+import io.mozocoin.sdk.utils.setMatchParent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import net.openid.appauth.*
 import org.greenrobot.eventbus.EventBus
-import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
@@ -59,6 +62,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mAuthService?.dispose()
+        mAuthService = null
         authenticationInProgress = false
 
         if (isAuthInProgress) {
@@ -72,7 +76,6 @@ internal class MozoAuthActivity : FragmentActivity() {
      * static values or by retrieving an OpenID discovery document.
      */
     private fun initializeAppAuth() = GlobalScope.launch {
-        mAuthService?.dispose()
         mAuthService = AuthorizationService(this@MozoAuthActivity)
         mAuthRequest.set(null)
         mAuthIntent.set(null)
@@ -104,13 +107,17 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     private fun createAuthRequest() {
-        val redirectUrl = getString(R.string.auth_redirect_uri, String.format(Locale.US, "com.biglabs.mozosdk.%s", applicationInfo.packageName))
+        val redirectUrl = getString(R.string.auth_redirect_uri, "com.biglabs.mozosdk.${applicationInfo.packageName}")
+        val clientId = getString(
+                if (MozoSDK.isRetailerApp) R.string.auth_client_id_retailer
+                else R.string.auth_client_id_shopper
+        )
         val authRequestBuilder = AuthorizationRequest.Builder(
                 if (modeSignIn)
                     mAuthStateManager!!.current.authorizationServiceConfiguration!!
                 else
                     signOutConfiguration!!,
-                string(R.string.auth_client_id),
+                clientId,
                 ResponseTypeValues.CODE,
                 Uri.parse(redirectUrl))
                 .setPrompt("consent")
@@ -151,7 +158,8 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun doAuth() = GlobalScope.launch(Dispatchers.Main) {
         try {
             mAuthIntentLatch.await()
-        } catch (ex: InterruptedException) {
+        } catch (ex: Exception) {
+            finishAuth(ex)
         }
 
         isAuthInProgress = true
