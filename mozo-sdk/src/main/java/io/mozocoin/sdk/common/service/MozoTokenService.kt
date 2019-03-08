@@ -63,13 +63,12 @@ internal class MozoTokenService private constructor() {
             }
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
-                if (context is Activity && (context.isFinishing || context.isDestroyed)) {
-                    return
-                }
-                if (t is IOException) {
-                    ErrorDialog.networkError(context, onTryAgain = retry)
-                } else {
-                    ErrorDialog.generalError(context, onTryAgain = retry)
+                if (context is Activity && !context.isFinishing && !context.isDestroyed) {
+                    if (t is IOException) {
+                        ErrorDialog.networkError(context, onTryAgain = retry)
+                    } else {
+                        ErrorDialog.generalError(context, onTryAgain = retry)
+                    }
                 }
             }
         })

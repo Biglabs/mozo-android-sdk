@@ -122,6 +122,10 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden) checkLogin()
+    }
+
     override fun onResume() {
         super.onResume()
         checkLogin()
@@ -178,6 +182,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun fetchData() {
+        fetchDataJob?.cancel()
         MozoAPIsService.getInstance().getTransactionHistory(
                 context ?: return,
                 currentAddress ?: return,
@@ -192,7 +197,6 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         return@getTransactionHistory
                     }
 
-                    fetchDataJob?.cancel()
                     fetchDataJob = GlobalScope.launch {
                         histories.clear()
                         histories.addAll(data.items!!.map {
@@ -203,6 +207,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                             }
                         })
                         withContext(Dispatchers.Main) {
+                            fetchDataJob = null
                             historyAdapter.setCanLoadMore(false)
                             historyAdapter.notifyData()
                         }
