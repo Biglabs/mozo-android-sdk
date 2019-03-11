@@ -352,11 +352,11 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun showLoading() = GlobalScope.launch(Dispatchers.Main) {
-        loading_container.visible()
+        transfer_loading_container.visible()
     }
 
     private fun hideLoading() = GlobalScope.launch(Dispatchers.Main) {
-        loading_container.gone()
+        transfer_loading_container.gone()
     }
 
     private fun showErrorAddressUI() {
