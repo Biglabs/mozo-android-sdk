@@ -42,15 +42,18 @@ class MozoAuth private constructor() {
                 MozoTokenService.newInstance().refreshToken {
                     onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
                 }
-            }
-        } else {
+            } else onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
+        } else
             onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
-        }
     }
 
     fun isSignedIn() = authStateManager.current.isAuthorized
 
-    fun isSignUpCompleted() = authStateManager.current.isAuthorized && walletService.isHasWallet()
+    fun isSignUpCompleted(callback: (isCompleted: Boolean) -> Unit) {
+        MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context, callback = {
+            callback.invoke(authStateManager.current.isAuthorized && MozoSDK.getInstance().profileViewModel.hasWallet())
+        })
+    }
 
     fun signIn() {
         walletService.clear()
@@ -220,7 +223,7 @@ class MozoAuth private constructor() {
                 GlobalScope.launch {
                     MozoSDK.getInstance().profileViewModel.updateProfile(context, data)
                     delay(100)
-                    MozoWallet.getInstance().initWallet(context).await()
+                    MozoWallet.getInstance().initWalletAsync(context).await()
                     callback?.invoke(SecurityActivity.KEY_CREATE_PIN)
                 }
                 return@getProfile
@@ -239,7 +242,7 @@ class MozoAuth private constructor() {
 
                         MozoSDK.getInstance().profileViewModel.updateProfile(context, data)
 
-                        val flag = MozoWallet.getInstance().initWallet(context).await()
+                        val flag = MozoWallet.getInstance().initWalletAsync(context).await()
                         callback?.invoke(flag)
                     }
                 }

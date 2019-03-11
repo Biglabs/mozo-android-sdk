@@ -19,10 +19,10 @@ internal class TransactionHistoryButton : BaseButton {
 
     override fun buttonIcon(): Int = R.drawable.ic_action_time
 
-    override fun authorizeChanged(signedIn: Boolean) {
-        if (needToContinue && MozoAuth.getInstance().isSignUpCompleted()) {
+    override fun authorizeChanged(isSignUpCompleted: Boolean) {
+        if (needToContinue) {
             needToContinue = false
-            doOpenTxHistory()
+            if (isSignUpCompleted) doOpenTxHistory()
         }
     }
 
@@ -31,12 +31,11 @@ internal class TransactionHistoryButton : BaseButton {
     }
 
     override fun onClick(view: View) {
-        MozoAuth.getInstance().run {
-            if (isSignUpCompleted())
-                doOpenTxHistory()
+        MozoAuth.getInstance().isSignUpCompleted {
+            if (it) doOpenTxHistory()
             else {
                 needToContinue = true
-                signIn()
+                MozoAuth.getInstance().signIn()
             }
         }
     }

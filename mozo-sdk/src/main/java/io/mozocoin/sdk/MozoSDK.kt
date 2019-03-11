@@ -49,10 +49,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         val networkRequest = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network?) {
-                if (MozoAuth.getInstance().isInitialized && MozoAuth.getInstance().isSignUpCompleted()) {
-                    profileViewModel.fetchData(context, callback = {
-                        MozoSocketClient.connect()
-                    })
+                if (!MozoAuth.getInstance().isInitialized) return
+
+                MozoAuth.getInstance().isSignUpCompleted {
+                    if (!it) return@isSignUpCompleted
+                    MozoSocketClient.connect()
                     contactViewModel.fetchData(context)
                 }
             }

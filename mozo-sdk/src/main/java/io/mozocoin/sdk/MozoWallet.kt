@@ -78,7 +78,7 @@ class MozoWallet private constructor() {
         AddressBookActivity.start(MozoSDK.getInstance().context)
     }
 
-    internal fun initWallet(context: Context) = GlobalScope.async {
+    internal fun initWalletAsync(context: Context) = GlobalScope.async {
         mProfile = MozoSDK.getInstance().profileViewModel.getProfile()
         mProfile ?: return@async 0
         if (mProfile!!.walletInfo == null || mProfile!!.walletInfo!!.encryptSeedPhrase.isNullOrEmpty()) {
@@ -170,7 +170,7 @@ class MozoWallet private constructor() {
     }
 
     @Suppress("UNUSED_VALUE")
-    internal fun validatePin(pin: String) = GlobalScope.async {
+    internal fun validatePinAsync(pin: String) = GlobalScope.async {
         mProfile?.walletInfo?.run {
             if (encryptSeedPhrase.isNullOrEmpty() || pin.isEmpty()) return@async false
             else return@async try {
@@ -201,8 +201,6 @@ class MozoWallet private constructor() {
         /* load data to variables */
         MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
     }
-
-    internal fun isHasWallet() = MozoSDK.getInstance().profileViewModel.hasWallet()
 
     internal fun getSeed() = this.forSaveSeed
 

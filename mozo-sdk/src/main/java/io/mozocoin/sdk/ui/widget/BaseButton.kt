@@ -58,7 +58,7 @@ internal abstract class BaseButton : MaterialButton {
         authorizeChanged(it?.walletInfo != null)
     }
 
-    protected open fun authorizeChanged(signedIn: Boolean) {
+    protected open fun authorizeChanged(isSignUpCompleted: Boolean) {
 
     }
 

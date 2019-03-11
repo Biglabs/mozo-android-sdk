@@ -19,10 +19,10 @@ internal class SendButton : BaseButton {
 
     override fun buttonIcon(): Int = R.drawable.ic_action_send
 
-    override fun authorizeChanged(signedIn: Boolean) {
-        if (needToContinue && MozoAuth.getInstance().isSignUpCompleted()) {
+    override fun authorizeChanged(isSignUpCompleted: Boolean) {
+        if (needToContinue) {
             needToContinue = false
-            doTransfer()
+            if (isSignUpCompleted) doTransfer()
         }
     }
 
@@ -31,12 +31,11 @@ internal class SendButton : BaseButton {
     }
 
     override fun onClick(view: View) {
-        MozoAuth.getInstance().run {
-            if (isSignUpCompleted())
-                doTransfer()
+        MozoAuth.getInstance().isSignUpCompleted {
+            if (it) doTransfer()
             else {
                 needToContinue = true
-                signIn()
+                MozoAuth.getInstance().signIn()
             }
         }
     }
