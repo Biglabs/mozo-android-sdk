@@ -13,6 +13,7 @@ import io.mozocoin.sdk.utils.CryptoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.web3j.crypto.Credentials
@@ -84,16 +85,17 @@ class MozoTx private constructor() {
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe
     internal fun onUserCancel(event: MessageEvent.UserCancel) {
         checkNotNull(event)
         EventBus.getDefault().unregister(this)
         messagesToSign = null
+        callbackToSign?.invoke(emptyList())
         callbackToSign = null
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe
     internal fun onReceivePin(event: MessageEvent.Pin) {
         EventBus.getDefault().unregister(this)
@@ -118,7 +120,7 @@ class MozoTx private constructor() {
                     return@map Triple(it, signature, publicKey)
                 }
 
-                launch(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     callbackToSign!!.invoke(result)
                     messagesToSign = null
                     callbackToSign = null
