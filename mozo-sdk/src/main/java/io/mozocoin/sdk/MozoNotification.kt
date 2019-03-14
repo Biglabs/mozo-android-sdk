@@ -26,11 +26,16 @@ class MozoNotification {
         const val REQUEST_CODE = 0x3020
         const val KEY_DATA = "mozo_notification_data"
 
-        internal fun shouldShowNotification(event: String?) = arrayOf(
-                Constant.NOTIFY_EVENT_AIRDROPPED,
-                Constant.NOTIFY_EVENT_BALANCE_CHANGED,
-                Constant.NOTIFY_EVENT_CUSTOMER_CAME
-        ).contains(event?.toLowerCase())
+        internal fun shouldShowNotification(event: String?) = (if (MozoSDK.isRetailerApp)
+            arrayOf(
+                    Constant.NOTIFY_EVENT_AIRDROPPED,
+                    Constant.NOTIFY_EVENT_BALANCE_CHANGED,
+                    Constant.NOTIFY_EVENT_CUSTOMER_CAME
+            ) else
+            arrayOf(
+                    Constant.NOTIFY_EVENT_AIRDROPPED,
+                    Constant.NOTIFY_EVENT_BALANCE_CHANGED
+            )).contains(event?.toLowerCase())
 
         @Synchronized
         internal fun prepareDataIntent(message: Notification): Intent = Intent(
