@@ -35,7 +35,7 @@ class MozoNotification {
             arrayOf(
                     Constant.NOTIFY_EVENT_AIRDROPPED,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED
-            )).contains(event?.toLowerCase())
+            )).contains(event?.toLowerCase()) && MozoSDK.shouldShowNotification
 
         @Synchronized
         internal fun prepareDataIntent(message: Notification): Intent = Intent(

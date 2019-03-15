@@ -88,6 +88,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @Volatile
         internal var isEnableDebugLogging = false
 
+        @Volatile
+        internal var shouldShowNotification = true
+
         @JvmStatic
         @Synchronized
         fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_STAGING, isRetailerApp: Boolean = false) {
@@ -152,6 +155,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         fun attachNotificationReceiverActivity(activity: Class<out Activity>) {
             checkNotNull(activity)
             getInstance().notifyActivityClass = activity
+        }
+
+        @JvmStatic
+        fun shouldShowNotification(show: Boolean) {
+            shouldShowNotification = show
         }
 
         internal fun isNetworkAvailable(): Boolean {
