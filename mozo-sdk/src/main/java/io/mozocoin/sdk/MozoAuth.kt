@@ -32,7 +32,7 @@ class MozoAuth private constructor() {
 
     internal var isInitialized = false
 
-    init {
+    internal fun initialize() {
         if (isSignedIn() && authStateManager.current.accessTokenExpirationTime ?: 0 > 0) {
             val expirationTime = Calendar.getInstance()
             expirationTime.timeInMillis = authStateManager.current.accessTokenExpirationTime ?: 0
