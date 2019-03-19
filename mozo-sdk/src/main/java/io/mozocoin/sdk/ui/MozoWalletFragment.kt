@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -45,6 +46,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var historyAdapter = TransactionHistoryRecyclerAdapter(histories, onItemClick, null)
     private var currentAddress: String? = null
     private var fetchDataJob: Job? = null
+    private var fetchDataJobHandler: Job? = null
     private var generateQRJob: Job? = null
     private var animationJob: Job? = null
 
@@ -122,14 +124,13 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden) checkLogin()
+    }
+
     override fun onResume() {
         super.onResume()
         checkLogin()
-        MozoSDK.getInstance().profileViewModel.run {
-            profileLiveData.observe(this@MozoWalletFragment, profileObserver)
-            balanceAndRateLiveData.observeForever(balanceAndRateObserver)
-        }
-        MozoSDK.getInstance().profileViewModel.fetchBalance(context ?: return)
     }
 
     override fun onPause() {
@@ -143,6 +144,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onDestroyView() {
         super.onDestroyView()
         fetchDataJob?.cancel()
+        fetchDataJobHandler?.cancel()
         generateQRJob?.cancel()
         animationJob?.cancel()
     }
@@ -152,6 +154,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private val profileObserver = Observer<Profile?> {
+        "Wallet Fragment - Profile loaded: ${it != null}".logAsInfo()
         if (it?.walletInfo != null) {
             currentAddress = it.walletInfo!!.offchainAddress
             historyAdapter.address = currentAddress
@@ -160,7 +163,6 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             generateQRJob?.cancel()
             generateQRJob = generateQRImage()
         }
-        checkLogin()
     }
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
@@ -177,38 +179,45 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
+    @Synchronized
     private fun fetchData() {
-        MozoAPIsService.getInstance().getTransactionHistory(
-                context ?: return,
-                currentAddress ?: return,
-                page = Constant.PAGING_START_INDEX,
-                size = 10,
-                callback = { data, _ ->
-                    wallet_fragment_refresh_layout?.isRefreshing = false
+        fetchDataJob?.cancel()
+        fetchDataJobHandler?.cancel()
+        fetchDataJobHandler = GlobalScope.launch {
+            delay(1000)
+            if (!isAdded || activity == null) return@launch
+            MozoAPIsService.getInstance().getTransactionHistory(
+                    context ?: return@launch,
+                    currentAddress ?: return@launch,
+                    page = Constant.PAGING_START_INDEX,
+                    size = 10,
+                    callback = { data, _ ->
+                        wallet_fragment_refresh_layout?.isRefreshing = false
 
-                    if (data?.items == null) {
-                        historyAdapter.setCanLoadMore(false)
-                        historyAdapter.notifyData()
-                        return@getTransactionHistory
-                    }
-
-                    fetchDataJob?.cancel()
-                    fetchDataJob = GlobalScope.launch {
-                        histories.clear()
-                        histories.addAll(data.items!!.map {
-                            it.apply {
-                                contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
-                                        if (it.type(currentAddress)) it.addressTo else it.addressFrom
-                                )?.name
-                            }
-                        })
-                        withContext(Dispatchers.Main) {
+                        if (data?.items == null) {
                             historyAdapter.setCanLoadMore(false)
                             historyAdapter.notifyData()
+                            return@getTransactionHistory
                         }
-                    }
-                },
-                retry = this::fetchData)
+
+                        fetchDataJob = GlobalScope.launch {
+                            histories.clear()
+                            histories.addAll(data.items!!.map {
+                                it.apply {
+                                    contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
+                                            if (it.type(currentAddress)) it.addressTo else it.addressFrom
+                                    )?.name
+                                }
+                            })
+                            withContext(Dispatchers.Main) {
+                                fetchDataJob = null
+                                historyAdapter.setCanLoadMore(false)
+                                historyAdapter.notifyData()
+                            }
+                        }
+                    },
+                    retry = this@MozoWalletFragment::fetchData)
+        }
     }
 
     private fun generateQRImage() = GlobalScope.launch {
@@ -224,7 +233,15 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun checkLogin() {
         view?.find<View>(R.id.wallet_fragment_login_required)?.apply {
             isClickable = true
-            if (MozoAuth.getInstance().isSignUpCompleted()) gone() else visible()
+            isVisible = !MozoAuth.getInstance().isSignedIn()
+        }
+
+        if (MozoAuth.getInstance().isSignedIn()) {
+            MozoSDK.getInstance().profileViewModel.run {
+                profileLiveData.observe(this@MozoWalletFragment, profileObserver)
+                balanceAndRateLiveData.observeForever(balanceAndRateObserver)
+            }
+            MozoSDK.getInstance().profileViewModel.fetchData(context ?: return)
         }
     }
 

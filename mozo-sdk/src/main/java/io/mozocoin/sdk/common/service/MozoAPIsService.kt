@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.authentication.MozoAuthActivity
 import io.mozocoin.sdk.common.Constant
@@ -13,6 +14,9 @@ import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -28,37 +32,51 @@ internal class MozoAPIsService private constructor() {
     private val mozoAPIs: MozoAPIs by lazy { createService() }
 
     fun getProfile(context: Context, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.getProfile(), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getProfile(), callback)
+        }
     }
 
     fun updateProfile(context: Context, profile: Profile, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.updateProfile(profile), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.updateProfile(profile), callback)
+        }
     }
 
     /**
      * Wallet Information APIs
      */
     fun saveWallet(context: Context, walletInfo: WalletInfo, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.saveWallet(walletInfo), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.saveWallet(walletInfo), callback)
+        }
     }
 
     fun getBalance(context: Context, address: String, callback: ((data: BalanceInfo?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.getBalance(address), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getBalance(address), callback)
+        }
     }
 
     fun getExchangeRate(context: Context, locale: String, callback: ((data: ExchangeRate?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.getExchangeRate(locale), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getExchangeRate(locale), callback)
+        }
     }
 
     /**
      * Transaction APIs
      */
     fun createTx(context: Context, request: TransactionRequest, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.createTx(request), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.createTx(request), callback)
+        }
     }
 
     fun sendTransaction(context: Context, request: TransactionResponse, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
-        execute(context, mozoAPIs.sendTx(request), callback, retry)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.sendTx(request), callback, retry)
+        }
     }
 
     fun getTransactionHistory(
@@ -69,41 +87,57 @@ internal class MozoAPIsService private constructor() {
             callback: ((data: BaseData<TransactionHistory>?, errorCode: String?) -> Unit)? = null,
             retry: (() -> Unit)? = null
     ) {
-        execute(context, mozoAPIs.getTransactionHistory(address, page, size), callback, retry)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getTransactionHistory(address, page, size), callback, retry)
+        }
     }
 
     fun getTxStatus(context: Context, txHash: String, callback: ((data: TransactionStatus?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.getTxStatus(txHash), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getTxStatus(txHash), callback)
+        }
     }
 
     /**
      * Address Book APIs
      */
     fun getContactUsers(context: Context, callback: ((data: BaseData<Contact>?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.getContacts(), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getContacts(), callback)
+        }
     }
 
     fun saveContact(context: Context, contact: Contact, callback: ((data: Contact?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.saveContact(contact), callback, handleError = false)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.saveContact(contact), callback, handleError = false)
+        }
     }
 
     fun getContactStores(context: Context, callback: ((data: BaseData<Contact>?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.getStoreBook(), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getStoreBook(), callback)
+        }
     }
 
     /**
      * Payment Request APIs
      */
     fun getPaymentRequests(context: Context, page: Int = Constant.PAGING_START_INDEX, size: Int = Constant.PAGING_SIZE, callback: ((data: BaseData<PaymentRequest>?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.getPaymentRequests(page, size), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getPaymentRequests(page, size), callback)
+        }
     }
 
     fun sendPaymentRequest(context: Context, toAddress: String, request: PaymentRequest, callback: ((data: PaymentRequest?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.sendPaymentRequest(toAddress, request), callback, handleError = false)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.sendPaymentRequest(toAddress, request), callback, handleError = false)
+        }
     }
 
     fun deletePaymentRequest(context: Context, id: Long, callback: ((data: Any?, errorCode: String?) -> Unit)? = null) {
-        execute(context, mozoAPIs.deletePaymentRequest(id), callback)
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.deletePaymentRequest(id), callback)
+        }
     }
 
     private fun <V, T : Base<V>> execute(

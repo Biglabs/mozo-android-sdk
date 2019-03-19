@@ -49,10 +49,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         val networkRequest = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network?) {
-                if (MozoAuth.getInstance().isInitialized && MozoAuth.getInstance().isSignUpCompleted()) {
-                    profileViewModel.fetchData(context, callback = {
-                        MozoSocketClient.connect()
-                    })
+                if (!MozoAuth.getInstance().isInitialized) return
+
+                MozoAuth.getInstance().isSignUpCompleted {
+                    if (!it) return@isSignUpCompleted
+                    MozoSocketClient.connect()
                     contactViewModel.fetchData(context)
                 }
             }
@@ -87,6 +88,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @Volatile
         internal var isEnableDebugLogging = false
 
+        @Volatile
+        internal var shouldShowNotification = true
+
         @JvmStatic
         @Synchronized
         fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_STAGING, isRetailerApp: Boolean = false) {
@@ -100,7 +104,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 /* initialize Database Service */
                 MozoDatabase.getInstance(context)
                 /* initialize Authentication Service */
-                MozoAuth.getInstance()
+                MozoAuth.getInstance().initialize()
                 /* initialize Wallet Service */
                 MozoWallet.getInstance()
                 /* initialize Transaction Service */
@@ -151,6 +155,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         fun attachNotificationReceiverActivity(activity: Class<out Activity>) {
             checkNotNull(activity)
             getInstance().notifyActivityClass = activity
+        }
+
+        @JvmStatic
+        fun shouldShowNotification(show: Boolean) {
+            shouldShowNotification = show
         }
 
         internal fun isNetworkAvailable(): Boolean {

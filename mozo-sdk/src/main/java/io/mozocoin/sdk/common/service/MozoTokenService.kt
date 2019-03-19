@@ -10,6 +10,9 @@ import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.logAsError
 import io.mozocoin.sdk.utils.logAsInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -57,22 +60,23 @@ internal class MozoTokenService private constructor() {
             callback: ((isExpired: Boolean) -> Unit)?,
             retry: (() -> Unit)? = null
     ) {
-        mAPIs.getUserInfo().enqueue(object : Callback<Any> {
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
-                callback?.invoke(!response.isSuccessful)
-            }
+        GlobalScope.launch(Dispatchers.Main) {
+            mAPIs.getUserInfo().enqueue(object : Callback<Any> {
+                override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                    callback?.invoke(!response.isSuccessful)
+                }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
-                if (context is Activity && (context.isFinishing || context.isDestroyed)) {
-                    return
+                override fun onFailure(call: Call<Any>, t: Throwable) {
+                    if (context is Activity && !context.isFinishing && !context.isDestroyed) {
+                        if (t is IOException) {
+                            ErrorDialog.networkError(context, onTryAgain = retry)
+                        } else {
+                            ErrorDialog.generalError(context, onTryAgain = retry)
+                        }
+                    }
                 }
-                if (t is IOException) {
-                    ErrorDialog.networkError(context, onTryAgain = retry)
-                } else {
-                    ErrorDialog.generalError(context, onTryAgain = retry)
-                }
-            }
-        })
+            })
+        }
     }
 
     private fun createService(): KeyCloakAPIs {

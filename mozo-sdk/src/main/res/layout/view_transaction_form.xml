@@ -438,7 +438,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
-        android:id="@+id/loading_container"
+        android:id="@+id/transfer_loading_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clickable="true"

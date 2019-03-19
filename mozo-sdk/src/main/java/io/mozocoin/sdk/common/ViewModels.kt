@@ -3,6 +3,7 @@ package io.mozocoin.sdk.common
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.common.model.*
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.common.service.MozoDatabase
@@ -35,7 +36,16 @@ internal object ViewModels {
 
         val balanceAndRateLiveData = MutableLiveData<BalanceAndRate>()
 
+        init {
+            updateBalanceAndRate()
+        }
+
+        @Synchronized
         fun fetchData(context: Context, userId: String? = null, callback: ((p: Profile?) -> Unit)? = null) {
+            if (!MozoAuth.getInstance().isSignedIn()) {
+                callback?.invoke(null)
+                return
+            }
             GlobalScope.launch {
                 val profile = if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
                 else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
@@ -52,8 +62,18 @@ internal object ViewModels {
         }
 
         fun fetchBalance(context: Context, callback: ((balanceInfo: BalanceInfo?) -> Unit)? = null) {
-            profileLiveData.value?.walletInfo?.offchainAddress?.run {
-                MozoAPIsService.getInstance().getBalance(context, this) { data, _ ->
+            if (!MozoAuth.getInstance().isSignedIn()) {
+                callback?.invoke(null)
+                return
+            }
+            val address = profileLiveData.value?.walletInfo?.offchainAddress
+            if (address == null) {
+                fetchData(context, callback = {
+                    if (it == null) callback?.invoke(null)
+                    fetchBalance(context, callback)
+                })
+            } else {
+                MozoAPIsService.getInstance().getBalance(context, address) { data, _ ->
                     callback?.invoke(data)
                     data ?: return@getBalance
                     balanceInfoLiveData.value = data
@@ -81,6 +101,9 @@ internal object ViewModels {
         }
 
         private fun updateBalanceAndRate() {
+            if (exchangeRateLiveData.value == null) {
+                exchangeRateLiveData.value = Support.getDefaultCurrency()
+            }
             val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal()
                     ?: BigDecimal.ZERO
             val rate = (exchangeRateLiveData.value?.rate ?: 0.0).toBigDecimal()

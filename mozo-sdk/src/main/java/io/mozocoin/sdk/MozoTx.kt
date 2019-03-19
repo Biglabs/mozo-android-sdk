@@ -2,6 +2,7 @@ package io.mozocoin.sdk
 
 import android.content.Context
 import androidx.lifecycle.Observer
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.*
@@ -13,6 +14,7 @@ import io.mozocoin.sdk.utils.CryptoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.web3j.crypto.Credentials
@@ -22,8 +24,8 @@ import java.math.BigDecimal
 
 class MozoTx private constructor() {
 
-    private var decimal = 0.0
-    private var exchangeRate = BigDecimal.ZERO
+    private var decimal = Constant.DEFAULT_DECIMAL.toDouble()
+    private var exchangeRate = Constant.DEFAULT_CURRENCY_RATE.toBigDecimal()
 
     private var messagesToSign: Array<out String>? = null
     private var callbackToSign: ((result: List<Triple<String, String, String>>) -> Unit)? = null
@@ -84,16 +86,17 @@ class MozoTx private constructor() {
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe
     internal fun onUserCancel(event: MessageEvent.UserCancel) {
         checkNotNull(event)
         EventBus.getDefault().unregister(this)
         messagesToSign = null
+        callbackToSign?.invoke(emptyList())
         callbackToSign = null
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe
     internal fun onReceivePin(event: MessageEvent.Pin) {
         EventBus.getDefault().unregister(this)
@@ -118,7 +121,7 @@ class MozoTx private constructor() {
                     return@map Triple(it, signature, publicKey)
                 }
 
-                launch(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     callbackToSign!!.invoke(result)
                     messagesToSign = null
                     callbackToSign = null

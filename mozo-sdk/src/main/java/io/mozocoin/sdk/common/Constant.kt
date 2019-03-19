@@ -19,7 +19,7 @@ class Constant {
         internal const val DEFAULT_DECIMAL = 2
         internal const val DEFAULT_CURRENCY = "USD"
         internal const val DEFAULT_CURRENCY_SYMBOL = "$"
-        internal const val DEFAULT_CURRENCY_RATE = 0.00011535323856
+        internal const val DEFAULT_CURRENCY_RATE = 1.2042239402099
 
         internal const val CURRENCY_SYMBOL_KRW = "₩"
         internal const val CURRENCY_SYMBOL_VND = "₫"

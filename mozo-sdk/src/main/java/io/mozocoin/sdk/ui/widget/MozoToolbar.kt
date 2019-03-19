@@ -13,7 +13,7 @@ import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.utils.click
 import org.greenrobot.eventbus.EventBus
 
-internal class MozoToolbar : ConstraintLayout {
+class MozoToolbar : ConstraintLayout {
 
     private var viewScreenTitle: TextView? = null
     private var viewButtonBack: View? = null

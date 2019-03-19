@@ -72,6 +72,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         /* Do show notification on system tray */
                         if (MozoNotification.shouldShowNotification(broadcast.event)) {
                             showNotification(broadcast)
+                        } else if (!MozoSDK.shouldShowNotification) {
+                            "Notification received but not be shown".logAsInfo(TAG)
                         }
                     }
                 }
