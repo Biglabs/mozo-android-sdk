@@ -70,7 +70,7 @@ internal class SecurityActivity : BaseActivity() {
 
         val paddingVertical = resources.dp2Px(10f).toInt()
         val paddingHorizontal = resources.dp2Px(8f).toInt()
-        MozoWallet.getInstance().getSeed()?.split(" ")?.map {
+        MozoWallet.getInstance().getWallet().mnemonicPhrases()?.map {
             val word = TextView(this@SecurityActivity)
             word.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
             word.text = it

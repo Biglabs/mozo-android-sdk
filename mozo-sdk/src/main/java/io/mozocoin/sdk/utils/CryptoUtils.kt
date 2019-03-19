@@ -1,16 +1,35 @@
 package io.mozocoin.sdk.utils
 
 import android.util.Base64
+import androidx.annotation.IntRange
 import org.bitcoinj.crypto.HDUtils
 import org.bitcoinj.wallet.DeterministicKeyChain
 import org.bitcoinj.wallet.DeterministicSeed
 import org.cryptonode.jncryptor.AES256JNCryptor
 import org.web3j.crypto.Sign
 import org.web3j.utils.Numeric
+import java.security.InvalidParameterException
 import kotlin.experimental.and
 
 class CryptoUtils {
     companion object {
+
+        private const val ETH_DERIVATION_PATH = "M/44H/60H/0H/0/"
+        internal const val FIRST_ADDRESS = 0
+        internal const val SECOND_ADDRESS = 1
+
+        @JvmStatic
+        fun getAddressPrivateKey(@IntRange(from = 0, to = 1000) derived: Int, mnemonic: String): String {
+            if (derived < 0) {
+                throw InvalidParameterException("Invalid derived")
+            }
+            val key = DeterministicKeyChain
+                    .builder()
+                    .seed(DeterministicSeed(mnemonic, null, "", System.nanoTime()))
+                    .build()
+                    .getKeyByPath(HDUtils.parsePath(ETH_DERIVATION_PATH + derived), true)
+            return key.privKey.toString(16)
+        }
 
         @JvmStatic
         @Throws(Throwable::class)
@@ -33,17 +52,6 @@ class CryptoUtils {
                             password.toCharArray()
                     )
             )
-        }
-
-        private const val ETH_FIRST_ADDRESS_PATH = "M/44H/60H/0H/0/0"
-        @JvmStatic
-        fun getFirstAddressPrivateKey(mnemonic: String): String {
-            val key = DeterministicKeyChain
-                    .builder()
-                    .seed(DeterministicSeed(mnemonic, null, "", System.nanoTime()))
-                    .build()
-                    .getKeyByPath(HDUtils.parsePath(ETH_FIRST_ADDRESS_PATH), true)
-            return key.privKey.toString(16)
         }
 
         @JvmStatic

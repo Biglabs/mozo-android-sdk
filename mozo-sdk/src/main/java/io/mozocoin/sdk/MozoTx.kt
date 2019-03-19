@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.web3j.crypto.Credentials
 import org.web3j.crypto.Sign
 import org.web3j.utils.Numeric
 import java.math.BigDecimal
@@ -59,23 +58,27 @@ class MozoTx private constructor() {
         }
         MozoAPIsService.getInstance().createTx(context, prepareRequest(myAddress, output, amount)) { data, _ ->
             data ?: return@createTx
-            val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted()
-            val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, pin)
 
-            val toSign = data.toSign[0]
-            val credentials = Credentials.create(privateKey)
-            val signatureData = Sign.signMessage(Numeric.hexStringToByteArray(toSign), credentials.ecKeyPair, false)
+            val wallet = MozoWallet.getInstance().getWallet().decrypt(pin)
+            val credentials = wallet.buildOffChainCredentials()
+            if (credentials != null) {
 
-            val signature = CryptoUtils.serializeSignature(signatureData)
-            val pubKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
-            data.signatures = arrayListOf(signature)
-            data.publicKeys = arrayListOf(pubKey)
+                val toSign = data.toSign[0]
+                val signatureData = Sign.signMessage(Numeric.hexStringToByteArray(toSign), credentials.ecKeyPair, false)
 
-            MozoAPIsService.getInstance().sendTransaction(context, data, { txResponse, _ ->
-                callback.invoke(txResponse, false)
-            }, {
-                callback.invoke(null, true)
-            })
+                val signature = CryptoUtils.serializeSignature(signatureData)
+                val pubKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
+                data.signatures = arrayListOf(signature)
+                data.publicKeys = arrayListOf(pubKey)
+
+                MozoAPIsService.getInstance().sendTransaction(context, data, { txResponse, _ ->
+                    callback.invoke(txResponse, false)
+                }, {
+                    callback.invoke(null, true)
+                })
+            } else {
+                callback.invoke(null, false)
+            }
         }
     }
 
@@ -105,24 +108,26 @@ class MozoTx private constructor() {
 
         if (messagesToSign!!.isNotEmpty() && callbackToSign != null && event.requestCode == SecurityActivity.KEY_VERIFY_PIN) {
             GlobalScope.launch {
-                val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted()
-                val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, event.pin)
-                val credentials = Credentials.create(privateKey)
-                val publicKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
-
-                val result = messagesToSign!!.map {
-                    val signature = CryptoUtils.serializeSignature(
-                            Sign.signMessage(
-                                    Numeric.hexStringToByteArray(it),
-                                    credentials.ecKeyPair,
-                                    false
-                            )
-                    )
-                    return@map Triple(it, signature, publicKey)
+                val wallet = MozoWallet.getInstance().getWallet().decrypt(event.pin)
+                val credentials = wallet.buildOffChainCredentials()
+                val result = if (credentials != null) {
+                    val publicKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
+                    messagesToSign!!.map {
+                        val signature = CryptoUtils.serializeSignature(
+                                Sign.signMessage(
+                                        Numeric.hexStringToByteArray(it),
+                                        credentials.ecKeyPair,
+                                        false
+                                )
+                        )
+                        return@map Triple(it, signature, publicKey)
+                    }
+                } else {
+                    emptyList()
                 }
 
                 withContext(Dispatchers.Main) {
-                    callbackToSign!!.invoke(result)
+                    callbackToSign?.invoke(result)
                     messagesToSign = null
                     callbackToSign = null
                 }

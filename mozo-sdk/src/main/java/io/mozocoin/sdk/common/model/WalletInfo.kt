@@ -4,5 +4,5 @@ package io.mozocoin.sdk.common.model
 class WalletInfo {
     var encryptSeedPhrase: String? = null
     var offchainAddress: String? = null
-    var privateKey: String? = null
+    var onchainAddress: String? = null
 }
