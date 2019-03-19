@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoAuth
-import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.authentication.MozoAuthActivity
 import io.mozocoin.sdk.common.Constant
@@ -31,9 +30,9 @@ internal class MozoAPIsService private constructor() {
 
     private val mozoAPIs: MozoAPIs by lazy { createService() }
 
-    fun getProfile(context: Context, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
+    fun getProfile(context: Context, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
-            execute(context, mozoAPIs.getProfile(), callback)
+            execute(context, mozoAPIs.getProfile(), callback, retry)
         }
     }
 

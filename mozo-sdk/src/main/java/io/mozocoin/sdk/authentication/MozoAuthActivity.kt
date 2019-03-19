@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.Support
@@ -247,20 +248,20 @@ internal class MozoAuthActivity : FragmentActivity() {
             if (modeSignIn) {
                 if (exception == null) {
                     MozoAuth.getInstance().syncProfile(this@MozoAuthActivity) {
-                        if (it <= 0) {
-                            // This user already logged in before, so bypass confirm PIN
-                            finishAuth(exception)
-                        } else
-                            SecurityActivity.start(this@MozoAuthActivity, it, KEY_DO_ENTER_PIN)
+                        when {
+                            it == Constant.KEY_SYNC_PROFILE_FAIL -> finish()
+                            it <= 0 -> {
+                                // This user already logged in before, so bypass confirm PIN
+                                finishAuth(null)
+                            }
+                            else -> SecurityActivity.start(this@MozoAuthActivity, it, KEY_DO_ENTER_PIN)
+                        }
                     }
-                } else {
-                    //TODO handle authentication error
-                    exception.message?.logAsError("authentication")
+                    return@launch
                 }
-                return@launch
-            } else
-                signOutCallBack?.invoke()
+            } else signOutCallBack?.invoke()
 
+            exception?.message?.logAsError("authentication")
             finishAuth(exception)
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.authentication.AuthenticationListener
 import io.mozocoin.sdk.authentication.MozoAuthActivity
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.Gender
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.Profile
@@ -91,12 +92,17 @@ class MozoAuth private constructor() {
 
     fun getAccessToken() = authStateManager.current.accessToken
 
+    /**
+     *  Get current user information
+     * @param  fromCache    If true the result will be returns from cache immediately if it
+     * available, otherwise the value will be reloaded from network before returns. Default is true
+     */
     fun getUserInfo(context: Context, fromCache: Boolean = true, callback: (userInfo: UserInfo?) -> Unit) {
         if (fromCache) {
             callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
             return
         }
-        MozoAPIsService.getInstance().getProfile(context) { data, _ ->
+        MozoAPIsService.getInstance().getProfile(context, { data, _ ->
             if (data == null) {
                 callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
                 return@getProfile
@@ -118,7 +124,9 @@ class MozoAuth private constructor() {
                 mozoDB.userInfo().save(userInfo)
                 MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
             }
-        }
+        }, {
+            getUserInfo(context, fromCache, callback)
+        })
     }
 
     fun updateUserInfo(
@@ -201,7 +209,8 @@ class MozoAuth private constructor() {
     }
 
     internal fun syncProfile(context: Context, callback: ((flag: Int) -> Unit)? = null) {
-        MozoAPIsService.getInstance().getProfile(context) { data, _ ->
+        MozoAPIsService.getInstance().getProfile(context, { data, _ ->
+            callback?.invoke(Constant.KEY_SYNC_PROFILE_FAIL)
             data ?: return@getProfile
 
             GlobalScope.launch {
@@ -247,7 +256,9 @@ class MozoAuth private constructor() {
                     }
                 }
             }
-        }
+        }, {
+            syncProfile(context, callback)
+        })
     }
 
     companion object {
