@@ -2,6 +2,7 @@ package io.mozocoin.sdk.common
 
 import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.utils.CryptoUtils
+import io.mozocoin.sdk.utils.logAsError
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.MnemonicUtils
 import java.security.SecureRandom
@@ -29,12 +30,13 @@ internal class WalletHelper {
     }
 
     private fun initAddresses() {
+        "wallet helper - initAddresses".logAsError("vu")
         mnemonic ?: return
         this.offChainPrivateKey = CryptoUtils.getAddressPrivateKey(CryptoUtils.FIRST_ADDRESS, mnemonic!!)
         this.offChainAddress = Credentials.create(offChainPrivateKey).address
 
         this.onChainPrivateKey = CryptoUtils.getAddressPrivateKey(CryptoUtils.SECOND_ADDRESS, mnemonic!!)
-        this.onChainAddress = Credentials.create(offChainPrivateKey).address
+        this.onChainAddress = Credentials.create(onChainPrivateKey).address
     }
 
     fun isUnlocked() = !mnemonic.isNullOrEmpty()
@@ -45,13 +47,19 @@ internal class WalletHelper {
     fun mnemonicPhrases() = mnemonic?.split(" ")
 
     fun encrypt(pin: String): WalletHelper {
+        "wallet helper - encrypt".logAsError("vu")
         if (!mnemonic.isNullOrEmpty() && mnemonicEncrypted.isNullOrEmpty()) {
-            mnemonicEncrypted = CryptoUtils.encrypt(mnemonic!!, pin)
+            try {
+                mnemonicEncrypted = CryptoUtils.encrypt(mnemonic!!, pin)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
         return this
     }
 
     fun decrypt(pin: String): WalletHelper {
+        "wallet helper - decrypt".logAsError("vu")
         if (mnemonic.isNullOrEmpty() && !mnemonicEncrypted.isNullOrEmpty()) {
             try {
                 mnemonic = CryptoUtils.decrypt(mnemonicEncrypted!!, pin)
@@ -66,16 +74,17 @@ internal class WalletHelper {
 
     fun verifyPin(pin: String): Boolean {
         mnemonicEncrypted ?: return false
+        "wallet helper - verifyPin".logAsError("vu")
 
-        val raw = CryptoUtils.decrypt(mnemonicEncrypted!!, pin)
-        return !raw.isNullOrEmpty() && MnemonicUtils.validateMnemonic(raw)
+        return try {
+            val raw = CryptoUtils.decrypt(mnemonicEncrypted!!, pin)
+            !raw.isNullOrEmpty() && MnemonicUtils.validateMnemonic(raw)
+        } catch (ignore: Exception) {
+            false
+        }
     }
 
-    fun buildWalletInfo() = WalletInfo().apply {
-        encryptSeedPhrase = mnemonicEncrypted
-        offchainAddress = offChainAddress
-        onchainAddress = onChainAddress
-    }
+    fun buildWalletInfo() = WalletInfo(mnemonicEncrypted, offChainAddress, onChainAddress)
 
     fun buildOffChainCredentials() = if (isUnlocked() && !offChainPrivateKey.isNullOrEmpty())
         Credentials.create(offChainPrivateKey)

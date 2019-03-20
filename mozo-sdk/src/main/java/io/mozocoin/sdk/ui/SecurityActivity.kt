@@ -224,7 +224,7 @@ internal class SecurityActivity : BaseActivity() {
         ))
     }
 
-    private fun showErrorAndRetryUI() {
+    private fun showErrorAndRetryUI() = GlobalScope.launch(Dispatchers.Main) {
         hideLoadingUI()
         error_container.visible()
         button_retry.click {
@@ -302,12 +302,16 @@ internal class SecurityActivity : BaseActivity() {
             }
         }
 
-        fun startVerify(context: Context) {
+        fun start(context: Context, mode: Int) {
             Intent(context, SecurityActivity::class.java).apply {
-                putExtra(KEY_MODE, KEY_VERIFY_PIN)
+                putExtra(KEY_MODE, mode)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(this)
             }
+        }
+
+        fun startVerify(context: Context) {
+            start(context, KEY_VERIFY_PIN)
         }
     }
 }

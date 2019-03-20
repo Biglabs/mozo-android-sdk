@@ -25,7 +25,7 @@ public class MozoWalletUnitTest {
                 System.out.println(index + "-seed: " + mnemonic);
                 Log.e(getClass().getName(), index + "-seed encrypted: " + mnemonicEn);
 
-                String privateKey = CryptoUtils.getFirstAddressPrivateKey(mnemonic);
+                String privateKey = CryptoUtils.getAddressPrivateKey(0, mnemonic);
                 String privateKeyEn = CryptoUtils.encrypt(privateKey, PIN);
 
                 Log.e(getClass().getName(), index + "-privateKey: " + privateKey);

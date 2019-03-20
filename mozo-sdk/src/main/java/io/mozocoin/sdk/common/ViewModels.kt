@@ -10,6 +10,7 @@ import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.displayString
+import io.mozocoin.sdk.utils.logAsError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -50,28 +51,32 @@ internal object ViewModels {
                 val profile = if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
                 else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
 
+                "fetchData userid: $userId".logAsError("vu")
+                "fetchData profile: $profile".logAsError("vu")
+
                 val userInfo = MozoDatabase.getInstance(context).userInfo().get()
 
                 withContext(Dispatchers.Main) {
                     userInfoLiveData.value = userInfo
                     profileLiveData.value = profile
                     callback?.invoke(profile)
-                    fetchBalance(context)
+                    fetchBalance(context, false)
                 }
             }
         }
 
-        fun fetchBalance(context: Context, callback: ((balanceInfo: BalanceInfo?) -> Unit)? = null) {
+        fun fetchBalance(context: Context, keepTry: Boolean = true, callback: ((balanceInfo: BalanceInfo?) -> Unit)? = null) {
             if (!MozoAuth.getInstance().isSignedIn()) {
                 callback?.invoke(null)
                 return
             }
             val address = profileLiveData.value?.walletInfo?.offchainAddress
             if (address == null) {
-                fetchData(context, callback = {
+                if (keepTry) fetchData(context, callback = {
                     if (it == null) callback?.invoke(null)
-                    fetchBalance(context, callback)
+                    fetchBalance(context, false, callback)
                 })
+                else callback?.invoke(null)
             } else {
                 MozoAPIsService.getInstance().getBalance(context, address) { data, _ ->
                     callback?.invoke(data)

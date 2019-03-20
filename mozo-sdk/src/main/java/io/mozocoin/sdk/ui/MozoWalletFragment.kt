@@ -241,7 +241,9 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 profileLiveData.observe(this@MozoWalletFragment, profileObserver)
                 balanceAndRateLiveData.observeForever(balanceAndRateObserver)
             }
-            MozoSDK.getInstance().profileViewModel.fetchData(context ?: return)
+            MozoAuth.getInstance().isSignUpCompleted {
+                /* no need to handle here */
+            }
         }
     }
 
