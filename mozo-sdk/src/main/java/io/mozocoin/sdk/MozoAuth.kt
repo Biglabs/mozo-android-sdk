@@ -13,7 +13,6 @@ import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.utils.UserCancelException
-import io.mozocoin.sdk.utils.logAsError
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -42,8 +41,7 @@ class MozoAuth private constructor() {
         if (isSignedIn()) {
             MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
-                "MozoAuth - onAuthorizeChanged fetch profile: $it".logAsError()
-                if (it == null) {
+                if (it == null || it.walletInfo?.onchainAddress.isNullOrEmpty()) {
                     syncProfile(MozoSDK.getInstance().context) { isSuccess ->
                         mAuthListeners.forEach { l -> l.onAuthStateChanged(isSuccess) }
                         if (isSuccess) MozoSocketClient.connect()
@@ -143,31 +141,9 @@ class MozoAuth private constructor() {
             callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
             return
         }
-        MozoAPIsService.getInstance().getProfile(context, { data, _ ->
-            if (data == null) {
-                callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
-                return@getProfile
-            }
-
-            val userInfo = UserInfo(
-                    userId = data.userId ?: "",
-                    avatarUrl = data.avatarUrl,
-                    fullName = data.fullName,
-                    phoneNumber = data.phoneNumber,
-                    birthday = data.birthday ?: 0L,
-                    email = data.email,
-                    gender = data.gender
-            )
-            callback.invoke(userInfo)
-
-            GlobalScope.launch {
-                /* save User info first */
-                mozoDB.userInfo().save(userInfo)
-                MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
-            }
-        }, {
-            getUserInfo(context, fromCache, callback)
-        })
+        syncProfile(context) {
+            callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
+        }
     }
 
     fun updateUserInfo(
@@ -203,6 +179,7 @@ class MozoAuth private constructor() {
 
             GlobalScope.launch {
                 /* save User info first */
+                mozoDB.userInfo().deleteAll()
                 mozoDB.userInfo().save(userInfo)
                 MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
             }
@@ -230,29 +207,19 @@ class MozoAuth private constructor() {
             callback?.invoke(false)
             data ?: return@getProfile
 
-            "syncProfile from server: $data".logAsError("vu")
-
             if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
-                "syncProfile from server: no wallet".logAsError("vu")
                 saveUserInfo(context, data, callback)
                 return@getProfile
             }
 
             MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
-
-                "syncProfile from local: $it".logAsError("vu")
-
                 if (
                         it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
-                        it?.walletInfo?.offchainAddress == data.walletInfo?.offchainAddress
+                        it?.walletInfo?.offchainAddress == data.walletInfo?.offchainAddress &&
+                        it?.walletInfo?.onchainAddress == data.walletInfo?.onchainAddress
                 ) {
-                    "syncProfile from local: No need recover wallet".logAsError("vu")
-
-                    // TODO has Wallet - no On chain
-
                     callback?.invoke(true) // No need recover wallet
                 } else {
-                    "syncProfile from local: update local".logAsError("vu")
                     saveUserInfo(context, data, callback)
                 }
             }
@@ -276,8 +243,10 @@ class MozoAuth private constructor() {
                     )
 
                     /* update local profile to match with server profile */
+                    profile.apply { walletInfo = MozoWallet.getInstance().getWallet().buildWalletInfo() }
                     mozoDB.profile().save(profile)
                     /* save User info first */
+                    mozoDB.userInfo().deleteAll()
                     mozoDB.userInfo().save(userInfo)
 
                     MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)

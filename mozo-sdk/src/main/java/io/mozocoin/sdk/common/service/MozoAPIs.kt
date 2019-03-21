@@ -26,8 +26,11 @@ internal interface MozoAPIs {
     @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/settings")
     fun saveSettings(notificationThreshold: Int = 0): Call<Base<Profile>>
 
-    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/wallet")
+    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/walletAll")
     fun saveWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>
+
+    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/updateWalletOnchain")
+    fun saveOnChainWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>
 
     @GET("${MozoAPIsService.APIS_SOLOMON}/solo/contract/solo-token/balance/{address}")
     fun getBalance(@Path("address") address: String): Call<Base<BalanceInfo>>

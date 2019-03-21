@@ -10,7 +10,6 @@ import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.displayString
-import io.mozocoin.sdk.utils.logAsError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -50,9 +49,6 @@ internal object ViewModels {
             GlobalScope.launch {
                 val profile = if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
                 else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
-
-                "fetchData userid: $userId".logAsError("vu")
-                "fetchData profile: $profile".logAsError("vu")
 
                 val userInfo = MozoDatabase.getInstance(context).userInfo().get()
 

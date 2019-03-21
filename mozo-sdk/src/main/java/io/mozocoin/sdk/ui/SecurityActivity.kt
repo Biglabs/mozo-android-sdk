@@ -237,42 +237,45 @@ internal class SecurityActivity : BaseActivity() {
             delay(500)
             showLoadingUI().join()
 
+            if (mRequestCode == KEY_CREATE_PIN) {
+                MozoWallet.getInstance().executeSaveWallet(this@SecurityActivity, mPIN) {
+                    if (!it) {
+                        showErrorAndRetryUI()
+                        return@executeSaveWallet
+                    }
+                    showPinCreatedUI()
+                    finishResult()
+                }
+                return@launch
+            }
+
+            mPIN = input_pin.text.toString()
+            val isCorrect = MozoWallet.getInstance().validatePinAsync(mPIN).await()
+
             when (mRequestCode) {
-                KEY_CREATE_PIN -> {
-                    MozoWallet.getInstance().executeSaveWallet(this@SecurityActivity, mPIN) {
-                        if (!it) {
-                            showErrorAndRetryUI()
-                            return@executeSaveWallet
-                        }
-                        showPinCreatedUI()
-                        finishResult()
-                    }
-                    return@launch
-                }
                 KEY_ENTER_PIN -> {
-                    mPIN = input_pin.text.toString()
-                    val isCorrect = MozoWallet.getInstance().validatePinAsync(mPIN).await()
-                    initRestoreUI(!isCorrect).join()
-                    if (isCorrect) showPinInputCorrectUI().join()
-                    else {
-                        showPinInputWrongUI().join()
-                        return@launch
+                    showLoadingUI().join()
+                    MozoWallet.getInstance().syncOnChainWallet(this@SecurityActivity, mPIN) {
+                        initRestoreUI(!isCorrect)
+                        if (isCorrect) {
+                            showPinInputCorrectUI()
+                            finishResult()
+                        } else {
+                            showPinInputWrongUI()
+                        }
                     }
                 }
-                else -> {
-                    if (mRequestCode == KEY_VERIFY_PIN || mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
-                        mPIN = input_pin.text.toString()
-                        val isCorrect = MozoWallet.getInstance().validatePinAsync(mPIN).await()
-                        initVerifyUI(!isCorrect).join()
-                        if (isCorrect) showPinInputCorrectUI().join()
-                        else {
-                            showPinInputWrongUI().join()
-                            return@launch
-                        }
+                KEY_VERIFY_PIN,
+                KEY_VERIFY_PIN_FOR_SEND -> {
+                    initVerifyUI(!isCorrect).join()
+                    if (isCorrect) {
+                        showPinInputCorrectUI().join()
+                        finishResult()
+                    } else {
+                        showPinInputWrongUI().join()
                     }
                 }
             }
-            finishResult()
         }
     }
 
