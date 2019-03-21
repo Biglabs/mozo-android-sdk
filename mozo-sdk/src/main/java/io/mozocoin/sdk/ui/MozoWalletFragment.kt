@@ -213,6 +213,7 @@ class MozoWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                                 fetchDataJob = null
                                 historyAdapter.setCanLoadMore(false)
                                 historyAdapter.notifyData()
+                                wallet_fragment_history_recycler?.scheduleLayoutAnimation()
                             }
                         }
                     },

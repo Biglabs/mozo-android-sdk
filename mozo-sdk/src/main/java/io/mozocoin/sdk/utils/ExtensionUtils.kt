@@ -147,8 +147,8 @@ fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
 }
 
 fun SwipeRefreshLayout.mozoSetup() {
-    val offset = resources.getDimensionPixelSize(R.dimen.mozo_refresh_progress_offset)
-    setProgressViewOffset(true, progressViewStartOffset + offset, progressViewEndOffset + offset / 3)
+//    val offset = resources.getDimensionPixelSize(R.dimen.mozo_refresh_progress_offset)
+//    setProgressViewOffset(true, progressViewStartOffset + offset, progressViewEndOffset + offset / 3)
     setColorSchemeResources(R.color.mozo_color_primary)
 }
 

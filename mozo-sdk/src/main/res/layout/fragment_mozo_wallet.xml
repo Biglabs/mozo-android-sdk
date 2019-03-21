@@ -220,6 +220,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:layoutAnimation="@anim/item_slide_up_animation"
             android:overScrollMode="never"
             android:paddingBottom="@dimen/mozo_list_history_item_height"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
