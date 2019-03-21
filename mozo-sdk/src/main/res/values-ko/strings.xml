@@ -33,9 +33,11 @@
     <string name="mozo_button_transaction_history">거래 내역</string>
     <string name="mozo_button_withdraw">철수</string>
     <string name="mozo_button_request_list">MozoX 코인 요청</string>
+    <string name="mozo_button_offchain_wallet">Offchain 지갑</string>
+    <string name="mozo_button_onchain_wallets">Onchain 지갑</string>
+
     <string name="mozo_button_confirm">확인</string>
     <string name="mozo_button_restore">복구</string>
-
     <string name="mozo_button_back">돌아가기</string>
     <string name="mozo_button_cancel">취소</string>
     <string name="mozo_button_copy">복사</string>

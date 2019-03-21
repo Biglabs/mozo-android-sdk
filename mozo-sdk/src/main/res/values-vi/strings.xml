@@ -33,9 +33,11 @@
     <string name="mozo_button_transaction_history">Lịch sử giao dịch</string>
     <string name="mozo_button_withdraw">Rút tiền</string>
     <string name="mozo_button_request_list">Yêu cầu nhận MozoX</string>
+    <string name="mozo_button_offchain_wallet">Ví Offchain</string>
+    <string name="mozo_button_onchain_wallets">Ví Onchain</string>
+
     <string name="mozo_button_confirm">Xác nhận</string>
     <string name="mozo_button_restore">Khôi phục</string>
-
     <string name="mozo_button_back">Trở lại</string>
     <string name="mozo_button_cancel">Thoát</string>
     <string name="mozo_button_copy">Sao chép</string>
