@@ -35,6 +35,10 @@
     <string name="mozo_button_request">Request</string>
     <string name="mozo_button_offchain_wallet">Offchain Wallet</string>
     <string name="mozo_button_onchain_wallets">Onchain Wallets</string>
+    <string name="mozo_button_onchain_how_to_buy">How to add MozoX Onchain?</string>
+    <string name="mozo_button_onchain_tx_history">Go to <b>Etherscan.io</b></string>
+    <string name="mozo_button_onchain_convert">Convert to MozoX Offchain</string>
+    <string name="mozo_button_onchain_converting">Pending transaction…</string>
 
     <string name="mozo_button_confirm">Confirm</string>
     <string name="mozo_button_restore">Restore</string>
@@ -146,4 +150,5 @@
     <string name="mozo_view_text_tx_success">Success</string>
     <string name="mozo_view_text_view_all">View All</string>
     <string name="mozo_view_text_just_now">Just now</string>
+    <string name="mozo_view_text_token_list">Token List:</string>
 </resources>

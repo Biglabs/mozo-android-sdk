@@ -32,7 +32,7 @@ internal object ViewModels {
         var userInfoLiveData = MutableLiveData<UserInfo?>()
         var profileLiveData = MutableLiveData<Profile?>()
         var balanceInfoLiveData = MutableLiveData<BalanceInfo?>()
-        var exchangeRateLiveData = MutableLiveData<ExchangeRate?>()
+        var exchangeRateLiveData = MutableLiveData<ExchangeRateData?>()
 
         val balanceAndRateLiveData = MutableLiveData<BalanceAndRate>()
 
@@ -90,8 +90,8 @@ internal object ViewModels {
             MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().language) { data, _ ->
                 if (data != null) {
                     exchangeRateLiveData.value = data
-                    if (data.currency == Constant.DEFAULT_CURRENCY) {
-                        SharedPrefsUtils.setDefaultCurrencyRate(data.rate)
+                    if (data.token?.currency == Constant.DEFAULT_CURRENCY) {
+                        SharedPrefsUtils.setDefaultCurrencyRate(data.token.rate())
                     }
                 } else {
                     exchangeRateLiveData.value = Support.getDefaultCurrency()
@@ -107,7 +107,7 @@ internal object ViewModels {
             }
             val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal()
                     ?: BigDecimal.ZERO
-            val rate = (exchangeRateLiveData.value?.rate ?: 0.0).toBigDecimal()
+            val rate = exchangeRateLiveData.value?.token?.rate() ?: BigDecimal.ZERO
             val balanceInCurrency = balanceNonDecimal.multiply(rate)
 
             balanceAndRateLiveData.value = BalanceAndRate(
@@ -139,13 +139,15 @@ internal object ViewModels {
 
         fun formatCurrencyDisplay(amount: BigDecimal, withBracket: Boolean = false) = StringBuilder().apply {
             if (withBracket) append("(")
-            append(exchangeRateLiveData.value?.currencySymbol ?: Constant.DEFAULT_CURRENCY_SYMBOL)
+            append(exchangeRateLiveData.value?.token?.currencySymbol
+                    ?: Constant.DEFAULT_CURRENCY_SYMBOL)
             append(amount.displayString())
             if (withBracket) append(")")
         }.toString()
 
-        fun calculateAmountInCurrency(amount: BigDecimal) = formatCurrencyDisplay(
-                amount.multiply(balanceAndRateLiveData.value?.rate ?: BigDecimal.ZERO)
+        fun calculateAmountInCurrency(amount: BigDecimal, useOffChain: Boolean = true) = formatCurrencyDisplay(
+                amount.multiply((if (useOffChain) balanceAndRateLiveData.value?.rate else exchangeRateLiveData.value?.eth?.rate)
+                        ?: BigDecimal.ZERO)
         )
 
         fun clear() = GlobalScope.launch(Dispatchers.Main) {

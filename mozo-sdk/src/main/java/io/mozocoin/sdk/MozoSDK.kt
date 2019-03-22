@@ -2,6 +2,7 @@ package io.mozocoin.sdk
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
 import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.Intent
@@ -19,6 +20,7 @@ import io.mozocoin.sdk.common.OnNotificationReceiveListener
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoSocketClient
+import io.mozocoin.sdk.utils.customtabs.CustomTabsActivityLifecycleCallbacks
 import io.mozocoin.sdk.utils.logAsInfo
 import java.util.*
 
@@ -108,6 +110,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 /* initialize Transaction Service */
                 MozoTx.getInstance()
 
+                // Preload custom tabs service for improved performance
+                if (context is Application) {
+                    context.registerActivityLifecycleCallbacks(CustomTabsActivityLifecycleCallbacks())
+                }
+
                 /* register network changes */
                 instance?.registerNetworkCallback()
 
@@ -120,7 +127,8 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                         newConfig ?: return
 
                         val symbol = getInstance().profileViewModel
-                                .exchangeRateLiveData.value?.currencySymbol ?: return
+                                .exchangeRateLiveData.value?.token?.currencySymbol
+                                ?: Constant.DEFAULT_CURRENCY_SYMBOL
                         if (
                                 when (Locale.getDefault().language) {
                                     Locale.KOREA.language -> symbol != Constant.CURRENCY_SYMBOL_KRW

@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Resources
+import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -16,12 +17,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.utils.customtabs.CustomTabsHelper
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
@@ -76,6 +79,15 @@ fun Context.color(@ColorRes id: Int): Int {
 fun Context.dimen(@DimenRes id: Int): Int = resources.getDimensionPixelSize(id)
 
 fun Context.bitmap(@DrawableRes icon: Int) = AppCompatResources.getDrawable(this, icon)?.toBitmap()
+
+fun Context.openTab(url: String) {
+    val customTabsIntent = CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .setToolbarColor(color(R.color.mozo_color_primary))
+            .build()
+    CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
+    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(url), null)
+}
 
 fun visible(views: Array<View>) {
     views.map {

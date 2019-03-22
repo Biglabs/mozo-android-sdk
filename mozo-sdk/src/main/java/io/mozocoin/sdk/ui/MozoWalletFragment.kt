@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.view_wallet_state_not_login.*
 
 class MozoWalletFragment : Fragment() {
 
-    private val tabFragments = arrayListOf(MozoWalletOffChainFragment.getInstance(), MozoWalletOnChainFragment.getInstance())
+    private val tabFragments = arrayListOf<Fragment>(MozoWalletOffChainFragment.getInstance(), MozoWalletOnChainFragment.getInstance())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_mozo_wallet, container, false)
@@ -73,7 +73,7 @@ class MozoWalletFragment : Fragment() {
             }
 
             if (fragment.isAdded) show(fragment)
-            else add(R.id.wallet_fragment_contain, fragment)
+            else add(R.id.wallet_fragment_content, fragment)
         }.commit()
     }
 

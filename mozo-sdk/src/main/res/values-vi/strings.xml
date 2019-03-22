@@ -35,6 +35,10 @@
     <string name="mozo_button_request">Yêu cầu</string>
     <string name="mozo_button_offchain_wallet">Ví Offchain</string>
     <string name="mozo_button_onchain_wallets">Ví Onchain</string>
+    <string name="mozo_button_onchain_how_to_buy">Hướng dẫn thêm MozoX Onchain</string>
+    <string name="mozo_button_onchain_tx_history">Đi đến <b>Etherscan.io</b></string>
+    <string name="mozo_button_onchain_convert">Chuyển đổi thành MozoX Offchain</string>
+    <string name="mozo_button_onchain_converting">Đang xử lý giao dịch…</string>
 
     <string name="mozo_button_confirm">Xác nhận</string>
     <string name="mozo_button_restore">Khôi phục</string>
@@ -142,4 +146,5 @@
     <string name="mozo_view_text_tx_success">Thành công</string>
     <string name="mozo_view_text_view_all">Xem toàn bộ</string>
     <string name="mozo_view_text_just_now">Vừa xong</string>
+    <string name="mozo_view_text_token_list">Danh sách Token:</string>
 </resources>

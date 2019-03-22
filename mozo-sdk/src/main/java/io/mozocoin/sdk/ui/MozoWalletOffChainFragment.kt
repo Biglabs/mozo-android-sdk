@@ -70,11 +70,10 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
             }
         }
         wallet_fragment_btn_view_all?.click {
-            if (context != null) TransactionHistoryActivity.start(context!!)
+            TransactionHistoryActivity.start(context ?: return@click)
         }
         wallet_fragment_qr_image?.click {
-            if (context != null && currentAddress != null)
-                QRCodeDialog.show(context!!, currentAddress!!)
+            QRCodeDialog.show(context ?: return@click, currentAddress ?: return@click)
         }
         wallet_fragment_address?.click {
             it.copyWithToast()
@@ -199,11 +198,12 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
     }
 
     private fun generateQRImage() = GlobalScope.launch {
-        if (currentAddress != null) {
-            val qrImage = Support.generateQRCode(currentAddress!!, resources.dp2Px(128f).toInt())
-            launch(Dispatchers.Main) {
-                wallet_fragment_qr_image?.setImageBitmap(qrImage)
-            }
+        val qrImage = Support.generateQRCode(
+                currentAddress ?: return@launch,
+                resources.dp2Px(128f).toInt()
+        )
+        withContext(Dispatchers.Main) {
+            wallet_fragment_qr_image?.setImageBitmap(qrImage)
         }
         generateQRJob = null
     }

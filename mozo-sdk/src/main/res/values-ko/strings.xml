@@ -35,6 +35,10 @@
     <string name="mozo_button_request">요청</string>
     <string name="mozo_button_offchain_wallet">Offchain 지갑</string>
     <string name="mozo_button_onchain_wallets">Onchain 지갑</string>
+    <string name="mozo_button_onchain_how_to_buy">MozoX Onchain을 추가하는 방법은 무엇입니까?</string>
+    <string name="mozo_button_onchain_tx_history"><b>Etherscan.io</b>로 이동합니다</string>
+    <string name="mozo_button_onchain_convert">MozoX Offchain으로 변환하기</string>
+    <string name="mozo_button_onchain_converting">보류중인 거래 …</string>
 
     <string name="mozo_button_confirm">확인</string>
     <string name="mozo_button_restore">복구</string>
@@ -142,4 +146,5 @@
     <string name="mozo_view_text_tx_success">성공</string>
     <string name="mozo_view_text_view_all">전체보기</string>
     <string name="mozo_view_text_just_now">지금</string>
+    <string name="mozo_view_text_token_list">Token 리스트:</string>
 </resources>
