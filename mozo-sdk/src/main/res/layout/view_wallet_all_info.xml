@@ -73,14 +73,14 @@
         app:layout_goneMarginEnd="56dp"
         tools:text="0x97309d360C015695cf50892f035E516ccA1898F0" />
 
-    <TextView
+    <io.mozocoin.sdk.ui.view.MozoIconTextView
         android:id="@+id/button_copy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:drawableStart="@drawable/ic_action_copy"
-        android:drawablePadding="-2dp"
+        android:drawablePadding="3dp"
         android:focusable="true"
         android:gravity="center_vertical"
         android:includeFontPadding="false"
@@ -91,6 +91,7 @@
         android:text="@string/mozo_button_copy"
         android:textColor="@color/mozo_color_primary"
         android:textSize="12sp"
+        app:drawableSize="16dp"
         app:layout_constraintBaseline_toBaselineOf="@id/mozo_wallet_address"
         app:layout_constraintStart_toEndOf="@id/mozo_wallet_address" />
 

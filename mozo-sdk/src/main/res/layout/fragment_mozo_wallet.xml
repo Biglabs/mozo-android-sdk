@@ -21,7 +21,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@color/mozo_color_primary"
-        app:tabIndicatorHeight="4dp">
+        app:tabIndicatorHeight="4dp"
+        app:tabSelectedTextColor="@color/mozo_color_primary"
+        app:tabTextAppearance="@style/MozoTabTextStyle"
+        app:tabTextColor="@color/mozo_color_title">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

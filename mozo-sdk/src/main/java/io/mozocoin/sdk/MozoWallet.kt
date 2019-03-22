@@ -150,7 +150,7 @@ class MozoWallet private constructor() {
         }
         if (mProfile!!.walletInfo?.onchainAddress.isNullOrEmpty()) {
             val wallet = getWallet().decrypt(pin).buildWalletInfo()
-            MozoAPIsService.getInstance().saveOnChainWallet(context, wallet, { p, errorCode ->
+            MozoAPIsService.getInstance().saveOnChainWallet(context, wallet, { p, _ ->
                 callback?.invoke(p != null)
             }, {
                 syncOnChainWallet(context, pin, callback)

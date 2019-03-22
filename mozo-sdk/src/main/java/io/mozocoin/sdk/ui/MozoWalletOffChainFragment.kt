@@ -10,8 +10,6 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
@@ -48,7 +46,6 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
     private var fetchDataJob: Job? = null
     private var fetchDataJobHandler: Job? = null
     private var generateQRJob: Job? = null
-    private var animationJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_mozo_wallet_off, container, false)
@@ -56,16 +53,9 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        wallet_fragment_btn_refresh_balance?.click {
-            it.isSelected = true
-            animationJob?.cancel()
-            animationJob = GlobalScope.launch {
-                delay(30000)
-                withContext(Dispatchers.Main) {
-                    wallet_fragment_btn_refresh_balance?.isSelected = false
-                }
-            }
-            if (context != null) MozoSDK.getInstance().profileViewModel.fetchBalance(context!!)
+        wallet_fragment_off_swipe?.apply {
+            mozoSetup()
+            setOnRefreshListener(this@MozoWalletOffChainFragment)
         }
         wallet_fragment_btn_payment_request?.apply {
             visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
@@ -86,26 +76,14 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
             if (context != null && currentAddress != null)
                 QRCodeDialog.show(context!!, currentAddress!!)
         }
-        wallet_fragment_btn_show?.click {
-            if (context != null && currentAddress != null)
-                QRCodeDialog.show(context!!, currentAddress!!)
-        }
-
-        wallet_fragment_refresh_layout?.apply {
-            mozoSetup()
-            setOnRefreshListener(this@MozoWalletOffChainFragment)
+        wallet_fragment_address?.click {
+            it.copyWithToast()
         }
 
         historyAdapter.setEmptyView(wallet_fragment_history_empty_view)
         wallet_fragment_history_recycler?.apply {
-            setHasFixedSize(true)
-            itemAnimator = DefaultItemAnimator()
+            setHasFixedSize(false)
             adapter = historyAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    wallet_fragment_top_hover?.isSelected = recyclerView.canScrollVertically(-1)
-                }
-            })
         }
 
         button_login?.click {
@@ -146,18 +124,20 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
         fetchDataJob?.cancel()
         fetchDataJobHandler?.cancel()
         generateQRJob?.cancel()
-        animationJob?.cancel()
     }
 
     override fun onRefresh() {
+        MozoSDK.getInstance().profileViewModel.fetchBalance(context!!)
         fetchData()
     }
 
     private val profileObserver = Observer<Profile?> {
-        "Wallet Fragment - Profile loaded: ${it != null}".logAsInfo()
         if (it?.walletInfo != null) {
             currentAddress = it.walletInfo!!.offchainAddress
             historyAdapter.address = currentAddress
+
+            wallet_fragment_address?.text = currentAddress
+
             fetchData()
 
             generateQRJob?.cancel()
@@ -166,9 +146,6 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
     }
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
-        wallet_fragment_btn_refresh_balance?.isSelected = false
-        animationJob?.cancel()
-
         it?.run {
             view?.find<TextView>(R.id.wallet_fragment_balance_value)?.apply {
                 text = balanceInDecimal.displayString()
@@ -192,7 +169,7 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
                     page = Constant.PAGING_START_INDEX,
                     size = 10,
                     callback = { data, _ ->
-                        wallet_fragment_refresh_layout?.isRefreshing = false
+                        wallet_fragment_off_swipe?.isRefreshing = false
 
                         if (data?.items == null) {
                             historyAdapter.setCanLoadMore(false)

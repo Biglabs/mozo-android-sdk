@@ -18,7 +18,7 @@
 
     <string name="mozo_dialog_qr_code">Your MozoX Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
-    <string name="mozo_dialog_copied_msg">Copied!</string>
+    <string name="mozo_dialog_copied_msg">Copied to clipboard</string>
 
     <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
     <string name="mozo_dialog_error_timeout_msg" translatable="false">Time out, please try again.</string>
@@ -29,10 +29,10 @@
     <string name="mozo_button_deposit">Deposit</string>
     <string name="mozo_button_login">Sign In to MozoX</string>
     <string name="mozo_button_logout">Log Out MozoX</string>
-    <string name="mozo_button_transfer">Send MozoX</string>
+    <string name="mozo_button_send_mozo">Send MozoX</string>
+    <string name="mozo_button_transfer">Transfer</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
-    <string name="mozo_button_withdraw">Withdraw</string>
-    <string name="mozo_button_request_list">Request MozoX</string>
+    <string name="mozo_button_request">Request</string>
     <string name="mozo_button_offchain_wallet">Offchain Wallet</string>
     <string name="mozo_button_onchain_wallets">Onchain Wallets</string>
 
@@ -129,6 +129,8 @@
 
     <string name="mozo_view_balance_title">MozoX Offchain Balance</string>
     <string name="mozo_view_address_title">Your MozoX Offchain Wallet Address</string>
+    <string name="mozo_view_text_mozo_off_chain" translatable="false">MozoX Offchain</string>
+    <string name="mozo_view_text_address">Address:</string>
     <string name="mozo_view_text_hint">…</string>
     <string name="mozo_view_text_to">To</string>
     <string name="mozo_view_text_send_to">To:</string>
@@ -143,6 +145,5 @@
     <string name="mozo_view_text_tx_failed">Failed</string>
     <string name="mozo_view_text_tx_success">Success</string>
     <string name="mozo_view_text_view_all">View All</string>
-    <string name="mozo_view_text_total_mozo">Total MozoX Tokens</string>
     <string name="mozo_view_text_just_now">Just now</string>
 </resources>

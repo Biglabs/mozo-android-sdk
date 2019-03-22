@@ -19,7 +19,7 @@
 
     <string name="mozo_dialog_qr_code">MozoX 월렛 주소</string>
     <string name="mozo_dialog_loading_msg">인터페이스 만들기</string>
-    <string name="mozo_dialog_copied_msg">복사 됨!</string>
+    <string name="mozo_dialog_copied_msg">클립 보드에 복사 됩니다</string>
 
     <string name="mozo_dialog_error_network_msg">인터넷에 연결되어 있지 않습니다!</string>
     <string name="mozo_dialog_error_scan_invalid_msg">스캔 한 값이 유효하지 않습니다.</string>
@@ -29,10 +29,10 @@
     <string name="mozo_button_deposit">예금</string>
     <string name="mozo_button_login">MozoX에 로그인</string>
     <string name="mozo_button_logout">MozoX 로그 아웃</string>
-    <string name="mozo_button_transfer">MozoX 코인 보내기</string>
+    <string name="mozo_button_send_mozo">MozoX 코인 보내기</string>
+    <string name="mozo_button_transfer">전송하기</string>
     <string name="mozo_button_transaction_history">거래 내역</string>
-    <string name="mozo_button_withdraw">철수</string>
-    <string name="mozo_button_request_list">MozoX 코인 요청</string>
+    <string name="mozo_button_request">요청</string>
     <string name="mozo_button_offchain_wallet">Offchain 지갑</string>
     <string name="mozo_button_onchain_wallets">Onchain 지갑</string>
 
@@ -126,6 +126,7 @@
 
     <string name="mozo_view_balance_title">MozoX Offchain 밸런스</string>
     <string name="mozo_view_address_title">귀하의 MozoX Offchain 월렛 주소</string>
+    <string name="mozo_view_text_address">주소:</string>
     <string name="mozo_view_text_hint">…</string>
     <string name="mozo_view_text_to">까지</string>
     <string name="mozo_view_text_send_to">까지:</string>
@@ -140,6 +141,5 @@
     <string name="mozo_view_text_tx_failed">실패</string>
     <string name="mozo_view_text_tx_success">성공</string>
     <string name="mozo_view_text_view_all">전체보기</string>
-    <string name="mozo_view_text_total_mozo">총 MozoX 수</string>
     <string name="mozo_view_text_just_now">지금</string>
 </resources>

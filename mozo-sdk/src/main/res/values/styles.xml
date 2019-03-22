@@ -108,4 +108,9 @@
         <item name="android:textSize">@dimen/mozo_text_size</item>
         <item name="android:textColor">@color/mozo_color_content</item>
     </style>
+
+    <style name="MozoTabTextStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">@dimen/mozo_text_size</item>
+    </style>
 </resources>
