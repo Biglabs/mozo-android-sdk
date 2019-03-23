@@ -171,3 +171,11 @@ fun BigDecimal.trailingZeros(scale: Int): BigDecimal {
 fun BigDecimal?.displayString(scale: Int = 6): String {
     return NumberFormat.getNumberInstance().format(this?.trailingZeros(scale) ?: BigDecimal.ZERO)
 }
+
+fun BigDecimal.toWei(): BigDecimal {
+    return this.multiply(Math.pow(10.0, 9.0).toBigDecimal())
+}
+
+fun BigDecimal.toGwei(): BigDecimal {
+    return this.divide(Math.pow(10.0, 9.0).toBigDecimal())
+}

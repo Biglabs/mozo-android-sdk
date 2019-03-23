@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <io.mozocoin.sdk.ui.widget.MozoToolbar
+        android:id="@+id/convert_on_chain_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:buttonClose="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/mozo_convert_title" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/convert_on_chain_toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="100dp">
+
+            <TextView
+                android:id="@+id/output_amount_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/mozo_transfer_amount"
+                android:textColor="@color/mozo_color_input_focus"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/input_convert_amount"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/input_convert_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginEnd="@dimen/mozo_screen_margin"
+                android:autofillHints="@string/mozo_transfer_amount_hint"
+                android:background="@android:color/transparent"
+                android:hint="@string/mozo_convert_amount_hint"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
+                android:lines="1"
+                android:maxLength="12"
+                android:paddingStart="32dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="0dp"
+                android:paddingBottom="50dp"
+                android:textColor="@color/mozo_color_title"
+                android:textColorHint="@color/mozo_color_un_active"
+                android:textSize="@dimen/mozo_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/output_amount_label"
+                tools:targetApi="o" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="24dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="10.5dp"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintStart_toStartOf="@id/input_convert_amount"
+                app:layout_constraintTop_toTopOf="@id/input_convert_amount"
+                app:srcCompat="@drawable/ic_mozo_offchain" />
+
+            <TextView
+                android:id="@+id/input_convert_amount_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:textColor="@color/mozo_color_un_active"
+                android:textSize="@dimen/mozo_text_size"
+                app:layout_constraintBaseline_toBaselineOf="@id/input_convert_amount"
+                app:layout_constraintEnd_toEndOf="@id/input_convert_amount"
+                tools:text="₩100" />
+
+            <View
+                android:id="@+id/output_amount_underline"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="45dp"
+                android:background="@drawable/mozo_color_line_focus"
+                app:layout_constraintEnd_toEndOf="@id/input_convert_amount"
+                app:layout_constraintStart_toStartOf="@id/input_convert_amount"
+                app:layout_constraintTop_toBottomOf="@id/output_amount_label" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="@string/mozo_convert_gas_limit"
+                android:textColor="@color/mozo_color_section_text"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/convert_gas_limit"
+                app:layout_constraintStart_toStartOf="@id/convert_gas_limit" />
+
+            <TextView
+                android:id="@+id/convert_gas_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginTop="40dp"
+                android:textColor="@color/mozo_color_title"
+                android:textSize="@dimen/mozo_text_size"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/input_convert_amount"
+                tools:text="4,000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="@string/mozo_convert_gas_price"
+                android:textColor="@color/mozo_color_section_text"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/convert_gas_price"
+                app:layout_constraintStart_toStartOf="@id/convert_gas_price" />
+
+            <TextView
+                android:id="@+id/convert_gas_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginTop="46dp"
+                android:textColor="@color/mozo_color_title"
+                android:textSize="@dimen/mozo_text_size"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/convert_gas_limit"
+                tools:text="4,000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="GWEI"
+                android:textColor="#bac0c6"
+                android:textSize="@dimen/mozo_text_size"
+                app:layout_constraintBaseline_toBaselineOf="@id/convert_gas_price"
+                app:layout_constraintStart_toEndOf="@id/convert_gas_price"
+                tools:ignore="HardcodedText" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="6dp"
+                android:background="@drawable/mozo_bg_seek_bar"
+                app:layout_constraintBottom_toBottomOf="@id/convert_gas_price_seek"
+                app:layout_constraintEnd_toEndOf="@id/convert_gas_price_seek"
+                app:layout_constraintStart_toStartOf="@id/convert_gas_price_seek"
+                app:layout_constraintTop_toTopOf="@id/convert_gas_price_seek" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/convert_gas_price_seek"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="@dimen/mozo_screen_margin"
+                android:padding="0dp"
+                android:progressDrawable="@android:color/transparent"
+                android:splitTrack="false"
+                android:thumb="@drawable/mozo_bg_seek_bar_thumb"
+                android:thumbOffset="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/convert_gas_price" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/mozo_convert_slow"
+                app:layout_constraintStart_toStartOf="@id/convert_gas_price_seek"
+                app:layout_constraintTop_toBottomOf="@id/convert_gas_price_seek" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/mozo_convert_normal"
+                app:layout_constraintEnd_toEndOf="@id/convert_gas_price_seek"
+                app:layout_constraintHorizontal_bias="0.4"
+                app:layout_constraintStart_toStartOf="@id/convert_gas_price_seek"
+                app:layout_constraintTop_toBottomOf="@id/convert_gas_price_seek" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/mozo_convert_fast"
+                app:layout_constraintEnd_toEndOf="@id/convert_gas_price_seek"
+                app:layout_constraintTop_toBottomOf="@id/convert_gas_price_seek" />
+
+            <TextView
+                android:id="@android:id/text2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginTop="65dp"
+                android:layout_marginEnd="@dimen/mozo_screen_margin"
+                android:text="@string/mozo_convert_explain"
+                android:textColor="@color/mozo_color_title"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/convert_gas_price_seek" />
+
+            <TextView
+                android:id="@+id/button_read_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackgroundBorderless"
+                android:paddingStart="@dimen/mozo_screen_margin"
+                android:paddingTop="11dp"
+                android:paddingEnd="@dimen/mozo_screen_margin"
+                android:paddingBottom="10dp"
+                android:text="@string/mozo_button_read_more"
+                android:textColor="@color/mozo_color_primary"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@android:id/text2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:background="@drawable/mozo_bg_floating_footer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_continue"
+        style="@style/MozoButtonStyle.Floating"
+        android:layout_width="0dp"
+        android:enabled="false"
+        android:includeFontPadding="false"
+        android:text="@string/mozo_button_continue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/convert_loading_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="KeyboardInaccessibleWidget"
+        tools:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="@dimen/mozo_background_dim_amount"
+            android:background="@android:color/black" />
+
+        <include layout="@layout/view_loading" />
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

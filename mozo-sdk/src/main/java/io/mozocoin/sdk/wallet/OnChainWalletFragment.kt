@@ -1,4 +1,4 @@
-package io.mozocoin.sdk.ui
+package io.mozocoin.sdk.wallet
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,15 +9,18 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.ui.dialog.QRCodeDialog
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_mozo_wallet_on.*
 import kotlinx.coroutines.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.math.BigDecimal
 
-class MozoWalletOnChainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var wallet: WalletInfo? = null
     private var txHistoryUrl: String? = null
@@ -31,7 +34,7 @@ class MozoWalletOnChainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListen
 
         wallet_fragment_on_swipe?.apply {
             mozoSetup()
-            setOnRefreshListener(this@MozoWalletOnChainFragment)
+            setOnRefreshListener(this@OnChainWalletFragment)
         }
 
         wallet_fragment_on_how_button?.apply {
@@ -55,6 +58,10 @@ class MozoWalletOnChainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListen
                 context?.openTab(txHistoryUrl ?: return@click)
             }
         }
+
+        wallet_fragment_on_convert?.click {
+            ConvertOnChainActivity.start(context ?: return@click)
+        }
     }
 
     override fun onResume() {
@@ -74,6 +81,15 @@ class MozoWalletOnChainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListen
         generateQRJob = generateQRImage()
 
         fetchData()
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onDestroyView() {
@@ -82,6 +98,14 @@ class MozoWalletOnChainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListen
     }
 
     override fun onRefresh() {
+        fetchData()
+    }
+
+    @Suppress("unused")
+    @Subscribe
+    internal fun onReceiveEvent(event: MessageEvent.ConvertOnChain) {
+        checkNotNull(event)
+
         fetchData()
     }
 
@@ -124,6 +148,6 @@ class MozoWalletOnChainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListen
     }
 
     companion object {
-        fun getInstance() = MozoWalletOnChainFragment()
+        fun getInstance() = OnChainWalletFragment()
     }
 }

@@ -39,6 +39,8 @@
     <string name="mozo_button_onchain_tx_history">Go to <b>Etherscan.io</b></string>
     <string name="mozo_button_onchain_convert">Convert to MozoX Offchain</string>
     <string name="mozo_button_onchain_converting">Pending transaction…</string>
+    <string name="mozo_button_hide_transaction">Hide transaction</string>
+    <string name="mozo_button_back_on_chain">Back to Onchain Wallet</string>
 
     <string name="mozo_button_confirm">Confirm</string>
     <string name="mozo_button_restore">Restore</string>
@@ -56,6 +58,7 @@
     <string name="mozo_button_save_address">Save Wallet Address</string>
     <string name="mozo_button_retry">Retry</string>
     <string name="mozo_button_refresh">Refresh</string>
+    <string name="mozo_button_read_more">Read more</string>
     <string name="mozo_button_try_again">Try Again</string>
     <string name="mozo_button_contact_telegram" translatable="false">Telegram</string>
     <string name="mozo_button_contact_kakao" translatable="false">KakaoTalk</string>
@@ -66,6 +69,26 @@
     <string name="mozo_backup_content">Please write it down on paper and keep it in a safe place as you would with money</string>
     <string name="mozo_backup_warning">*If you lose your Recovery Phrase, your wallet cannot be recovered.</string>
     <string name="mozo_backup_confirm_msg">I have safely stored Recovery Phrase</string>
+
+    <string name="mozo_convert_title">Convert To Offchain</string>
+    <string name="mozo_convert_amount_hint">Enter amount to convert MozoX Offchain</string>
+    <string name="mozo_convert_gas_limit" translatable="false">Gas limit</string>
+    <string name="mozo_convert_gas_price" translatable="false">Gas price</string>
+    <string name="mozo_convert_slow">Slow</string>
+    <string name="mozo_convert_normal">Normal</string>
+    <string name="mozo_convert_fast">Fast</string>
+    <string name="mozo_convert_explain">Gas Price is the amount you pay per unit of gas. <b>TX fee = Gas Used by Txn * Gas Price</b> &amp; is paid to miners for including your TX in a block. Higher the gas price = faster transaction, but more expensive. Default is <b>41 GWEI</b>.</string>
+    <string name="mozo_convert_from_on_chain">From Onchain</string>
+    <string name="mozo_convert_to_off_chain">To Offchain</string>
+    <string name="mozo_convert_submit_broadcast_title">Broadcast completed</string>
+    <string name="mozo_convert_submit_broadcasting_title">Broadcasting transaction…</string>
+    <string name="mozo_convert_submit_broadcasting_content">It’s might take about <b>3 minutes</b> to complete</string>
+    <string name="mozo_convert_submit_hide_explain">When you hide this screen, you will receive notify when transaction <b>complete</b> or <b>fail</b>.</string>
+    <string name="mozo_convert_submit_waiting_title">Waiting for transaction status…</string>
+    <string name="mozo_convert_submit_success_title">Convert Successful</string>
+    <string name="mozo_convert_submit_success_content">You have just converted MozoX from <b>Onchain</b> to <b>Offchain</b>:</string>
+    <string name="mozo_convert_submit_fail_title">Convert Failed</string>
+    <string name="mozo_convert_submit_fail_content">Cannot complete convert MozoX from <b>Onchain</b> to <b>Offchain</b>.\n\nPlease try again after some time.</string>
 
     <string name="mozo_pin_title">Create Security PIN</string>
     <string name="mozo_pin_title_restore">Restore Wallet</string>

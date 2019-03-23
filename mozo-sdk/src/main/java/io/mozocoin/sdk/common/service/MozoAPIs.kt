@@ -64,4 +64,16 @@ internal interface MozoAPIs {
 
     @GET("${MozoAPIsService.APIS_STORE}/onchain/getBalanceETHAndToken/{address}")
     fun getOnChainBalance(@Path("address") address: String): Call<Base<BalanceData>>
+
+    @GET("${MozoAPIsService.APIS_SOLOMON}/getGasPrices")
+    fun getGasInfo(): Call<Base<GasInfo>>
+
+    @POST("${MozoAPIsService.APIS_STORE}/onchain/prepareConvertMozoXToSolo")
+    fun prepareConvertRequest(@Body request: ConvertRequest): Call<Base<TransactionResponse>>
+
+    @POST("${MozoAPIsService.APIS_STORE}/onchain/sign-transfer")
+    fun signConvertRequest(@Body request: TransactionResponse): Call<Base<TransactionResponse>>
+
+    @GET("${MozoAPIsService.APIS_STORE}/onchain/status/{hash}")
+    fun getConvertStatus(@Path("hash") hash: String): Call<Base<TransactionStatus>>
 }

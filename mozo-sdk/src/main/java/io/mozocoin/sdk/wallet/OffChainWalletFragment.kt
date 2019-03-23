@@ -1,4 +1,4 @@
-package io.mozocoin.sdk.ui
+package io.mozocoin.sdk.wallet
 
 import android.content.Context
 import android.os.Bundle
@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.fragment_mozo_wallet_off.*
 import kotlinx.android.synthetic.main.view_wallet_state_not_login.*
 import kotlinx.coroutines.*
 
-internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val histories = arrayListOf<TransactionHistory>()
     private val onItemClick = { history: TransactionHistory ->
         if (context != null) {
@@ -55,7 +55,7 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
 
         wallet_fragment_off_swipe?.apply {
             mozoSetup()
-            setOnRefreshListener(this@MozoWalletOffChainFragment)
+            setOnRefreshListener(this@OffChainWalletFragment)
         }
         wallet_fragment_btn_payment_request?.apply {
             visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
@@ -193,7 +193,7 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
                             }
                         }
                     },
-                    retry = this@MozoWalletOffChainFragment::fetchData)
+                    retry = this@OffChainWalletFragment::fetchData)
         }
     }
 
@@ -216,7 +216,7 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
 
         if (MozoAuth.getInstance().isSignedIn()) {
             MozoSDK.getInstance().profileViewModel.run {
-                profileLiveData.observe(this@MozoWalletOffChainFragment, profileObserver)
+                profileLiveData.observe(this@OffChainWalletFragment, profileObserver)
                 balanceAndRateLiveData.observeForever(balanceAndRateObserver)
             }
             MozoAuth.getInstance().isSignUpCompleted {
@@ -238,6 +238,6 @@ internal class MozoWalletOffChainFragment : Fragment(), SwipeRefreshLayout.OnRef
     }
 
     companion object {
-        fun getInstance() = MozoWalletOffChainFragment()
+        fun getInstance() = OffChainWalletFragment()
     }
 }

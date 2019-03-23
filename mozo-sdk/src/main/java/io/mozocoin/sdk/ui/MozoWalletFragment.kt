@@ -14,12 +14,14 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.find
+import io.mozocoin.sdk.wallet.OffChainWalletFragment
+import io.mozocoin.sdk.wallet.OnChainWalletFragment
 import kotlinx.android.synthetic.main.fragment_mozo_wallet.*
 import kotlinx.android.synthetic.main.view_wallet_state_not_login.*
 
 class MozoWalletFragment : Fragment() {
 
-    private val tabFragments = arrayListOf<Fragment>(MozoWalletOffChainFragment.getInstance(), MozoWalletOnChainFragment.getInstance())
+    private val tabFragments = arrayListOf<Fragment>(OffChainWalletFragment.getInstance(), OnChainWalletFragment.getInstance())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_mozo_wallet, container, false)

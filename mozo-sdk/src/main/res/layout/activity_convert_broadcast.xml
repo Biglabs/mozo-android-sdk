@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <io.mozocoin.sdk.ui.widget.MozoToolbar
+        android:id="@+id/convert_broadcast_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:buttonBack="true"
+        app:buttonClose="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/mozo_convert_title" />
+
+    <ViewFlipper
+        android:id="@+id/convert_broadcast_flipper"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/convert_broadcast_toolbar">
+
+        <include layout="@layout/activity_convert_broadcast_confirm" />
+
+        <include layout="@layout/activity_convert_broadcast_submit" />
+
+        <include layout="@layout/activity_convert_broadcast_result" />
+    </ViewFlipper>
+
+    <FrameLayout
+        android:id="@+id/convert_loading_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="KeyboardInaccessibleWidget"
+        tools:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="@dimen/mozo_background_dim_amount"
+            android:background="@android:color/black" />
+
+        <include layout="@layout/view_loading" />
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

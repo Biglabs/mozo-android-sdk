@@ -1,5 +1,5 @@
 package io.mozocoin.sdk.common.model
 
-class TransactionAddress(
+data class TransactionAddress(
         val addresses: ArrayList<String> = arrayListOf()
 )

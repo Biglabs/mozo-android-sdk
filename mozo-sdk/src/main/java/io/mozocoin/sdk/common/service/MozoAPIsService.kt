@@ -78,6 +78,30 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
+    fun getGasInfo(context: Context, callback: ((data: GasInfo?, errorCode: String?) -> Unit)?, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getGasInfo(), callback, retry)
+        }
+    }
+
+    fun prepareConvertRequest(context: Context, request: ConvertRequest, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.prepareConvertRequest(request), callback, retry)
+        }
+    }
+
+    fun signConvertRequest(context: Context, data: TransactionResponse, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.signConvertRequest(data), callback, retry)
+        }
+    }
+
+    fun getConvertStatus(context: Context, txHash: String, callback: ((data: TransactionStatus?, errorCode: String?) -> Unit)?, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getConvertStatus(txHash), callback, retry)
+        }
+    }
+
     /**
      * Transaction APIs
      */

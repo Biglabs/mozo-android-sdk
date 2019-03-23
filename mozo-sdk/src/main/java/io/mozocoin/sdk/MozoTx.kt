@@ -28,6 +28,7 @@ class MozoTx private constructor() {
 
     private var messagesToSign: Array<out String>? = null
     private var callbackToSign: ((result: List<Triple<String, String, String>>) -> Unit)? = null
+    private var isOnChainMessageSigning = false
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
         it?.run {
@@ -109,7 +110,7 @@ class MozoTx private constructor() {
         if (messagesToSign!!.isNotEmpty() && callbackToSign != null && event.requestCode == SecurityActivity.KEY_VERIFY_PIN) {
             GlobalScope.launch {
                 val wallet = MozoWallet.getInstance().getWallet().decrypt(event.pin)
-                val credentials = wallet.buildOffChainCredentials()
+                val credentials = if (isOnChainMessageSigning) wallet.buildOnChainCredentials() else wallet.buildOffChainCredentials()
                 val result = if (credentials != null) {
                     val publicKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
                     messagesToSign!!.map {
@@ -126,6 +127,7 @@ class MozoTx private constructor() {
                     emptyList()
                 }
 
+                isOnChainMessageSigning = false
                 withContext(Dispatchers.Main) {
                     callbackToSign?.invoke(result)
                     messagesToSign = null
@@ -146,6 +148,15 @@ class MozoTx private constructor() {
 
     fun openTransactionHistory() {
         TransactionHistoryActivity.start(MozoSDK.getInstance().context)
+    }
+
+    internal fun signOnChainMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {
+        isOnChainMessageSigning = true
+        signMessages(context, message) {
+            it.firstOrNull()?.run {
+                callback.invoke(first, second, third)
+            }
+        }
     }
 
     fun signMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {
