@@ -3,6 +3,7 @@ package io.mozocoin.sdk.wallet
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.isVisible
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
@@ -162,12 +163,20 @@ internal class ConvertBroadcastActivity : BaseActivity() {
             convert_broadcast_result_title?.setText(R.string.mozo_convert_submit_success_title)
             convert_broadcast_result_content?.setText(R.string.mozo_convert_submit_success_content)
             convert_broadcast_result_hash?.text = hash
+            convert_broadcast_result_hash?.click {
+                openTab(StringBuilder("https://")
+                        .append(Support.domainEhterscan())
+                        .append("/tx/")
+                        .append(it.text)
+                        .toString()
+                )
+            }
             convert_broadcast_result_amount_group?.visible()
         } else {
             convert_broadcast_result_icon?.setImageResource(R.drawable.ic_send_failed)
             convert_broadcast_result_title?.setText(R.string.mozo_convert_submit_fail_title)
             convert_broadcast_result_content?.setText(R.string.mozo_convert_submit_fail_content)
-            convert_broadcast_result_amount_group?.gone()
+            convert_broadcast_result_amount_group?.visibility = View.INVISIBLE
         }
     }
 

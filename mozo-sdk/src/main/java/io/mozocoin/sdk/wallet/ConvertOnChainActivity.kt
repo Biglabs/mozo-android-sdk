@@ -3,11 +3,16 @@ package io.mozocoin.sdk.wallet
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
 import android.widget.SeekBar
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.ConvertRequest
 import io.mozocoin.sdk.common.model.GasInfo
 import io.mozocoin.sdk.common.model.WalletInfo
@@ -17,6 +22,7 @@ import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.activity_convert_on_chain.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
+import java.util.*
 
 internal class ConvertOnChainActivity : BaseActivity() {
 
@@ -24,18 +30,44 @@ internal class ConvertOnChainActivity : BaseActivity() {
     private var mGasInfo: GasInfo? = null
     private var mGasPrice: BigDecimal = BigDecimal.ZERO
 
+    private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> { bar ->
+        bar?.run {
+            //            currentBalance = balanceInDecimal
+            //            currentRate = rate
+            //            text_spendable.text = SpannableString(getString(R.string.mozo_transfer_spendable, currentBalance.displayString())).apply {
+            //                set(indexOfFirst { it.isDigit() }..length, ForegroundColorSpan(color(R.color.mozo_color_primary)))
+            //            }
+            // TODO display spannable
+        }
+        input_convert_amount.filters = arrayOf<InputFilter>(
+                DecimalDigitsInputFilter(
+                        12,
+                        bar?.decimal ?: Constant.DEFAULT_DECIMAL
+                )
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_convert_on_chain)
 
         input_convert_amount.onTextChanged {
-            if (it.isNullOrEmpty()) {
-                input_convert_amount_rate?.text = ""
-                button_continue?.isEnabled = false
-            } else {
-                val amount = BigDecimal(it.toString())
-                input_convert_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
-                button_continue?.isEnabled = true
+            when {
+                it.isNullOrEmpty() -> {
+                    input_convert_amount_rate?.text = ""
+                    button_continue?.isEnabled = false
+
+                }
+                it.startsWith(".") -> {
+                    input_convert_amount.setText(String.format(Locale.US, "0%s", it))
+                    input_convert_amount.setSelection(it.length + 1)
+
+                }
+                else -> {
+                    val amount = BigDecimal(it.toString())
+                    input_convert_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
+                    button_continue?.isEnabled = true
+                }
             }
         }
 
@@ -62,6 +94,20 @@ internal class ConvertOnChainActivity : BaseActivity() {
         }
 
         fetchData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        MozoSDK.getInstance().profileViewModel
+                .balanceAndRateLiveData
+                .observe(this, balanceAndRateObserver)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        MozoSDK.getInstance().profileViewModel
+                .balanceAndRateLiveData
+                .removeObservers(this)
     }
 
     private fun updateGasPriceUI() {

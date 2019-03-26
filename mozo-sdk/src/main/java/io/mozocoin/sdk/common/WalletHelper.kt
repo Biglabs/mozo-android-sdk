@@ -1,5 +1,6 @@
 package io.mozocoin.sdk.common
 
+import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.utils.CryptoUtils
 import org.web3j.crypto.Credentials
@@ -87,6 +88,22 @@ internal class WalletHelper {
     fun buildOnChainCredentials() = if (isUnlocked() && !onChainPrivateKey.isNullOrEmpty())
         Credentials.create(onChainPrivateKey)
     else null
+
+    override fun toString(): String {
+        return if (BuildConfig.DEBUG) "WalletHelper [" +
+                "mnemonic: $mnemonic" +
+                ", mnemonicEncrypted: $mnemonicEncrypted" +
+                ", offChainAddress: $offChainAddress" +
+                ", offChainPrivateKey: $offChainPrivateKey" +
+                ", onChainAddress: $onChainAddress" +
+                ", onChainPrivateKey: $onChainPrivateKey" +
+                "]"
+        else "WalletHelper [" +
+                "mnemonicEncrypted: $mnemonicEncrypted" +
+                ", offChainAddress: $offChainAddress" +
+                ", onChainAddress: $onChainAddress" +
+                "]"
+    }
 
     companion object {
         fun create(): WalletHelper = WalletHelper(
