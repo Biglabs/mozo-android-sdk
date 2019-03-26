@@ -123,8 +123,7 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun fetchData() {
         MozoAPIsService.getInstance().getOnChainBalance(
                 context ?: return,
-                wallet?.onchainAddress ?: return
-        ) { data, _ ->
+                wallet?.onchainAddress ?: return, { data, _ ->
             wallet_fragment_on_swipe?.isRefreshing = false
 
             data ?: return@getOnChainBalance
@@ -144,7 +143,7 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     if (data.convertToMozoXOnchain) R.string.mozo_button_onchain_convert
                     else R.string.mozo_button_onchain_converting
             )
-        }
+        }, this::fetchData)
     }
 
     companion object {

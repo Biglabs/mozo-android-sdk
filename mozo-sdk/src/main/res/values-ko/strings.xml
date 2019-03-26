@@ -131,6 +131,8 @@
     <string name="mozo_transfer_amount">금액</string>
     <string name="mozo_transfer_amount_hint">십진수로 값을 입력하십시오</string>
     <string name="mozo_transfer_amount_error_not_enough">오류 : 잔액만으로는 충분하지 않습니다.</string>
+    <string name="mozo_transfer_amount_on_chain_not_enough">Onchain 밸런스가 충분하지 않습니다.</string>
+    <string name="mozo_transfer_amount_eth_not_enough">ETH 밸런스가 충분하지 않습니다.</string>
     <string name="mozo_transfer_amount_error_too_low">오류 : 금액이 너무 적습니다. 유효한 금액을 입력하십시오.</string>
     <string name="mozo_transfer_amount_error">오류 :십진수로 값을 입력하십시오.</string>
     <string name="mozo_transfer_spendable">가용 잔액: %s MozoX</string>

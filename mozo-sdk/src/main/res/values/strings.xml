@@ -136,6 +136,8 @@
     <string name="mozo_transfer_amount">Amount</string>
     <string name="mozo_transfer_amount_hint">Input value in decimal format</string>
     <string name="mozo_transfer_amount_error_not_enough">Error: Your spendable is not enough for this.</string>
+    <string name="mozo_transfer_amount_on_chain_not_enough">Onchain balance is not enough.</string>
+    <string name="mozo_transfer_amount_eth_not_enough">ETH balance is not enough.</string>
     <string name="mozo_transfer_amount_error_too_low">Error: Amount is too low, please input valid amount.</string>
     <string name="mozo_transfer_amount_error">Error: Please input value in decimal format.</string>
     <string name="mozo_transfer_spendable">Spendable: %s MozoX</string>

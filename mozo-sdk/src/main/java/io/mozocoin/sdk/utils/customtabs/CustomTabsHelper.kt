@@ -161,7 +161,12 @@ internal class CustomTabsHelper {
         }
 
         fun addKeepAliveExtra(context: Context, intent: Intent) {
-            val keepAliveIntent = Intent().setClassName(context.packageName, KeepAliveService::class.java.canonicalName)
+            @Suppress("SpellCheckingInspection")
+            val keepAliveIntent = Intent().setClassName(
+                    context.packageName,
+                    KeepAliveService::class.java.canonicalName
+                            ?: "io.mozocoin.sdk.utils.customtabs.KeepAliveService"
+            )
             intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, keepAliveIntent)
         }
     }

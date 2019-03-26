@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Typeface
 import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
@@ -37,9 +38,9 @@ fun Activity.setMatchParent() {
 }
 
 fun FragmentActivity.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
-    supportFragmentManager?.beginTransaction()?.replace(id, fragment)?.apply {
+    supportFragmentManager.beginTransaction().replace(id, fragment).apply {
         if (backStackName != null) addToBackStack(backStackName)
-    }?.commit()
+    }.commit()
 }
 
 fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
@@ -50,15 +51,15 @@ fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? 
 
 internal fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-internal fun Context.copyText(text: String?) = apply {
-    text?.let {
-        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", it)
+internal fun Context.copyText(text: String?) {
+    if (!text.isNullOrEmpty()) {
+        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", text)
     }
 }
 
-internal fun Context.copyWithToast(text: String?) = apply {
-    text?.let {
-        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", it)
+internal fun Context.copyWithToast(text: String?) {
+    if (!text.isNullOrEmpty()) {
+        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", text)
         Toast.makeText(this, R.string.mozo_dialog_copied_msg, Toast.LENGTH_SHORT).show()
     }
 }
@@ -145,6 +146,10 @@ fun View.gone() {
 
 internal fun TextView.copyText() = apply { context.copyText(text.toString()) }
 internal fun TextView.copyWithToast() = apply { context.copyWithToast(text.toString()) }
+internal fun TextView.highlight(doIt: Boolean) {
+    typeface = if (doIt) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+    setTextColor(context.color(if (doIt) R.color.mozo_color_primary else R.color.mozo_color_section_text))
+}
 
 fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
     addTextChangedListener(object : TextWatcher {
@@ -179,3 +184,5 @@ fun BigDecimal.toWei(): BigDecimal {
 fun BigDecimal.toGwei(): BigDecimal {
     return this.divide(Math.pow(10.0, 9.0).toBigDecimal())
 }
+
+fun BigDecimal?.safe(): BigDecimal = this ?: BigDecimal.ZERO

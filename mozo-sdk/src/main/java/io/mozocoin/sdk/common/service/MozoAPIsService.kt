@@ -72,9 +72,9 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
-    fun getOnChainBalance(context: Context, address: String, callback: ((data: BalanceData?, errorCode: String?) -> Unit)? = null) {
+    fun getOnChainBalance(context: Context, address: String, callback: ((data: BalanceData?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
-            execute(context, mozoAPIs.getOnChainBalance(address), callback)
+            execute(context, mozoAPIs.getOnChainBalance(address), callback, retry)
         }
     }
 

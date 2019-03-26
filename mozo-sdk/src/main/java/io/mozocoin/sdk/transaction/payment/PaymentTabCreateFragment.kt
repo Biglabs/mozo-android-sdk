@@ -26,7 +26,7 @@ class PaymentTabCreateFragment : Fragment() {
 
     private var mListener: PaymentRequestInteractionListener? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is PaymentRequestActivity) {
             mListener = context

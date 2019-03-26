@@ -77,7 +77,7 @@ internal class TransactionDetails : BaseActivity() {
             }
         })
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this, Observer {
-            currentBalance = it.balanceInDecimal
+            currentBalance = it.balanceNonDecimal
             it?.rate?.run {
                 text_detail_amount_rate_side.text = MozoSDK.getInstance().profileViewModel
                         .formatCurrencyDisplay(amount.multiply(this), true)

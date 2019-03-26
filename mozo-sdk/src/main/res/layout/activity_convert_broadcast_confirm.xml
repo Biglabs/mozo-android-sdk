@@ -226,14 +226,15 @@
         app:layout_constraintTop_toBottomOf="@id/convert_gas_price" />
 
     <TextView
+        android:id="@+id/convert_gas_price_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/mozo_screen_margin"
-        android:text="@string/mozo_convert_fast"
         android:textColor="@color/mozo_color_title"
         android:textSize="@dimen/mozo_text_size"
         app:layout_constraintBaseline_toBaselineOf="@id/convert_gas_price"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="@string/mozo_convert_fast" />
 
     <Button
         android:id="@+id/button_confirm"

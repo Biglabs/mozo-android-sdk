@@ -9,6 +9,7 @@ import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.common.TransferSpeed
 import io.mozocoin.sdk.common.model.ConvertRequest
 import io.mozocoin.sdk.common.model.TransactionResponse
 import io.mozocoin.sdk.common.service.MozoAPIsService
@@ -81,6 +82,7 @@ internal class ConvertBroadcastActivity : BaseActivity() {
 
         convert_gas_limit?.text = convertRequest!!.gasLimit.displayString()
         convert_gas_price?.text = convertRequest!!.gasPrice.toGwei().displayString()
+        convert_gas_price_speed?.setText(TransferSpeed.calculate(convertRequest!!.gasPriceProgress).display)
     }
 
     private fun showLoading(show: Boolean) {

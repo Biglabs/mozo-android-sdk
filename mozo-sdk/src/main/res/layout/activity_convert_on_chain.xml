@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -26,6 +27,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:paddingBottom="100dp">
 
             <TextView
@@ -48,6 +51,7 @@
                 android:layout_marginEnd="@dimen/mozo_screen_margin"
                 android:autofillHints="@string/mozo_transfer_amount_hint"
                 android:background="@android:color/transparent"
+                android:duplicateParentState="false"
                 android:hint="@string/mozo_convert_amount_hint"
                 android:imeOptions="actionDone"
                 android:inputType="numberDecimal"
@@ -95,6 +99,23 @@
                 app:layout_constraintEnd_toEndOf="@id/input_convert_amount"
                 app:layout_constraintStart_toStartOf="@id/input_convert_amount"
                 app:layout_constraintTop_toBottomOf="@id/output_amount_label" />
+
+            <TextView
+                android:id="@+id/output_amount_spendable"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/mozo_screen_margin"
+                android:textColor="@color/mozo_color_text_main"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/output_amount_underline"
+                tools:text="@string/mozo_transfer_spendable"
+                tools:visibility="visible" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -181,28 +202,38 @@
                 app:layout_constraintTop_toBottomOf="@id/convert_gas_price" />
 
             <TextView
+                android:id="@+id/convert_gas_price_seek_slow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="@string/mozo_convert_slow"
+                android:textColor="@color/mozo_color_section_text"
+                android:textSize="13sp"
                 app:layout_constraintStart_toStartOf="@id/convert_gas_price_seek"
                 app:layout_constraintTop_toBottomOf="@id/convert_gas_price_seek" />
 
             <TextView
+                android:id="@+id/convert_gas_price_seek_normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
+                android:paddingStart="50dp"
+                android:paddingEnd="50dp"
                 android:text="@string/mozo_convert_normal"
+                android:textColor="@color/mozo_color_section_text"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="@id/convert_gas_price_seek"
-                app:layout_constraintHorizontal_bias="0.4"
                 app:layout_constraintStart_toStartOf="@id/convert_gas_price_seek"
                 app:layout_constraintTop_toBottomOf="@id/convert_gas_price_seek" />
 
             <TextView
+                android:id="@+id/convert_gas_price_seek_fast"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="@string/mozo_convert_fast"
+                android:textColor="@color/mozo_color_section_text"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="@id/convert_gas_price_seek"
                 app:layout_constraintTop_toBottomOf="@id/convert_gas_price_seek" />
 
@@ -232,6 +263,7 @@
                 android:text="@string/mozo_button_read_more"
                 android:textColor="@color/mozo_color_primary"
                 android:textSize="12sp"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@android:id/text2" />
         </androidx.constraintlayout.widget.ConstraintLayout>

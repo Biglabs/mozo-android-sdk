@@ -20,9 +20,9 @@ import java.util.*
 internal object ViewModels {
 
     data class BalanceAndRate(
-            val balanceInDecimal: BigDecimal,
-            val balanceInCurrency: BigDecimal,
-            val balanceInCurrencyDisplay: String,
+            val balanceNonDecimal: BigDecimal,
+            val balanceNonDecimalInCurrency: BigDecimal,
+            val balanceNonDecimalInCurrencyDisplay: String,
             val decimal: Int,
             val rate: BigDecimal
     )
@@ -135,7 +135,7 @@ internal object ViewModels {
 
         fun getBalance() = balanceInfoLiveData.value
 
-        fun getBalanceInCurrencyDisplay() = balanceAndRateLiveData.value?.balanceInCurrencyDisplay
+        fun getBalanceInCurrencyDisplay() = balanceAndRateLiveData.value?.balanceNonDecimalInCurrencyDisplay
 
         fun formatCurrencyDisplay(amount: BigDecimal, withBracket: Boolean = false) = StringBuilder().apply {
             if (withBracket) append("(")

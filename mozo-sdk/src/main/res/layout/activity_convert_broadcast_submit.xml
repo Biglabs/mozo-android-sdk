@@ -49,18 +49,19 @@
         android:layout_width="0dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="86dp"
+        android:layout_marginBottom="17dp"
         android:background="@drawable/mozo_dr_btn_rounded_border"
         android:clickable="true"
         android:focusable="true"
         android:text="@string/mozo_button_hide_transaction"
         android:textColor="@color/mozo_color_primary"
         android:textSize="@dimen/mozo_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@android:id/text2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
+        android:id="@android:id/text2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"

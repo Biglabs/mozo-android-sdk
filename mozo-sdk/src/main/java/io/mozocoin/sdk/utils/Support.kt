@@ -3,6 +3,11 @@ package io.mozocoin.sdk.utils
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.widget.TextView
+import androidx.core.text.set
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -97,5 +102,13 @@ class Support {
                 ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, SharedPrefsUtils.getDefaultCurrencyRate()),
                 ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, BigDecimal.ZERO)
         )
+
+        internal fun formatSpendableText(view: TextView?, balanceDisplay: String, isOnchain: Boolean = false) {
+            view ?: return
+            view.text = SpannableString(view.context.getString(R.string.mozo_transfer_spendable, balanceDisplay) + (if (isOnchain) " Onchain" else "")).apply {
+                set(indexOfFirst { it.isDigit() }..length, ForegroundColorSpan(view.context.color(R.color.mozo_color_primary)))
+            }
+            view.isVisible = true
+        }
     }
 }

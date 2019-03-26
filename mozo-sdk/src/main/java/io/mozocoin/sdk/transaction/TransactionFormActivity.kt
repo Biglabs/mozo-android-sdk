@@ -5,12 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.core.text.set
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
@@ -190,11 +187,9 @@ internal class TransactionFormActivity : BaseActivity() {
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> { bar ->
         bar?.run {
-            currentBalance = balanceInDecimal
+            currentBalance = balanceNonDecimal
             currentRate = rate
-            text_spendable.text = SpannableString(getString(R.string.mozo_transfer_spendable, currentBalance.displayString())).apply {
-                set(indexOfFirst { it.isDigit() }..length, ForegroundColorSpan(color(R.color.mozo_color_primary)))
-            }
+            Support.formatSpendableText(text_spendable, currentBalance.displayString())
             output_amount.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, decimal))
         }
     }

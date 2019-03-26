@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.Px
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import io.mozocoin.sdk.MozoAuth
@@ -22,12 +24,16 @@ import kotlinx.android.synthetic.main.view_wallet_state_not_login.*
 class MozoWalletFragment : Fragment() {
 
     private val tabFragments = arrayListOf<Fragment>(OffChainWalletFragment.getInstance(), OnChainWalletFragment.getInstance())
+    private var unLoadedTabPosition = -1
+    private var mPadding = arrayOf(/* left */0, /* top */0, /* right */0, /* bottom */0)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_mozo_wallet, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        root?.updatePadding(mPadding[0], mPadding[1], mPadding[2], mPadding[3])
 
         button_login?.click {
             MozoAuth.getInstance().signIn()
@@ -64,6 +70,11 @@ class MozoWalletFragment : Fragment() {
     }
 
     private fun loadFragment(position: Int) {
+        if (!MozoAuth.getInstance().isSignedIn()) {
+            unLoadedTabPosition = position
+            return
+        }
+
         val fragment = when (position) {
             1 -> tabFragments[1]
             else -> tabFragments[0]
@@ -94,9 +105,18 @@ class MozoWalletFragment : Fragment() {
 
         if (MozoAuth.getInstance().isSignedIn()) {
             MozoAuth.getInstance().isSignUpCompleted {
-                /* no need to handle here */
+                if (unLoadedTabPosition > -1) loadFragment(unLoadedTabPosition)
+                unLoadedTabPosition = -1
             }
         }
+    }
+
+    fun updatePadding(@Px left: Int = 0, @Px top: Int = 0, @Px right: Int = 0, @Px bottom: Int = 0) {
+        mPadding[0] = left
+        mPadding[1] = top
+        mPadding[2] = right
+        mPadding[3] = bottom
+        root?.updatePadding(left, top, right, bottom)
     }
 
     companion object {

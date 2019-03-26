@@ -131,6 +131,8 @@
     <string name="mozo_transfer_amount">Số lượng</string>
     <string name="mozo_transfer_amount_hint">Điền giá trị bằng số thập phân</string>
     <string name="mozo_transfer_amount_error_not_enough">Lỗi: Số dư khả dụng không đủ</string>
+    <string name="mozo_transfer_amount_on_chain_not_enough">Không đủ MozoX Onchain</string>
+    <string name="mozo_transfer_amount_eth_not_enough">Không đủ ETH</string>
     <string name="mozo_transfer_amount_error_too_low">Lỗi: Số lượng quá nhỏ, vui lòng nhập số hợp lệ</string>
     <string name="mozo_transfer_amount_error">Lỗi: Vui lòng nhập giá trị bằng số thập phân</string>
     <string name="mozo_transfer_spendable">Số dư khả dụng: %s MozoX</string>

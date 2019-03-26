@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -27,7 +26,6 @@ import io.mozocoin.sdk.transaction.payment.PaymentRequestActivity
 import io.mozocoin.sdk.ui.dialog.QRCodeDialog
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_mozo_wallet_off.*
-import kotlinx.android.synthetic.main.view_wallet_state_not_login.*
 import kotlinx.coroutines.*
 
 internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
@@ -84,30 +82,24 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             setHasFixedSize(false)
             adapter = historyAdapter
         }
-
-        button_login?.click {
-            MozoAuth.getInstance().signIn()
-        }
     }
 
-    override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+    override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
-
-        attrs?.run {
-            val typedArray = resources.obtainAttributes(this, R.styleable.MozoWalletFragment)
-            buttonPaymentRequest = typedArray.getBoolean(R.styleable.MozoWalletFragment_buttonPaymentRequest, buttonPaymentRequest)
-            buttonSend = typedArray.getBoolean(R.styleable.MozoWalletFragment_buttonSend, buttonSend)
-            typedArray.recycle()
-        }
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        if (!hidden) checkLogin()
+        val typedArray = resources.obtainAttributes(attrs, R.styleable.MozoWalletFragment)
+        buttonPaymentRequest = typedArray.getBoolean(R.styleable.MozoWalletFragment_buttonPaymentRequest, buttonPaymentRequest)
+        buttonSend = typedArray.getBoolean(R.styleable.MozoWalletFragment_buttonSend, buttonSend)
+        typedArray.recycle()
     }
 
     override fun onResume() {
         super.onResume()
-        checkLogin()
+        if (MozoAuth.getInstance().isSignedIn()) {
+            MozoSDK.getInstance().profileViewModel.run {
+                profileLiveData.observe(this@OffChainWalletFragment, profileObserver)
+                balanceAndRateLiveData.observeForever(balanceAndRateObserver)
+            }
+        }
     }
 
     override fun onPause() {
@@ -147,10 +139,10 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
         it?.run {
             view?.find<TextView>(R.id.wallet_fragment_balance_value)?.apply {
-                text = balanceInDecimal.displayString()
+                text = balanceNonDecimal.displayString()
             }
             view?.find<TextView>(R.id.wallet_fragment_currency_value)?.apply {
-                text = balanceInCurrencyDisplay
+                text = balanceNonDecimalInCurrencyDisplay
             }
         }
     }
@@ -206,23 +198,6 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             wallet_fragment_qr_image?.setImageBitmap(qrImage)
         }
         generateQRJob = null
-    }
-
-    private fun checkLogin() {
-        view?.find<View>(R.id.wallet_fragment_login_required)?.apply {
-            isClickable = true
-            isVisible = !MozoAuth.getInstance().isSignedIn()
-        }
-
-        if (MozoAuth.getInstance().isSignedIn()) {
-            MozoSDK.getInstance().profileViewModel.run {
-                profileLiveData.observe(this@OffChainWalletFragment, profileObserver)
-                balanceAndRateLiveData.observeForever(balanceAndRateObserver)
-            }
-            MozoAuth.getInstance().isSignUpCompleted {
-                /* no need to handle here */
-            }
-        }
     }
 
     @Suppress("unused")

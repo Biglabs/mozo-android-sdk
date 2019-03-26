@@ -93,7 +93,8 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MozoTheme" />
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name=".wallet.ConvertBroadcastActivity"
