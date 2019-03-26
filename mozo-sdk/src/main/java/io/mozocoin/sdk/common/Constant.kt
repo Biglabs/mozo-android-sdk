@@ -4,8 +4,6 @@ import java.util.*
 
 class Constant {
     companion object {
-        internal const val KEY_SYNC_PROFILE_FAIL = -100
-
         const val PAGING_START_INDEX = 0
         const val PAGING_SIZE = 15
         const val LIST_VISIBLE_THRESHOLD = 5
@@ -17,11 +15,12 @@ class Constant {
         const val NOTIFY_EVENT_BALANCE_CHANGED = "balance_changed"
         const val NOTIFY_EVENT_CUSTOMER_CAME = "customer_came"
         const val NOTIFY_EVENT_STORE_BOOK_ADDED = "store_book_added"
+        const val NOTIFY_EVENT_CONVERT = "convert_onchain_to_offchain"
 
         internal const val DEFAULT_DECIMAL = 2
         internal const val DEFAULT_CURRENCY = "USD"
         internal const val DEFAULT_CURRENCY_SYMBOL = "$"
-        internal const val DEFAULT_CURRENCY_RATE = 1.2042239402099
+        internal const val DEFAULT_CURRENCY_RATE = 0.000403004625212
 
         internal const val CURRENCY_SYMBOL_KRW = "₩"
         internal const val CURRENCY_SYMBOL_VND = "₫"
@@ -37,6 +36,10 @@ class Constant {
         internal const val DOMAIN_SOCKET_DEV = "dev.noti.mozocoin.io"
         internal const val DOMAIN_SOCKET_STAGING = "staging.noti.mozocoin.io"
         internal const val DOMAIN_SOCKET_PRODUCTION = "noti.mozocoin.io"
+
+        internal const val DOMAIN_ETHER_SCAN_DEV = "ropsten.etherscan.io"
+        internal const val DOMAIN_ETHER_SCAN_STAGING = "ropsten.etherscan.io"
+        internal const val DOMAIN_ETHER_SCAN_PRODUCTION = "etherscan.io"
 
         internal const val SOCKET_CHANNEL_SHOPPER = "shopper"
         internal const val SOCKET_CHANNEL_RETAILER = "retailer"

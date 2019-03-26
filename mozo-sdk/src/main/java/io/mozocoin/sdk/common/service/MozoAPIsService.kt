@@ -43,7 +43,7 @@ internal class MozoAPIsService private constructor() {
     }
 
     /**
-     * Wallet Information APIs
+     * Off-Chain Wallet Information APIs
      */
     fun saveWallet(context: Context, walletInfo: WalletInfo, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
@@ -57,9 +57,48 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
-    fun getExchangeRate(context: Context, locale: String, callback: ((data: ExchangeRate?, errorCode: String?) -> Unit)? = null) {
+    fun getExchangeRate(context: Context, locale: String, callback: ((data: ExchangeRateData?, errorCode: String?) -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getExchangeRate(locale), callback)
+        }
+    }
+
+    /**
+     * On-Chain Wallet Information APIs
+     */
+    fun saveOnChainWallet(context: Context, walletInfo: WalletInfo, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.saveOnChainWallet(walletInfo), callback, retry)
+        }
+    }
+
+    fun getOnChainBalance(context: Context, address: String, callback: ((data: BalanceData?, errorCode: String?) -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getOnChainBalance(address), callback)
+        }
+    }
+
+    fun getGasInfo(context: Context, callback: ((data: GasInfo?, errorCode: String?) -> Unit)?, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getGasInfo(), callback, retry)
+        }
+    }
+
+    fun prepareConvertRequest(context: Context, request: ConvertRequest, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.prepareConvertRequest(request), callback, retry)
+        }
+    }
+
+    fun signConvertRequest(context: Context, data: TransactionResponse, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.signConvertRequest(data), callback, retry)
+        }
+    }
+
+    fun getConvertStatus(context: Context, txHash: String, callback: ((data: TransactionStatus?, errorCode: String?) -> Unit)?, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getConvertStatus(txHash), callback, retry)
         }
     }
 

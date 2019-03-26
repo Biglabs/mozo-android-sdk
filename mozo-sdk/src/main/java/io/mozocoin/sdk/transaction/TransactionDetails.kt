@@ -109,7 +109,7 @@ internal class TransactionDetails : BaseActivity() {
                 val data = Support.parsePaymentRequest(mPaymentRequest!!.content!!)
                 targetAddress = data.firstOrNull()
 
-                text_detail_status.setText(R.string.mozo_button_transfer)
+                text_detail_status.setText(R.string.mozo_button_send_mozo)
                 //detailTime = mPaymentRequest!!.timeInSec * 1000
                 data.lastOrNull()?.let {
                     amountDisplay = it.toBigDecimal().displayString()

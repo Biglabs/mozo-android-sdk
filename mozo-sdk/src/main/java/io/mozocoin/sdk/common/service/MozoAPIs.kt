@@ -26,14 +26,14 @@ internal interface MozoAPIs {
     @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/settings")
     fun saveSettings(notificationThreshold: Int = 0): Call<Base<Profile>>
 
-    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/wallet")
+    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/walletAll")
     fun saveWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>
 
     @GET("${MozoAPIsService.APIS_SOLOMON}/solo/contract/solo-token/balance/{address}")
     fun getBalance(@Path("address") address: String): Call<Base<BalanceInfo>>
 
-    @GET("${MozoAPIsService.APIS_SOLOMON}/exchange/rate")
-    fun getExchangeRate(@Query("locale") locale: String): Call<Base<ExchangeRate>>
+    @GET("${MozoAPIsService.APIS_SOLOMON}/exchange/rateETHAndToken")
+    fun getExchangeRate(@Query("locale") locale: String): Call<Base<ExchangeRateData>>
 
     @POST("${MozoAPIsService.APIS_SOLOMON}/solo/contract/solo-token/transfer")
     fun createTx(@Body request: TransactionRequest): Call<Base<TransactionResponse>>
@@ -55,4 +55,25 @@ internal interface MozoAPIs {
 
     @DELETE("${MozoAPIsService.APIS_SOLOMON}/payment-request/{id}")
     fun deletePaymentRequest(@Path("id") id: Long): Call<Base<Any>>
+
+    /**
+     * OnChain Wallet APIs
+     */
+    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/updateWalletOnchain")
+    fun saveOnChainWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>
+
+    @GET("${MozoAPIsService.APIS_STORE}/onchain/getBalanceETHAndToken/{address}")
+    fun getOnChainBalance(@Path("address") address: String): Call<Base<BalanceData>>
+
+    @GET("${MozoAPIsService.APIS_SOLOMON}/getGasPrices")
+    fun getGasInfo(): Call<Base<GasInfo>>
+
+    @POST("${MozoAPIsService.APIS_STORE}/onchain/prepareConvertMozoXToSolo")
+    fun prepareConvertRequest(@Body request: ConvertRequest): Call<Base<TransactionResponse>>
+
+    @POST("${MozoAPIsService.APIS_STORE}/onchain/sign-transfer")
+    fun signConvertRequest(@Body request: TransactionResponse): Call<Base<TransactionResponse>>
+
+    @GET("${MozoAPIsService.APIS_STORE}/onchain/status/{hash}")
+    fun getConvertStatus(@Path("hash") hash: String): Call<Base<TransactionStatus>>
 }

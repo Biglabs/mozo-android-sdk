@@ -104,12 +104,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:layoutAnimation="@anim/item_slide_up_animation"
             android:overScrollMode="never"
             android:paddingBottom="@dimen/mozo_screen_margin"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             android:scrollbarStyle="insideOverlay"
             android:scrollbars="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:layoutAnimation="@anim/slide_fade_up"
             tools:listitem="@layout/item_history" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

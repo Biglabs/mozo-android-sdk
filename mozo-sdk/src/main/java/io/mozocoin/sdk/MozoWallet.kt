@@ -1,7 +1,6 @@
 package io.mozocoin.sdk
 
 import android.content.Context
-import com.google.gson.Gson
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.ErrorCode
 import io.mozocoin.sdk.common.MessageEvent
@@ -15,7 +14,6 @@ import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.UserCancelException
-import io.mozocoin.sdk.utils.logAsError
 import io.mozocoin.sdk.utils.string
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -75,31 +73,22 @@ class MozoWallet private constructor() {
         AddressBookActivity.start(MozoSDK.getInstance().context)
     }
 
-    internal fun initWallet(context: Context, profile: Profile, callback: ((success: Boolean) -> Unit)? = null) {
-        "MozoWallet initWallet: $profile".logAsError("vu")
-
-        val flag = if (profile.walletInfo == null || profile.walletInfo!!.encryptSeedPhrase.isNullOrEmpty()) {
+    internal fun initWallet(context: Context, profile: Profile /* server */, callback: ((success: Boolean) -> Unit)? = null) {
+        val flag = if (profile.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
             /* Server wallet is NOT existing, create a new one at local */
             mWallet = WalletHelper.create()
-
-            "MozoWallet initWallet: create new wallet: ${Gson().toJson(mWallet)} ".logAsError("vu")
 
             /* Required input new PIN */
             SecurityActivity.KEY_CREATE_PIN
         } else {
 
             mWallet = WalletHelper.initWithWalletInfo(profile.walletInfo)
-            "MozoWallet initWallet: recover wallet: ${Gson().toJson(mWallet)} ".logAsError("vu")
-
-
-            if (mWallet?.isUnlocked() == false) {
+            if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
                 /* Local wallet is existing but no private Key */
                 /* Required input previous PIN */
                 SecurityActivity.KEY_ENTER_PIN
             } else 0
         }
-
-        "MozoWallet initWallet: flag: $flag".logAsError("vu")
 
         if (flag == 0) {
             callback?.invoke(true)
@@ -117,15 +106,12 @@ class MozoWallet private constructor() {
     }
 
     internal fun executeSaveWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {
-        "MozoWallet executeSaveWallet: $mProfile".logAsError("vu")
-        "MozoWallet executeSaveWallet: wallet: ${Gson().toJson(mWallet)} ".logAsError("vu")
         if (mProfile == null) {
             callback?.invoke(false)
             return
         }
 
         val wallet = getWallet().encrypt(pin).buildWalletInfo()
-        "MozoWallet executeSaveWallet: wallet: ${Gson().toJson(wallet)} ".logAsError("vu")
         mProfile!!.apply { walletInfo = wallet }
 
         /* save wallet info to server */
@@ -155,6 +141,22 @@ class MozoWallet private constructor() {
             SharedPrefsUtils.setNeedSyncWallet(!isSuccess)
             callback?.invoke(isSuccess)
         }
+    }
+
+    internal fun syncOnChainWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+        if (mProfile == null) {
+            callback?.invoke(false)
+            return
+        }
+        if (mProfile!!.walletInfo?.onchainAddress.isNullOrEmpty()) {
+            val wallet = getWallet().decrypt(pin).buildWalletInfo()
+            MozoAPIsService.getInstance().saveOnChainWallet(context, wallet, { p, _ ->
+                callback?.invoke(p != null)
+            }, {
+                syncOnChainWallet(context, pin, callback)
+            })
+        } else
+            callback?.invoke(true)
     }
 
     @Suppress("UNUSED_VALUE")

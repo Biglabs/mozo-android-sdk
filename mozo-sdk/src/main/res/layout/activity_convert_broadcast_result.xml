@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/convert_broadcast_result_icon"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/mozo_transfer_send_complete"
+        android:src="@drawable/ic_send_complete"
+        app:layout_constraintBottom_toTopOf="@id/convert_broadcast_result_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/convert_broadcast_result_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="22dp"
+        android:textColor="@color/mozo_color_text_main"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/convert_broadcast_result_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/convert_broadcast_result_icon"
+        tools:text="@string/mozo_convert_submit_success_title" />
+
+    <TextView
+        android:id="@+id/convert_broadcast_result_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="50dp"
+        android:gravity="center"
+        android:text="@string/mozo_convert_submit_success_content"
+        android:textColor="@color/mozo_color_text_main"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/convert_broadcast_result_title" />
+
+    <io.mozocoin.sdk.ui.view.MozoIconTextView
+        android:id="@+id/convert_broadcast_result_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginTop="80dp"
+        android:drawableStart="@drawable/ic_mozo_offchain"
+        android:drawablePadding="7dp"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeTextType="uniform"
+        app:backgroundTint="@android:color/transparent"
+        app:drawableSize="30dp"
+        app:layout_constraintBottom_toTopOf="@id/convert_broadcast_result_hash"
+        app:layout_constraintEnd_toStartOf="@id/convert_broadcast_result_amount_rate"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/convert_broadcast_result_title"
+        tools:text="200" />
+
+    <TextView
+        android:id="@+id/convert_broadcast_result_amount_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_un_active"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/convert_broadcast_result_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/convert_broadcast_result_amount"
+        app:layout_constraintTop_toTopOf="@id/convert_broadcast_result_amount"
+        tools:text="(₩100)" />
+
+    <TextView
+        android:id="@+id/convert_broadcast_result_hash_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="TX#:"
+        android:textColor="@color/mozo_color_text_main"
+        android:textSize="@dimen/mozo_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/convert_broadcast_result_amount"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/convert_broadcast_result_hash"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:ellipsize="middle"
+        android:focusable="true"
+        android:padding="4dp"
+        android:singleLine="true"
+        android:textColor="@color/mozo_color_primary"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/convert_broadcast_result_amount"
+        app:layout_constraintWidth_percent="0.3"
+        tools:text="0xc910e3a3s4fer5t273c1cc0a4a" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/convert_broadcast_result_amount_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="convert_broadcast_result_amount,convert_broadcast_result_amount_rate,convert_broadcast_result_hash_label,convert_broadcast_result_hash" />
+
+    <Button
+        android:id="@+id/button_back_to_wallet"
+        style="@style/MozoButtonStyle.Floating"
+        android:layout_width="0dp"
+        android:text="@string/mozo_button_back_on_chain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

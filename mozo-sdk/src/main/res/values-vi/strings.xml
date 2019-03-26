@@ -19,7 +19,7 @@
 
     <string name="mozo_dialog_qr_code">Địa chỉ ví MozoX của bạn</string>
     <string name="mozo_dialog_loading_msg">Đang khởi tạo giao diện</string>
-    <string name="mozo_dialog_copied_msg">Đã sao chép!</string>
+    <string name="mozo_dialog_copied_msg">Đã sao chép</string>
 
     <string name="mozo_dialog_error_network_msg">Mất kết nối Internet!</string>
     <string name="mozo_dialog_error_scan_invalid_msg">Thông tin quét được không hợp lệ.</string>
@@ -29,13 +29,21 @@
     <string name="mozo_button_deposit">Gửi vào</string>
     <string name="mozo_button_login">Đăng nhập MozoX</string>
     <string name="mozo_button_logout">Đăng xuất MozoX</string>
-    <string name="mozo_button_transfer">Gửi MozoX</string>
+    <string name="mozo_button_send_mozo">Gửi MozoX</string>
+    <string name="mozo_button_transfer">Gửi</string>
     <string name="mozo_button_transaction_history">Lịch sử giao dịch</string>
-    <string name="mozo_button_withdraw">Rút tiền</string>
-    <string name="mozo_button_request_list">Yêu cầu nhận MozoX</string>
+    <string name="mozo_button_request">Yêu cầu</string>
+    <string name="mozo_button_offchain_wallet">Ví Offchain</string>
+    <string name="mozo_button_onchain_wallets">Ví Onchain</string>
+    <string name="mozo_button_onchain_how_to_buy">Hướng dẫn thêm MozoX Onchain</string>
+    <string name="mozo_button_onchain_tx_history">Đi đến <b>Etherscan.io</b></string>
+    <string name="mozo_button_onchain_convert">Chuyển đổi thành MozoX Offchain</string>
+    <string name="mozo_button_onchain_converting">Đang xử lý giao dịch…</string>
+    <string name="mozo_button_hide_transaction">Ẩn màn hình</string>
+    <string name="mozo_button_back_on_chain">Trở về ví Onchain</string>
+
     <string name="mozo_button_confirm">Xác nhận</string>
     <string name="mozo_button_restore">Khôi phục</string>
-
     <string name="mozo_button_back">Trở lại</string>
     <string name="mozo_button_cancel">Thoát</string>
     <string name="mozo_button_copy">Sao chép</string>
@@ -50,6 +58,7 @@
     <string name="mozo_button_save_address">Lưu địa chỉ ví</string>
     <string name="mozo_button_retry">Thử lại</string>
     <string name="mozo_button_refresh">Làm mới</string>
+    <string name="mozo_button_read_more">Chi tiết</string>
     <string name="mozo_button_try_again">Thử lại</string>
 
     <string name="mozo_backup_title">Sao lưu ví</string>
@@ -57,6 +66,24 @@
     <string name="mozo_backup_content">Ghi lại những từ này và cất giữ ở nơi an toàn để khôi phục lại ví khi cần thiết.</string>
     <string name="mozo_backup_warning">*Nếu mất bản ghi này, ví của bạn sẽ không thể khôi phục.</string>
     <string name="mozo_backup_confirm_msg">Tôi đã ghi lại xong</string>
+
+    <string name="mozo_convert_title">Đổi thành MozoX Offchain</string>
+    <string name="mozo_convert_amount_hint">Nhập số lượng đổi thành MozoX Offchain</string>
+    <string name="mozo_convert_slow">Chậm</string>
+    <string name="mozo_convert_normal">Bình thường</string>
+    <string name="mozo_convert_fast">Nhanh</string>
+    <string name="mozo_convert_explain">Gas Price là chi phí được tính bằng đơn vị GWEI dùng để thực hiện một giao dịch trong Ethereum. <b>Tổng chi phí (TX fee) được tính = Số Gas thực dùng * Gas Price</b>, phí này được dùng trả cho “thợ đào” (Miner) để họ đưa giao dịch vào một khối (Block). Gas Price cao đồng nghĩa với giao dịch diễn ra nhanh hơn (nhưng tốn kém hơn). Giá mặc định là <b>41 GWEI</b>.</string>
+    <string name="mozo_convert_from_on_chain">Từ Onchain</string>
+    <string name="mozo_convert_to_off_chain">Thành Offchain</string>
+    <string name="mozo_convert_submit_broadcast_title">Đã xử lý xong</string>
+    <string name="mozo_convert_submit_broadcasting_title">Đang gửi thông tin giao dịch…</string>
+    <string name="mozo_convert_submit_broadcasting_content">Sẽ mất khoảng <b>3 phút</b> để hoàn tất</string>
+    <string name="mozo_convert_submit_hide_explain">Khi ẩn màn hình này, bạn vẫn sẽ nhận được thông báo khi việc chuyển đổi <b>hoàn tất</b> hoặc <b>thất bại</b>.</string>
+    <string name="mozo_convert_submit_waiting_title">Đang chờ kết quả…</string>
+    <string name="mozo_convert_submit_success_title">Chuyển đổi thành công</string>
+    <string name="mozo_convert_submit_success_content">Bạn vừa đổi thành công MozoX từ <b>Onchain</b> thành <b>Offchain</b>:</string>
+    <string name="mozo_convert_submit_fail_title">Chuyển đổi thất bại</string>
+    <string name="mozo_convert_submit_fail_content">"Không thể hoàn tất việc chuyển đổi.\n\nXin đợi một lúc và thử lại."</string>
 
     <string name="mozo_pin_title">Tạo mã PIN</string>
     <string name="mozo_pin_title_restore">Khôi phục lại ví</string>
@@ -124,6 +151,7 @@
 
     <string name="mozo_view_balance_title">Tổng MozoX Offchain</string>
     <string name="mozo_view_address_title">Địa chỉ ví MozoX Offchain của bạn</string>
+    <string name="mozo_view_text_address">Địa chỉ:</string>
     <string name="mozo_view_text_hint">…</string>
     <string name="mozo_view_text_to">Đến</string>
     <string name="mozo_view_text_send_to">Đến:</string>
@@ -138,6 +166,6 @@
     <string name="mozo_view_text_tx_failed">Thất bại</string>
     <string name="mozo_view_text_tx_success">Thành công</string>
     <string name="mozo_view_text_view_all">Xem toàn bộ</string>
-    <string name="mozo_view_text_total_mozo">Tổng số MozoX</string>
     <string name="mozo_view_text_just_now">Vừa xong</string>
+    <string name="mozo_view_text_token_list">Danh sách Token:</string>
 </resources>
