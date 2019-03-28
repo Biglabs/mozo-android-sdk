@@ -24,7 +24,6 @@ import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.activity_convert_on_chain.*
 import java.math.BigDecimal
-import java.text.DecimalFormat
 import java.util.*
 
 internal class ConvertOnChainActivity : BaseActivity() {
@@ -73,6 +72,7 @@ internal class ConvertOnChainActivity : BaseActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 mGasInfo ?: return
                 mGasPrice = BigDecimal((progress / 100.0) * (mGasInfo!!.fast - mGasInfo!!.low) + mGasInfo!!.low)
+                        .setScale(0, BigDecimal.ROUND_HALF_UP)
                 updateGasPriceUI()
             }
 
@@ -109,7 +109,7 @@ internal class ConvertOnChainActivity : BaseActivity() {
     }
 
     private fun updateGasPriceUI() {
-        convert_gas_price?.text = DecimalFormat("#.00").format(mGasPrice)
+        convert_gas_price?.text = mGasPrice.displayString()
 
         convert_gas_price_seek_slow.highlight(false)
         convert_gas_price_seek_normal.highlight(false)

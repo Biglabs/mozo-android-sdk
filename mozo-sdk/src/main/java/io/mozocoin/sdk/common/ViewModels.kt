@@ -7,9 +7,7 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.common.model.*
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.common.service.MozoDatabase
-import io.mozocoin.sdk.utils.SharedPrefsUtils
-import io.mozocoin.sdk.utils.Support
-import io.mozocoin.sdk.utils.displayString
+import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -51,7 +49,6 @@ internal object ViewModels {
                 else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
 
                 val userInfo = MozoDatabase.getInstance(context).userInfo().get()
-
                 withContext(Dispatchers.Main) {
                     userInfoLiveData.value = userInfo
                     profileLiveData.value = profile
@@ -105,9 +102,8 @@ internal object ViewModels {
             if (exchangeRateLiveData.value == null) {
                 exchangeRateLiveData.value = Support.getDefaultCurrency()
             }
-            val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal()
-                    ?: BigDecimal.ZERO
-            val rate = exchangeRateLiveData.value?.token?.rate() ?: BigDecimal.ZERO
+            val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal().safe()
+            val rate = exchangeRateLiveData.value?.token?.rate().safe()
             val balanceInCurrency = balanceNonDecimal.multiply(rate)
 
             balanceAndRateLiveData.value = BalanceAndRate(
@@ -146,8 +142,7 @@ internal object ViewModels {
         }.toString()
 
         fun calculateAmountInCurrency(amount: BigDecimal, useOffChain: Boolean = true) = formatCurrencyDisplay(
-                amount.multiply((if (useOffChain) balanceAndRateLiveData.value?.rate else exchangeRateLiveData.value?.eth?.rate)
-                        ?: BigDecimal.ZERO)
+                amount.multiply((if (useOffChain) balanceAndRateLiveData.value?.rate else exchangeRateLiveData.value?.eth?.rate).safe())
         )
 
         fun clear() = GlobalScope.launch(Dispatchers.Main) {

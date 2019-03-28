@@ -174,7 +174,7 @@ fun BigDecimal.trailingZeros(scale: Int): BigDecimal {
 }
 
 fun BigDecimal?.displayString(scale: Int = 6): String {
-    return NumberFormat.getNumberInstance().format(this?.trailingZeros(scale) ?: BigDecimal.ZERO)
+    return NumberFormat.getNumberInstance().format(this?.trailingZeros(scale).safe())
 }
 
 fun BigDecimal.toWei(): BigDecimal {

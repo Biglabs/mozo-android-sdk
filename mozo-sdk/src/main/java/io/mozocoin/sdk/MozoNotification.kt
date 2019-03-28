@@ -10,10 +10,7 @@ import io.mozocoin.sdk.common.model.Notification
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.transaction.TransactionDetails
-import io.mozocoin.sdk.utils.Support
-import io.mozocoin.sdk.utils.censor
-import io.mozocoin.sdk.utils.displayString
-import io.mozocoin.sdk.utils.string
+import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -131,7 +128,7 @@ class MozoNotification {
                                 0L,
                                 null,
                                 0.0,
-                                it.amount ?: BigDecimal.ZERO,
+                                it.amount.safe(),
                                 it.from,
                                 it.to,
                                 null,

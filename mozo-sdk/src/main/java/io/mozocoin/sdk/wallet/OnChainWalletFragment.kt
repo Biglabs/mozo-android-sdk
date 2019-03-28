@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.fragment_mozo_wallet_on.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import java.math.BigDecimal
 
 class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -130,13 +129,13 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             wallet_fragment_eth_balance?.text = data.balanceOfETH?.balanceNonDecimal().displayString()
             wallet_fragment_eth_currency?.text = MozoSDK.getInstance().profileViewModel
                     .calculateAmountInCurrency(
-                            data.balanceOfETH?.balanceNonDecimal() ?: BigDecimal.ZERO,
+                            data.balanceOfETH?.balanceNonDecimal().safe(),
                             false
                     )
 
             wallet_fragment_on_token_balance?.text = data.balanceOfToken?.balanceNonDecimal().displayString()
             wallet_fragment_on_token_currency?.text = MozoWallet.getInstance()
-                    .amountInCurrency(data.balanceOfToken?.balanceNonDecimal() ?: BigDecimal.ZERO)
+                    .amountInCurrency(data.balanceOfToken?.balanceNonDecimal().safe())
 
             wallet_fragment_on_convert?.isEnabled = data.convertToMozoXOnchain
             wallet_fragment_on_convert?.setText(

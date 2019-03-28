@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.utils.displayString
+import io.mozocoin.sdk.utils.safe
 import kotlinx.android.synthetic.main.fragment_payment_sent.*
 import java.math.BigDecimal
 
@@ -24,7 +25,7 @@ class PaymentRequestSentFragment : Fragment() {
                 .contactViewModel
                 .findByAddress(address)?.name ?: address
 
-        val amount = arguments?.getString(KEY_AMOUNT)?.toBigDecimal() ?: BigDecimal.ZERO
+        val amount = arguments?.getString(KEY_AMOUNT)?.toBigDecimal().safe()
         payment_request_amount.text = amount.displayString()
 
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this, Observer {
