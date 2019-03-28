@@ -42,6 +42,7 @@
     <string name="mozo_button_hide_transaction">Ẩn màn hình</string>
     <string name="mozo_button_back_on_chain">Trở về ví Onchain</string>
 
+    <string name="mozo_button_ok">Đồng ý</string>
     <string name="mozo_button_confirm">Xác nhận</string>
     <string name="mozo_button_restore">Khôi phục</string>
     <string name="mozo_button_back">Trở lại</string>

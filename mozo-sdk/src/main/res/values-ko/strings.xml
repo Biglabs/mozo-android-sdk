@@ -42,6 +42,7 @@
     <string name="mozo_button_hide_transaction">거래 숨기기</string>
     <string name="mozo_button_back_on_chain">Onchain 지갑으로 돌아 가기</string>
 
+    <string name="mozo_button_ok">확인</string>
     <string name="mozo_button_confirm">확인</string>
     <string name="mozo_button_restore">복구</string>
     <string name="mozo_button_back">돌아가기</string>

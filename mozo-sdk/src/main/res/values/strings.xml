@@ -42,6 +42,7 @@
     <string name="mozo_button_hide_transaction">Hide transaction</string>
     <string name="mozo_button_back_on_chain">Back to Onchain Wallet</string>
 
+    <string name="mozo_button_ok">OK</string>
     <string name="mozo_button_confirm">Confirm</string>
     <string name="mozo_button_restore">Restore</string>
     <string name="mozo_button_back">Back</string>

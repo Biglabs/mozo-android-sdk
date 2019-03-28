@@ -207,20 +207,24 @@ class MozoAuth private constructor() {
             callback?.invoke(false)
             data ?: return@getProfile
 
-            if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
-                saveUserInfo(context, data, callback)
-                return@getProfile
-            }
-
-            MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
-                if (
-                        it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
-                        it?.walletInfo?.offchainAddress == data.walletInfo?.offchainAddress &&
-                        it?.walletInfo?.onchainAddress == data.walletInfo?.onchainAddress
-                ) {
-                    callback?.invoke(true) // No need recover wallet
-                } else {
+            GlobalScope.launch {
+                if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
                     saveUserInfo(context, data, callback)
+                    return@launch
+                }
+
+                doSaveUserInfoAsync(data).await()
+
+                MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
+                    if (
+                            it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
+                            it?.walletInfo?.offchainAddress == data.walletInfo?.offchainAddress &&
+                            it?.walletInfo?.onchainAddress == data.walletInfo?.onchainAddress
+                    ) {
+                        callback?.invoke(true) // No need recover wallet
+                    } else {
+                        saveUserInfo(context, data, callback)
+                    }
                 }
             }
         }, {
@@ -232,24 +236,14 @@ class MozoAuth private constructor() {
         MozoWallet.getInstance().initWallet(context, profile) {
             GlobalScope.launch {
                 if (it) {
-                    val userInfo = UserInfo(
-                            userId = profile.userId ?: "",
-                            avatarUrl = profile.avatarUrl,
-                            fullName = profile.fullName,
-                            phoneNumber = profile.phoneNumber,
-                            birthday = profile.birthday ?: 0L,
-                            email = profile.email,
-                            gender = profile.gender
-                    )
+
 
                     /* update local profile to match with server profile */
                     profile.apply { walletInfo = MozoWallet.getInstance().getWallet().buildWalletInfo() }
                     mozoDB.profile().save(profile)
                     /* save User info first */
-                    mozoDB.userInfo().deleteAll()
-                    mozoDB.userInfo().save(userInfo)
+                    doSaveUserInfoAsync(profile).await()
 
-                    MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
                     MozoSDK.getInstance().profileViewModel.updateProfile(context, profile)
                 }
                 withContext(Dispatchers.Main) {
@@ -257,6 +251,23 @@ class MozoAuth private constructor() {
                 }
             }
         }
+    }
+
+    private fun doSaveUserInfoAsync(profile: Profile) = GlobalScope.async {
+        mozoDB.userInfo().deleteAll()
+
+        val userInfo = UserInfo(
+                userId = profile.userId ?: "",
+                avatarUrl = profile.avatarUrl,
+                fullName = profile.fullName,
+                phoneNumber = profile.phoneNumber,
+                birthday = profile.birthday ?: 0L,
+                email = profile.email,
+                gender = profile.gender
+        )
+        mozoDB.userInfo().save(userInfo)
+        MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
+        return@async userInfo
     }
 
     companion object {
