@@ -78,7 +78,7 @@
     <string name="mozo_convert_slow">Slow</string>
     <string name="mozo_convert_normal">Normal</string>
     <string name="mozo_convert_fast">Fast</string>
-    <string name="mozo_convert_explain">Gas Price is the amount you pay per unit of gas. <b>TX fee = Gas Used by Txn * Gas Price</b> &amp; is paid to miners for including your TX in a block. Higher the gas price = faster transaction, but more expensive. Default is <b>41 GWEI</b>.</string>
+    <string name="mozo_convert_explain">Gas Price is the amount you pay per unit of gas. <b>TX fee = Gas Used by Txn * Gas Price</b> &amp; is paid to miners for including your TX in a block. Higher the gas price = faster transaction, but more expensive.</string>
     <string name="mozo_convert_from_on_chain">From Onchain</string>
     <string name="mozo_convert_to_off_chain">To Offchain</string>
     <string name="mozo_convert_submit_broadcast_title">Broadcast completed</string>

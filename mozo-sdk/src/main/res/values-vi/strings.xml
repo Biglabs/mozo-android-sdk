@@ -73,7 +73,7 @@
     <string name="mozo_convert_slow">Chậm</string>
     <string name="mozo_convert_normal">Bình thường</string>
     <string name="mozo_convert_fast">Nhanh</string>
-    <string name="mozo_convert_explain">Gas Price là chi phí được tính bằng đơn vị GWEI dùng để thực hiện một giao dịch trong Ethereum. <b>Tổng chi phí (TX fee) được tính = Số Gas thực dùng * Gas Price</b>, phí này được dùng trả cho “thợ đào” (Miner) để họ đưa giao dịch vào một khối (Block). Gas Price cao đồng nghĩa với giao dịch diễn ra nhanh hơn (nhưng tốn kém hơn). Giá mặc định là <b>41 GWEI</b>.</string>
+    <string name="mozo_convert_explain">Gas Price là chi phí được tính bằng đơn vị GWEI dùng để thực hiện một giao dịch trong Ethereum. <b>Tổng chi phí (TX fee) được tính = Số Gas thực dùng * Gas Price</b>, phí này được dùng trả cho “thợ đào” (Miner) để họ đưa giao dịch vào một khối (Block). Gas Price cao đồng nghĩa với giao dịch diễn ra nhanh hơn (nhưng tốn kém hơn).</string>
     <string name="mozo_convert_from_on_chain">Từ Onchain</string>
     <string name="mozo_convert_to_off_chain">Thành Offchain</string>
     <string name="mozo_convert_submit_broadcast_title">Đã xử lý xong</string>

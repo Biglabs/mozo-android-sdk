@@ -73,7 +73,7 @@
     <string name="mozo_convert_slow">느리다</string>
     <string name="mozo_convert_normal">정상</string>
     <string name="mozo_convert_fast">빠르다</string>
-    <string name="mozo_convert_explain">가스 가격은 가스 단위당(GWEI) 지불하는 금액입니다. <b>TX fee = Txn에서 사용하는 가스 * Gas Price</b> 이며  TX fee는 한 블록 내에 TX를 포함시키기 위하여 광부에게 지급됩니다. 가스 가격이 높을수록 거래는 빠르지 만 가격은 더 비쌉니다. 기본값은 <b>41 GWEI</b>입니다.</string>
+    <string name="mozo_convert_explain">가스 가격은 가스 단위당(GWEI) 지불하는 금액입니다. <b>TX fee = Txn에서 사용하는 가스 * Gas Price</b> 이며  TX fee는 한 블록 내에 TX를 포함시키기 위하여 광부에게 지급됩니다. 가스 가격이 높을수록 거래는 빠르지 만 가격은 더 비쌉니다.</string>
     <string name="mozo_convert_from_on_chain">Onchain에서</string>
     <string name="mozo_convert_to_off_chain">Offchain으로</string>
     <string name="mozo_convert_submit_broadcast_title">전송 완료</string>
