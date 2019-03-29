@@ -1,12 +1,15 @@
 package io.mozocoin.sdk.ui.view
 
 import android.content.Context
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.Gravity
 import androidx.core.content.ContextCompat
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.utils.color
+import io.mozocoin.sdk.utils.dimen
+import io.mozocoin.sdk.utils.dp2Px
 
 class MozoEmptyView : MozoIconTextView {
 
@@ -24,6 +27,10 @@ class MozoEmptyView : MozoIconTextView {
 
         if (!hasIcon) {
             setCompoundDrawablesRelative(null, ContextCompat.getDrawable(context, R.drawable.im_empty_box), null, null)
+
+            compoundDrawablePadding = resources.dp2Px(20f).toInt()
+            drawableSize = context.dimen(R.dimen.mozo_view_empty_height)
+            drawableRect = Rect(0, 0, drawableSize, drawableSize)
         }
     }
 }
