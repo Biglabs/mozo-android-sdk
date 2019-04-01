@@ -334,7 +334,7 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="25dp"
+                android:layout_marginBottom="@dimen/mozo_list_history_item_height"
                 android:background="@drawable/mozo_dr_btn_tx_history"
                 android:drawableEnd="@drawable/ic_content_arrow_right"
                 android:drawablePadding="10dp"

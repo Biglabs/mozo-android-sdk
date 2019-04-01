@@ -57,6 +57,11 @@ class MainActivity : AppCompatActivity() {
             R.id.action_sign_message -> {
                 startActivity(Intent(this, DemoSignMessageActivity::class.java))
             }
+            R.id.action_view_profile -> {
+                MozoAuth.getInstance().getUserInfo(this, false) {
+
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
