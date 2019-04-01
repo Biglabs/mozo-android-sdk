@@ -28,7 +28,7 @@ import java.util.*
 
 internal class ConvertOnChainActivity : BaseActivity() {
 
-    private val wallet: WalletInfo by lazy { MozoWallet.getInstance().getWallet().buildWalletInfo() }
+    private val wallet: WalletInfo? by lazy { MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
     private var mGasInfo: GasInfo? = null
     private var mGasPrice: BigDecimal = BigDecimal.ZERO
 
@@ -154,7 +154,7 @@ internal class ConvertOnChainActivity : BaseActivity() {
 
         MozoAPIsService.getInstance().getOnChainBalance(
                 this,
-                wallet.onchainAddress ?: return,
+                wallet?.onchainAddress ?: return,
                 { data, _ ->
                     showLoading(false)
                     data ?: return@getOnChainBalance
@@ -191,16 +191,16 @@ internal class ConvertOnChainActivity : BaseActivity() {
         }
 
         if (
-                wallet.offchainAddress != null &&
-                wallet.onchainAddress != null
+                wallet?.offchainAddress != null &&
+                wallet?.onchainAddress != null
         ) {
             val gasLimit = mGasInfo?.gasLimit.safe()
             val finalAmount = MozoTx.getInstance().amountWithDecimal(amount)
             return ConvertRequest(
-                    wallet.onchainAddress!!,
+                    wallet?.onchainAddress!!,
                     gasLimit,
                     gasPrice,
-                    wallet.offchainAddress!!,
+                    wallet?.offchainAddress!!,
                     finalAmount,
                     convert_gas_price_seek?.progress ?: 0
             )

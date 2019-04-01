@@ -5,11 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.common.ViewModels
+import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.ui.dialog.QRCodeDialog
@@ -18,12 +22,16 @@ import kotlinx.android.synthetic.main.fragment_mozo_wallet_on.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.math.BigDecimal
 
 class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var wallet: WalletInfo? = null
     private var txHistoryUrl: String? = null
     private var generateQRJob: Job? = null
+
+    private var mBalanceETH = BigDecimal.ZERO
+    private var mBalanceOnChain = BigDecimal.ZERO
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_mozo_wallet_on, container, false)
@@ -65,30 +73,29 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onResume() {
         super.onResume()
-        wallet = MozoWallet.getInstance().getWallet().buildWalletInfo()
+        if (MozoAuth.getInstance().isSignedIn()) {
+            wallet = MozoWallet.getInstance().getWallet()?.buildWalletInfo()
 
-        txHistoryUrl = StringBuilder("https://")
-                .append(Support.domainEhterscan())
-                .append("/address/")
-                .append(wallet?.onchainAddress)
-                .append("#transactions")
-                .toString()
+            updateUI()
+            fetchData()
 
-        wallet_fragment_on_address?.text = wallet?.onchainAddress
+            if (!EventBus.getDefault().isRegistered(this)) {
+                EventBus.getDefault().register(this)
+            }
 
-        generateQRJob?.cancel()
-        generateQRJob = generateQRImage()
-
-        fetchData()
-
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
+            MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this, balanceAndRateObserver)
+            MozoSDK.getInstance().profileViewModel.profileLiveData.observe(this, profileObserver)
         }
     }
 
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
+        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
+        MozoSDK.getInstance().profileViewModel.profileLiveData.removeObserver(profileObserver)
+
+        mBalanceETH = BigDecimal.ZERO
+        mBalanceOnChain = BigDecimal.ZERO
     }
 
     override fun onDestroyView() {
@@ -108,6 +115,20 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         fetchData()
     }
 
+    private fun updateUI() {
+        txHistoryUrl = StringBuilder("https://")
+                .append(Support.domainEhterscan())
+                .append("/address/")
+                .append(wallet?.onchainAddress)
+                .append("#transactions")
+                .toString()
+
+        wallet_fragment_on_address?.text = wallet?.onchainAddress
+
+        generateQRJob?.cancel()
+        generateQRJob = generateQRImage()
+    }
+
     private fun generateQRImage() = GlobalScope.launch {
         val qrImage = Support.generateQRCode(
                 wallet?.onchainAddress ?: return@launch,
@@ -120,22 +141,26 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun fetchData() {
+        if (wallet == null) {
+            wallet = MozoWallet.getInstance().getWallet()?.buildWalletInfo()
+            updateUI()
+        }
         MozoAPIsService.getInstance().getOnChainBalance(
                 context ?: return,
                 wallet?.onchainAddress ?: return, { data, _ ->
             wallet_fragment_on_swipe?.isRefreshing = false
 
             data ?: return@getOnChainBalance
-            wallet_fragment_eth_balance?.text = data.balanceOfETH?.balanceNonDecimal().displayString()
-            wallet_fragment_eth_currency?.text = MozoSDK.getInstance().profileViewModel
-                    .calculateAmountInCurrency(
-                            data.balanceOfETH?.balanceNonDecimal().safe(),
-                            false
-                    )
 
-            wallet_fragment_on_token_balance?.text = data.balanceOfToken?.balanceNonDecimal().displayString()
+            mBalanceETH = data.balanceOfETH?.balanceNonDecimal().safe()
+            wallet_fragment_eth_balance?.text = mBalanceETH.displayString()
+            wallet_fragment_eth_currency?.text = MozoSDK.getInstance().profileViewModel
+                    .calculateAmountInCurrency(mBalanceETH, false)
+
+            mBalanceOnChain = data.balanceOfToken?.balanceNonDecimal().safe()
+            wallet_fragment_on_token_balance?.text = mBalanceOnChain.displayString()
             wallet_fragment_on_token_currency?.text = MozoWallet.getInstance()
-                    .amountInCurrency(data.balanceOfToken?.balanceNonDecimal().safe())
+                    .amountInCurrency(mBalanceOnChain)
 
             wallet_fragment_on_convert?.isEnabled = data.convertToMozoXOnchain
             wallet_fragment_on_convert?.setText(
@@ -143,6 +168,18 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     else R.string.mozo_button_onchain_converting
             )
         }, this::fetchData)
+    }
+
+    private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
+        wallet_fragment_eth_currency?.text = MozoSDK.getInstance().profileViewModel
+                .calculateAmountInCurrency(mBalanceETH, false)
+
+        wallet_fragment_on_token_currency?.text = MozoWallet.getInstance()
+                .amountInCurrency(mBalanceOnChain)
+    }
+
+    private val profileObserver = Observer<Profile?> {
+        onResume()
     }
 
     companion object {

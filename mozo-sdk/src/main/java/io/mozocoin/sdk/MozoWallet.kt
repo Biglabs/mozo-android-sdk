@@ -111,11 +111,11 @@ class MozoWallet private constructor() {
             return
         }
 
-        val wallet = getWallet().encrypt(pin).buildWalletInfo()
+        val wallet = getWallet()?.encrypt(pin)?.buildWalletInfo()
         mProfile!!.apply { walletInfo = wallet }
 
         /* save wallet info to server */
-        syncWalletInfo(wallet, context, callback)
+        syncWalletInfo(wallet ?: return, context, callback)
     }
 
     private fun syncWalletInfo(walletInfo: WalletInfo, context: Context, callback: ((isSuccess: Boolean) -> Unit)? = null) {
@@ -149,8 +149,8 @@ class MozoWallet private constructor() {
             return
         }
         if (mProfile!!.walletInfo?.onchainAddress.isNullOrEmpty()) {
-            val wallet = getWallet().decrypt(pin).buildWalletInfo()
-            MozoAPIsService.getInstance().saveOnChainWallet(context, wallet, { p, _ ->
+            val wallet = getWallet()?.decrypt(pin)?.buildWalletInfo()
+            MozoAPIsService.getInstance().saveOnChainWallet(context, wallet ?: return, { p, _ ->
                 callback?.invoke(p != null)
             }, {
                 syncOnChainWallet(context, pin, callback)
@@ -205,11 +205,11 @@ class MozoWallet private constructor() {
         EventBus.getDefault().post(MessageEvent.Auth(false, UserCancelException()))
     }
 
-    internal fun getWallet(): WalletHelper {
-        if (mWallet == null) {
+    internal fun getWallet(createNewIfNeed: Boolean = false): WalletHelper? {
+        if (createNewIfNeed && mWallet == null) {
             mWallet = WalletHelper.create()
         }
-        return mWallet!!
+        return mWallet
     }
 
     internal fun clear() {

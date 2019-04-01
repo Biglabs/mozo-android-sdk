@@ -239,7 +239,7 @@ class MozoAuth private constructor() {
 
 
                     /* update local profile to match with server profile */
-                    profile.apply { walletInfo = MozoWallet.getInstance().getWallet().buildWalletInfo() }
+                    profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
                     mozoDB.profile().save(profile)
                     /* save User info first */
                     doSaveUserInfoAsync(profile).await()
