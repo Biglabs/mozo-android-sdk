@@ -256,12 +256,13 @@ internal class SecurityActivity : BaseActivity() {
                 KEY_ENTER_PIN -> {
                     showLoadingUI().join()
                     MozoWallet.getInstance().syncOnChainWallet(this@SecurityActivity, mPIN) {
-                        initRestoreUI(!isCorrect)
-                        if (isCorrect) {
-                            showPinInputCorrectUI()
-                            finishResult()
-                        } else {
-                            showPinInputWrongUI()
+                        initRestoreUI(!isCorrect).invokeOnCompletion {
+                            if (isCorrect) {
+                                showPinInputCorrectUI()
+                                finishResult()
+                            } else {
+                                showPinInputWrongUI()
+                            }
                         }
                     }
                 }
