@@ -218,8 +218,8 @@ class MozoAuth private constructor() {
                 MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
                     if (
                             it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
-                            it?.walletInfo?.offchainAddress == data.walletInfo?.offchainAddress &&
-                            it?.walletInfo?.onchainAddress == data.walletInfo?.onchainAddress
+                            it?.walletInfo?.offchainAddress?.equals(data.walletInfo?.offchainAddress, ignoreCase = true) == true &&
+                            it.walletInfo?.onchainAddress?.equals(data.walletInfo?.onchainAddress, ignoreCase = true) == true
                     ) {
                         callback?.invoke(true) // No need recover wallet
                     } else {

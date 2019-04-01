@@ -69,17 +69,18 @@ class MozoTx private constructor() {
                     callback.invoke(null, true)
                     return@createTx
                 }
+                val signatureData = Sign.signMessage(Numeric.hexStringToByteArray(toSign), credentials.ecKeyPair, false)
 
-                signMessage(context, toSign) { _, signature, publicKey ->
-                    data.signatures = arrayListOf(signature)
-                    data.publicKeys = arrayListOf(publicKey)
+                val signature = CryptoUtils.serializeSignature(signatureData)
+                val pubKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
+                data.signatures = arrayListOf(signature)
+                data.publicKeys = arrayListOf(pubKey)
 
-                    MozoAPIsService.getInstance().sendTransaction(context, data, { txResponse, _ ->
-                        callback.invoke(txResponse, false)
-                    }, {
-                        callback.invoke(null, true)
-                    })
-                }
+                MozoAPIsService.getInstance().sendTransaction(context, data, { txResponse, _ ->
+                    callback.invoke(txResponse, false)
+                }, {
+                    callback.invoke(null, true)
+                })
             } else {
                 callback.invoke(null, false)
             }
