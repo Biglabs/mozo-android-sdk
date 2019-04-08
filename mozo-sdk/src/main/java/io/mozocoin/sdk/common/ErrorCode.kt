@@ -16,7 +16,9 @@ enum class ErrorCode(val key: String, @StringRes val message: Int) {
     ERROR_WALLET_ADDRESS_EXISTING("SOLOMON_USER_PROFILE_WALLET_INVALID_UPDATE_EXISTING_WALLET_ADDRESS", R.string.error_wallet_different),
     ERROR_WALLET_DIFFERENT("SOLOMON_FATAL_USE_DIFFERENT_OFFCHAIN_ADDRESS", R.string.error_wallet_different),
 
-    ERROR_CONVERT_STATUS_PENDING("STORE_ADDRESS_SIGN_TRANSACTION_STATUS_PENDING", R.string.error_convert_status_pending);
+    ERROR_CONVERT_STATUS_PENDING("STORE_ADDRESS_SIGN_TRANSACTION_STATUS_PENDING", R.string.error_convert_status_pending),
+
+    ERROR_DUPLICATE_ADDRESS("SOLOMON_USER_ADDRESS_BOOK_DUPLICATE_OFFCHAIN_ADDRESS", R.string.error_common);
 
     fun shouldShowContactMessage() = message == R.string.error_fatal
 

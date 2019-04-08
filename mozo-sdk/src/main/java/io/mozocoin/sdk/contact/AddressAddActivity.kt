@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.ErrorCode
 import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.ui.BaseActivity
+import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.view_address_add_new.*
 import kotlinx.coroutines.Dispatchers
@@ -43,11 +45,11 @@ internal class AddressAddActivity : BaseActivity() {
         mozoService.saveContact(this, contact) { data, errorCode ->
             hideLoading()
 
-            if (data != null) showDoneMsg()
-
-            if (errorCode == "DUPLICATED_ERROR_CODE") {
-                showErrorMsg()
+            if (errorCode == ErrorCode.ERROR_DUPLICATE_ADDRESS.key) {
+                MessageDialog.show(this, R.string.mozo_address_add_msg_error)
+                return@saveContact
             }
+            if (data != null) showDoneMsg()
         }
     }
 
@@ -61,19 +63,14 @@ internal class AddressAddActivity : BaseActivity() {
         finishAndRemoveTask()
     }
 
-    private fun showErrorMsg() = GlobalScope.launch(Dispatchers.Main) {
-        text_msg_error.visible()
-    }
-
     private fun showLoading() {
         input_contact_name.hideKeyboard()
         button_save.isEnabled = false
         loading_container.show()
         text_msg_saved.gone()
-        text_msg_error.gone()
     }
 
-    private fun hideLoading() = GlobalScope.launch(Dispatchers.Main) {
+    private fun hideLoading() {
         input_contact_name.requestFocus()
         input_contact_name.showKeyboard()
         button_save.isEnabled = true
