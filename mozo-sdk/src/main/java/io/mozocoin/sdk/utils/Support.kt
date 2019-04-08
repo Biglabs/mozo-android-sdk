@@ -3,17 +3,23 @@ package io.mozocoin.sdk.utils
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.widget.TextView
+import androidx.core.text.set
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import io.mozocoin.sdk.MozoSDK
-import io.mozocoin.sdk.MozoWallet
-import io.mozocoin.sdk.R
-import io.mozocoin.sdk.common.Constant
-import io.mozocoin.sdk.common.model.ExchangeRate
-import io.mozocoin.sdk.ui.ScannerQRActivity
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import io.mozocoin.sdk.MozoSDK
+import io.mozocoin.sdk.MozoWallet
+import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.model.ExchangeRateData
+import io.mozocoin.sdk.common.model.ExchangeRateInfo
+import io.mozocoin.sdk.ui.ScannerQRActivity
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
@@ -86,6 +92,23 @@ class Support {
             else -> Constant.DOMAIN_SOCKET_PRODUCTION
         }
 
-        internal fun getDefaultCurrency() = ExchangeRate(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, SharedPrefsUtils.getDefaultCurrencyRate())
+        internal fun domainEhterscan() = when (MozoSDK.serviceEnvironment) {
+            MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_ETHER_SCAN_DEV
+            MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_ETHER_SCAN_STAGING
+            else -> Constant.DOMAIN_ETHER_SCAN_PRODUCTION
+        }
+
+        internal fun getDefaultCurrency() = ExchangeRateData(
+                ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, SharedPrefsUtils.getDefaultCurrencyRate()),
+                ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, BigDecimal.ZERO)
+        )
+
+        internal fun formatSpendableText(view: TextView?, balanceDisplay: String, isOnchain: Boolean = false) {
+            view ?: return
+            view.text = SpannableString(view.context.getString(R.string.mozo_transfer_spendable, balanceDisplay) + (if (isOnchain) " Onchain" else "")).apply {
+                set(indexOfFirst { it.isDigit() }..length, ForegroundColorSpan(view.context.color(R.color.mozo_color_primary)))
+            }
+            view.isVisible = true
+        }
     }
 }

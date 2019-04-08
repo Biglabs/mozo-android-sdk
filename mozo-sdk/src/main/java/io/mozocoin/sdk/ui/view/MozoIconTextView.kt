@@ -8,8 +8,8 @@ import io.mozocoin.sdk.R
 
 open class MozoIconTextView : AppCompatTextView {
 
-    private var drawableSize = 0
-    private var drawableRect: Rect? = null
+    protected var drawableSize = 0
+    protected var drawableRect: Rect? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, android.R.attr.textViewStyle)

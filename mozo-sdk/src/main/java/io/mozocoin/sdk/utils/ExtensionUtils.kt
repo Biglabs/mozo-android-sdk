@@ -5,6 +5,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Typeface
+import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -16,12 +18,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.utils.customtabs.CustomTabsHelper
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
@@ -34,9 +38,9 @@ fun Activity.setMatchParent() {
 }
 
 fun FragmentActivity.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
-    supportFragmentManager?.beginTransaction()?.replace(id, fragment)?.apply {
+    supportFragmentManager.beginTransaction().replace(id, fragment).apply {
         if (backStackName != null) addToBackStack(backStackName)
-    }?.commit()
+    }.commit()
 }
 
 fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
@@ -47,15 +51,15 @@ fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? 
 
 internal fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-internal fun Context.copyText(text: String?) = apply {
-    text?.let {
-        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", it)
+internal fun Context.copyText(text: String?) {
+    if (!text.isNullOrEmpty()) {
+        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", text)
     }
 }
 
-internal fun Context.copyWithToast(text: String?) = apply {
-    text?.let {
-        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", it)
+internal fun Context.copyWithToast(text: String?) {
+    if (!text.isNullOrEmpty()) {
+        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", text)
         Toast.makeText(this, R.string.mozo_dialog_copied_msg, Toast.LENGTH_SHORT).show()
     }
 }
@@ -76,6 +80,15 @@ fun Context.color(@ColorRes id: Int): Int {
 fun Context.dimen(@DimenRes id: Int): Int = resources.getDimensionPixelSize(id)
 
 fun Context.bitmap(@DrawableRes icon: Int) = AppCompatResources.getDrawable(this, icon)?.toBitmap()
+
+fun Context.openTab(url: String) {
+    val customTabsIntent = CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .setToolbarColor(color(R.color.mozo_color_primary))
+            .build()
+    CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
+    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(url), null)
+}
 
 fun visible(views: Array<View>) {
     views.map {
@@ -133,6 +146,10 @@ fun View.gone() {
 
 internal fun TextView.copyText() = apply { context.copyText(text.toString()) }
 internal fun TextView.copyWithToast() = apply { context.copyWithToast(text.toString()) }
+internal fun TextView.highlight(doIt: Boolean) {
+    typeface = if (doIt) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+    setTextColor(context.color(if (doIt) R.color.mozo_color_primary else R.color.mozo_color_section_text))
+}
 
 fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
     addTextChangedListener(object : TextWatcher {
@@ -147,8 +164,8 @@ fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
 }
 
 fun SwipeRefreshLayout.mozoSetup() {
-    val offset = resources.getDimensionPixelSize(R.dimen.mozo_refresh_progress_offset)
-    setProgressViewOffset(true, progressViewStartOffset + offset, progressViewEndOffset + offset / 3)
+//    val offset = resources.getDimensionPixelSize(R.dimen.mozo_refresh_progress_offset)
+//    setProgressViewOffset(true, progressViewStartOffset + offset, progressViewEndOffset + offset / 3)
     setColorSchemeResources(R.color.mozo_color_primary)
 }
 
@@ -157,5 +174,15 @@ fun BigDecimal.trailingZeros(scale: Int): BigDecimal {
 }
 
 fun BigDecimal?.displayString(scale: Int = 6): String {
-    return NumberFormat.getNumberInstance().format(this?.trailingZeros(scale) ?: BigDecimal.ZERO)
+    return NumberFormat.getNumberInstance().format(this?.trailingZeros(scale).safe())
 }
+
+fun BigDecimal.toWei(): BigDecimal {
+    return this.multiply(Math.pow(10.0, 9.0).toBigDecimal())
+}
+
+fun BigDecimal.toGwei(): BigDecimal {
+    return this.divide(Math.pow(10.0, 9.0).toBigDecimal())
+}
+
+fun BigDecimal?.safe(): BigDecimal = this ?: BigDecimal.ZERO

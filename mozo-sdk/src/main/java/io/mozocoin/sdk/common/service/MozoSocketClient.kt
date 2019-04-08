@@ -15,10 +15,12 @@ import io.mozocoin.sdk.MozoNotification
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.BroadcastData
 import io.mozocoin.sdk.common.model.BroadcastDataContent
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
+import org.greenrobot.eventbus.EventBus
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
@@ -66,6 +68,9 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                             }
                             Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
                                 MozoSDK.getInstance().contactViewModel.fetchStore(MozoSDK.getInstance().context)
+                            }
+                            Constant.NOTIFY_EVENT_CONVERT -> {
+                                EventBus.getDefault().post(MessageEvent.ConvertOnChain())
                             }
                         }
 

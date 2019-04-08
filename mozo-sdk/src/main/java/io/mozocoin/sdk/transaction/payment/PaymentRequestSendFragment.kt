@@ -31,7 +31,7 @@ class PaymentRequestSendFragment : Fragment() {
     private var amountBigDecimal = BigDecimal.ZERO
     private var selectedContact: Contact? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is PaymentRequestActivity) {
             mListener = context

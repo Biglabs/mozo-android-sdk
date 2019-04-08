@@ -55,7 +55,7 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
                         button_contact_kakao
                 ))
                 text_msg_error.setText(R.string.error_fatal)
-                button_try_again.setText(android.R.string.ok)
+                button_try_again.setText(R.string.mozo_button_ok)
             }
         }
 

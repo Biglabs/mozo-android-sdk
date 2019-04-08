@@ -18,7 +18,7 @@
 
     <string name="mozo_dialog_qr_code">Your MozoX Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
-    <string name="mozo_dialog_copied_msg">Copied!</string>
+    <string name="mozo_dialog_copied_msg">Copied to clipboard</string>
 
     <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
     <string name="mozo_dialog_error_timeout_msg" translatable="false">Time out, please try again.</string>
@@ -29,13 +29,22 @@
     <string name="mozo_button_deposit">Deposit</string>
     <string name="mozo_button_login">Sign In to MozoX</string>
     <string name="mozo_button_logout">Log Out MozoX</string>
-    <string name="mozo_button_transfer">Send MozoX</string>
+    <string name="mozo_button_send_mozo">Send MozoX</string>
+    <string name="mozo_button_transfer">Transfer</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
-    <string name="mozo_button_withdraw">Withdraw</string>
-    <string name="mozo_button_request_list">Request MozoX</string>
+    <string name="mozo_button_request">Request</string>
+    <string name="mozo_button_offchain_wallet">Offchain Wallet</string>
+    <string name="mozo_button_onchain_wallets">Onchain Wallets</string>
+    <string name="mozo_button_onchain_how_to_buy">How to add MozoX Onchain?</string>
+    <string name="mozo_button_onchain_tx_history">Go to <b>Etherscan.io</b></string>
+    <string name="mozo_button_onchain_convert">Convert to MozoX Offchain</string>
+    <string name="mozo_button_onchain_converting">Pending transaction…</string>
+    <string name="mozo_button_hide_transaction">Hide transaction</string>
+    <string name="mozo_button_back_on_chain">Back to Onchain Wallet</string>
+
+    <string name="mozo_button_ok">OK</string>
     <string name="mozo_button_confirm">Confirm</string>
     <string name="mozo_button_restore">Restore</string>
-
     <string name="mozo_button_back">Back</string>
     <string name="mozo_button_cancel">Cancel</string>
     <string name="mozo_button_copy">Copy</string>
@@ -50,6 +59,7 @@
     <string name="mozo_button_save_address">Save Wallet Address</string>
     <string name="mozo_button_retry">Retry</string>
     <string name="mozo_button_refresh">Refresh</string>
+    <string name="mozo_button_read_more">Read more</string>
     <string name="mozo_button_try_again">Try Again</string>
     <string name="mozo_button_contact_telegram" translatable="false">Telegram</string>
     <string name="mozo_button_contact_kakao" translatable="false">KakaoTalk</string>
@@ -60,6 +70,26 @@
     <string name="mozo_backup_content">Please write it down on paper and keep it in a safe place as you would with money</string>
     <string name="mozo_backup_warning">*If you lose your Recovery Phrase, your wallet cannot be recovered.</string>
     <string name="mozo_backup_confirm_msg">I have safely stored Recovery Phrase</string>
+
+    <string name="mozo_convert_title">Convert To Offchain</string>
+    <string name="mozo_convert_amount_hint">Enter amount to convert MozoX Offchain</string>
+    <string name="mozo_convert_gas_limit" translatable="false">Gas limit</string>
+    <string name="mozo_convert_gas_price" translatable="false">Gas price</string>
+    <string name="mozo_convert_slow">Slow</string>
+    <string name="mozo_convert_normal">Normal</string>
+    <string name="mozo_convert_fast">Fast</string>
+    <string name="mozo_convert_explain">Gas Price is the amount you pay per unit of gas. <b>TX fee = Gas Used by Txn * Gas Price</b> &amp; is paid to miners for including your TX in a block. Higher the gas price = faster transaction, but more expensive.</string>
+    <string name="mozo_convert_from_on_chain">From Onchain</string>
+    <string name="mozo_convert_to_off_chain">To Offchain</string>
+    <string name="mozo_convert_submit_broadcast_title">Broadcast completed</string>
+    <string name="mozo_convert_submit_broadcasting_title">Broadcasting transaction…</string>
+    <string name="mozo_convert_submit_broadcasting_content">It’s might take about <b>3 minutes</b> to complete</string>
+    <string name="mozo_convert_submit_hide_explain">When you hide this screen, you will receive notify when transaction <b>complete</b> or <b>fail</b>.</string>
+    <string name="mozo_convert_submit_waiting_title">Waiting for transaction status…</string>
+    <string name="mozo_convert_submit_success_title">Convert Successful</string>
+    <string name="mozo_convert_submit_success_content">You have just converted MozoX from <b>Onchain</b> to <b>Offchain</b>:</string>
+    <string name="mozo_convert_submit_fail_title">Convert Failed</string>
+    <string name="mozo_convert_submit_fail_content">Cannot complete convert MozoX from <b>Onchain</b> to <b>Offchain</b>.\n\nPlease try again after some time.</string>
 
     <string name="mozo_pin_title">Create Security PIN</string>
     <string name="mozo_pin_title_restore">Restore Wallet</string>
@@ -107,6 +137,8 @@
     <string name="mozo_transfer_amount">Amount</string>
     <string name="mozo_transfer_amount_hint">Input value in decimal format</string>
     <string name="mozo_transfer_amount_error_not_enough">Error: Your spendable is not enough for this.</string>
+    <string name="mozo_transfer_amount_on_chain_not_enough">Onchain balance is not enough.</string>
+    <string name="mozo_transfer_amount_eth_not_enough">ETH balance is not enough.</string>
     <string name="mozo_transfer_amount_error_too_low">Error: Amount is too low, please input valid amount.</string>
     <string name="mozo_transfer_amount_error">Error: Please input value in decimal format.</string>
     <string name="mozo_transfer_spendable">Spendable: %s MozoX</string>
@@ -127,6 +159,8 @@
 
     <string name="mozo_view_balance_title">MozoX Offchain Balance</string>
     <string name="mozo_view_address_title">Your MozoX Offchain Wallet Address</string>
+    <string name="mozo_view_text_mozo_off_chain" translatable="false">MozoX Offchain</string>
+    <string name="mozo_view_text_address">Address:</string>
     <string name="mozo_view_text_hint">…</string>
     <string name="mozo_view_text_to">To</string>
     <string name="mozo_view_text_send_to">To:</string>
@@ -141,6 +175,6 @@
     <string name="mozo_view_text_tx_failed">Failed</string>
     <string name="mozo_view_text_tx_success">Success</string>
     <string name="mozo_view_text_view_all">View All</string>
-    <string name="mozo_view_text_total_mozo">Total MozoX Tokens</string>
     <string name="mozo_view_text_just_now">Just now</string>
+    <string name="mozo_view_text_token_list">Token List:</string>
 </resources>

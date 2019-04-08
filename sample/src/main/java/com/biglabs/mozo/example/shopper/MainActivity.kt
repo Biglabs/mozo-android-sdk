@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoNotification
 import io.mozocoin.sdk.MozoWallet
-import io.mozocoin.sdk.authentication.AuthenticationListener
+import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.ui.MozoWalletFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -27,15 +27,14 @@ class MainActivity : AppCompatActivity() {
             addTab(newTabSpec("notification").setIndicator("Notification"), NotificationFragment::class.java, null)
         }
 
-        MozoAuth.getInstance().setAuthenticationListener(object : AuthenticationListener() {
-            override fun onChanged(isSinged: Boolean) {
-                super.onChanged(isSinged)
+        MozoAuth.getInstance().addAuthStateListener(object : AuthStateListener() {
+            override fun onAuthStateChanged(singedIn: Boolean) {
 
-                Log.i("MozoSDK", "Authentication changed, signed in: $isSinged")
+                Log.i("MozoSDK", "Authentication changed, signed in: $singedIn")
                 Log.i("MozoSDK", "My Mozo address: ${MozoWallet.getInstance().getAddress()}")
             }
 
-            override fun onCanceled() {
+            override fun onAuthCanceled() {
                 Toast.makeText(this@MainActivity, "User canceled", Toast.LENGTH_SHORT).show()
             }
         })
@@ -57,6 +56,11 @@ class MainActivity : AppCompatActivity() {
         when (item?.itemId) {
             R.id.action_sign_message -> {
                 startActivity(Intent(this, DemoSignMessageActivity::class.java))
+            }
+            R.id.action_view_profile -> {
+                MozoAuth.getInstance().getUserInfo(this, false) {
+
+                }
             }
         }
         return super.onOptionsItemSelected(item)
