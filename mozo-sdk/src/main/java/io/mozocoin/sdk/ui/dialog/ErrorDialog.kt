@@ -76,8 +76,7 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
         }
 
         button_try_again.click {
-            onTryAgain?.invoke()
-            dismiss()
+            retry()
         }
     }
 
@@ -97,6 +96,11 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
         instance = null
         cancelCallback = null
         dismissCallback = null
+    }
+
+    private fun retry() {
+        onTryAgain?.invoke()
+        dismiss()
     }
 
     companion object {
@@ -165,6 +169,10 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
 
         fun setCancelable(cancel: Boolean) {
             instance?.setCancelable(cancel)
+        }
+
+        internal fun retry() {
+            instance?.retry()
         }
     }
 }

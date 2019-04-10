@@ -27,8 +27,10 @@ import java.util.concurrent.atomic.AtomicReference
 
 internal class MozoAuthActivity : FragmentActivity() {
 
-    private var mAuthService: AuthorizationService? = null
-    private var mAuthStateManager: AuthStateManager? = null
+    private lateinit var mAuthService: AuthorizationService
+    private val mAuthStateManager: AuthStateManager by lazy {
+        AuthStateManager.getInstance(applicationContext)
+    }
 
     private val mAuthRequest = AtomicReference<AuthorizationRequest>()
     private val mAuthIntent = AtomicReference<CustomTabsIntent>()
@@ -43,14 +45,15 @@ internal class MozoAuthActivity : FragmentActivity() {
     private var isAuthInProgress = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        mAuthService = AuthorizationService(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_loading)
         setMatchParent()
 
         modeSignIn = intent.getBooleanExtra(FLAG_MODE_SIGN_IN, modeSignIn)
 
-        mAuthStateManager = AuthStateManager.getInstance(this)
-        if (modeSignIn && mAuthStateManager!!.current.isAuthorized) {
+        if (modeSignIn && mAuthStateManager.current.isAuthorized) {
             handleResult()
             return
         }
@@ -59,10 +62,9 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        mAuthService?.dispose()
-        mAuthService = null
+        mAuthService.dispose()
         authenticationInProgress = false
+        super.onDestroy()
 
         if (isAuthInProgress) {
             isAuthInProgress = false
@@ -75,7 +77,6 @@ internal class MozoAuthActivity : FragmentActivity() {
      * static values or by retrieving an OpenID discovery document.
      */
     private fun initializeAppAuth() = GlobalScope.launch {
-        mAuthService = AuthorizationService(this@MozoAuthActivity)
         mAuthRequest.set(null)
         mAuthIntent.set(null)
 
@@ -85,7 +86,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                 logoutUrl.toUri(),
                 null
         )
-        mAuthStateManager!!.replace(AuthState(
+        mAuthStateManager.replace(AuthState(
                 AuthorizationServiceConfiguration(
                         getString(R.string.auth_end_point_authorization, Support.domainAuth()).toUri(),
                         getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
@@ -111,31 +112,35 @@ internal class MozoAuthActivity : FragmentActivity() {
                 if (MozoSDK.isRetailerApp) R.string.auth_client_id_retailer
                 else R.string.auth_client_id_shopper
         )
-        val authRequestBuilder = AuthorizationRequest.Builder(
-                if (modeSignIn)
-                    mAuthStateManager!!.current.authorizationServiceConfiguration!!
-                else
-                    signOutConfiguration!!,
-                clientId,
-                ResponseTypeValues.CODE,
-                Uri.parse(redirectUrl))
-                .setPrompt("consent")
-                .setScope("openid profile phone")
+        val configuration = if (modeSignIn) mAuthStateManager.current.authorizationServiceConfiguration
+        else signOutConfiguration
+
+        if (configuration == null) {
+            cancelAuth()
+            return
+        }
 
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
-        authRequestBuilder.setAdditionalParameters(
-                mutableMapOf(
-                        "kc_locale" to locale.language,
-                        "application_type" to "native"
-                )
+        val authRequestBuilder = AuthorizationRequest.Builder(
+                configuration,
+                clientId,
+                ResponseTypeValues.CODE,
+                Uri.parse(redirectUrl)
         )
+                .setPrompt("consent")
+                .setScope("openid profile phone")
+                .setAdditionalParameters(
+                        mutableMapOf(
+                                "kc_locale" to locale.language,
+                                "application_type" to "native"
+                        )
+                )
         mAuthRequest.set(authRequestBuilder.build())
     }
 
     private fun warmUpBrowser() {
         mAuthIntentLatch = CountDownLatch(1)
-        val intentBuilder = mAuthService!!.createCustomTabsIntentBuilder(mAuthRequest.get().toUri())
-        val customTabs = intentBuilder
+        val customTabs = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri())
                 .setShowTitle(true)
                 .setInstantAppsEnabled(false)
                 .build()
@@ -163,7 +168,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
         isAuthInProgress = true
         startActivityForResult(
-                mAuthService!!.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get()).apply {
+                mAuthService.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get()).apply {
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
@@ -177,7 +182,7 @@ internal class MozoAuthActivity : FragmentActivity() {
         when {
             requestCode == KEY_DO_AUTHENTICATION && modeSignIn -> {
                 if (isSignOutWhenError) {
-                    mAuthStateManager?.clearSession()
+                    mAuthStateManager.clearSession()
                     finishAuth()
                     return
                 }
@@ -191,16 +196,16 @@ internal class MozoAuthActivity : FragmentActivity() {
                 val ex = AuthorizationException.fromIntent(data)
 
                 if (response != null || ex != null) {
-                    mAuthStateManager!!.updateAfterAuthorization(response, ex)
+                    mAuthStateManager.updateAfterAuthorization(response, ex)
                 }
 
                 when {
                     response?.authorizationCode != null -> {
                         // authorization code exchange is required
-                        mAuthStateManager!!.updateAfterAuthorization(response, ex)
+                        mAuthStateManager.updateAfterAuthorization(response, ex)
                         exchangeAuthorizationCode(response)
                     }
-                    resultCode == RESULT_CANCELED -> finishAuth(UserCancelException())
+                    resultCode == RESULT_CANCELED -> cancelAuth()
                     else -> {
                         finish()
                     }
@@ -215,7 +220,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
     private fun exchangeAuthorizationCode(response: AuthorizationResponse) {
         performTokenRequest(response.createTokenExchangeRequest(), AuthorizationService.TokenResponseCallback { tokenResponse, authException ->
-            mAuthStateManager!!.updateAfterTokenResponse(tokenResponse, authException)
+            mAuthStateManager.updateAfterTokenResponse(tokenResponse, authException)
             handleResult(exception = authException)
         })
     }
@@ -223,13 +228,13 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun performTokenRequest(request: TokenRequest, callback: AuthorizationService.TokenResponseCallback) {
         val clientAuthentication: ClientAuthentication
         try {
-            clientAuthentication = mAuthStateManager!!.current.clientAuthentication
+            clientAuthentication = mAuthStateManager.current.clientAuthentication
         } catch (ex: ClientAuthentication.UnsupportedAuthenticationMethod) {
             handleResult(exception = ex)
             return
         }
 
-        mAuthService!!.performTokenRequest(request, clientAuthentication, callback)
+        mAuthService.performTokenRequest(request, clientAuthentication, callback)
     }
 
     private fun handleResult(exception: Exception? = null) {
@@ -253,6 +258,10 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun finishAuth(exception: Exception? = null) = GlobalScope.launch(Dispatchers.Main) {
         EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, exception))
         finish()
+    }
+
+    private fun cancelAuth() {
+        finishAuth(UserCancelException())
     }
 
     companion object {
