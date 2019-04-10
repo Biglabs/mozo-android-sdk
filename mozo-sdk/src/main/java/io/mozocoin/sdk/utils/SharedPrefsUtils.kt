@@ -3,6 +3,7 @@ package io.mozocoin.sdk.utils
 import android.preference.PreferenceManager
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.common.Constant
+import java.math.BigDecimal
 
 class SharedPrefsUtils private constructor() {
     companion object {
@@ -22,15 +23,15 @@ class SharedPrefsUtils private constructor() {
         }
 
         @JvmStatic
-        fun getDefaultCurrencyRate(): Double {
+        fun getDefaultCurrencyRate(): BigDecimal {
             val rate = manager().getString(KEY_CURRENCY_RATE, "")
-            return if (rate.isNullOrEmpty()) Constant.DEFAULT_CURRENCY_RATE
-            else rate.toDouble()
+            return if (rate.isNullOrEmpty()) Constant.DEFAULT_CURRENCY_RATE.toBigDecimal()
+            else rate.toBigDecimal()
         }
 
         @JvmStatic
-        fun setDefaultCurrencyRate(rate: Double) {
-            val rateStr = if (rate <= 0) Constant.DEFAULT_CURRENCY_RATE.toString()
+        fun setDefaultCurrencyRate(rate: BigDecimal) {
+            val rateStr = if (rate <= BigDecimal.ZERO) Constant.DEFAULT_CURRENCY_RATE.toString()
             else rate.toString()
             manager().edit().putString(KEY_CURRENCY_RATE, rateStr).apply()
         }

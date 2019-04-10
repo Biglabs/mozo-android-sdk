@@ -151,8 +151,8 @@ class MozoWalletView : ConstraintLayout {
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
         it?.run {
-            mBalance = balanceInDecimal.displayString()
-            mBalanceRate = balanceInCurrencyDisplay
+            mBalance = balanceNonDecimal.displayString()
+            mBalanceRate = balanceNonDecimalInCurrencyDisplay
             updateUI()
         }
 

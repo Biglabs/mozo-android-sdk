@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true">
 
     <io.mozocoin.sdk.ui.widget.MozoToolbar
         android:id="@+id/toolbar"
@@ -99,24 +100,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_contact_address"
         app:layout_constraintVertical_bias="0.3"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/text_msg_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="@string/mozo_address_add_msg_error"
-        android:textColor="@color/mozo_color_error"
-        android:textSize="12sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_contact_address"
-        app:layout_constraintVertical_bias="0.05"
         tools:visibility="visible" />
 
     <TextView

@@ -108,6 +108,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
                         withContext(Dispatchers.Main) {
                             historyAdapter.setCanLoadMore(data.items!!.size == Constant.PAGING_SIZE)
                             historyAdapter.notifyData()
+//                          list_history?.scheduleLayoutAnimation()
                         }
                     }
                 },

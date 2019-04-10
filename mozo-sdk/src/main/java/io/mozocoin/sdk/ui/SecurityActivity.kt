@@ -70,7 +70,7 @@ internal class SecurityActivity : BaseActivity() {
 
         val paddingVertical = resources.dp2Px(10f).toInt()
         val paddingHorizontal = resources.dp2Px(8f).toInt()
-        MozoWallet.getInstance().getSeed()?.split(" ")?.map {
+        MozoWallet.getInstance().getWallet(true)?.mnemonicPhrases()?.map {
             val word = TextView(this@SecurityActivity)
             word.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
             word.text = it
@@ -224,7 +224,7 @@ internal class SecurityActivity : BaseActivity() {
         ))
     }
 
-    private fun showErrorAndRetryUI() {
+    private fun showErrorAndRetryUI() = GlobalScope.launch(Dispatchers.Main) {
         hideLoadingUI()
         error_container.visible()
         button_retry.click {
@@ -237,42 +237,46 @@ internal class SecurityActivity : BaseActivity() {
             delay(500)
             showLoadingUI().join()
 
+            if (mRequestCode == KEY_CREATE_PIN) {
+                MozoWallet.getInstance().executeSaveWallet(this@SecurityActivity, mPIN) {
+                    if (!it) {
+                        showErrorAndRetryUI()
+                        return@executeSaveWallet
+                    }
+                    showPinCreatedUI()
+                    finishResult()
+                }
+                return@launch
+            }
+
+            mPIN = input_pin.text.toString()
+            val isCorrect = MozoWallet.getInstance().validatePinAsync(mPIN).await()
+
             when (mRequestCode) {
-                KEY_CREATE_PIN -> {
-                    MozoWallet.getInstance().executeSaveWallet(this@SecurityActivity, mPIN) {
-                        if (!it) {
-                            showErrorAndRetryUI()
-                            return@executeSaveWallet
-                        }
-                        showPinCreatedUI()
-                        finishResult()
-                    }
-                    return@launch
-                }
                 KEY_ENTER_PIN -> {
-                    mPIN = input_pin.text.toString()
-                    val isCorrect = MozoWallet.getInstance().validatePinAsync(mPIN).await()
-                    initRestoreUI(!isCorrect).join()
-                    if (isCorrect) showPinInputCorrectUI().join()
-                    else {
-                        showPinInputWrongUI().join()
-                        return@launch
+                    showLoadingUI().join()
+                    MozoWallet.getInstance().syncOnChainWallet(this@SecurityActivity, mPIN) {
+                        initRestoreUI(!isCorrect).invokeOnCompletion {
+                            if (isCorrect) {
+                                showPinInputCorrectUI()
+                                finishResult()
+                            } else {
+                                showPinInputWrongUI()
+                            }
+                        }
                     }
                 }
-                else -> {
-                    if (mRequestCode == KEY_VERIFY_PIN || mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
-                        mPIN = input_pin.text.toString()
-                        val isCorrect = MozoWallet.getInstance().validatePinAsync(mPIN).await()
-                        initVerifyUI(!isCorrect).join()
-                        if (isCorrect) showPinInputCorrectUI().join()
-                        else {
-                            showPinInputWrongUI().join()
-                            return@launch
-                        }
+                KEY_VERIFY_PIN,
+                KEY_VERIFY_PIN_FOR_SEND -> {
+                    initVerifyUI(!isCorrect).join()
+                    if (isCorrect) {
+                        showPinInputCorrectUI().join()
+                        finishResult()
+                    } else {
+                        showPinInputWrongUI().join()
                     }
                 }
             }
-            finishResult()
         }
     }
 
@@ -302,12 +306,16 @@ internal class SecurityActivity : BaseActivity() {
             }
         }
 
-        fun startVerify(context: Context) {
+        fun start(context: Context, mode: Int) {
             Intent(context, SecurityActivity::class.java).apply {
-                putExtra(KEY_MODE, KEY_VERIFY_PIN)
+                putExtra(KEY_MODE, mode)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(this)
             }
+        }
+
+        fun startVerify(context: Context) {
+            start(context, KEY_VERIFY_PIN)
         }
     }
 }

@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.web3j.crypto.Credentials
 import org.web3j.crypto.Sign
 import org.web3j.utils.Numeric
 import java.math.BigDecimal
@@ -29,6 +28,7 @@ class MozoTx private constructor() {
 
     private var messagesToSign: Array<out String>? = null
     private var callbackToSign: ((result: List<Triple<String, String, String>>) -> Unit)? = null
+    private var isOnChainMessageSigning = false
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
         it?.run {
@@ -59,23 +59,31 @@ class MozoTx private constructor() {
         }
         MozoAPIsService.getInstance().createTx(context, prepareRequest(myAddress, output, amount)) { data, _ ->
             data ?: return@createTx
-            val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted()
-            val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, pin)
 
-            val toSign = data.toSign[0]
-            val credentials = Credentials.create(privateKey)
-            val signatureData = Sign.signMessage(Numeric.hexStringToByteArray(toSign), credentials.ecKeyPair, false)
+            val wallet = MozoWallet.getInstance().getWallet()?.decrypt(pin)
+            val credentials = wallet?.buildOffChainCredentials()
+            if (wallet != null && credentials != null) {
 
-            val signature = CryptoUtils.serializeSignature(signatureData)
-            val pubKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
-            data.signatures = arrayListOf(signature)
-            data.publicKeys = arrayListOf(pubKey)
+                val toSign = data.toSign.firstOrNull()
+                if (toSign == null) {
+                    callback.invoke(null, true)
+                    return@createTx
+                }
+                val signatureData = Sign.signMessage(Numeric.hexStringToByteArray(toSign), credentials.ecKeyPair, false)
 
-            MozoAPIsService.getInstance().sendTransaction(context, data, { txResponse, _ ->
-                callback.invoke(txResponse, false)
-            }, {
-                callback.invoke(null, true)
-            })
+                val signature = CryptoUtils.serializeSignature(signatureData)
+                val pubKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
+                data.signatures = arrayListOf(signature)
+                data.publicKeys = arrayListOf(pubKey)
+
+                MozoAPIsService.getInstance().sendTransaction(context, data, { txResponse, _ ->
+                    callback.invoke(txResponse, false)
+                }, {
+                    callback.invoke(null, true)
+                })
+            } else {
+                callback.invoke(null, false)
+            }
         }
     }
 
@@ -105,24 +113,27 @@ class MozoTx private constructor() {
 
         if (messagesToSign!!.isNotEmpty() && callbackToSign != null && event.requestCode == SecurityActivity.KEY_VERIFY_PIN) {
             GlobalScope.launch {
-                val privateKeyEncrypted = MozoWallet.getInstance().getPrivateKeyEncrypted()
-                val privateKey = CryptoUtils.decrypt(privateKeyEncrypted, event.pin)
-                val credentials = Credentials.create(privateKey)
-                val publicKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
-
-                val result = messagesToSign!!.map {
-                    val signature = CryptoUtils.serializeSignature(
-                            Sign.signMessage(
-                                    Numeric.hexStringToByteArray(it),
-                                    credentials.ecKeyPair,
-                                    false
-                            )
-                    )
-                    return@map Triple(it, signature, publicKey)
+                val wallet = MozoWallet.getInstance().getWallet()?.decrypt(event.pin)
+                val credentials = if (isOnChainMessageSigning) wallet?.buildOnChainCredentials() else wallet?.buildOffChainCredentials()
+                val result = if (credentials != null) {
+                    val publicKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
+                    messagesToSign!!.map {
+                        val signature = CryptoUtils.serializeSignature(
+                                Sign.signMessage(
+                                        Numeric.hexStringToByteArray(it),
+                                        credentials.ecKeyPair,
+                                        false
+                                )
+                        )
+                        return@map Triple(it, signature, publicKey)
+                    }
+                } else {
+                    emptyList()
                 }
 
+                isOnChainMessageSigning = false
                 withContext(Dispatchers.Main) {
-                    callbackToSign!!.invoke(result)
+                    callbackToSign?.invoke(result)
                     messagesToSign = null
                     callbackToSign = null
                 }
@@ -141,6 +152,15 @@ class MozoTx private constructor() {
 
     fun openTransactionHistory() {
         TransactionHistoryActivity.start(MozoSDK.getInstance().context)
+    }
+
+    internal fun signOnChainMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {
+        isOnChainMessageSigning = true
+        signMessages(context, message) {
+            it.firstOrNull()?.run {
+                callback.invoke(first, second, third)
+            }
+        }
     }
 
     fun signMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {

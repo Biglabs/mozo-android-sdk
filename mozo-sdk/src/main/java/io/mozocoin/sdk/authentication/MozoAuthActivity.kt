@@ -12,7 +12,6 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
-import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.logAsError
@@ -207,14 +206,6 @@ internal class MozoAuthActivity : FragmentActivity() {
                     }
                 }
             }
-            requestCode == KEY_DO_ENTER_PIN -> {
-                if (resultCode == RESULT_OK) {
-                    finishAuth()
-                } else {
-                    modeSignIn = false
-                    initializeAppAuth()
-                }
-            }
             !modeSignIn -> {
                 handleResult()
             }
@@ -247,20 +238,14 @@ internal class MozoAuthActivity : FragmentActivity() {
             if (modeSignIn) {
                 if (exception == null) {
                     MozoAuth.getInstance().syncProfile(this@MozoAuthActivity) {
-                        if (it <= 0) {
-                            // This user already logged in before, so bypass confirm PIN
-                            finishAuth(exception)
-                        } else
-                            SecurityActivity.start(this@MozoAuthActivity, it, KEY_DO_ENTER_PIN)
+                        if (it) finishAuth(null)
+                        else finish()
                     }
-                } else {
-                    //TODO handle authentication error
-                    exception.message?.logAsError("authentication")
+                    return@launch
                 }
-                return@launch
-            } else
-                signOutCallBack?.invoke()
+            } else signOutCallBack?.invoke()
 
+            exception?.message?.logAsError("authentication")
             finishAuth(exception)
         }
     }
@@ -273,7 +258,6 @@ internal class MozoAuthActivity : FragmentActivity() {
     companion object {
         private const val FLAG_MODE_SIGN_IN = "FLAG_MODE_SIGN_IN"
         private const val KEY_DO_AUTHENTICATION = 100
-        private const val KEY_DO_ENTER_PIN = 200
 
         private var signOutCallBack: (() -> Unit)? = null
         @Volatile

@@ -7,4 +7,5 @@
 
     <string name="error_wallet_different">Your wallet was updated but did not sync with your current device. Please restore your wallet first.</string>
     <string name="error_wallet_not_found">The destination wallet was not found. Please recheck the wallet address or try another wallet address</string>
+    <string name="error_convert_status_pending" translatable="false">Can not send transaction to Ethereum network or sent but failed. Please check your data and try again</string>
 </resources>
