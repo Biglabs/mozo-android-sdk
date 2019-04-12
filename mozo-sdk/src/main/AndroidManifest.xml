@@ -97,6 +97,14 @@
             android:windowSoftInputMode="stateHidden" />
 
         <activity
+            android:name=".wallet.ConvertOnInOffActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+
+        <activity
             android:name=".wallet.ConvertBroadcastActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"

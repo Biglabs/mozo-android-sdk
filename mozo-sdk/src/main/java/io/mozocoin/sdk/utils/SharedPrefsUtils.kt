@@ -11,6 +11,9 @@ class SharedPrefsUtils private constructor() {
 
         private const val KEY_CURRENCY_RATE = "KEY_CURRENCY_RATE"
 
+        private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX = "KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX"
+        private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT = "KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT"
+
         @JvmStatic
         private fun manager() = PreferenceManager.getDefaultSharedPreferences(MozoSDK.getInstance().context.applicationContext)
 
@@ -34,6 +37,24 @@ class SharedPrefsUtils private constructor() {
             val rateStr = if (rate <= BigDecimal.ZERO) Constant.DEFAULT_CURRENCY_RATE.toString()
             else rate.toString()
             manager().edit().putString(KEY_CURRENCY_RATE, rateStr).apply()
+        }
+
+        @JvmStatic
+        fun setLastInfoConvertOnChainInOffChain(txHash: String?, amount: String?) {
+            manager().edit()
+                    .putString(KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX, txHash)
+                    .putString(KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT, amount)
+                    .apply()
+        }
+
+        @JvmStatic
+        fun getLastTxConvertOnChainInOffChain(): String? {
+            return manager().getString(KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX, null)
+        }
+
+        @JvmStatic
+        fun getLastAmountConvertOnChainInOffChain(): String? {
+            return manager().getString(KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT, null)
         }
     }
 }

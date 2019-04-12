@@ -26,16 +26,24 @@ internal class ConvertBroadcastActivity : BaseActivity() {
 
     private var convertRequest: ConvertRequest? = null
     private var checkStatusJob: Job? = null
+    private var isOnChain = true
     private var isCanBack = true
+
+    private var lastTxHash: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (intent?.hasExtra(KEY_DATA) == true) {
-            convertRequest = intent.getParcelableExtra(KEY_DATA)
-        } else {
-            finish()
-            return
+        when {
+            intent?.hasExtra(KEY_DATA) == true -> {
+                convertRequest = intent.getParcelableExtra(KEY_DATA)
+                isOnChain = intent.getBooleanExtra(KEY_CONVERT_ON_CHAIN, isOnChain)
+            }
+            intent?.hasExtra(KEY_DATA_TX_HASH) == true -> lastTxHash = intent.getStringExtra(KEY_DATA_TX_HASH)
+            else -> {
+                finish()
+                return
+            }
         }
 
         setContentView(R.layout.activity_convert_broadcast)
@@ -67,8 +75,18 @@ internal class ConvertBroadcastActivity : BaseActivity() {
     }
 
     private fun updateUI() {
+        if (!lastTxHash.isNullOrEmpty()) {
+            val amountInDecimal = SharedPrefsUtils.getLastAmountConvertOnChainInOffChain()?.toBigDecimal().safe()
+            val amount = MozoTx.getInstance().amountNonDecimal(amountInDecimal)
+            convert_broadcast_result_amount?.text = amount.displayString()
+            convert_broadcast_result_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
+
+            checkConvertStatus(lastTxHash)
+            return
+        }
         convertRequest ?: return
 
+        updateContainerUI(FLOW_STEP_CONFIRM)
         val amount = MozoTx.getInstance().amountNonDecimal(convertRequest!!.value)
         val amountDisplay = amount.displayString()
         val amountCurrency = MozoWallet.getInstance().amountInCurrency(amount)
@@ -104,26 +122,39 @@ internal class ConvertBroadcastActivity : BaseActivity() {
     }
 
     private fun signConvertRequest(data: TransactionResponse) {
-        MozoTx.getInstance().signOnChainMessage(this, data.toSign.first()) { _, signature, publicKey ->
+        val onReceiveMessage: (String, String, String) -> Unit = { _, signature, publicKey ->
             data.signatures = arrayListOf(signature)
             data.publicKeys = arrayListOf(publicKey)
 
             submitRequest(data)
         }
+
+        if (isOnChain) {
+            MozoTx.getInstance().signOnChainMessage(this, data.toSign.first(), onReceiveMessage)
+        } else {
+            MozoTx.getInstance().signMessage(this, data.toSign.first(), onReceiveMessage)
+        }
     }
 
     private fun submitRequest(response: TransactionResponse) {
         showLoading(false)
-        convert_broadcast_flipper?.showNext()
-        convert_broadcast_toolbar?.showBackButton(false)
-        convert_broadcast_toolbar?.showCloseButton(false)
+        updateContainerUI(FLOW_STEP_WAITING)
+        convert_broadcast_submit_title?.setText(R.string.mozo_convert_submit_broadcasting_title)
         checkStatusJob?.cancel()
         isCanBack = false
 
         MozoAPIsService.getInstance().signConvertRequest(this, response, { data, _ ->
-            convert_broadcast_submit_title?.setText(R.string.mozo_convert_submit_broadcast_title)
+            if (data == null) {
+                updateContainerUI(FLOW_STEP_CONFIRM)
+                isCanBack = true
+                return@signConvertRequest
+            }
 
-            checkConvertStatus(data?.tx?.hash)
+            if (!isOnChain) {
+                SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(data.tx.hash, convertRequest?.value.toString())
+            }
+            convert_broadcast_submit_title?.setText(R.string.mozo_convert_submit_broadcast_title)
+            checkConvertStatus(data.tx.hash)
         }, {
             submitRequest(response)
         })
@@ -136,7 +167,7 @@ internal class ConvertBroadcastActivity : BaseActivity() {
             updateResultUI(false, hash)
             return
         }
-
+        updateContainerUI(FLOW_STEP_WAITING)
         checkStatusJob = GlobalScope.launch(Dispatchers.Main) {
             delay(2000)
 
@@ -159,7 +190,11 @@ internal class ConvertBroadcastActivity : BaseActivity() {
     }
 
     private fun updateResultUI(success: Boolean, hash: String?) {
-        convert_broadcast_flipper?.showNext()
+        if (!isOnChain) {
+            SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(null, null)
+        }
+        updateContainerUI(FLOW_STEP_RESULT)
+
         if (success) {
             convert_broadcast_result_icon?.setImageResource(R.drawable.ic_send_complete)
             convert_broadcast_result_title?.setText(R.string.mozo_convert_submit_success_title)
@@ -182,13 +217,33 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         }
     }
 
-    companion object {
-        private const val KEY_DATA = "KEY_DATA"
+    private fun updateContainerUI(step: Int) {
+        convert_broadcast_flipper?.displayedChild = step
+        convert_broadcast_toolbar?.showBackButton(step == FLOW_STEP_CONFIRM)
+        convert_broadcast_toolbar?.showCloseButton(step == FLOW_STEP_CONFIRM)
+    }
 
-        fun start(context: Context, request: ConvertRequest) {
+    companion object {
+        private const val FLOW_STEP_CONFIRM = 0
+        private const val FLOW_STEP_WAITING = 1
+        private const val FLOW_STEP_RESULT = 2
+
+        private const val KEY_DATA = "KEY_DATA"
+        private const val KEY_DATA_TX_HASH = "KEY_DATA_TX_HASH"
+        private const val KEY_CONVERT_ON_CHAIN = "KEY_CONVERT_ON_CHAIN"
+
+        fun start(context: Context, request: ConvertRequest, isOnChain: Boolean = true) {
             context.startActivity(
                     Intent(context, ConvertBroadcastActivity::class.java)
                             .putExtra(KEY_DATA, request)
+                            .putExtra(KEY_CONVERT_ON_CHAIN, isOnChain)
+            )
+        }
+
+        fun start(context: Context, txHash: String) {
+            context.startActivity(
+                    Intent(context, ConvertBroadcastActivity::class.java)
+                            .putExtra(KEY_DATA_TX_HASH, txHash)
             )
         }
     }

@@ -7,6 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,6 +19,7 @@ import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.ViewModels
+import io.mozocoin.sdk.common.model.BalanceInfo
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.service.MozoAPIsService
@@ -44,6 +48,8 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     private var fetchDataJob: Job? = null
     private var fetchDataJobHandler: Job? = null
     private var generateQRJob: Job? = null
+
+    private var mOnChainBalanceInfo: BalanceInfo? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_mozo_wallet_off, container, false)
@@ -77,6 +83,19 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             it.copyWithToast()
         }
 
+        wallet_info_detected_on_chain?.click {
+            val lastTxHash = SharedPrefsUtils.getLastTxConvertOnChainInOffChain()
+            if (lastTxHash.isNullOrEmpty()) {
+                ConvertOnInOffActivity.start(
+                        it.context,
+                        currentAddress ?: return@click,
+                        mOnChainBalanceInfo ?: return@click
+                )
+            } else {
+                ConvertBroadcastActivity.start(it.context, lastTxHash)
+            }
+        }
+
         historyAdapter.setEmptyView(wallet_fragment_history_empty_view)
         wallet_fragment_history_recycler?.apply {
             setHasFixedSize(false)
@@ -94,6 +113,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
 
     override fun onResume() {
         super.onResume()
+        wallet_info_detected_on_chain?.gone()
         if (MozoAuth.getInstance().isSignedIn()) {
             MozoSDK.getInstance().profileViewModel.run {
                 profileLiveData.observe(this@OffChainWalletFragment, profileObserver)
@@ -154,9 +174,9 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
         fetchDataJobHandler = GlobalScope.launch {
             delay(1000)
             if (!isAdded || activity == null) return@launch
-            MozoAPIsService.getInstance().getTransactionHistory(
-                    context ?: return@launch,
-                    currentAddress ?: return@launch,
+            if (context == null || currentAddress == null) return@launch
+
+            MozoAPIsService.getInstance().getTransactionHistory(context!!, currentAddress!!,
                     page = Constant.PAGING_START_INDEX,
                     size = 10,
                     callback = { data, _ ->
@@ -186,6 +206,36 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                         }
                     },
                     retry = this@OffChainWalletFragment::fetchData)
+
+            /**
+             * Detect Onchain MozoX inside Offchain Wallet Address
+             * */
+            MozoAPIsService.getInstance().getOnChainBalanceInOffChain(context!!, currentAddress!!, { data, _ ->
+                data ?: return@getOnChainBalanceInOffChain
+
+                wallet_info_detected_on_chain?.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
+                mOnChainBalanceInfo = data.balanceOfTokenOnchain
+
+                when {
+                    !data.convertToMozoXOnchain -> {
+                        wallet_info_detected_on_chain?.text = HtmlCompat.fromHtml(
+                                getString(R.string.mozo_convert_on_in_off_converting),
+                                FROM_HTML_MODE_LEGACY
+                        )
+                    }
+                    data.detectedOnchain -> {
+                        wallet_info_detected_on_chain?.text = HtmlCompat.fromHtml(getString(
+                                R.string.mozo_convert_on_in_off_detected,
+                                data.balanceOfTokenOnchain?.balanceNonDecimal()?.displayString()
+                        ), FROM_HTML_MODE_LEGACY)
+                    }
+                }
+
+                if (data.convertToMozoXOnchain) {
+                    SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(null, null)
+                }
+
+            }, this@OffChainWalletFragment::fetchData)
         }
     }
 
