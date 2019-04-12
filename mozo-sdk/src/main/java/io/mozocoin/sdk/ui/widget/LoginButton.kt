@@ -17,8 +17,10 @@ internal class LoginButton : BaseButton {
     override fun buttonIcon(): Int = R.drawable.ic_action_auth
 
     override fun authorizeChanged(isSignUpCompleted: Boolean) {
-        super.setText(if (isSignUpCompleted) R.string.mozo_button_logout else R.string.mozo_button_login)
-        isActivated = isSignUpCompleted
+        MozoAuth.getInstance().run {
+            super.setText(if (isSignedIn()) R.string.mozo_button_logout else R.string.mozo_button_login)
+            isActivated = isSignedIn()
+        }
     }
 
     override fun onClick(view: View) {
