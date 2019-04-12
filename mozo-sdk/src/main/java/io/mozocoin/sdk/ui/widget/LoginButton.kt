@@ -14,16 +14,11 @@ internal class LoginButton : BaseButton {
         super.setText(R.string.mozo_button_login)
     }
 
-    override fun buttonIcon(): Int = R.drawable.ic_action_login
+    override fun buttonIcon(): Int = R.drawable.ic_action_auth
 
     override fun authorizeChanged(isSignUpCompleted: Boolean) {
-        if (isSignUpCompleted) {
-            setIconResource(R.drawable.ic_action_logout)
-            super.setText(R.string.mozo_button_logout)
-        } else {
-            setIconResource(R.drawable.ic_action_login)
-            super.setText(R.string.mozo_button_login)
-        }
+        super.setText(if (isSignUpCompleted) R.string.mozo_button_logout else R.string.mozo_button_login)
+        isActivated = isSignUpCompleted
     }
 
     override fun onClick(view: View) {

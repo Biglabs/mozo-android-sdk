@@ -11,6 +11,7 @@ import io.mozocoin.sdk.transaction.TransactionFormActivity
 import io.mozocoin.sdk.transaction.TransactionHistoryActivity
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.CryptoUtils
+import io.mozocoin.sdk.utils.logAsInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -61,6 +62,7 @@ class MozoTx private constructor() {
             data ?: return@createTx
 
             val wallet = MozoWallet.getInstance().getWallet()?.decrypt(pin)
+            "My Wallet: ${wallet.toString()}".logAsInfo(TAG)
             val credentials = wallet?.buildOffChainCredentials()
             if (wallet != null && credentials != null) {
 
@@ -96,8 +98,7 @@ class MozoTx private constructor() {
 
     @Suppress("unused")
     @Subscribe
-    internal fun onUserCancel(event: MessageEvent.UserCancel) {
-        checkNotNull(event)
+    internal fun onUserCancel(@Suppress("UNUSED_PARAMETER") event: MessageEvent.UserCancel) {
         EventBus.getDefault().unregister(this)
         messagesToSign = null
         callbackToSign?.invoke(emptyList())
@@ -150,8 +151,8 @@ class MozoTx private constructor() {
     fun amountNonDecimal(amount: String): BigDecimal = amountNonDecimal(amount.toBigDecimal())
     fun amountNonDecimal(amount: BigDecimal): BigDecimal = amount.divide(Math.pow(10.0, decimal).toBigDecimal())
 
-    fun openTransactionHistory() {
-        TransactionHistoryActivity.start(MozoSDK.getInstance().context)
+    fun openTransactionHistory(context: Context) {
+        TransactionHistoryActivity.start(context)
     }
 
     internal fun signOnChainMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {

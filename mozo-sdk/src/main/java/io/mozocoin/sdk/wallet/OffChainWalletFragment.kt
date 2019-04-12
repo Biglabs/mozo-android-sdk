@@ -24,7 +24,6 @@ import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.transaction.TransactionDetails
-import io.mozocoin.sdk.transaction.TransactionHistoryActivity
 import io.mozocoin.sdk.transaction.TransactionHistoryRecyclerAdapter
 import io.mozocoin.sdk.transaction.payment.PaymentRequestActivity
 import io.mozocoin.sdk.ui.dialog.QRCodeDialog
@@ -74,7 +73,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             }
         }
         wallet_fragment_btn_view_all?.click {
-            TransactionHistoryActivity.start(context ?: return@click)
+            MozoTx.getInstance().openTransactionHistory(it.context)
         }
         wallet_fragment_qr_image?.click {
             QRCodeDialog.show(context ?: return@click, currentAddress ?: return@click)
