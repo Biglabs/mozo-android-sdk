@@ -165,7 +165,7 @@
     <string name="mozo_view_address_title">Your MozoX Offchain Wallet Address</string>
     <string name="mozo_view_text_mozo_off_chain" translatable="false">MozoX Offchain</string>
     <string name="mozo_view_text_address">Address:</string>
-    <string name="mozo_view_text_hint">…</string>
+    <string name="mozo_view_text_hint">Loading…</string>
     <string name="mozo_view_text_to">To</string>
     <string name="mozo_view_text_send_to">To:</string>
     <string name="mozo_view_text_from">From</string>

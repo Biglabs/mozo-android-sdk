@@ -155,7 +155,7 @@
     <string name="mozo_view_balance_title">Tổng MozoX Offchain</string>
     <string name="mozo_view_address_title">Địa chỉ ví MozoX Offchain của bạn</string>
     <string name="mozo_view_text_address">Địa chỉ:</string>
-    <string name="mozo_view_text_hint">…</string>
+    <string name="mozo_view_text_hint">Đang tải…</string>
     <string name="mozo_view_text_to">Đến</string>
     <string name="mozo_view_text_send_to">Đến:</string>
     <string name="mozo_view_text_from">Từ</string>
