@@ -91,6 +91,7 @@
                     android:includeFontPadding="false"
                     android:textColor="@color/mozo_color_un_active"
                     android:textSize="@dimen/mozo_text_size"
+                    android:visibility="gone"
                     app:layout_constraintBaseline_toBaselineOf="@id/convert_on_chain_amount"
                     app:layout_constraintEnd_toEndOf="@id/convert_on_chain_amount"
                     tools:text="₩100" />
