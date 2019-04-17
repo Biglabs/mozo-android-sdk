@@ -158,10 +158,10 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
         it?.run {
             view?.find<TextView>(R.id.wallet_fragment_balance_value)?.apply {
-                text = balanceNonDecimal.displayString()
+                text = if (realValues) balanceNonDecimal.displayString() else null
             }
             view?.find<TextView>(R.id.wallet_fragment_currency_value)?.apply {
-                text = balanceNonDecimalInCurrencyDisplay
+                text = if (realValues) balanceNonDecimalInCurrencyDisplay else null
             }
         }
     }
