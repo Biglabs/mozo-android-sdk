@@ -82,9 +82,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
             requestCode == KEY_VERIFY_PIN -> {
-                data?.run {
-                    sendTx(getStringExtra(SecurityActivity.KEY_DATA))
-                }
+                sendTx(data?.getStringExtra(SecurityActivity.KEY_DATA) ?: return)
             }
             data != null -> {
                 IntentIntegrator
@@ -178,7 +176,14 @@ internal class TransactionFormActivity : BaseActivity() {
         }
         button_submit?.click {
             if (output_receiver_address.isEnabled) {
-                if (validateInput()) showConfirmationUI()
+                if (validateInput()) {
+                    MozoTx.getInstance().verifyAddress(
+                            it.context,
+                            selectedContact?.soloAddress ?: output_receiver_address.text.toString()
+                    ) { isValid ->
+                        if (isValid) showConfirmationUI()
+                    }
+                }
             } else {
                 SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN_FOR_SEND, KEY_VERIFY_PIN)
             }

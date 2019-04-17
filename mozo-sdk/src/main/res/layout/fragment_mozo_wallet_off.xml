@@ -96,6 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:hint="@string/mozo_view_text_hint"
                         android:includeFontPadding="false"
                         android:textColor="@color/mozo_color_section_text"
                         android:textSize="13sp"
