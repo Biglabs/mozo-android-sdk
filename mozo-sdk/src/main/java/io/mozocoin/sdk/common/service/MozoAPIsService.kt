@@ -122,7 +122,7 @@ internal class MozoAPIsService private constructor() {
      */
     fun createTx(context: Context, request: TransactionRequest, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
-            execute(context, mozoAPIs.createTx(request), callback)
+            execute(context, mozoAPIs.createTx(request), callback, retry)
         }
     }
 
