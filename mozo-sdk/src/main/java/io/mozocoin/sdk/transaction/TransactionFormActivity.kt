@@ -93,7 +93,7 @@ internal class TransactionFormActivity : BaseActivity() {
                     showInputUI()
                     if (selectedContact == null) {
                         output_receiver_address.setText(it)
-                        updateSubmitButton()
+                        validateInput(true)
                     } else
                         showContactInfoUI()
                 }
@@ -359,11 +359,14 @@ internal class TransactionFormActivity : BaseActivity() {
         transfer_loading_container?.gone()
     }
 
-    private fun showErrorAddressUI() {
+    private fun showErrorAddressUI(fromScan: Boolean = false) {
         val errorColor = color(R.color.mozo_color_error)
         output_receiver_address_label?.setTextColor(errorColor)
         output_receiver_address_underline?.setBackgroundColor(errorColor)
         output_receiver_address_error_msg?.visible()
+        output_receiver_address_error_msg?.setText(
+                if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else R.string.mozo_transfer_receiver_address_error
+        )
     }
 
     private fun hideErrorAddressUI() {
@@ -389,13 +392,16 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun validateInput(): Boolean {
+    private fun validateInput(fromScan: Boolean = false): Boolean {
         var isValidAddress = true
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         if (!WalletUtils.isValidAddress(address)) {
-            showErrorAddressUI()
+            if (fromScan) output_receiver_address.text = null
+            showErrorAddressUI(fromScan)
             isValidAddress = false
         }
+
+        if (fromScan) return isValidAddress
 
         var isValidAmount = true
         var amount = output_amount.text.toString()
