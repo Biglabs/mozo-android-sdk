@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@color/mozo_color_primary"
         app:tabIndicatorHeight="4dp"
+        android:visibility="gone"
         app:tabSelectedTextColor="@color/mozo_color_primary"
         app:tabTextAppearance="@style/MozoTabTextStyle"
         app:tabTextColor="@color/mozo_color_title">
