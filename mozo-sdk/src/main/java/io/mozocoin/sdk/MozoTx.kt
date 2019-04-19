@@ -3,6 +3,7 @@ package io.mozocoin.sdk
 import android.content.Context
 import androidx.lifecycle.Observer
 import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.ErrorCode
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.*
@@ -10,7 +11,9 @@ import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.transaction.TransactionFormActivity
 import io.mozocoin.sdk.transaction.TransactionHistoryActivity
 import io.mozocoin.sdk.ui.SecurityActivity
+import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.CryptoUtils
+import io.mozocoin.sdk.utils.logAsInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -51,16 +54,37 @@ class MozoTx private constructor() {
         )
     }
 
+    internal fun verifyAddress(context: Context, output: String, callback: (isValid: Boolean) -> Unit) {
+        MozoAPIsService.getInstance().createTx(context, prepareRequest("", output, "0"), { _, errorCode ->
+            callback.invoke(ErrorCode.ERROR_TX_INVALID_ADDRESS.key != errorCode)
+        }, {
+            verifyAddress(context, output, callback)
+        })
+    }
+
     internal fun createTransaction(context: Context, output: String, amount: String, pin: String, callback: (response: TransactionResponse?, doRetry: Boolean) -> Unit) {
         val myAddress = MozoWallet.getInstance().getAddress()
         if (myAddress == null) {
             callback.invoke(null, false)
             return
         }
-        MozoAPIsService.getInstance().createTx(context, prepareRequest(myAddress, output, amount)) { data, _ ->
-            data ?: return@createTx
+        MozoAPIsService.getInstance().createTx(context, prepareRequest(myAddress, output, amount), { data, errorCode ->
+            if (data == null) {
+                callback.invoke(null, false)
+
+                if (ErrorCode.findByKey(errorCode) == null) {
+                    /**
+                     * Handle otherwise errors
+                     * */
+                    ErrorDialog.generalError(context, true) {
+                        callback.invoke(null, true)
+                    }
+                }
+                return@createTx
+            }
 
             val wallet = MozoWallet.getInstance().getWallet()?.decrypt(pin)
+            "My Wallet: ${wallet.toString()}".logAsInfo(TAG)
             val credentials = wallet?.buildOffChainCredentials()
             if (wallet != null && credentials != null) {
 
@@ -84,7 +108,9 @@ class MozoTx private constructor() {
             } else {
                 callback.invoke(null, false)
             }
-        }
+        }, {
+            createTransaction(context, output, amount, pin, callback)
+        })
     }
 
     internal fun getTransactionStatus(context: Context, txHash: String, callback: (status: TransactionStatus) -> Unit) {
@@ -96,8 +122,7 @@ class MozoTx private constructor() {
 
     @Suppress("unused")
     @Subscribe
-    internal fun onUserCancel(event: MessageEvent.UserCancel) {
-        checkNotNull(event)
+    internal fun onUserCancel(@Suppress("UNUSED_PARAMETER") event: MessageEvent.UserCancel) {
         EventBus.getDefault().unregister(this)
         messagesToSign = null
         callbackToSign?.invoke(emptyList())
@@ -150,8 +175,8 @@ class MozoTx private constructor() {
     fun amountNonDecimal(amount: String): BigDecimal = amountNonDecimal(amount.toBigDecimal())
     fun amountNonDecimal(amount: BigDecimal): BigDecimal = amount.divide(Math.pow(10.0, decimal).toBigDecimal())
 
-    fun openTransactionHistory() {
-        TransactionHistoryActivity.start(MozoSDK.getInstance().context)
+    fun openTransactionHistory(context: Context) {
+        TransactionHistoryActivity.start(context)
     }
 
     internal fun signOnChainMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {

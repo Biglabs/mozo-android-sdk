@@ -166,12 +166,11 @@ class MozoWallet private constructor() {
         }
 
         val verifyPin = mWallet?.verifyPin(pin)
-        return@async !pin.isEmpty() && verifyPin == true
+        return@async pin.isNotEmpty() && verifyPin == true
     }
 
     @Subscribe
-    internal fun onUserCancelErrorDialog(event: MessageEvent.UserCancelErrorDialog) {
-        checkNotNull(event)
+    internal fun onUserCancelErrorDialog(@Suppress("UNUSED_PARAMETER") event: MessageEvent.UserCancelErrorDialog) {
         EventBus.getDefault().unregister(this@MozoWallet)
 
         MozoAuth.getInstance().signOut()
@@ -179,7 +178,6 @@ class MozoWallet private constructor() {
 
     @Subscribe
     internal fun onReceivePin(event: MessageEvent.Pin) {
-        checkNotNull(event)
         EventBus.getDefault().unregister(this@MozoWallet)
 
         if (mInitWalletCallback != null) {
@@ -197,8 +195,7 @@ class MozoWallet private constructor() {
     }
 
     @Subscribe
-    internal fun onCancelPin(event: MessageEvent.UserCancel) {
-        checkNotNull(event)
+    internal fun onCancelPin(@Suppress("UNUSED_PARAMETER") event: MessageEvent.UserCancel) {
         EventBus.getDefault().unregister(this@MozoWallet)
 
         mInitWalletCallback?.invoke(false)

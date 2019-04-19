@@ -155,7 +155,7 @@
     <string name="mozo_view_balance_title">MozoX Offchain 밸런스</string>
     <string name="mozo_view_address_title">귀하의 MozoX Offchain 월렛 주소</string>
     <string name="mozo_view_text_address">주소:</string>
-    <string name="mozo_view_text_hint">…</string>
+    <string name="mozo_view_text_hint">로드 중 …</string>
     <string name="mozo_view_text_to">까지</string>
     <string name="mozo_view_text_send_to">까지:</string>
     <string name="mozo_view_text_from">에서</string>

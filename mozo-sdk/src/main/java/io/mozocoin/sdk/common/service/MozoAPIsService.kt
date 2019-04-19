@@ -64,6 +64,21 @@ internal class MozoAPIsService private constructor() {
     }
 
     /**
+     * Off-Chain Wallet with On-Chain inside Information APIs
+     */
+    fun getOnChainBalanceInOffChain(context: Context, address: String, callback: ((data: BalanceTokensData?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getOnChainBalanceInOffChain(address), callback, retry)
+        }
+    }
+
+    fun getEthBalanceInOffChain(context: Context, address: String, callback: ((data: BalanceEthData?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getEthBalanceInOffChain(address), callback, retry)
+        }
+    }
+
+    /**
      * On-Chain Wallet Information APIs
      */
     fun saveOnChainWallet(context: Context, walletInfo: WalletInfo, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
@@ -105,9 +120,9 @@ internal class MozoAPIsService private constructor() {
     /**
      * Transaction APIs
      */
-    fun createTx(context: Context, request: TransactionRequest, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null) {
+    fun createTx(context: Context, request: TransactionRequest, callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
-            execute(context, mozoAPIs.createTx(request), callback)
+            execute(context, mozoAPIs.createTx(request), callback, retry)
         }
     }
 

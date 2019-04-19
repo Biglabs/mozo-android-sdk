@@ -12,6 +12,9 @@ import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.visible
 import kotlinx.android.synthetic.main.dialog_error.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 class ErrorDialog(context: Context, private val argument: Bundle, private val onTryAgain: (() -> Unit)? = null) : BaseDialog(context) {
@@ -171,7 +174,7 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
             instance?.setCancelable(cancel)
         }
 
-        internal fun retry() {
+        internal fun retry() = GlobalScope.launch(Dispatchers.Main) {
             instance?.retry()
         }
     }

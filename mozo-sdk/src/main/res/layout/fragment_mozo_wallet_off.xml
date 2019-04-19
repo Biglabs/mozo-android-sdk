@@ -17,6 +17,27 @@
             android:focusable="true"
             android:focusableInTouchMode="true">
 
+            <io.mozocoin.sdk.ui.view.MozoIconTextView
+                android:id="@+id/wallet_info_detected_on_chain"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/mozo_screen_margin"
+                android:background="@drawable/mozo_dr_btn_detected_on_chain"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_content_arrow_right"
+                android:drawablePadding="10dp"
+                android:focusable="true"
+                android:padding="15dp"
+                android:text="@string/mozo_convert_on_in_off_detected"
+                android:textColor="@color/mozo_color_title"
+                android:textSize="13sp"
+                android:visibility="gone"
+                app:drawableSize="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/wallet_info_container"
                 android:layout_width="0dp"
@@ -26,7 +47,7 @@
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/wallet_info_detected_on_chain">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -75,6 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:hint="@string/mozo_view_text_hint"
                         android:includeFontPadding="false"
                         android:textColor="@color/mozo_color_section_text"
                         android:textSize="13sp"
