@@ -22,6 +22,7 @@
     <string name="mozo_dialog_copied_msg">Đã sao chép</string>
 
     <string name="mozo_dialog_error_network_msg">Mất kết nối Internet!</string>
+    <string name="mozo_dialog_error_timeout_msg">Quá hạn, xin thử lại.</string>
     <string name="mozo_dialog_error_scan_invalid_msg">Thông tin quét được không hợp lệ.</string>
     <string name="mozo_dialog_error_msg">Có lỗi xảy ra.</string>
     <string name="mozo_dialog_error_not_enough_msg">Số dư không đủ để gửi</string>
@@ -85,6 +86,10 @@
     <string name="mozo_convert_submit_success_content">Bạn vừa đổi thành công MozoX từ <b>Onchain</b> thành <b>Offchain</b>:</string>
     <string name="mozo_convert_submit_fail_title">Chuyển đổi thất bại</string>
     <string name="mozo_convert_submit_fail_content">"Không thể hoàn tất việc chuyển đổi.\n\nXin đợi một lúc và thử lại."</string>
+    <string name="mozo_convert_on_in_off_detected">&lt;b>Phát hiện %s MozoX Onchain&lt;/b>&lt;br/>Bạn có muốn chuyển MozoX Onchain trong ví thành MozoX Offchain?</string>
+    <string name="mozo_convert_on_in_off_converting">&lt;b>Đang chuyển đổi MozoX Offchain…&lt;/b></string>
+    <string name="mozo_convert_on_in_off_warning">Số dư ETH: &lt;b>%s&lt;/b>&lt;br/>Bạn cần chuyển &lt;b>%s ETH&lt;/b> vào ví MozoX Offchain này để trả phí giao dịch</string>
+    <string name="mozo_convert_on_in_off_eth_balance">Số dư ETH: &lt;b>%s&lt;/b></string>
 
     <string name="mozo_pin_title">Tạo mã PIN</string>
     <string name="mozo_pin_title_restore">Khôi phục lại ví</string>
