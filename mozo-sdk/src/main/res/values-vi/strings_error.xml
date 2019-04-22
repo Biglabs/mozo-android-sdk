@@ -11,4 +11,5 @@
 
     <string name="error_wallet_different">Tài khoản ví đã được cập nhật nhưng chưa đồng bộ với thiết bị đang dùng. Xin khôi phục lại ví trước khi bắt đầu.</string>
     <string name="error_wallet_not_found">Không tìm thấy địa chỉ ví người nhận. Xin kiểm tra lại địa chỉ ví hoặc thử lại với địa chỉ khác.</string>
+    <string name="error_convert_status_pending">Không thể gởi giao dịch đến hệ thống Ethereum hoặc đã gởi nhưng xảy ra lỗi. Xin vui lòng kiểm tra thông tin và thực hiện lại giao dịch</string>
 </resources>
