@@ -20,6 +20,7 @@ import io.mozocoin.sdk.common.OnNotificationReceiveListener
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoSocketClient
+import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.customtabs.CustomTabsActivityLifecycleCallbacks
 import io.mozocoin.sdk.utils.logAsInfo
 import java.util.*
@@ -53,6 +54,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
             override fun onAvailable(network: Network?) {
                 if (!MozoAuth.getInstance().isInitialized) return
 
+                ErrorDialog.retry()
                 MozoAuth.getInstance().isSignUpCompleted {
                     if (!it) return@isSignUpCompleted
                     MozoSocketClient.connect()

@@ -22,6 +22,7 @@
     <string name="mozo_dialog_copied_msg">클립 보드에 복사 됩니다</string>
 
     <string name="mozo_dialog_error_network_msg">인터넷에 연결되어 있지 않습니다!</string>
+    <string name="mozo_dialog_error_timeout_msg">타임 아웃, 다시 시도하시기를 바랍니다.</string>
     <string name="mozo_dialog_error_scan_invalid_msg">스캔 한 값이 유효하지 않습니다.</string>
     <string name="mozo_dialog_error_msg">오류가 발생했습니다.</string>
     <string name="mozo_dialog_error_not_enough_msg">금액을 이송하도록 밸런스가 부족되어있습니다.</string>
@@ -85,6 +86,10 @@
     <string name="mozo_convert_submit_success_content">당신은 MozoX를 <b>Onchain</b>에서 <b>Offchain</b>으로 변환했습니다:</string>
     <string name="mozo_convert_submit_fail_title">변환 실패</string>
     <string name="mozo_convert_submit_fail_content">"<b>Onchain</b>에서 <b>Offchain</b>으로 MozoX 변환을 완료 할 수 없습니다.\n\n잠시 후 다시 시도하십시오"</string>
+    <string name="mozo_convert_on_in_off_detected">&lt;b>%s MozoX Onchain이 감지 됩니다.&lt;/b>&lt;br/>이 지갑에 있는 MozoX Onchain을 MozoX Offchain으로 변환 하시겠습니까?</string>
+    <string name="mozo_convert_on_in_off_converting">&lt;b>MozoX Offchain으로 변환 중 …&lt;/b></string>
+    <string name="mozo_convert_on_in_off_warning">ETH 잔액은 &lt;b>%s&lt;/b>입니다.&lt;br/>TX 요금을 지불하기 위하여 이 MozoX Offchain 지갑 주소로 &lt;b>%s ETH&lt;/b>를 전송해야합니다.</string>
+    <string name="mozo_convert_on_in_off_eth_balance">ETH 잔액은 &lt;b>%s&lt;/b>입니다.</string>
 
     <string name="mozo_pin_title">보안 PIN 생성</string>
     <string name="mozo_pin_title_restore">월렛 복구</string>
@@ -155,7 +160,7 @@
     <string name="mozo_view_balance_title">MozoX Offchain 밸런스</string>
     <string name="mozo_view_address_title">귀하의 MozoX Offchain 월렛 주소</string>
     <string name="mozo_view_text_address">주소:</string>
-    <string name="mozo_view_text_hint">…</string>
+    <string name="mozo_view_text_hint">로드 중 …</string>
     <string name="mozo_view_text_to">까지</string>
     <string name="mozo_view_text_send_to">까지:</string>
     <string name="mozo_view_text_from">에서</string>

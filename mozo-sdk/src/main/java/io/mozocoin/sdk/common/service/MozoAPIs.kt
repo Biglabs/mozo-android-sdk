@@ -76,4 +76,13 @@ internal interface MozoAPIs {
 
     @GET("${MozoAPIsService.APIS_STORE}/onchain/status/{hash}")
     fun getConvertStatus(@Path("hash") hash: String): Call<Base<TransactionStatus>>
+
+    /**
+     * OnChain inside OffChain Address APIs
+     */
+    @GET("${MozoAPIsService.APIS_STORE}/onchain/getBalanceTokenOnchainOffchain/{address}")
+    fun getOnChainBalanceInOffChain(@Path("address") address: String): Call<Base<BalanceTokensData>>
+
+    @GET("${MozoAPIsService.APIS_STORE}/onchain/getBalanceETHAndFeeTransferERC20/{address}")
+    fun getEthBalanceInOffChain(@Path("address") address: String): Call<Base<BalanceEthData>>
 }

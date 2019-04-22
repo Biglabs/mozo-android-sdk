@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
             override fun onAuthCanceled() {
                 Toast.makeText(this@MainActivity, "User canceled", Toast.LENGTH_SHORT).show()
             }
+
+            override fun onAuthFailed() {
+                Toast.makeText(this@MainActivity, "Authentication failed", Toast.LENGTH_SHORT).show()
+            }
         })
 
         handleNotification(intent)

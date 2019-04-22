@@ -5,12 +5,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import androidx.browser.customtabs.CustomTabsClient
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.browser.customtabs.CustomTabsServiceConnection
-import androidx.browser.customtabs.CustomTabsSession
+import androidx.browser.customtabs.*
 
 
 internal class CustomTabsHelper {
@@ -29,7 +25,7 @@ internal class CustomTabsHelper {
         get() {
             if (client == null) {
                 customTabsSession = null
-            } else if (customTabsSession == null) {
+            } else {
                 customTabsSession = client!!.newSession(null)
             }
             return customTabsSession
@@ -149,13 +145,9 @@ internal class CustomTabsHelper {
             if (packageName == null) {
                 fallback?.openUri(context, uri)
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                    customTabsIntent.intent
-                            .putExtra(Intent.EXTRA_REFERRER,
-                                    Uri.parse(Intent.URI_ANDROID_APP_SCHEME.toString() + "//" + context.packageName))
-                }
-
-                customTabsIntent.intent.setPackage(packageName)
+                customTabsIntent.intent
+                        .putExtra(Intent.EXTRA_REFERRER, Uri.parse("android-app://" + context.packageName))
+                        .setPackage(packageName)
                 customTabsIntent.launchUrl(context, uri)
             }
         }

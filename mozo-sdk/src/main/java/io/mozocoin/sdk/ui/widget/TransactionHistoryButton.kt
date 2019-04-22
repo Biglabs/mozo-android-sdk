@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.transaction.TransactionHistoryActivity
 
@@ -27,7 +28,7 @@ internal class TransactionHistoryButton : BaseButton {
     }
 
     private fun doOpenTxHistory() {
-        TransactionHistoryActivity.start(context)
+        MozoTx.getInstance().openTransactionHistory(context)
     }
 
     override fun onClick(view: View) {

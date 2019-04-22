@@ -9,6 +9,7 @@ enum class ErrorCode(val key: String, @StringRes val message: Int) {
     ERROR_REQUIRED_LOGIN("INVALID_USER_TOKEN", R.string.error_required_login),
 
     ERROR_TX_NONCE_TOO_LOW("TRANSACTION_ERROR_NONCE_TOO_LOW", R.string.error_common),
+    ERROR_TX_INVALID_ADDRESS("TRANSACTION_ERROR_INVALID_ADDRESS", R.string.error_tx_invalid_address),
 
     ERROR_WALLET_ADDRESS_NOT_EXIST("SOLOMON_PAYMENT_REQUEST_INVALID_NON_EXIST_WALLET_ADDRESS", R.string.error_wallet_not_found),
 

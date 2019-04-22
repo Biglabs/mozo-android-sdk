@@ -205,7 +205,10 @@ class MozoAuth private constructor() {
     internal fun syncProfile(context: Context, callback: ((success: Boolean) -> Unit)? = null) {
         MozoAPIsService.getInstance().getProfile(context, { data, _ ->
             callback?.invoke(false)
-            data ?: return@getProfile
+            if (data == null) {
+                mAuthListeners.forEach { l -> l.onAuthFailed() }
+                return@getProfile
+            }
 
             GlobalScope.launch {
                 if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {

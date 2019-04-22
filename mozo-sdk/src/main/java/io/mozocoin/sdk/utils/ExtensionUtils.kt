@@ -90,15 +90,15 @@ fun Context.openTab(url: String) {
     CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(url), null)
 }
 
-fun visible(views: Array<View>) {
+fun visible(views: Array<View?>) {
     views.map {
-        it.visible()
+        it?.visible()
     }
 }
 
-fun gone(views: Array<View>) {
+fun gone(views: Array<View?>) {
     views.map {
-        it.gone()
+        it?.gone()
     }
 }
 

@@ -7,7 +7,10 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.common.model.*
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.common.service.MozoDatabase
-import io.mozocoin.sdk.utils.*
+import io.mozocoin.sdk.utils.SharedPrefsUtils
+import io.mozocoin.sdk.utils.Support
+import io.mozocoin.sdk.utils.displayString
+import io.mozocoin.sdk.utils.safe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,7 +25,8 @@ internal object ViewModels {
             val balanceNonDecimalInCurrency: BigDecimal,
             val balanceNonDecimalInCurrencyDisplay: String,
             val decimal: Int,
-            val rate: BigDecimal
+            val rate: BigDecimal,
+            val realValues: Boolean = true
     )
 
     class ProfileViewModel : ViewModel() {
@@ -112,7 +116,8 @@ internal object ViewModels {
                     formatCurrencyDisplay(balanceInCurrency),
                     balanceInfoLiveData.value?.decimals
                             ?: Constant.DEFAULT_DECIMAL,
-                    rate
+                    rate,
+                    realValues = balanceInfoLiveData.value != null
             )
         }
 
