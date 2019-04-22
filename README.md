@@ -20,11 +20,11 @@ allprojects {
 ```
 
 * Add this library as a dependency in your `app/build.gradle` file.
-```
+<pre>
 dependencies {
-    implementation 'io.mozocoin:mozo-sdk:[LATEST_VERSION]'
+    implementation 'io.mozocoin:mozo-sdk:<a href="https://bintray.com/mozocoin/MozoSDK/mozo-sdk/_latestVersion" title="Latest version">LATEST_VERSION</a>'
 }
-```
+</pre>
 
 ## Setting up
 * First, in your module Gradle file (usually the `app/build.gradle`), add the `packagingOptions` and `compileOptions` to remove duplicate files and make sure your project compiling by Java 8:
