@@ -28,6 +28,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         MozoAuth.getInstance().addAuthStateListener(object : AuthStateListener() {
+
+            override fun onSignedIn() {
+                super.onSignedIn()
+                Log.i("MozoSDK", "onSignedIn")
+            }
+
             override fun onAuthStateChanged(singedIn: Boolean) {
 
                 Log.i("MozoSDK", "Authentication changed, signed in: $singedIn")

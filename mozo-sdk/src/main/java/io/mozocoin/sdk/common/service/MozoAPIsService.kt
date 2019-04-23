@@ -229,6 +229,7 @@ internal class MozoAPIsService private constructor() {
                         MozoAuth.getInstance().signOut()
                         return
                     }
+                    response.errorBody()?.close()
                     onFailure(call, Throwable())
                 }
             }

@@ -39,7 +39,6 @@ class MozoAuth private constructor() {
         }
 
         if (isSignedIn()) {
-            mAuthListeners.forEach { l -> l.onSignedIn() }
             MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
                 if (it == null || it.walletInfo?.onchainAddress.isNullOrEmpty()) {
@@ -119,6 +118,10 @@ class MozoAuth private constructor() {
                 }
             } else callback.invoke(authStateManager.current.isAuthorized && MozoSDK.getInstance().profileViewModel.hasWallet())
         }
+    }
+
+    internal fun onSignedInBeforeWallet() = GlobalScope.launch(Dispatchers.Main) {
+        mAuthListeners.forEach { l -> l.onSignedIn() }
     }
 
     fun addAuthStateListener(listener: AuthStateListener) {

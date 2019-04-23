@@ -241,6 +241,7 @@ internal class MozoAuthActivity : FragmentActivity() {
         handleJob?.cancel()
         handleJob = GlobalScope.launch {
             if (modeSignIn) {
+                MozoAuth.getInstance().onSignedInBeforeWallet()
                 if (exception == null) {
                     MozoAuth.getInstance().syncProfile(this@MozoAuthActivity) {
                         if (it) finishAuth(null)
