@@ -281,6 +281,7 @@ class MozoAuth private constructor() {
         @Volatile
         private var instance: MozoAuth? = null
 
+        @JvmStatic
         fun getInstance(): MozoAuth =
                 instance ?: synchronized(this) {
                     instance = MozoAuth()

@@ -95,12 +95,15 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @Volatile
         internal var shouldShowNotification = true
 
+        internal fun isNetworkAvailable(): Boolean {
+            val activeNetwork = getInstance().connectivityManager.activeNetworkInfo
+            return activeNetwork?.isConnected == true
+        }
+
         @JvmStatic
         @Synchronized
         fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_STAGING, isRetailerApp: Boolean = false) {
             if (instance == null) {
-                checkNotNull(context)
-
                 serviceEnvironment = environment
                 Companion.isRetailerApp = isRetailerApp
                 instance = MozoSDK(context.applicationContext)
@@ -161,18 +164,12 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @JvmStatic
         fun attachNotificationReceiverActivity(activity: Class<out Activity>) {
-            checkNotNull(activity)
             getInstance().notifyActivityClass = activity
         }
 
         @JvmStatic
         fun shouldShowNotification(show: Boolean) {
             shouldShowNotification = show
-        }
-
-        internal fun isNetworkAvailable(): Boolean {
-            val activeNetwork = getInstance().connectivityManager.activeNetworkInfo
-            return activeNetwork?.isConnected == true
         }
 
         @JvmStatic

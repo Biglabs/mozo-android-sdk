@@ -115,6 +115,7 @@
     <string name="mozo_notify_title_sent">Sent %s MozoX</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
+    <string name="mozo_notify_content_invited">%s joined MozoX</string>
 
     <string name="mozo_payment_request_title">Request MozoX</string>
     <string name="mozo_payment_request_amount">Receive Amount</string>
@@ -130,7 +131,7 @@
     <string name="mozo_payment_request_text_empty">Requested list is empty</string>
     <string name="mozo_payment_request_item_label_from">From:</string>
     <string name="mozo_payment_request_item_label_amount">Request:</string>
-    <string name="mozo_payment_request_item_amount">%s MozoX</string>
+    <string name="mozo_payment_request_item_amount" translatable="false">%s MozoX</string>
 
     <string name="mozo_transfer_title">Send MozoX</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>

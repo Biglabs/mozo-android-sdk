@@ -218,6 +218,7 @@ class MozoTx private constructor() {
         @Volatile
         private var instance: MozoTx? = null
 
+        @JvmStatic
         fun getInstance() = instance ?: synchronized(this) {
             instance = MozoTx()
             return@synchronized instance!!

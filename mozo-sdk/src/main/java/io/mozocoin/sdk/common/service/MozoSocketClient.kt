@@ -63,6 +63,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
                         when (broadcast.event.toLowerCase()) {
                             /* Reload balance */
+                            Constant.NOTIFY_EVENT_AIRDROP_INVITE,
                             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                             }

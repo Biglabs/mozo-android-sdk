@@ -14,7 +14,6 @@ import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 
 @Suppress("unused")
 class MozoNotification {
@@ -26,11 +25,13 @@ class MozoNotification {
         internal fun shouldShowNotification(event: String?) = (if (MozoSDK.isRetailerApp)
             arrayOf(
                     Constant.NOTIFY_EVENT_AIRDROPPED,
+                    Constant.NOTIFY_EVENT_AIRDROP_INVITE,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED,
                     Constant.NOTIFY_EVENT_CUSTOMER_CAME
             ) else
             arrayOf(
                     Constant.NOTIFY_EVENT_AIRDROPPED,
+                    Constant.NOTIFY_EVENT_AIRDROP_INVITE,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED
             )).contains(event?.toLowerCase()) && MozoSDK.shouldShowNotification
 
@@ -42,7 +43,15 @@ class MozoNotification {
             putExtra(KEY_DATA, Gson().toJson(message))
         }
 
-        internal fun prepareNotification(context: Context, message: BroadcastDataContent): Notification {
+        internal fun getNotificationIcon(type: String?) = when (type ?: "") {
+            Constant.NOTIFY_EVENT_AIRDROPPED -> R.drawable.im_notification_airdrop
+            Constant.NOTIFY_EVENT_AIRDROP_INVITE -> R.drawable.im_notification_airdrop_invite
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came
+            else -> R.drawable.im_notification_received_sent
+        }
+
+        @JvmStatic
+        fun prepareNotification(context: Context, message: BroadcastDataContent): Notification {
             val isSendType = message.from.equals(
                     MozoWallet.getInstance().getAddress() ?: "",
                     ignoreCase = true
@@ -57,6 +66,10 @@ class MozoNotification {
             when (message.event ?: "") {
                 Constant.NOTIFY_EVENT_AIRDROPPED -> {
                     content = context.getString(R.string.mozo_notify_content_from, message.storeName)
+                }
+                Constant.NOTIFY_EVENT_AIRDROP_INVITE -> {
+                    val phone = message.phoneNo?.censor(3, 4) ?: ""
+                    content = context.getString(R.string.mozo_notify_content_invited, phone)
                 }
                 Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
                     title = context.string(if (message.isComeIn) R.string.mozo_notify_title_come_in else R.string.mozo_notify_title_just_left)
@@ -79,12 +92,6 @@ class MozoNotification {
                     ?: "", time = message.time).apply {
                 raw = Gson().toJson(message)
             }
-        }
-
-        internal fun getNotificationIcon(type: String?) = when (type ?: "") {
-            Constant.NOTIFY_EVENT_AIRDROPPED -> R.drawable.im_notification_airdrop
-            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came
-            else -> R.drawable.im_notification_received_sent
         }
 
         @Synchronized

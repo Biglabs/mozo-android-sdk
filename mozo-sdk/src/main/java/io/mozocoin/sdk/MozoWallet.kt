@@ -218,6 +218,7 @@ class MozoWallet private constructor() {
         @Volatile
         private var instance: MozoWallet? = null
 
+        @JvmStatic
         fun getInstance() = instance ?: synchronized(this) {
             if (instance == null) instance = MozoWallet()
             instance
