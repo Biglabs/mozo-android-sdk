@@ -7,7 +7,7 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.R
 
-internal class SendButton : BaseButton {
+internal class TransferButton : BaseButton {
 
     private var needToContinue = false
 

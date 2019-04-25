@@ -224,6 +224,7 @@ internal class MozoAPIsService private constructor() {
                     }
 
                 } else /*300..500*/ {
+                    callback?.invoke(null, ErrorCode.ERROR_REQUIRED_LOGIN.key)
                     val error = response.errorBody()?.string()
                     if (error != null && error.contains("invalid_token", ignoreCase = true)) {
                         MozoAuth.getInstance().signOut()
