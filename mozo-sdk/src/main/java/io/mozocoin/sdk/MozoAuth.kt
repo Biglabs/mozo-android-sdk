@@ -214,6 +214,9 @@ class MozoAuth private constructor() {
                 return@getProfile
             }
 
+            /* Invoke Sign In event for subscriber */
+            MozoAuth.getInstance().onSignedInBeforeWallet()
+
             GlobalScope.launch {
                 if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
                     saveUserInfo(context, data, callback)
