@@ -21,6 +21,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import net.openid.appauth.*
+import net.openid.appauth.browser.BrowserBlacklist
+import net.openid.appauth.browser.Browsers
+import net.openid.appauth.browser.VersionRange
+import net.openid.appauth.browser.VersionedBrowserMatcher
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
@@ -45,7 +49,16 @@ internal class MozoAuthActivity : FragmentActivity() {
     private var isAuthInProgress = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mAuthService = AuthorizationService(this)
+        val appAuthConfig = AppAuthConfiguration.Builder()
+                .setBrowserMatcher(BrowserBlacklist(
+                        VersionedBrowserMatcher(
+                                Browsers.SBrowser.PACKAGE_NAME,
+                                Browsers.SBrowser.SIGNATURE_SET,
+                                true, // when this browser is used via a custom tab
+                                VersionRange.atMost("5.3")
+                        )))
+                .build()
+        mAuthService = AuthorizationService(this, appAuthConfig)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_loading)
