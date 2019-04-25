@@ -56,7 +56,14 @@ internal class MozoAuthActivity : FragmentActivity() {
                                 Browsers.SBrowser.SIGNATURE_SET,
                                 true, // when this browser is used via a custom tab
                                 VersionRange.atMost("5.3")
-                        )))
+                        ),
+                        VersionedBrowserMatcher(
+                                Browsers.Chrome.PACKAGE_NAME,
+                                Browsers.Chrome.SIGNATURE_SET,
+                                true, // when this browser is used via a custom tab
+                                VersionRange.atMost("53.0.2785.124")
+                        )
+                ))
                 .build()
         mAuthService = AuthorizationService(this, appAuthConfig)
 
