@@ -225,6 +225,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                         mAuthStateManager.updateAfterAuthorization(response, ex)
                         exchangeAuthorizationCode(response)
                     }
+                    ex != null -> handleResult(ex)
                     resultCode == RESULT_CANCELED -> cancelAuth()
                     else -> {
                         finish()

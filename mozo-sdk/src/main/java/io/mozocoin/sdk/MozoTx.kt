@@ -76,7 +76,7 @@ class MozoTx private constructor() {
                     /**
                      * Handle otherwise errors
                      * */
-                    ErrorDialog.generalError(context, true) {
+                    ErrorDialog.generalError(context) {
                         callback.invoke(null, true)
                     }
                 }

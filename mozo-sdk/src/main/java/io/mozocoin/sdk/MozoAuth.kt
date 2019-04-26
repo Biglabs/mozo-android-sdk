@@ -1,6 +1,7 @@
 package io.mozocoin.sdk
 
 import android.content.Context
+import android.os.Handler
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.authentication.MozoAuthActivity
@@ -14,6 +15,7 @@ import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.utils.UserCancelException
 import kotlinx.coroutines.*
+import net.openid.appauth.AuthorizationException
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.*
@@ -51,6 +53,9 @@ class MozoAuth private constructor() {
                     MozoSocketClient.connect()
                 }
             }
+        } else if (auth.exception is AuthorizationException && auth.exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code) {
+            Handler().postDelayed({ signIn() }, 1000)
+
         } else {
             MozoSDK.getInstance().profileViewModel.clear()
             MozoSocketClient.disconnect()

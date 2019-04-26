@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.zxing.integration.android.IntentIntegrator
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.PaymentRequest
@@ -21,7 +22,6 @@ import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.SwipeToDeleteCallback
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.mozoSetup
-import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.fragment_payment_list.*
 
 class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
@@ -79,8 +79,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         MozoAPIsService.getInstance().getPaymentRequests(
                 context ?: return,
                 Constant.PAGING_START_INDEX,
-                100
-        ) { data, _ ->
+                100, { data, _ ->
             data ?: return@getPaymentRequests
             data.items ?: return@getPaymentRequests
 
@@ -88,7 +87,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
             requests.addAll(data.items!!)
             payment_request_swipe_refresh?.isRefreshing = false
             payment_request_recycler?.adapter?.notifyDataSetChanged()
-        }
+        }, this::fetchData)
     }
 
     private fun deleteRequest(position: Int) {

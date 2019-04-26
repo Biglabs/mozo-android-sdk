@@ -41,7 +41,7 @@ internal class PaymentRequestActivity : BaseActivity(), PaymentRequestInteractio
     }
 
     override fun onSendRequestClicked(amount: String, toAddress: String, request: PaymentRequest) {
-        MozoAPIsService.getInstance().sendPaymentRequest(this, toAddress, request) { data, errorCode ->
+        MozoAPIsService.getInstance().sendPaymentRequest(this, toAddress, request, { data, errorCode ->
             when (errorCode) {
                 ErrorCode.ERROR_WALLET_ADDRESS_NOT_EXIST.key -> {
                     MessageDialog.show(this, R.string.error_wallet_not_found)
@@ -53,7 +53,9 @@ internal class PaymentRequestActivity : BaseActivity(), PaymentRequestInteractio
                 payment_request_toolbar.showBackButton(false)
                 replace(R.id.payment_request_content_frame, PaymentRequestSentFragment.getInstance(amount, toAddress))
             }
-        }
+        }, {
+            onSendRequestClicked(amount, toAddress, request)
+        })
     }
 
     companion object {

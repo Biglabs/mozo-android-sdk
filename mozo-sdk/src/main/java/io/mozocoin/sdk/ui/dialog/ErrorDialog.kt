@@ -17,7 +17,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-class ErrorDialog(context: Context, private val argument: Bundle, private val onTryAgain: (() -> Unit)? = null) : BaseDialog(context) {
+class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(context) {
 
     private var errorType = TYPE_GENERAL
     private var errorMessage: String? = null
@@ -90,19 +90,27 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
     }
 
     override fun dismiss() {
-        super.dismiss()
-        dismissCallback?.onDismiss(this)
+        try {
+            retryCallbacks?.clear()
+            super.dismiss()
+        } finally {
+            dismissCallback?.onDismiss(this)
+            instance = null
+        }
     }
 
     override fun onStop() {
         super.onStop()
         instance = null
+        retryCallbacks = null
         cancelCallback = null
         dismissCallback = null
     }
 
     private fun retry() {
-        onTryAgain?.invoke()
+        retryCallbacks?.forEach {
+            it.invoke()
+        }
         dismiss()
     }
 
@@ -123,39 +131,43 @@ class ErrorDialog(context: Context, private val argument: Bundle, private val on
         private var instance: ErrorDialog? = null
 
         @Volatile
+        private var retryCallbacks: ArrayList<(() -> Unit)>? = null
+
+        @Volatile
         private var dismissCallback: DialogInterface.OnDismissListener? = null
 
         @Volatile
         private var cancelCallback: DialogInterface.OnCancelListener? = null
 
-        fun generalError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
-            show(context, TYPE_GENERAL, forceShow, onTryAgain)
+        fun generalError(context: Context?, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_GENERAL, onTryAgain)
         }
 
-        fun networkError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
-            show(context, TYPE_NETWORK, forceShow, onTryAgain)
+        fun networkError(context: Context?, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_NETWORK, onTryAgain)
         }
 
-        fun timeoutError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
-            show(context, TYPE_TIMEOUT, forceShow, onTryAgain)
+        fun timeoutError(context: Context?, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_TIMEOUT, onTryAgain)
         }
 
-        fun withContactError(context: Context?, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) {
-            show(context, TYPE_WITH_CONTACT, forceShow, onTryAgain)
+        fun withContactError(context: Context?, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_WITH_CONTACT, onTryAgain)
         }
 
-        fun show(context: Context?, @ErrorType type: Int, forceShow: Boolean = false, onTryAgain: (() -> Unit)? = null) = synchronized(this) {
-            if (!forceShow && isShowing()) return
+        fun show(context: Context?, @ErrorType type: Int, onRetry: (() -> Unit)? = null) = synchronized(this) {
+            instance?.dismiss()
             context?.run {
                 if (this is Activity && (isFinishing || isDestroyed)) return@synchronized
-                instance?.apply {
-                    dismiss()
+
+                if (retryCallbacks == null) {
+                    retryCallbacks = arrayListOf()
                 }
+                onRetry?.let { retryCallbacks?.add(it) }
 
                 val bundle = Bundle()
                 bundle.putInt(ERROR_TYPE, type)
-
-                instance = ErrorDialog(this, bundle, onTryAgain)
+                instance = ErrorDialog(this, bundle)
                 instance!!.show()
             }
         }
