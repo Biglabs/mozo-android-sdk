@@ -33,8 +33,6 @@ class MozoAuth private constructor() {
 
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
-        EventBus.getDefault().unregister(this@MozoAuth)
-
         if (auth.exception is UserCancelException) {
             mAuthListeners.forEach { it.onAuthCanceled() }
             return
@@ -82,6 +80,16 @@ class MozoAuth private constructor() {
         isInitialized = true
     }
 
+    private var signedInCallbackJob: Job? = null
+    private fun onSignedInBeforeWallet() {
+        signedInCallbackJob?.cancel()
+        signedInCallbackJob = GlobalScope.launch(Dispatchers.Main) {
+            delay(2000) // 2s
+            mAuthListeners.forEach { l -> l.onSignedIn() }
+            signedInCallbackJob = null
+        }
+    }
+
     fun signIn() {
         initialize()
         walletService.clear()
@@ -123,10 +131,6 @@ class MozoAuth private constructor() {
                 }
             } else callback.invoke(authStateManager.current.isAuthorized && MozoSDK.getInstance().profileViewModel.hasWallet())
         }
-    }
-
-    internal fun onSignedInBeforeWallet() = GlobalScope.launch(Dispatchers.Main) {
-        mAuthListeners.forEach { l -> l.onSignedIn() }
     }
 
     fun addAuthStateListener(listener: AuthStateListener) {
