@@ -15,10 +15,7 @@ import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.view_toolbar.view.*
 import kotlinx.android.synthetic.main.view_wallet_backup.*
 import kotlinx.android.synthetic.main.view_wallet_security.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 
 internal class SecurityActivity : BaseActivity() {
@@ -280,13 +277,18 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
-    private fun finishResult() = GlobalScope.launch(Dispatchers.Main) {
-        delay(mShowMessageDuration)
+    private fun finishResult() = GlobalScope.launch {
+        val start = System.currentTimeMillis()
         EventBus.getDefault().post(MessageEvent.Pin(mPIN, mRequestCode))
 
-        setResult(RESULT_OK, Intent().putExtra(KEY_DATA, mPIN))
-        willReturnsResult = true
-        finishAndRemoveTask()
+        if (System.currentTimeMillis() - start < mShowMessageDuration / 2) {
+            delay(mShowMessageDuration)
+        }
+        withContext(Dispatchers.Main) {
+            setResult(RESULT_OK, Intent().putExtra(KEY_DATA, mPIN))
+            willReturnsResult = true
+            finishAndRemoveTask()
+        }
     }
 
     companion object {

@@ -71,11 +71,11 @@ class MozoAuth private constructor() {
 
             if (Calendar.getInstance().after(expirationTime)) {
                 MozoTokenService.newInstance().refreshToken {
-                    onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
+                    onAuthorizeChanged(MessageEvent.Auth())
                 }
-            } else onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
+            } else onAuthorizeChanged(MessageEvent.Auth())
         } else
-            onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
+            onAuthorizeChanged(MessageEvent.Auth())
 
         isInitialized = true
     }
@@ -107,7 +107,7 @@ class MozoAuth private constructor() {
         walletService.clear()
         MozoAuthActivity.signOut(MozoSDK.getInstance().context) {
 
-            onAuthorizeChanged(MessageEvent.Auth(false))
+            onAuthorizeChanged(MessageEvent.Auth())
 
             GlobalScope.launch {
                 mozoDB.clear()

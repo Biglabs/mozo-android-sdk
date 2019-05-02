@@ -199,7 +199,7 @@ class MozoWallet private constructor() {
         EventBus.getDefault().unregister(this@MozoWallet)
 
         mInitWalletCallback?.invoke(false)
-        EventBus.getDefault().post(MessageEvent.Auth(false, UserCancelException()))
+        EventBus.getDefault().post(MessageEvent.Auth(UserCancelException()))
     }
 
     internal fun getWallet(createNewIfNeed: Boolean = false): WalletHelper? {

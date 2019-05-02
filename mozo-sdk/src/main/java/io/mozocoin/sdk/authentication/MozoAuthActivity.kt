@@ -88,7 +88,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
         if (isAuthInProgress) {
             isAuthInProgress = false
-            EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, UserCancelException()))
+            EventBus.getDefault().post(MessageEvent.Auth(UserCancelException()))
         }
     }
 
@@ -277,7 +277,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     private fun finishAuth(exception: Exception? = null) = GlobalScope.launch(Dispatchers.Main) {
-        EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, exception))
+        EventBus.getDefault().post(MessageEvent.Auth(exception))
         finish()
     }
 
