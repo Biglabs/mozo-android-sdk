@@ -90,6 +90,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         internal var isRetailerApp = false
 
         @Volatile
+        internal var isReadyForWallet = true
+
+        @Volatile
         internal var isEnableDebugLogging = false
 
         @Volatile
@@ -158,18 +161,8 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         }
 
         @JvmStatic
-        fun enableDebugLogging(enable: Boolean) {
-            isEnableDebugLogging = enable
-        }
-
-        @JvmStatic
         fun attachNotificationReceiverActivity(activity: Class<out Activity>) {
             getInstance().notifyActivityClass = activity
-        }
-
-        @JvmStatic
-        fun shouldShowNotification(show: Boolean) {
-            shouldShowNotification = show
         }
 
         @JvmStatic
@@ -188,6 +181,21 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         fun contactKaKaoTalk(context: Context) {
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://open.kakao.com/o/g6tvra5")))
+        }
+
+        @JvmStatic
+        fun enableDebugLogging(enable: Boolean) {
+            isEnableDebugLogging = enable
+        }
+
+        @JvmStatic
+        fun shouldShowNotification(show: Boolean) {
+            shouldShowNotification = show
+        }
+
+        @JvmStatic
+        fun readyForWallet(isReady: Boolean) {
+            isReadyForWallet = isReady
         }
     }
 }
