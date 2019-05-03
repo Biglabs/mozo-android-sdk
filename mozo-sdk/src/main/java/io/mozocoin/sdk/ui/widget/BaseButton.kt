@@ -1,17 +1,20 @@
 package io.mozocoin.sdk.ui.widget
 
-import androidx.lifecycle.Observer
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import androidx.lifecycle.Observer
+import com.google.android.material.button.MaterialButton
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.utils.dp2Px
-import com.google.android.material.button.MaterialButton
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 internal abstract class BaseButton : MaterialButton {
     constructor(context: Context) : this(context, null)
@@ -40,6 +43,9 @@ internal abstract class BaseButton : MaterialButton {
             MozoSDK.getInstance().profileViewModel.run {
                 profileLiveData.observeForever(profileObserver)
             }
+            if (!EventBus.getDefault().isRegistered(this)) {
+                EventBus.getDefault().register(this)
+            }
         }
     }
 
@@ -49,7 +55,14 @@ internal abstract class BaseButton : MaterialButton {
             MozoSDK.getInstance().profileViewModel.run {
                 profileLiveData.removeObserver(profileObserver)
             }
+            EventBus.getDefault().unregister(this)
         }
+    }
+
+    @Suppress("UNUSED_PARAMETER", "unused")
+    @Subscribe
+    internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
+        authorizeChanged(MozoSDK.getInstance().profileViewModel.hasWallet())
     }
 
     abstract fun buttonIcon(): Int

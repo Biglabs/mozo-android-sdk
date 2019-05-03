@@ -4,28 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:fitsSystemWindows="true"
-        app:elevation="0dp">
+        app:elevation="0dp"
+        app:layout_insetEdge="none">
 
-        <io.mozocoin.sdk.ui.widget.MozoToolbar
-            android:id="@+id/pin_toolbar"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:buttonClose="true"
-            app:title="@string/mozo_pin_title"
-            tools:layout_height="84dp" />
+            android:fitsSystemWindows="true"
+            app:contentInsetEnd="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp">
+
+            <io.mozocoin.sdk.ui.widget.MozoToolbar
+                android:id="@+id/pin_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                app:buttonClose="true"
+                app:title="@string/mozo_pin_title"
+                tools:layout_height="84dp" />
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
+        android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
@@ -152,12 +166,13 @@
             <requestFocus />
         </io.mozocoin.sdk.ui.widget.PinEntryEditText>
 
-        <View
+        <ImageView
             android:id="@+id/input_pin_checker_status"
             android:layout_width="23dp"
             android:layout_height="23dp"
             android:layout_marginStart="15dp"
-            android:background="@drawable/mozo_dr_pin_check"
+            android:contentDescription="@string/mozo_pin_msg_enter_correct"
+            android:src="@drawable/mozo_dr_pin_check"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/input_pin"
             app:layout_constraintStart_toEndOf="@id/input_pin"

@@ -45,9 +45,9 @@ internal class MozoAPIsService private constructor() {
     /**
      * Off-Chain Wallet Information APIs
      */
-    fun saveWallet(context: Context, walletInfo: WalletInfo, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
+    fun saveWallet(context: Context, walletInfo: WalletInfo, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
-            execute(context, mozoAPIs.saveWallet(walletInfo), callback)
+            execute(context, mozoAPIs.saveWallet(walletInfo), callback, retry)
         }
     }
 

@@ -122,7 +122,7 @@ class MozoWallet private constructor() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-        MozoAPIsService.getInstance().saveWallet(context, walletInfo) { _, errorCode ->
+        MozoAPIsService.getInstance().saveWallet(context, walletInfo, { data, errorCode ->
             when (errorCode) {
                 ErrorCode.ERROR_WALLET_ADDRESS_IN_USED.key,
                 ErrorCode.ERROR_WALLET_ADDRESS_EXISTING.key,
@@ -137,10 +137,12 @@ class MozoWallet private constructor() {
                 }
             }
 
-            val isSuccess = errorCode.isNullOrEmpty()
+            val isSuccess = data != null
             SharedPrefsUtils.setNeedSyncWallet(!isSuccess)
             callback?.invoke(isSuccess)
-        }
+        }, {
+            syncWalletInfo(walletInfo, context, callback)
+        })
     }
 
     internal fun syncOnChainWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {

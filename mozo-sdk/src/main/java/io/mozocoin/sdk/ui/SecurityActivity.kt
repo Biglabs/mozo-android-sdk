@@ -13,8 +13,8 @@ import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.ui.widget.onBackPress
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.view_toolbar.view.*
-import kotlinx.android.synthetic.main.view_wallet_backup.*
 import kotlinx.android.synthetic.main.view_wallet_security.*
+import kotlinx.android.synthetic.main.view_wallet_security_backup.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 
@@ -25,6 +25,7 @@ internal class SecurityActivity : BaseActivity() {
     private var mShowMessageDuration = 0L
     private var mRequestCode = -1
     private var willReturnsResult = false
+    private var mFinishJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +33,9 @@ internal class SecurityActivity : BaseActivity() {
         mShowMessageDuration = getInteger(R.integer.security_pin_show_msg_duration).toLong()
 
         mRequestCode = intent.getIntExtra(KEY_MODE, mRequestCode)
+
+        mFinishJob?.cancel()
+        mFinishJob = null
 
         when (mRequestCode) {
             KEY_CREATE_PIN -> showBackupUI()
@@ -55,15 +59,17 @@ internal class SecurityActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mPIN = ""
+        mFinishJob?.cancel()
+        mFinishJob = null
         if (!willReturnsResult) {
             EventBus.getDefault().post(MessageEvent.UserCancel())
         }
+        super.onDestroy()
     }
 
     private fun showBackupUI() {
-        setContentView(R.layout.view_wallet_backup)
+        setContentView(R.layout.view_wallet_security_backup)
 
         val paddingVertical = resources.dp2Px(10f).toInt()
         val paddingHorizontal = resources.dp2Px(8f).toInt()
@@ -85,6 +91,11 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showPinInputUI() {
         setContentView(R.layout.view_wallet_security)
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayShowHomeEnabled(false)
+            setDisplayHomeAsUpEnabled(false)
+        }
 
         pin_toolbar.screen_title.setText(R.string.mozo_pin_title)
         sub_title_pin.setText(R.string.mozo_pin_sub_title)
@@ -240,8 +251,9 @@ internal class SecurityActivity : BaseActivity() {
                         showErrorAndRetryUI()
                         return@executeSaveWallet
                     }
-                    showPinCreatedUI()
-                    finishResult()
+                    mFinishJob = finishResult {
+                        showPinCreatedUI()
+                    }
                 }
                 return@launch
             }
@@ -253,13 +265,12 @@ internal class SecurityActivity : BaseActivity() {
                 KEY_ENTER_PIN -> {
                     showLoadingUI().join()
                     MozoWallet.getInstance().syncOnChainWallet(this@SecurityActivity, mPIN) {
-                        initRestoreUI(!isCorrect).invokeOnCompletion {
-                            if (isCorrect) {
-                                showPinInputCorrectUI()
-                                finishResult()
-                            } else {
-                                showPinInputWrongUI()
+                        if (isCorrect) {
+                            mFinishJob = finishResult {
+                                initRestoreUI(clearPin = false).invokeOnCompletion { showPinInputCorrectUI() }
                             }
+                        } else {
+                            initRestoreUI(clearPin = true).invokeOnCompletion { showPinInputWrongUI() }
                         }
                     }
                 }
@@ -267,8 +278,9 @@ internal class SecurityActivity : BaseActivity() {
                 KEY_VERIFY_PIN_FOR_SEND -> {
                     initVerifyUI(!isCorrect).join()
                     if (isCorrect) {
-                        showPinInputCorrectUI().join()
-                        finishResult()
+                        mFinishJob = finishResult {
+                            showPinInputCorrectUI()
+                        }
                     } else {
                         showPinInputWrongUI().join()
                     }
@@ -277,14 +289,11 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
-    private fun finishResult() = GlobalScope.launch {
-        val start = System.currentTimeMillis()
+    private fun finishResult(callback: () -> Unit) = GlobalScope.launch {
         EventBus.getDefault().post(MessageEvent.Pin(mPIN, mRequestCode))
-
-        if (System.currentTimeMillis() - start < mShowMessageDuration / 2) {
-            delay(mShowMessageDuration)
-        }
         withContext(Dispatchers.Main) {
+            callback.invoke()
+            delay(mShowMessageDuration)
             setResult(RESULT_OK, Intent().putExtra(KEY_DATA, mPIN))
             willReturnsResult = true
             finishAndRemoveTask()
