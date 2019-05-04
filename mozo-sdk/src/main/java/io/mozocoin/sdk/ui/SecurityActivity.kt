@@ -296,7 +296,7 @@ internal class SecurityActivity : BaseActivity() {
             delay(mShowMessageDuration)
             setResult(RESULT_OK, Intent().putExtra(KEY_DATA, mPIN))
             willReturnsResult = true
-            finishAndRemoveTask()
+            finish()
         }
     }
 
