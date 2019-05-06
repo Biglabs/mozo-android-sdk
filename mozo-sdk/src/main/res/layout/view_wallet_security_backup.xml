@@ -11,12 +11,13 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:fitsSystemWindows="true"
-        app:elevation="0dp">
+        app:elevation="0dp"
+        app:layout_insetEdge="none">
 
         <io.mozocoin.sdk.ui.widget.MozoToolbar
-            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
             app:buttonClose="true"
             app:title="@string/mozo_backup_title"
             tools:layout_height="84dp" />
@@ -25,8 +26,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         android:fitsSystemWindows="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <TextView
             android:id="@android:id/text1"

@@ -41,12 +41,12 @@ dependencies {
     api 'androidx.core:core-ktx:1.0.1'
     api "androidx.room:room-runtime:2.0.0"
     kapt "androidx.room:room-compiler:2.0.0"
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    api "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
-    api 'com.google.android.material:material:1.1.0-alpha05'
-    api 'com.google.android:flexbox:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha05'
+    implementation 'com.google.android:flexbox:1.1.0'
 
     // Kotlin X
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -58,10 +58,10 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     // Other
-    api 'org.bitcoinj:bitcoinj-core:0.15'
-    api 'org.cryptonode.jncryptor:jncryptor:1.2.0'
-    api 'org.web3j:core:4.1.0-android'
-    api 'org.greenrobot:eventbus:3.1.1'
+    implementation 'org.bitcoinj:bitcoinj-core:0.15'
+    implementation 'org.cryptonode.jncryptor:jncryptor:1.2.0'
+    implementation 'org.web3j:core:4.1.0-android'
+    implementation 'org.greenrobot:eventbus:3.1.1'
     api 'com.journeyapps:zxing-android-embedded:3.6.0'
 
     // test

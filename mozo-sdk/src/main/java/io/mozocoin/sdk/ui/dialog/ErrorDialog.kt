@@ -21,50 +21,11 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
 
     private var errorType = TYPE_GENERAL
     private var errorMessage: String? = null
+    private var identifier: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_error)
-
-        errorType = argument.getInt(ERROR_TYPE, errorType)
-        errorMessage = argument.getString(ERROR_MESSAGE)
-
-        image_error_type.visible()
-        gone(arrayOf(
-                button_contact_telegram,
-                button_contact_zalo,
-                button_contact_kakao
-        ))
-        button_try_again.setText(R.string.mozo_button_try_again)
-
-        when (errorType) {
-            TYPE_GENERAL -> {
-                image_error_type.setImageResource(R.drawable.ic_error_general)
-                text_msg_error.setText(R.string.mozo_dialog_error_msg)
-            }
-            TYPE_NETWORK -> {
-                image_error_type.setImageResource(R.drawable.ic_error_network)
-                text_msg_error.setText(R.string.mozo_dialog_error_network_msg)
-            }
-            TYPE_TIMEOUT -> {
-                image_error_type.setImageResource(R.drawable.ic_error_timeout)
-                text_msg_error.setText(R.string.mozo_dialog_error_timeout_msg)
-            }
-            TYPE_WITH_CONTACT -> {
-                image_error_type.gone()
-                visible(arrayOf(
-                        button_contact_telegram,
-                        button_contact_zalo,
-                        button_contact_kakao
-                ))
-                text_msg_error.setText(R.string.error_fatal)
-                button_try_again.setText(R.string.mozo_button_ok)
-            }
-        }
-
-        errorMessage?.let {
-            text_msg_error?.text = it
-        }
 
         button_contact_telegram.click {
             MozoSDK.contactTelegram(context)
@@ -81,6 +42,8 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         button_try_again.click {
             retry()
         }
+
+        updateUI()
     }
 
     override fun cancel() {
@@ -91,7 +54,7 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
 
     override fun dismiss() {
         try {
-            retryCallbacks?.clear()
+            MozoSDK.getInstance().retryCallbacks?.clear()
             super.dismiss()
         } finally {
             dismissCallback?.onDismiss(this)
@@ -102,13 +65,56 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
     override fun onStop() {
         super.onStop()
         instance = null
-        retryCallbacks = null
+        MozoSDK.getInstance().retryCallbacks = null
         cancelCallback = null
         dismissCallback = null
     }
 
+    private fun updateUI(@ErrorType type: Int? = null) {
+
+        errorType = type ?: argument.getInt(ERROR_TYPE, errorType)
+        errorMessage = argument.getString(ERROR_MESSAGE)
+
+        image_error_type?.visible()
+        gone(arrayOf(
+                button_contact_telegram,
+                button_contact_zalo,
+                button_contact_kakao
+        ))
+        button_try_again?.setText(R.string.mozo_button_try_again)
+
+        when (errorType) {
+            TYPE_GENERAL -> {
+                image_error_type?.setImageResource(R.drawable.ic_error_general)
+                text_msg_error?.setText(R.string.mozo_dialog_error_msg)
+            }
+            TYPE_NETWORK -> {
+                image_error_type?.setImageResource(R.drawable.ic_error_network)
+                text_msg_error?.setText(R.string.mozo_dialog_error_network_msg)
+            }
+            TYPE_TIMEOUT -> {
+                image_error_type?.setImageResource(R.drawable.ic_error_timeout)
+                text_msg_error?.setText(R.string.mozo_dialog_error_timeout_msg)
+            }
+            TYPE_WITH_CONTACT -> {
+                image_error_type?.gone()
+                visible(arrayOf(
+                        button_contact_telegram,
+                        button_contact_zalo,
+                        button_contact_kakao
+                ))
+                text_msg_error?.setText(R.string.error_fatal)
+                button_try_again?.setText(R.string.mozo_button_ok)
+            }
+        }
+
+        errorMessage?.let {
+            text_msg_error?.text = it
+        }
+    }
+
     private fun retry() {
-        retryCallbacks?.forEach {
+        MozoSDK.getInstance().retryCallbacks?.forEach {
             it.invoke()
         }
         dismiss()
@@ -131,51 +137,66 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         private var instance: ErrorDialog? = null
 
         @Volatile
-        private var retryCallbacks: ArrayList<(() -> Unit)>? = null
-
-        @Volatile
         private var dismissCallback: DialogInterface.OnDismissListener? = null
 
         @Volatile
         private var cancelCallback: DialogInterface.OnCancelListener? = null
 
+        @JvmStatic
         fun generalError(context: Context?, onTryAgain: (() -> Unit)? = null) {
             show(context, TYPE_GENERAL, onTryAgain)
         }
 
+        @JvmStatic
         fun networkError(context: Context?, onTryAgain: (() -> Unit)? = null) {
             show(context, TYPE_NETWORK, onTryAgain)
         }
 
+        @JvmStatic
         fun timeoutError(context: Context?, onTryAgain: (() -> Unit)? = null) {
             show(context, TYPE_TIMEOUT, onTryAgain)
         }
 
+        @JvmStatic
         fun withContactError(context: Context?, onTryAgain: (() -> Unit)? = null) {
             show(context, TYPE_WITH_CONTACT, onTryAgain)
         }
 
+        @JvmStatic
         fun show(context: Context?, @ErrorType type: Int, onRetry: (() -> Unit)? = null) = synchronized(this) {
-            instance?.dismiss()
+            if (instance?.identifier != context?.toString()) {
+                dismiss()
+            }
             context?.run {
                 if (this is Activity && (isFinishing || isDestroyed)) return@synchronized
 
-                if (retryCallbacks == null) {
-                    retryCallbacks = arrayListOf()
+                if (MozoSDK.getInstance().retryCallbacks == null) {
+                    MozoSDK.getInstance().retryCallbacks = arrayListOf()
                 }
-                onRetry?.let { retryCallbacks?.add(it) }
+                onRetry?.let { MozoSDK.getInstance().retryCallbacks?.add(it) }
 
-                val bundle = Bundle()
-                bundle.putInt(ERROR_TYPE, type)
-                instance = ErrorDialog(this, bundle)
-                instance!!.show()
+                if (instance?.isShowing == true) {
+                    instance?.updateUI(type)
+                } else {
+                    val bundle = Bundle()
+                    bundle.putInt(ERROR_TYPE, type)
+                    instance = ErrorDialog(this, bundle)
+                    instance!!.identifier = this.toString()
+                    instance!!.show()
+                }
             }
         }
 
+        fun dismiss() {
+            instance?.dismiss()
+        }
+
+        @JvmStatic
         fun onDismiss(callback: DialogInterface.OnDismissListener) {
             dismissCallback = callback
         }
 
+        @JvmStatic
         fun onCancel(callback: DialogInterface.OnCancelListener) {
             cancelCallback = callback
         }

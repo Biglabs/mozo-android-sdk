@@ -46,15 +46,17 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     internal var onNotificationReceiveListener: OnNotificationReceiveListener? = null
 
+    internal var retryCallbacks: ArrayList<(() -> Unit)>? = null
+
     override fun getViewModelStore(): ViewModelStore = mViewModelStore
 
     private fun registerNetworkCallback() {
         val networkRequest = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network?) {
+                ErrorDialog.retry()
                 if (!MozoAuth.getInstance().isInitialized) return
 
-                ErrorDialog.retry()
                 MozoAuth.getInstance().isSignUpCompleted {
                     if (!it) return@isSignUpCompleted
                     MozoSocketClient.connect()
@@ -88,6 +90,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @Volatile
         internal var isRetailerApp = false
+
+        @Volatile
+        internal var isReadyForWallet = true
 
         @Volatile
         internal var isEnableDebugLogging = false
@@ -158,23 +163,16 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         }
 
         @JvmStatic
-        fun enableDebugLogging(enable: Boolean) {
-            isEnableDebugLogging = enable
-        }
-
-        @JvmStatic
         fun attachNotificationReceiverActivity(activity: Class<out Activity>) {
             getInstance().notifyActivityClass = activity
         }
 
         @JvmStatic
-        fun shouldShowNotification(show: Boolean) {
-            shouldShowNotification = show
-        }
-
-        @JvmStatic
         fun contactTelegram(context: Context) {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/mozotoken")))
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(
+                    if (isRetailerApp) "https://t.me/MozoXRetailerApp"
+                    else "https://t.me/MozoXApp"
+            )))
         }
 
         @JvmStatic
@@ -185,6 +183,21 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         fun contactKaKaoTalk(context: Context) {
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://open.kakao.com/o/g6tvra5")))
+        }
+
+        @JvmStatic
+        fun enableDebugLogging(enable: Boolean) {
+            isEnableDebugLogging = enable
+        }
+
+        @JvmStatic
+        fun shouldShowNotification(show: Boolean) {
+            shouldShowNotification = show
+        }
+
+        @JvmStatic
+        fun readyForWallet(isReady: Boolean) {
+            isReadyForWallet = isReady
         }
     }
 }

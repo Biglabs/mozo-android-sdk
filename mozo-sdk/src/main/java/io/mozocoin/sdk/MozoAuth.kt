@@ -33,8 +33,6 @@ class MozoAuth private constructor() {
 
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
-        EventBus.getDefault().unregister(this@MozoAuth)
-
         if (auth.exception is UserCancelException) {
             mAuthListeners.forEach { it.onAuthCanceled() }
             return
@@ -73,13 +71,23 @@ class MozoAuth private constructor() {
 
             if (Calendar.getInstance().after(expirationTime)) {
                 MozoTokenService.newInstance().refreshToken {
-                    onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
+                    onAuthorizeChanged(MessageEvent.Auth())
                 }
-            } else onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
+            } else onAuthorizeChanged(MessageEvent.Auth())
         } else
-            onAuthorizeChanged(MessageEvent.Auth(isSignedIn()))
+            onAuthorizeChanged(MessageEvent.Auth())
 
         isInitialized = true
+    }
+
+    private var signedInCallbackJob: Job? = null
+    private fun onSignedInBeforeWallet() {
+        signedInCallbackJob?.cancel()
+        signedInCallbackJob = GlobalScope.launch(Dispatchers.Main) {
+            delay(2000) // 2s
+            mAuthListeners.forEach { l -> l.onSignedIn() }
+            signedInCallbackJob = null
+        }
     }
 
     fun signIn() {
@@ -99,7 +107,7 @@ class MozoAuth private constructor() {
         walletService.clear()
         MozoAuthActivity.signOut(MozoSDK.getInstance().context) {
 
-            onAuthorizeChanged(MessageEvent.Auth(false))
+            onAuthorizeChanged(MessageEvent.Auth())
 
             GlobalScope.launch {
                 mozoDB.clear()
@@ -123,10 +131,6 @@ class MozoAuth private constructor() {
                 }
             } else callback.invoke(authStateManager.current.isAuthorized && MozoSDK.getInstance().profileViewModel.hasWallet())
         }
-    }
-
-    internal fun onSignedInBeforeWallet() = GlobalScope.launch(Dispatchers.Main) {
-        mAuthListeners.forEach { l -> l.onSignedIn() }
     }
 
     fun addAuthStateListener(listener: AuthStateListener) {
@@ -167,32 +171,35 @@ class MozoAuth private constructor() {
         val finalEmail = if (email.isNullOrEmpty()) null else email
         MozoAPIsService.getInstance().updateProfile(
                 context,
-                Profile(avatarUrl = avatar, fullName = fullName, birthday = birthday, email = finalEmail, gender = gender?.key)
-        ) { data, _ ->
+                Profile(avatarUrl = avatar, fullName = fullName, birthday = birthday, email = finalEmail, gender = gender?.key),
+                { data, _ ->
 
-            if (data == null) {
-                callback.invoke(null)
-                return@updateProfile
-            }
+                    if (data == null) {
+                        callback.invoke(null)
+                        return@updateProfile
+                    }
 
-            val userInfo = UserInfo(
-                    userId = data.userId ?: "",
-                    avatarUrl = data.avatarUrl,
-                    fullName = data.fullName,
-                    phoneNumber = data.phoneNumber,
-                    birthday = data.birthday ?: 0L,
-                    email = data.email,
-                    gender = data.gender
-            )
-            callback.invoke(userInfo)
+                    val userInfo = UserInfo(
+                            userId = data.userId ?: "",
+                            avatarUrl = data.avatarUrl,
+                            fullName = data.fullName,
+                            phoneNumber = data.phoneNumber,
+                            birthday = data.birthday ?: 0L,
+                            email = data.email,
+                            gender = data.gender
+                    )
+                    callback.invoke(userInfo)
 
-            GlobalScope.launch {
-                /* save User info first */
-                mozoDB.userInfo().deleteAll()
-                mozoDB.userInfo().save(userInfo)
-                MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
-            }
-        }
+                    GlobalScope.launch {
+                        /* save User info first */
+                        mozoDB.userInfo().deleteAll()
+                        mozoDB.userInfo().save(userInfo)
+                        MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
+                    }
+                },
+                {
+                    updateUserInfo(context, avatar, fullName, birthday, email, gender, callback)
+                })
     }
 
     fun checkSession(context: Context, callback: (isExpired: Boolean) -> Unit) {

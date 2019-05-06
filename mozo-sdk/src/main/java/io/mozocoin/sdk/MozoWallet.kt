@@ -15,8 +15,7 @@ import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.string
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.math.BigDecimal
@@ -28,6 +27,8 @@ class MozoWallet private constructor() {
     private var mProfile: Profile? = null
     private var mWallet: WalletHelper? = null
     private var mInitWalletCallback: ((isSuccess: Boolean) -> Unit)? = null
+    private var mReady4WalletCheckingJob: Job? = null
+    private var mReady4WalletCheckingDelayed = 0L
 
     init {
         MozoSDK.getInstance().profileViewModel.profileLiveData.observeForever {
@@ -106,6 +107,20 @@ class MozoWallet private constructor() {
     }
 
     internal fun executeSaveWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+        mReady4WalletCheckingJob?.cancel()
+
+        if (!MozoSDK.isReadyForWallet && mReady4WalletCheckingDelayed < MAX_DELAY_TIME) {
+            mReady4WalletCheckingJob = GlobalScope.launch {
+                delay(1000)
+
+                mReady4WalletCheckingDelayed += 1000
+                executeSaveWallet(context, pin, callback)
+            }
+            return
+        }
+        MozoSDK.readyForWallet(true)
+        mReady4WalletCheckingDelayed = 0L
+
         if (mProfile == null) {
             callback?.invoke(false)
             return
@@ -122,7 +137,7 @@ class MozoWallet private constructor() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-        MozoAPIsService.getInstance().saveWallet(context, walletInfo) { _, errorCode ->
+        MozoAPIsService.getInstance().saveWallet(context, walletInfo, { data, errorCode ->
             when (errorCode) {
                 ErrorCode.ERROR_WALLET_ADDRESS_IN_USED.key,
                 ErrorCode.ERROR_WALLET_ADDRESS_EXISTING.key,
@@ -137,10 +152,12 @@ class MozoWallet private constructor() {
                 }
             }
 
-            val isSuccess = errorCode.isNullOrEmpty()
+            val isSuccess = data != null
             SharedPrefsUtils.setNeedSyncWallet(!isSuccess)
             callback?.invoke(isSuccess)
-        }
+        }, {
+            syncWalletInfo(walletInfo, context, callback)
+        })
     }
 
     internal fun syncOnChainWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {
@@ -199,7 +216,11 @@ class MozoWallet private constructor() {
         EventBus.getDefault().unregister(this@MozoWallet)
 
         mInitWalletCallback?.invoke(false)
-        EventBus.getDefault().post(MessageEvent.Auth(false, UserCancelException()))
+        mReady4WalletCheckingJob?.cancel()
+        mReady4WalletCheckingJob = null
+        mReady4WalletCheckingDelayed = 0L
+
+        EventBus.getDefault().post(MessageEvent.Auth(UserCancelException()))
     }
 
     internal fun getWallet(createNewIfNeed: Boolean = false): WalletHelper? {
@@ -217,6 +238,8 @@ class MozoWallet private constructor() {
     companion object {
         @Volatile
         private var instance: MozoWallet? = null
+
+        private const val MAX_DELAY_TIME = 270000L /* 90s x 3 times */
 
         @JvmStatic
         fun getInstance() = instance ?: synchronized(this) {

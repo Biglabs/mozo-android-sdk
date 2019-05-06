@@ -21,7 +21,7 @@ internal class ContactRecyclerAdapter(
                     KoreanChar.getCompatChoseong(c.name?.getOrNull(0))
                 else c.name?.getOrNull(0)
 
-                if (ch == it) {
+                if (ch?.equals(it, ignoreCase = true) == true) {
                     sec.add(c)
                 }
             }
