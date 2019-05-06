@@ -36,9 +36,9 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
-    fun updateProfile(context: Context, profile: Profile, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
+    fun updateProfile(context: Context, profile: Profile, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
-            execute(context, mozoAPIs.updateProfile(profile), callback)
+            execute(context, mozoAPIs.updateProfile(profile), callback, retry)
         }
     }
 
@@ -271,7 +271,7 @@ internal class MozoAPIsService private constructor() {
             override fun onFailure(call: Call<T>, t: Throwable) {
                 callback?.invoke(null, null)
 
-                if (context is BaseActivity || context is MozoAuthActivity) {
+                if (context is BaseActivity || context is MozoAuthActivity || shouldHandleException(call)) {
                     if (context is Activity && (context.isFinishing || context.isDestroyed)) {
                         return
                     }
@@ -283,6 +283,11 @@ internal class MozoAPIsService private constructor() {
                 }
             }
         })
+    }
+
+    private fun <T> shouldHandleException(call: Call<T>): Boolean {
+        val path = call.request().url().encodedPath()
+        return path.endsWith("/user-profile", true)
     }
 
     private fun createService(): MozoAPIs {

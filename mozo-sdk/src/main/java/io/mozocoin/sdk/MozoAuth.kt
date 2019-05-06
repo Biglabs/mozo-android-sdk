@@ -171,32 +171,35 @@ class MozoAuth private constructor() {
         val finalEmail = if (email.isNullOrEmpty()) null else email
         MozoAPIsService.getInstance().updateProfile(
                 context,
-                Profile(avatarUrl = avatar, fullName = fullName, birthday = birthday, email = finalEmail, gender = gender?.key)
-        ) { data, _ ->
+                Profile(avatarUrl = avatar, fullName = fullName, birthday = birthday, email = finalEmail, gender = gender?.key),
+                { data, _ ->
 
-            if (data == null) {
-                callback.invoke(null)
-                return@updateProfile
-            }
+                    if (data == null) {
+                        callback.invoke(null)
+                        return@updateProfile
+                    }
 
-            val userInfo = UserInfo(
-                    userId = data.userId ?: "",
-                    avatarUrl = data.avatarUrl,
-                    fullName = data.fullName,
-                    phoneNumber = data.phoneNumber,
-                    birthday = data.birthday ?: 0L,
-                    email = data.email,
-                    gender = data.gender
-            )
-            callback.invoke(userInfo)
+                    val userInfo = UserInfo(
+                            userId = data.userId ?: "",
+                            avatarUrl = data.avatarUrl,
+                            fullName = data.fullName,
+                            phoneNumber = data.phoneNumber,
+                            birthday = data.birthday ?: 0L,
+                            email = data.email,
+                            gender = data.gender
+                    )
+                    callback.invoke(userInfo)
 
-            GlobalScope.launch {
-                /* save User info first */
-                mozoDB.userInfo().deleteAll()
-                mozoDB.userInfo().save(userInfo)
-                MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
-            }
-        }
+                    GlobalScope.launch {
+                        /* save User info first */
+                        mozoDB.userInfo().deleteAll()
+                        mozoDB.userInfo().save(userInfo)
+                        MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
+                    }
+                },
+                {
+                    updateUserInfo(context, avatar, fullName, birthday, email, gender, callback)
+                })
     }
 
     fun checkSession(context: Context, callback: (isExpired: Boolean) -> Unit) {
