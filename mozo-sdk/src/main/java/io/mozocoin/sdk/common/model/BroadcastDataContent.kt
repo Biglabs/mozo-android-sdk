@@ -1,5 +1,6 @@
 package io.mozocoin.sdk.common.model
 
+import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 
 data class BroadcastDataContent(
@@ -10,7 +11,7 @@ data class BroadcastDataContent(
         val decimal: Int,
         val symbol: String,
         var time: Long,
-        val phoneNo: String?,
+        @SerializedName(value = "phoneNo", alternate = ["phoneNumSignUp"]) val phoneNo: String?,
         val isComeIn: Boolean,
         val storeName: String
 ) {

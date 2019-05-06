@@ -12,10 +12,12 @@ class Constant {
         const val STATUS_FAILED = "FAILED"
 
         const val NOTIFY_EVENT_AIRDROPPED = "airdropped"
+        const val NOTIFY_EVENT_AIRDROP_INVITE = "airdrop_invite"
         const val NOTIFY_EVENT_BALANCE_CHANGED = "balance_changed"
         const val NOTIFY_EVENT_CUSTOMER_CAME = "customer_came"
         const val NOTIFY_EVENT_STORE_BOOK_ADDED = "store_book_added"
         const val NOTIFY_EVENT_CONVERT = "convert_onchain_to_offchain"
+        const val NOTIFY_EVENT_PROFILE_CHANGED = "profile_changed"
 
         internal const val DEFAULT_DECIMAL = 2
         internal const val DEFAULT_CURRENCY = "USD"

@@ -21,6 +21,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import net.openid.appauth.*
+import net.openid.appauth.browser.BrowserBlacklist
+import net.openid.appauth.browser.Browsers
+import net.openid.appauth.browser.VersionRange
+import net.openid.appauth.browser.VersionedBrowserMatcher
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
@@ -45,7 +49,23 @@ internal class MozoAuthActivity : FragmentActivity() {
     private var isAuthInProgress = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mAuthService = AuthorizationService(this)
+        val appAuthConfig = AppAuthConfiguration.Builder()
+                .setBrowserMatcher(BrowserBlacklist(
+                        VersionedBrowserMatcher(
+                                Browsers.SBrowser.PACKAGE_NAME,
+                                Browsers.SBrowser.SIGNATURE_SET,
+                                true, // when this browser is used via a custom tab
+                                VersionRange.atMost("5.3")
+                        ),
+                        VersionedBrowserMatcher(
+                                Browsers.Chrome.PACKAGE_NAME,
+                                Browsers.Chrome.SIGNATURE_SET,
+                                true, // when this browser is used via a custom tab
+                                VersionRange.atMost("53.0.2785.124")
+                        )
+                ))
+                .build()
+        mAuthService = AuthorizationService(this, appAuthConfig)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_loading)
@@ -68,7 +88,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
         if (isAuthInProgress) {
             isAuthInProgress = false
-            EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, UserCancelException()))
+            EventBus.getDefault().post(MessageEvent.Auth(UserCancelException()))
         }
     }
 
@@ -205,6 +225,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                         mAuthStateManager.updateAfterAuthorization(response, ex)
                         exchangeAuthorizationCode(response)
                     }
+                    ex != null -> handleResult(ex)
                     resultCode == RESULT_CANCELED -> cancelAuth()
                     else -> {
                         finish()
@@ -256,7 +277,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     private fun finishAuth(exception: Exception? = null) = GlobalScope.launch(Dispatchers.Main) {
-        EventBus.getDefault().post(MessageEvent.Auth(modeSignIn, exception))
+        EventBus.getDefault().post(MessageEvent.Auth(exception))
         finish()
     }
 

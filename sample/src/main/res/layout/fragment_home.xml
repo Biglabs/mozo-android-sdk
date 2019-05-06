@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <io.mozocoin.sdk.ui.widget.SendButton
+        <io.mozocoin.sdk.ui.widget.TransferButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp" />

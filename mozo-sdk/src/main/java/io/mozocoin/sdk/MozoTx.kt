@@ -76,7 +76,7 @@ class MozoTx private constructor() {
                     /**
                      * Handle otherwise errors
                      * */
-                    ErrorDialog.generalError(context, true) {
+                    ErrorDialog.generalError(context) {
                         callback.invoke(null, true)
                     }
                 }
@@ -218,6 +218,7 @@ class MozoTx private constructor() {
         @Volatile
         private var instance: MozoTx? = null
 
+        @JvmStatic
         fun getInstance() = instance ?: synchronized(this) {
             instance = MozoTx()
             return@synchronized instance!!

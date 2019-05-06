@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="false">
 
-    <io.mozocoin.sdk.ui.widget.MozoToolbar
-        android:id="@+id/transfer_toolbar"
-        android:layout_width="0dp"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:buttonClose="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/mozo_transfer_title"
-        tools:layout_height="84dp" />
+        android:background="@android:color/white"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp">
+
+        <io.mozocoin.sdk.ui.widget.MozoToolbar
+            android:id="@+id/transfer_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:buttonClose="true"
+            app:title="@string/mozo_transfer_title"
+            tools:layout_height="84dp" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/transfer_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="101dp"
         android:animateLayoutChanges="true"
-        app:layout_constraintBottom_toTopOf="@id/button_submit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/transfer_toolbar">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/send_state_container"
@@ -371,21 +374,6 @@
             tools:ignore="SmallSp"
             tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/text_spendable"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/mozo_screen_margin"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="@dimen/mozo_screen_margin"
-            android:text="@string/mozo_transfer_spendable"
-            android:textColor="@color/mozo_color_text_main"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/output_amount_underline" />
-
         <LinearLayout
             android:id="@+id/output_amount_preview_container"
             android:layout_width="0dp"
@@ -423,34 +411,49 @@
                 android:textSize="@dimen/mozo_text_size"
                 tools:text="(₩100)" />
         </LinearLayout>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/text_spendable_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="output_amount_underline, output_amount_preview_container" />
+
+        <TextView
+            android:id="@+id/text_spendable"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/mozo_screen_margin"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="@dimen/mozo_screen_margin"
+            android:text="@string/mozo_transfer_spendable"
+            android:textColor="@color/mozo_color_text_main"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_spendable_barrier" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/button_submit"
         style="@style/MozoButtonStyle.Floating"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
         android:background="@drawable/mozo_dr_btn_no_radius"
         android:enabled="false"
-        android:text="@string/mozo_button_continue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="@string/mozo_button_continue" />
 
     <FrameLayout
         android:id="@+id/transfer_loading_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:clickable="true"
         android:elevation="10dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:gravity="center"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="KeyboardInaccessibleWidget">
 
         <View
@@ -461,4 +464,4 @@
 
         <include layout="@layout/view_loading" />
     </FrameLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

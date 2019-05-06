@@ -111,6 +111,7 @@
     <string name="mozo_notify_title_sent">Đã gửi %s MozoX</string>
     <string name="mozo_notify_content_from">Từ %s</string>
     <string name="mozo_notify_content_to">Đến %s</string>
+    <string name="mozo_notify_content_invited">%s đã tham gia MozoX</string>
 
     <string name="mozo_payment_request_title">Yêu cầu MozoX</string>
     <string name="mozo_payment_request_amount">Tổng nhận</string>
@@ -126,7 +127,6 @@
     <string name="mozo_payment_request_text_empty">Danh sách trống</string>
     <string name="mozo_payment_request_item_label_from">Từ:</string>
     <string name="mozo_payment_request_item_label_amount">Yêu cầu:</string>
-    <string name="mozo_payment_request_item_amount">%s MozoX</string>
 
     <string name="mozo_transfer_title">Gửi MozoX</string>
     <string name="mozo_transfer_confirmation">Xác nhận</string>

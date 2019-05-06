@@ -111,6 +111,7 @@
     <string name="mozo_notify_title_sent">MozoX %s 를 보냈습니다.</string>
     <string name="mozo_notify_content_from">%s 부터</string>
     <string name="mozo_notify_content_to">%s 까지</string>
+    <string name="mozo_notify_content_invited">%s는 MozoX에 가입했습니다.</string>
 
     <string name="mozo_payment_request_title">MozoX 요청</string>
     <string name="mozo_payment_request_amount">수신 금액</string>
@@ -126,7 +127,6 @@
     <string name="mozo_payment_request_text_empty">요청한 리스트가 비어 있습니다</string>
     <string name="mozo_payment_request_item_label_from">부터:</string>
     <string name="mozo_payment_request_item_label_amount">요청하기:</string>
-    <string name="mozo_payment_request_item_amount">%s MozoX</string>
 
     <string name="mozo_transfer_title">MozoX 보내기</string>
     <string name="mozo_transfer_confirmation">확인</string>

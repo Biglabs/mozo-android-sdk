@@ -11,7 +11,6 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.safe
 import kotlinx.android.synthetic.main.fragment_payment_sent.*
-import java.math.BigDecimal
 
 class PaymentRequestSentFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

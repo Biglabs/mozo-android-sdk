@@ -75,12 +75,14 @@ internal object ViewModels {
                 })
                 else callback?.invoke(null)
             } else {
-                MozoAPIsService.getInstance().getBalance(context, address) { data, _ ->
+                MozoAPIsService.getInstance().getBalance(context, address, { data, _ ->
                     callback?.invoke(data)
                     data ?: return@getBalance
                     balanceInfoLiveData.value = data
                     fetchExchangeRate(context)
-                }
+                }, {
+                    fetchBalance(context, keepTry, callback)
+                })
             }
         }
 
@@ -88,7 +90,7 @@ internal object ViewModels {
             exchangeRateLiveData.value = Support.getDefaultCurrency()
             updateBalanceAndRate()
 
-            MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().language) { data, _ ->
+            MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().language, { data, _ ->
                 if (data != null) {
                     exchangeRateLiveData.value = data
                     if (data.token?.currency == Constant.DEFAULT_CURRENCY) {
@@ -99,7 +101,9 @@ internal object ViewModels {
                 }
 
                 updateBalanceAndRate()
-            }
+            }, {
+                fetchExchangeRate(context)
+            })
         }
 
         private fun updateBalanceAndRate() {
@@ -161,21 +165,25 @@ internal object ViewModels {
         private val storesLiveData = MutableLiveData<List<Contact>>()
 
         fun fetchUser(context: Context, callback: (() -> Unit)? = null) {
-            MozoAPIsService.getInstance().getContactUsers(context) { data, _ ->
+            MozoAPIsService.getInstance().getContactUsers(context, { data, _ ->
                 if (data?.items != null) {
                     usersLiveData.value = data.items!!.sortedBy { it.name }
                 }
                 callback?.invoke()
-            }
+            }, {
+                fetchUser(context, callback)
+            })
         }
 
         fun fetchStore(context: Context, callback: (() -> Unit)? = null) {
-            MozoAPIsService.getInstance().getContactStores(context) { data, _ ->
+            MozoAPIsService.getInstance().getContactStores(context, { data, _ ->
                 if (data?.items != null) {
                     storesLiveData.value = data.items!!.sortedBy { it.apply { isStore = true }.name }
                 }
                 callback?.invoke()
-            }
+            }, {
+                fetchStore(context, callback)
+            })
         }
 
         fun fetchData(context: Context) {

@@ -73,6 +73,7 @@ internal class MozoTokenService private constructor() {
                         } else {
                             ErrorDialog.generalError(context, onTryAgain = retry)
                         }
+                        ErrorDialog.setCancelable(false)
                     }
                 }
             })

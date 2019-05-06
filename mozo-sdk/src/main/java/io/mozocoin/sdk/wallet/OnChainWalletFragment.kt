@@ -110,8 +110,7 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     @Suppress("unused")
     @Subscribe
     internal fun onReceiveEvent(event: MessageEvent.ConvertOnChain) {
-        checkNotNull(event)
-
+        event::class.java.canonicalName.logAsInfo("onReceiveEvent")
         fetchData()
     }
 
