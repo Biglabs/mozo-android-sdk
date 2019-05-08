@@ -20,10 +20,11 @@
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
     <string name="mozo_dialog_copied_msg">Copied to clipboard</string>
 
-    <string name="mozo_dialog_error_network_msg">There is no internet connection!</string>
+    <string name="mozo_dialog_error_network_msg">No internet connection!</string>
+    <string name="mozo_dialog_error_network_msg_sub" translatable="false">Once you have a stronger internet connection, we’ll automatically process your request.</string>
     <string name="mozo_dialog_error_timeout_msg">Time out, please try again.</string>
     <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
-    <string name="mozo_dialog_error_msg">An error has occurred.</string>
+    <string name="mozo_dialog_error_msg">There is an error occurred.</string>
     <string name="mozo_dialog_error_not_enough_msg">Your balance is not insufficient for this transfer amount.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
