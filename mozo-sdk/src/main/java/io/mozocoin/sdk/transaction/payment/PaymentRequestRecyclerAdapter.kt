@@ -16,9 +16,10 @@ import kotlinx.android.synthetic.main.item_payment_request.*
 
 class PaymentRequestRecyclerAdapter(
         private val requests: List<PaymentRequest>,
-        private val emptyView: View? = null,
         private val itemClick: ((position: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<PaymentRequestRecyclerAdapter.ItemPaymentViewHolder>() {
+
+    var emptyView: View? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemPaymentViewHolder =
             ItemPaymentViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_payment_request, parent, false))

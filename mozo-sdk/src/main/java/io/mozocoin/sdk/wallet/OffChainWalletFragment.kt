@@ -95,7 +95,6 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             }
         }
 
-        historyAdapter.setEmptyView(wallet_fragment_history_empty_view)
         wallet_fragment_history_recycler?.apply {
             setHasFixedSize(false)
             adapter = historyAdapter
@@ -168,6 +167,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
 
     @Synchronized
     private fun fetchData() {
+        wallet_fragment_off_swipe?.isRefreshing = true
         fetchDataJob?.cancel()
         fetchDataJobHandler?.cancel()
         fetchDataJobHandler = GlobalScope.launch {
@@ -180,6 +180,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                     size = 10,
                     callback = { data, _ ->
                         wallet_fragment_off_swipe?.isRefreshing = false
+                        historyAdapter.mEmptyView = wallet_fragment_history_empty_view
 
                         if (data?.items == null) {
                             historyAdapter.setCanLoadMore(false)
