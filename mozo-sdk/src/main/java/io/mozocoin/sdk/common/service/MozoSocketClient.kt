@@ -18,6 +18,7 @@ import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.BroadcastData
 import io.mozocoin.sdk.common.model.BroadcastDataContent
+import io.mozocoin.sdk.common.model.NotificationGroup
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
@@ -126,11 +127,40 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
-        withContext(Dispatchers.Main) {
-            NotificationManagerCompat
-                    .from(context)
-                    .notify(System.currentTimeMillis().toInt(), builder.build())
+
+        groupNotification(context, message, notification, builder)
+    }
+
+    private fun groupNotification(
+            context: Context,
+            message: BroadcastDataContent,
+            notification: io.mozocoin.sdk.common.model.Notification,
+            notice: NotificationCompat.Builder) = synchronized(this) {
+
+        val notificationGroup = NotificationGroup.getKey(message)
+
+        notice.setGroup(notificationGroup.name)
+        NotificationManagerCompat.from(context).notify(System.currentTimeMillis().toInt(), notice.build())
+
+        val summaryNotification = NotificationCompat.Builder(context, message.event!!).apply {
+            val title = NotificationGroup.getContentTitle(context, message, extras)
+            setContentTitle(title)
+
+            NotificationGroup.getContentText(context, message)?.let { setContentText(it) }
+
+            setStyle(NotificationCompat.InboxStyle().run {
+                val line = "${notification.titleDisplay()} ${notification.contentDisplay()}"
+                NotificationGroup.getItems(context, message, extras, line)?.apply {
+                    forEach { addLine(it) }
+                }
+                setBigContentTitle(title)
+            })
+            setSmallIcon(NotificationGroup.getIcon(message.event))
+            setGroup(notificationGroup.name)
+            setGroupSummary(true)
         }
+
+        NotificationManagerCompat.from(context).notify(notificationGroup.id, summaryNotification.build())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -223,4 +253,5 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             "stop retry connect".logAsInfo(TAG)
         }
     }
+
 }
