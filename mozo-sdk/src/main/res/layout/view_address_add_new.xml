@@ -38,7 +38,7 @@
         android:hint="@string/mozo_address_add_input_name_hint"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
-        android:maxLength="24"
+        android:maxLength="50"
         android:textColor="@color/mozo_color_text_main"
         android:textColorHint="@color/mozo_color_section_text"
         android:textSize="@dimen/mozo_text_size"

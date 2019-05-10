@@ -62,7 +62,7 @@
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
         android:text="@string/mozo_button_cancel"
-        android:textColor="@color/mozo_color_primary"
+        android:textColor="@color/mozo_selector_btn_color"
         android:textSize="@dimen/mozo_text_size"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/screen_title"

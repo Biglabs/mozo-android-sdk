@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:paddingStart="@dimen/mozo_screen_padding"
+    android:paddingEnd="@dimen/mozo_screen_padding">
+
+    <TextView
+        android:id="@+id/reset_pin_enter_pin_header"
+        style="@style/MozoTheme.SubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/mozo_pin_reset_header_create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/reset_pin_enter_pin_sub_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:gravity="center"
+        android:text="@string/mozo_pin_content"
+        android:textColor="@color/mozo_color_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reset_pin_enter_pin_header" />
+
+    <io.mozocoin.sdk.ui.widget.PinEntryEditText
+        android:id="@+id/reset_pin_enter_pin_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:imeOptions="actionNext"
+        android:inputType="numberPassword"
+        android:maxLength="@integer/security_pin_length"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reset_pin_enter_pin_sub_content"
+        app:layout_constraintVertical_bias="0.42"
+        app:layout_constraintWidth_percent="0.6"
+        app:pinAnimationType="fromBottom"
+        app:pinLineColors="@color/mozo_color_pin_input"
+        app:pinLineStroke="1dp"
+        app:pinLineStrokeSelected="2dp"
+        app:pinTextBottomPadding="10dp"
+        tools:text="000000">
+
+        <requestFocus />
+    </io.mozocoin.sdk.ui.widget.PinEntryEditText>
+
+    <TextView
+        android:id="@+id/text_correct_pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_check_green"
+        android:drawablePadding="6dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/mozo_pin_msg_enter_correct"
+        android:textColor="@color/mozo_color_correct"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/reset_pin_enter_pin_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reset_pin_enter_pin_sub_content"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/text_incorrect_pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_error"
+        android:drawablePadding="6dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/mozo_pin_msg_enter_incorrect"
+        android:textColor="@color/mozo_color_error"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/reset_pin_enter_pin_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reset_pin_enter_pin_sub_content"
+        tools:visibility="visible" />
+
+    <FrameLayout
+        android:id="@+id/reset_pin_loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:focusable="false"
+        android:visibility="gone"
+        tools:ignore="KeyboardInaccessibleWidget">
+
+        <ProgressBar
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:text="@string/mozo_pin_reset_msg_processing"
+            android:textColor="@color/mozo_color_title"
+            android:textSize="@dimen/mozo_text_size" />
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

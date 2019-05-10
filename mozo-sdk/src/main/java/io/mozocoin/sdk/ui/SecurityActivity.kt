@@ -10,6 +10,7 @@ import androidx.core.widget.TextViewCompat
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import io.mozocoin.sdk.ui.widget.onBackPress
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.view_toolbar.view.*
@@ -141,7 +142,10 @@ internal class SecurityActivity : BaseActivity() {
                 showKeyboard()
             }
         }
-        input_pin_checker_status.gone()
+        input_pin_checker_status?.gone()
+        pin_forgot_msg?.click {
+            startActivity(Intent(this, ResetPinActivity::class.java))
+        }
     }
 
     private fun showPinInputRestoreUI() = GlobalScope.launch(Dispatchers.Main) {

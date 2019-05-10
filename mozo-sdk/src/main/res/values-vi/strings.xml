@@ -61,6 +61,7 @@
     <string name="mozo_button_retry">Thử lại</string>
     <string name="mozo_button_refresh">Làm mới</string>
     <string name="mozo_button_read_more">Chi tiết</string>
+    <string name="mozo_button_next">Tiếp tục</string>
     <string name="mozo_button_try_again">Thử lại</string>
 
     <string name="mozo_backup_title">Sao lưu ví</string>

@@ -58,9 +58,11 @@
     <string name="mozo_button_send">Send</string>
     <string name="mozo_button_save">Save</string>
     <string name="mozo_button_save_address">Save Wallet Address</string>
+    <string name="mozo_button_submit" translatable="false">Submit</string>
     <string name="mozo_button_retry">Retry</string>
     <string name="mozo_button_refresh">Refresh</string>
     <string name="mozo_button_read_more">Read more</string>
+    <string name="mozo_button_next">Next</string>
     <string name="mozo_button_try_again">Try Again</string>
     <string name="mozo_button_contact_telegram" translatable="false">Telegram</string>
     <string name="mozo_button_contact_kakao" translatable="false">KakaoTalk</string>
@@ -113,6 +115,14 @@
     <string name="mozo_pin_msg_error">Create Wallet failed</string>
     <string name="mozo_pin_forgot_title" translatable="false">Forgot your PIN?</string>
     <string name="mozo_pin_forgot_msg" translatable="false">Reset PIN by using recovery phrases</string>
+    <string name="mozo_pin_reset_title" translatable="false">Reset PIN</string>
+    <string name="mozo_pin_reset_sub_title" translatable="false">Type your 12 recover phrases</string>
+    <string name="mozo_pin_reset_header_create" translatable="false">Enter new Security PIN</string>
+    <string name="mozo_pin_reset_msg_error" translatable="false">Recovery phrase contains unrecognized words.</string>
+    <string name="mozo_pin_reset_msg_error_incorrect" translatable="false">Recover phrases is not belong to user wallet.</string>
+    <string name="mozo_pin_reset_msg_checking" translatable="false">Checking recovery phrases</string>
+    <string name="mozo_pin_reset_msg_processing" translatable="false">Reset PIN is processing</string>
+    <string name="mozo_pin_reset_msg_done" translatable="false">PIN Reset Successful</string>
 
     <string name="mozo_notify_title_come_in">Customer has entered</string>
     <string name="mozo_notify_title_just_left">Customer has left</string>

@@ -17,11 +17,12 @@ class MozoToolbar : ConstraintLayout {
 
     private var viewScreenTitle: TextView? = null
     private var viewButtonBack: View? = null
-    private var viewButtonClose: View? = null
+    private var viewButtonClose: TextView? = null
 
     private var mTitle: String? = null
     private var mShowBack = false
     private var mShowClose = false
+    private var mButtonCloseText: String? = null
     private var mPaddingTop = -1
 
     var onBackPress: (() -> Unit)? = null
@@ -35,6 +36,7 @@ class MozoToolbar : ConstraintLayout {
             mTitle = typeArray.getString(R.styleable.MozoToolbar_title)
             mShowBack = typeArray.getBoolean(R.styleable.MozoToolbar_buttonBack, mShowBack)
             mShowClose = typeArray.getBoolean(R.styleable.MozoToolbar_buttonClose, mShowClose)
+            mButtonCloseText = typeArray.getString(R.styleable.MozoToolbar_buttonCloseText)
         } finally {
             typeArray.recycle()
         }
@@ -80,6 +82,8 @@ class MozoToolbar : ConstraintLayout {
         viewScreenTitle?.text = mTitle
         viewButtonBack?.visibility = if (mShowBack) View.VISIBLE else View.GONE
         viewButtonClose?.visibility = if (mShowClose) View.VISIBLE else View.GONE
+
+        viewButtonClose?.text = mButtonCloseText ?: context.getString(R.string.mozo_button_cancel)
     }
 
     fun showBackButton(isShow: Boolean) {
@@ -99,6 +103,11 @@ class MozoToolbar : ConstraintLayout {
 
     fun setTitle(@StringRes id: Int) {
         mTitle = context.getString(id)
+        updateUI()
+    }
+
+    fun setCloseButtonText(text: String) {
+        mButtonCloseText = text
         updateUI()
     }
 }

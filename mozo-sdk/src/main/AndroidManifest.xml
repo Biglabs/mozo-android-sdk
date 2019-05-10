@@ -112,6 +112,14 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
         <activity
+            android:name=".wallet.reset.ResetPinActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+
+        <activity
             android:name="net.openid.appauth.AuthorizationManagementActivity"
             android:exported="false"
             android:launchMode="singleTask"

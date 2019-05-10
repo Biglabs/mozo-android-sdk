@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:top="47dp">
+        <selector>
+            <item
+                android:color="@color/mozo_color_primary"
+                android:drawable="@color/mozo_color_primary"
+                android:state_focused="true" />
+            <item
+                android:color="@color/mozo_color_line"
+                android:drawable="@color/mozo_color_line"
+                android:state_focused="false" />
+        </selector>
+    </item>
+</layer-list>

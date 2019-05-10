@@ -21,6 +21,7 @@
         <attr name="title" format="reference|string" />
         <attr name="buttonBack" format="boolean" />
         <attr name="buttonClose" format="boolean" />
+        <attr name="buttonCloseText" format="reference|string" />
     </declare-styleable>
 
     <declare-styleable name="MozoRecyclerView">
