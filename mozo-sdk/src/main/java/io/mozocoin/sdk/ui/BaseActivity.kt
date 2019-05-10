@@ -31,10 +31,9 @@ internal open class BaseActivity : AppCompatActivity() {
         super.setTitle(titleId)
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onReceiveSignal(event: MessageEvent.CloseActivities) {
-        checkNotNull(event)
         finishAndRemoveTask()
     }
 }

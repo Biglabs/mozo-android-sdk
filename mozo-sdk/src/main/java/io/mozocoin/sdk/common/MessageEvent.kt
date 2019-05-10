@@ -5,6 +5,7 @@ internal object MessageEvent {
     class Auth(val exception: Exception? = null)
     class CloseActivities
     class ConvertOnChain
+    class StopMaintenanceMode
     class UserCancel
     class UserCancelErrorDialog
 }

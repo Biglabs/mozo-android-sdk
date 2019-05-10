@@ -70,6 +70,11 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showBackupUI() {
         setContentView(R.layout.view_wallet_security_backup)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.apply {
+            setDisplayShowHomeEnabled(false)
+            setDisplayHomeAsUpEnabled(false)
+        }
 
         val paddingVertical = resources.dp2Px(10f).toInt()
         val paddingHorizontal = resources.dp2Px(8f).toInt()
@@ -91,7 +96,7 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showPinInputUI() {
         setContentView(R.layout.view_wallet_security)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.apply {
             setDisplayShowHomeEnabled(false)
             setDisplayHomeAsUpEnabled(false)
@@ -160,6 +165,7 @@ internal class SecurityActivity : BaseActivity() {
             }
         }
         text_content_pin.visible()
+        pin_forgot_group.visible()
         hideLoadingUI()
     }
 
@@ -191,6 +197,7 @@ internal class SecurityActivity : BaseActivity() {
         input_pin.visible()
         input_pin.isEnabled = false
         text_content_pin.visible()
+        pin_forgot_group.gone()
         hideLoadingUI()
     }
 
@@ -216,19 +223,18 @@ internal class SecurityActivity : BaseActivity() {
                 input_pin,
                 input_pin_checker_status,
                 text_content_pin,
-                error_container
+                error_container,
+                pin_forgot_group
         ))
 
         visible(arrayOf(
-                input_loading_indicator,
-                input_loading_text
+                input_loading_indicator
         ))
     }
 
     private fun hideLoadingUI() {
         gone(arrayOf(
-                input_loading_indicator,
-                input_loading_text
+                input_loading_indicator
         ))
     }
 

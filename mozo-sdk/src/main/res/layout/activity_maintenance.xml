@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@android:id/icon"
+        android:layout_width="160dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@android:id/text1"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:srcCompat="@drawable/ic_content_maintenance" />
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="26dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="@string/mozo_maintenance_title"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="@dimen/mozo_text_size"
+        app:layout_constraintBottom_toTopOf="@android:id/extractArea"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@android:id/icon" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@android:id/extractArea"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="44dp"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="16dp"
+        app:contentPadding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_content_question"
+            android:drawablePadding="6.5dp"
+            android:gravity="center"
+            android:text="@string/mozo_maintenance_tips_title"
+            android:textColor="@color/mozo_color_section_text"
+            android:textSize="@dimen/mozo_text_size" />
+
+        <TextView
+            android:id="@+id/maintenance_tips_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="46dp"
+            android:textColor="@color/mozo_color_title"
+            android:textSize="@dimen/mozo_text_size"
+            android:textStyle="bold"
+            tools:text="How do MozoX Tokens work as a rewards program?" />
+
+        <TextView
+            android:id="@+id/maintenance_tips_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="93dp"
+            android:ellipsize="end"
+            android:maxLines="5"
+            android:textColor="@color/mozo_color_title"
+            android:textSize="@dimen/mozo_text_size"
+            tools:text="@tools:sample/lorem/random" />
+
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:id="@+id/button_read_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:drawableEnd="@drawable/ic_action_arrow_right"
+            android:drawablePadding="8dp"
+            android:includeFontPadding="false"
+            android:paddingStart="0dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="5dp"
+            android:text="@string/mozo_button_read_more"
+            android:textColor="@color/mozo_color_primary"
+            android:textSize="@dimen/mozo_text_size"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

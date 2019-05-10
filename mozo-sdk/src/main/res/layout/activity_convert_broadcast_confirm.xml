@@ -89,7 +89,8 @@
         app:layout_constraintEnd_toStartOf="@id/convert_amount_off_chain"
         app:layout_constraintStart_toEndOf="@id/convert_amount_on_chain"
         app:layout_constraintTop_toTopOf="@id/convert_amount_on_chain"
-        app:srcCompat="@drawable/ic_action_arrow_right" />
+        app:srcCompat="@drawable/ic_action_arrow_right"
+        app:tint="@color/mozo_color_title" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -111,6 +111,8 @@
     <string name="mozo_pin_msg_enter_correct">Security PIN is correct</string>
     <string name="mozo_pin_msg_enter_incorrect">Incorrect Security PIN</string>
     <string name="mozo_pin_msg_error">Create Wallet failed</string>
+    <string name="mozo_pin_forgot_title" translatable="false">Forgot your PIN?</string>
+    <string name="mozo_pin_forgot_msg" translatable="false">Reset PIN by using recovery phrases</string>
 
     <string name="mozo_notify_title_come_in">Customer has entered</string>
     <string name="mozo_notify_title_just_left">Customer has left</string>
@@ -119,6 +121,9 @@
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
     <string name="mozo_notify_content_invited">%s joined MozoX</string>
+
+    <string name="mozo_maintenance_title" translatable="false">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>
+    <string name="mozo_maintenance_tips_title" translatable="false">Did you know?</string>
 
     <string name="mozo_payment_request_title">Request MozoX</string>
     <string name="mozo_payment_request_amount">Receive Amount</string>

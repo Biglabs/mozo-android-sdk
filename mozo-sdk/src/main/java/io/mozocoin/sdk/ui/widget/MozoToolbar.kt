@@ -41,13 +41,12 @@ class MozoToolbar : ConstraintLayout {
 
         inflate(context, R.layout.view_toolbar, this)
 
-        if (isInEditMode) {
-            maxHeight = 100
-        } else {
-            viewScreenTitle = this.findViewById(R.id.screen_title)
-            viewButtonBack = this.findViewById(R.id.button_back)
-            viewButtonClose = this.findViewById(R.id.button_close)
+        viewScreenTitle = this.findViewById(R.id.screen_title)
+        viewButtonBack = this.findViewById(R.id.button_back)
+        viewButtonClose = this.findViewById(R.id.button_close)
+        updateUI()
 
+        if (!isInEditMode) {
             viewButtonBack?.click {
                 if (onBackPress != null) onBackPress?.invoke()
                 else (context as? Activity)?.onBackPressed()
@@ -58,7 +57,6 @@ class MozoToolbar : ConstraintLayout {
                     EventBus.getDefault().post(MessageEvent.CloseActivities())
                 }
             }
-            updateUI()
         }
     }
 

@@ -47,7 +47,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".transaction.payment.PaymentRequestActivity"
@@ -130,5 +130,13 @@
                 <data android:scheme="com.biglabs.mozosdk.${applicationId}" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.MaintenanceActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
     </application>
 </manifest>
