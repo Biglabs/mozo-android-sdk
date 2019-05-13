@@ -24,85 +24,121 @@ enum class NotificationGroup(val id: Int) {
         private const val TOTAL_AMOUNT = "total_amount"
 
         private fun getCurrentlyGroupExtras(context: Context, groupKey: String, key: String): Bundle? = synchronized(this) {
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                manager.activeNotifications
-                        .firstOrNull {
+                manager?.activeNotifications
+                        ?.firstOrNull {
                             it.groupKey.contains(groupKey, true)
                                     && it.notification.extras.containsKey(key)
                         }?.notification?.extras
             } else null
         }
 
-        fun getItems(context: Context, message: BroadcastDataContent, groupExtras: Bundle, newItem: String): List<String>? {
+        fun getItems(context: Context, message: BroadcastDataContent, groupExtras: Bundle? = null, newItem: String? = null): List<String>? {
             var items = getCurrentlyGroupExtras(context, getKey(message).name, NOTIFY_ITEM)
                     ?.getString(NOTIFY_ITEM)
-            items = if (items.isNullOrBlank()) newItem
-            else "$newItem|$items"
 
-            groupExtras.putString(NOTIFY_ITEM, items)
-            return items.split("|")
+            groupExtras?.apply {
+                items = if (items.isNullOrBlank())
+                    newItem
+                else {
+                    if (newItem != null)
+                        "$newItem|$items"
+                    else "$items"
+                }
+                putString(NOTIFY_ITEM, items)
+            }
+
+            return items?.split("|")
         }
 
-        fun getContentText(context: Context, message: BroadcastDataContent): String? {
+        fun getContentText(context: Context, message: BroadcastDataContent, groupExtras: Bundle): String? {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                 return null
 
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val count = manager.activeNotifications.filter {
-                it.groupKey.contains(getKey(message).name, true)
-            }.size - 1
+            val notificationGroup = getKey(message)
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+            var totalNotice = manager?.activeNotifications
+                    ?.filter { it.groupKey.contains(notificationGroup.name, true) }
+                    ?.size ?: 0
 
-            return when (message.event) {
-                Constant.NOTIFY_EVENT_BALANCE_CHANGED -> "From $count transaction"
-                else -> ""
+            totalNotice = Math.max(totalNotice - 1, 1)
+
+            var totalAmount = getCurrentlyGroupExtras(context, notificationGroup.name, TOTAL_AMOUNT)
+                    ?.getDouble(TOTAL_AMOUNT, 0.0) ?: 0.0
+
+            totalAmount += MozoTx.getInstance()
+                    .amountNonDecimal(message.amount ?: BigDecimal.ZERO)
+                    .toDouble()
+
+            totalAmount = DecimalFormat("#.##").format(totalAmount).toDouble()
+
+            groupExtras.putDouble(TOTAL_AMOUNT, totalAmount)
+
+            return when (notificationGroup) {
+                BALANCE_SENT      -> context.getString(
+                        R.string.mozo_notify_content_sent_group,
+                        totalNotice,
+                        totalAmount.toString()
+                )
+                BALANCE_RECEIVE   -> context.getString(
+                        R.string.mozo_notify_content_received_group,
+                        totalNotice,
+                        totalAmount.toString()
+                )
+                CUSTOMER_COME_IN  -> context.getString(
+                        R.string.mozo_notify_content_customer_join_group,
+                        totalNotice,
+                        totalNotice
+                )
+                CUSTOMER_COME_OUT -> context.getString(
+                        R.string.mozo_notify_content_customer_left_group,
+                        totalNotice,
+                        totalNotice
+                )
+                INVITE            -> context.getString(
+                        R.string.mozo_notify_content_invited_group,
+                        totalNotice,
+                        totalNotice
+                )
+                else              -> context.getString(
+                        R.string.mozo_notify_content_airdrop_group,
+                        totalNotice,
+                        totalAmount.toString()
+                )
             }
         }
 
-        fun getContentTitle(context: Context, message: BroadcastDataContent, groupExtras: Bundle): String {
-            var count = getCurrentlyGroupExtras(context, getKey(message).name, TOTAL_AMOUNT)
-                    ?.getDouble(TOTAL_AMOUNT, 0.0) ?: 0.0
+        fun getContentTitle(context: Context, message: BroadcastDataContent) = when (getKey(message)) {
+            CUSTOMER_COME_IN  -> context.getString(R.string.mozo_notify_title_come_in_group)
 
-            count += MozoTx.getInstance().amountNonDecimal(message.amount
-                    ?: BigDecimal.ZERO).toDouble()
+            CUSTOMER_COME_OUT -> context.getString(R.string.mozo_notify_title_just_left_group)
 
-            count = DecimalFormat("#.##").format(count).toDouble()
+            INVITE            -> context.getString(R.string.mozo_notify_content_invited_group)
 
-            groupExtras.putDouble(TOTAL_AMOUNT, count)
-
-            return when (message.event) {
-                Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
-                    if (message.from.equals(MozoWallet.getInstance().getAddress() ?: "", true))
-                        context.getString(R.string.mozo_notify_title_sent)
-                    else
-                        context.getString(R.string.mozo_notify_title_received)
-                }
-                else -> "$count Customers arrived"
-            }
+            else              -> null
         }
 
         fun getIcon(type: String?) = when (type) {
-            Constant.NOTIFY_EVENT_BALANCE_CHANGED -> R.drawable.ic_airdrops_grouped
-            else -> R.drawable.ic_customer_arrived_grouped
+            Constant.NOTIFY_EVENT_BALANCE_CHANGED -> R.drawable.ic_notification_balance_changed
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME   -> R.drawable.ic_customer_came_grouped
+            Constant.NOTIFY_EVENT_AIRDROPPED      -> R.drawable.ic_notification_airdrops_grouped
+            else                                  -> R.drawable.ic_notification_invite_group
         }
 
-        /*return group key of Notifications*/
         fun getKey(message: BroadcastDataContent) = when (message.event) {
             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                 if (message.from.equals(MozoWallet.getInstance().getAddress(), true))
                     BALANCE_SENT
                 else BALANCE_RECEIVE
             }
-
-            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
-                if (message.isComeIn)
-                    CUSTOMER_COME_IN
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME   -> {
+                if (message.isComeIn) CUSTOMER_COME_IN
                 else CUSTOMER_COME_OUT
             }
+            Constant.NOTIFY_EVENT_AIRDROP_INVITE  -> INVITE
 
-            Constant.NOTIFY_EVENT_AIRDROP_INVITE -> INVITE
-
-            else -> AIRDROP
+            else                                  -> AIRDROP
         }
     }
 }
