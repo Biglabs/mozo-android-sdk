@@ -18,10 +18,7 @@ import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.hideKeyboard
 import io.mozocoin.sdk.utils.visible
 import kotlinx.android.synthetic.main.fragment_reset_enter_seed.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.web3j.crypto.MnemonicUtils
 
 internal class EnterSeedFragment : ResetPinBaseFragment() {
@@ -136,7 +133,10 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
 
     private fun finalVerify() {
         reset_pin_loading_view?.visible()
-        mInteractionListener?.getCloseButton()?.setText(R.string.mozo_button_cancel)
+        mInteractionListener?.run {
+            hideToolbarActions(left = true, right = false)
+            getCloseButton()?.setText(R.string.mozo_button_cancel)
+        }
         isCancelableRightButton = true
 
         val mnemonic = mInputView?.map { it.text.toString().trim() }?.joinToString(separator = " ") { s -> s }
@@ -146,11 +146,14 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
                 val isCorrectWallet = wallet.buildWalletInfo().offchainAddress
                         .equals(MozoWallet.getInstance().getAddress(), ignoreCase = true)
 
+                /* Prevent crash when back pressed during working */
+                if (!isAdded || isRemoving) return@launch
+
                 if (isCorrectWallet) {
                     mInteractionListener?.getResetPinModel()?.setData(wallet)
                     mInteractionListener?.requestEnterPin()
                 } else {
-                    showInlineError(R.string.mozo_pin_reset_msg_error_incorrect, false)
+                    showInlineError(R.string.mozo_pin_reset_msg_error_incorrect, true)
                 }
             }
 
@@ -169,7 +172,10 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
         }
 
         reset_pin_loading_view?.gone()
-        mInteractionListener?.getCloseButton()?.setText(R.string.mozo_button_submit)
+        mInteractionListener?.run {
+            getCloseButton()?.setText(R.string.mozo_button_submit)
+            hideToolbarActions(left = false, right = false)
+        }
         isCancelableRightButton = false
     }
 
