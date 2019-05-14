@@ -61,6 +61,7 @@
     <string name="mozo_button_retry">재시도</string>
     <string name="mozo_button_refresh">새로 고침</string>
     <string name="mozo_button_read_more">자세히 보기</string>
+    <string name="mozo_button_next">다음 가기</string>
     <string name="mozo_button_try_again">다시 시도하십시오</string>
 
     <string name="mozo_backup_title">월렛 백업</string>

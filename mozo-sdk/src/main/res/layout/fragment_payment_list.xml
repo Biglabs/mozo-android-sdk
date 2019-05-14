@@ -6,18 +6,19 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <io.mozocoin.sdk.ui.view.MozoEmptyView
+    <io.mozocoin.sdk.ui.view.MozoPlaceHolderView
         android:id="@+id/payment_request_empty_view"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/mozo_payment_request_text_empty"
         android:visibility="gone"
-        app:drawableSize="@dimen/mozo_view_empty_height"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:holder_content="@string/mozo_payment_request_text_empty_msg"
+        app:holder_icon="@drawable/im_empty_state_requested_list"
+        app:holder_title="@string/mozo_payment_request_text_empty"
+        app:layout_constraintBottom_toTopOf="@id/button_scan_qr"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.45"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/payment_request_swipe_refresh"

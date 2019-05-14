@@ -51,6 +51,12 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
+    fun resetWallet(context: Context, walletInfo: WalletInfo, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.resetWallet(walletInfo), callback, null, false)
+        }
+    }
+
     fun getBalance(context: Context, address: String, callback: ((data: BalanceInfo?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getBalance(address), callback, retry)

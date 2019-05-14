@@ -10,6 +10,7 @@ import androidx.core.widget.TextViewCompat
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import io.mozocoin.sdk.ui.widget.onBackPress
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.view_toolbar.view.*
@@ -70,6 +71,11 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showBackupUI() {
         setContentView(R.layout.view_wallet_security_backup)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.apply {
+            setDisplayShowHomeEnabled(false)
+            setDisplayHomeAsUpEnabled(false)
+        }
 
         val paddingVertical = resources.dp2Px(10f).toInt()
         val paddingHorizontal = resources.dp2Px(8f).toInt()
@@ -91,7 +97,7 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showPinInputUI() {
         setContentView(R.layout.view_wallet_security)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.apply {
             setDisplayShowHomeEnabled(false)
             setDisplayHomeAsUpEnabled(false)
@@ -136,7 +142,10 @@ internal class SecurityActivity : BaseActivity() {
                 showKeyboard()
             }
         }
-        input_pin_checker_status.gone()
+        input_pin_checker_status?.gone()
+        pin_forgot_msg?.click {
+            startActivity(Intent(this, ResetPinActivity::class.java))
+        }
     }
 
     private fun showPinInputRestoreUI() = GlobalScope.launch(Dispatchers.Main) {
@@ -160,6 +169,7 @@ internal class SecurityActivity : BaseActivity() {
             }
         }
         text_content_pin.visible()
+        pin_forgot_group.visible()
         hideLoadingUI()
     }
 
@@ -191,6 +201,7 @@ internal class SecurityActivity : BaseActivity() {
         input_pin.visible()
         input_pin.isEnabled = false
         text_content_pin.visible()
+        pin_forgot_group.gone()
         hideLoadingUI()
     }
 
@@ -216,19 +227,18 @@ internal class SecurityActivity : BaseActivity() {
                 input_pin,
                 input_pin_checker_status,
                 text_content_pin,
-                error_container
+                error_container,
+                pin_forgot_group
         ))
 
         visible(arrayOf(
-                input_loading_indicator,
-                input_loading_text
+                input_loading_indicator
         ))
     }
 
     private fun hideLoadingUI() {
         gone(arrayOf(
-                input_loading_indicator,
-                input_loading_text
+                input_loading_indicator
         ))
     }
 

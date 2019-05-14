@@ -71,19 +71,6 @@
             android:textColor="@color/mozo_check_btn_text_color" />
     </RadioGroup>
 
-    <io.mozocoin.sdk.ui.view.MozoEmptyView
-        android:id="@+id/list_history_empty_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/mozo_transaction_history_empty"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/list_history_refresh"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/list_history_refresh"
-        app:layout_constraintVertical_bias="0.4"
-        tools:visibility="visible" />
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/list_history_refresh"
         android:layout_width="0dp"
@@ -119,4 +106,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/history_filter_group" />
+
+    <io.mozocoin.sdk.ui.view.MozoPlaceHolderView
+        android:id="@+id/list_history_empty_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:visibility="gone"
+        app:holder_content="@string/mozo_transaction_history_empty_msg"
+        app:holder_icon="@drawable/im_empty_state_tx_history"
+        app:holder_primaryButtonText="@string/mozo_button_go_to_wallet"
+        app:holder_title="@string/mozo_transaction_history_empty"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/history_toolbar"
+        tools:ignore="KeyboardInaccessibleWidget" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,7 +44,14 @@ fun FragmentActivity.replace(@IdRes id: Int, fragment: Fragment, backStackName: 
 }
 
 fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
-    childFragmentManager.beginTransaction().replace(id, fragment).apply {
+    childFragmentManager.beginTransaction().run {
+        childFragmentManager.fragments.forEach {
+            hide(it)
+        }
+
+        if (fragment.isAdded) show(fragment)
+        else add(id, fragment)
+    }.apply {
         if (backStackName != null) addToBackStack(backStackName)
     }.commit()
 }
