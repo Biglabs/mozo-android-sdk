@@ -43,7 +43,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
     }
 
     override fun onMessage(s: String?) {
-        "message $s".logAsInfo(TAG)
+        "${instance.toString()} : message $s".logAsInfo(TAG)
         s?.run {
             if (equals("1|X", ignoreCase = true)) {
                 sendPing()
@@ -65,13 +65,13 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         when (broadcast.event.toLowerCase()) {
                             /* Reload balance */
                             Constant.NOTIFY_EVENT_AIRDROP_INVITE,
-                            Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
+                            Constant.NOTIFY_EVENT_BALANCE_CHANGED  -> {
                                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                             }
                             Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
                                 MozoSDK.getInstance().contactViewModel.fetchStore(MozoSDK.getInstance().context)
                             }
-                            Constant.NOTIFY_EVENT_CONVERT -> {
+                            Constant.NOTIFY_EVENT_CONVERT          -> {
                                 EventBus.getDefault().post(MessageEvent.ConvertOnChain())
                             }
                         }
@@ -143,18 +143,18 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         NotificationManagerCompat.from(context).notify(System.currentTimeMillis().toInt(), notice.build())
 
         val summaryNotification = NotificationCompat.Builder(context, message.event!!).apply {
-            val title = NotificationGroup.getContentTitle(context, message, extras)
-            setContentTitle(title)
-
-            NotificationGroup.getContentText(context, message)?.let { setContentText(it) }
-
+            val line = "${notification.titleDisplay()} ${notification.contentDisplay()}"
+            val items = NotificationGroup.getItems(context, message, extras, line)
+            val title = NotificationGroup.getContentTitle(context, message) ?: line
             setStyle(NotificationCompat.InboxStyle().run {
-                val line = "${notification.titleDisplay()} ${notification.contentDisplay()}"
-                NotificationGroup.getItems(context, message, extras, line)?.apply {
+                items?.apply {
                     forEach { addLine(it) }
-                }
+                } ?: addLine(line)
                 setBigContentTitle(title)
             })
+
+            setContentTitle(title)
+            NotificationGroup.getContentText(context, message, extras)?.let { setContentText(it) }
             setSmallIcon(NotificationGroup.getIcon(message.event))
             setGroup(notificationGroup.name)
             setGroupSummary(true)
