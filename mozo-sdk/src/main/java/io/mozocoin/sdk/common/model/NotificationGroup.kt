@@ -123,7 +123,7 @@ enum class NotificationGroup(val id: Int) {
             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> R.drawable.ic_notification_balance_changed
             Constant.NOTIFY_EVENT_CUSTOMER_CAME   -> R.drawable.ic_customer_came_grouped
             Constant.NOTIFY_EVENT_AIRDROPPED      -> R.drawable.ic_notification_airdrops_grouped
-            else                                  -> R.drawable.ic_notification_invite_group
+            else                                  -> R.drawable.ic_notification_invite_grouped
         }
 
         fun getKey(message: BroadcastDataContent) = when (message.event) {

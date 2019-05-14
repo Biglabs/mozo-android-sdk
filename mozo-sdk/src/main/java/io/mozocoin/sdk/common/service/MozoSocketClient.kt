@@ -142,25 +142,27 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         notice.setGroup(notificationGroup.name)
         NotificationManagerCompat.from(context).notify(System.currentTimeMillis().toInt(), notice.build())
 
-        val summaryNotification = NotificationCompat.Builder(context, message.event!!).apply {
+        NotificationCompat.Builder(context, message.event!!).apply {
             val line = "${notification.titleDisplay()} ${notification.contentDisplay()}"
             val items = NotificationGroup.getItems(context, message, extras, line)
             val title = NotificationGroup.getContentTitle(context, message) ?: line
+
             setStyle(NotificationCompat.InboxStyle().run {
-                items?.apply {
-                    forEach { addLine(it) }
-                } ?: addLine(line)
+                items?.forEach { addLine(it) }
+                        ?: addLine(line)
                 setBigContentTitle(title)
             })
 
-            setContentTitle(title)
+            color = context.color(R.color.mozo_color_primary)
             NotificationGroup.getContentText(context, message, extras)?.let { setContentText(it) }
-            setSmallIcon(NotificationGroup.getIcon(message.event))
+            setContentTitle(title)
+            setSmallIcon(R.drawable.ic_mozo_notification)
+            setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
             setGroup(notificationGroup.name)
             setGroupSummary(true)
-        }
 
-        NotificationManagerCompat.from(context).notify(notificationGroup.id, summaryNotification.build())
+            NotificationManagerCompat.from(context).notify(notificationGroup.id, build())
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
