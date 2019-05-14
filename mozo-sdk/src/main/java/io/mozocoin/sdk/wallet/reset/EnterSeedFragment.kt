@@ -18,7 +18,10 @@ import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.hideKeyboard
 import io.mozocoin.sdk.utils.visible
 import kotlinx.android.synthetic.main.fragment_reset_enter_seed.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.web3j.crypto.MnemonicUtils
 
 internal class EnterSeedFragment : ResetPinBaseFragment() {
@@ -94,8 +97,6 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
              * Advanced: auto detect Clipboard to fill in seed phrase
              * if (v.id == R.id.reset_pin_seed_1) detectClipboard()
              */
-
-            if (v.id == R.id.reset_pin_seed_1) detectClipboard()
         }
     }
 
@@ -107,6 +108,7 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
             withContext(Dispatchers.Main) {
                 v.isActivated = !word.isNullOrEmpty()
                 v.isSelected = word.isNullOrEmpty()
+                showInlineError(R.string.mozo_pin_reset_msg_error, word.isNullOrEmpty())
             }
         }
     }
