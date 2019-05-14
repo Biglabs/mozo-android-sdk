@@ -52,6 +52,7 @@
     <string name="mozo_button_continue">Continue</string>
     <string name="mozo_button_close">Close</string>
     <string name="mozo_button_clear">Clear</string>
+    <string name="mozo_button_done" translatable="false">Done</string>
     <string name="mozo_button_scan_qr_code">Scan QR Code</string>
     <string name="mozo_button_scan">Scan</string>
     <string name="mozo_button_show_qr_code">Enlarge QR Code</string>

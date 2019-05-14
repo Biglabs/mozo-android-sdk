@@ -145,11 +145,12 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
                 val wallet = WalletHelper(mnemonic)
                 val isCorrectWallet = wallet.buildWalletInfo().offchainAddress
                         .equals(MozoWallet.getInstance().getAddress(), ignoreCase = true)
-                showInlineError(R.string.mozo_pin_reset_msg_error_incorrect, !isCorrectWallet)
 
                 if (isCorrectWallet) {
                     mInteractionListener?.getResetPinModel()?.setData(wallet)
                     mInteractionListener?.requestEnterPin()
+                } else {
+                    showInlineError(R.string.mozo_pin_reset_msg_error_incorrect, false)
                 }
             }
 

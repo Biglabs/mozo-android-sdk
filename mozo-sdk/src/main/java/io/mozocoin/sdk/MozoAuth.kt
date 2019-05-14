@@ -254,7 +254,7 @@ class MozoAuth private constructor() {
         })
     }
 
-    private fun saveUserInfo(context: Context, profile: Profile, callback: ((success: Boolean) -> Unit)? = null) {
+    internal fun saveUserInfo(context: Context, profile: Profile, callback: ((success: Boolean) -> Unit)? = null) {
         MozoWallet.getInstance().initWallet(context, profile) {
             GlobalScope.launch {
                 if (it) {

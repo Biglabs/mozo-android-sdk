@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:paddingStart="@dimen/mozo_screen_padding"
-    android:paddingEnd="@dimen/mozo_screen_padding">
+    android:animateLayoutChanges="true">
 
     <TextView
         android:id="@+id/reset_pin_enter_pin_header"
@@ -96,12 +94,16 @@
 
     <FrameLayout
         android:id="@+id/reset_pin_loading_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@android:color/white"
         android:clickable="true"
         android:focusable="false"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="KeyboardInaccessibleWidget">
 
         <ProgressBar
@@ -119,4 +121,78 @@
             android:textColor="@color/mozo_color_title"
             android:textSize="@dimen/mozo_text_size" />
     </FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/reset_pin_message_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/reset_pin_message_icon"
+            android:layout_width="102dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="42dp"
+            android:contentDescription="@string/mozo_dialog_error_msg"
+            android:src="@drawable/ic_error_network"
+            app:layout_constraintBottom_toTopOf="@id/reset_pin_message_title"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/reset_pin_message_title"
+            android:layout_width="215dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/mozo_dialog_error_network_msg"
+            android:textColor="@color/mozo_color_text_main"
+            android:textSize="@dimen/mozo_text_size"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/reset_pin_message_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reset_pin_message_icon"
+            app:layout_goneMarginTop="40dp" />
+
+        <TextView
+            android:id="@+id/reset_pin_message_content"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/mozo_dialog_error_network_msg_sub"
+            android:textColor="@color/mozo_color_text_main"
+            android:textSize="@dimen/mozo_text_size"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/reset_pin_message_retry_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reset_pin_message_title"
+            app:layout_goneMarginTop="40dp"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/reset_pin_message_retry_btn"
+            style="@style/MozoButtonStyle.Rounded"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="27dp"
+            android:layout_marginBottom="40dp"
+            android:text="@string/mozo_button_try_again"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reset_pin_message_content" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
