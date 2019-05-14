@@ -7,6 +7,7 @@ import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.authentication.MozoAuthActivity
 import io.mozocoin.sdk.common.Gender
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.UserInfo
 import io.mozocoin.sdk.common.service.MozoAPIsService
@@ -231,7 +232,7 @@ class MozoAuth private constructor() {
 
             GlobalScope.launch {
                 if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
-                    saveUserInfo(context, data, callback)
+                    saveUserInfo(context, data, callback = callback)
                     return@launch
                 }
 
@@ -245,7 +246,7 @@ class MozoAuth private constructor() {
                     ) {
                         callback?.invoke(true) // No need recover wallet
                     } else {
-                        saveUserInfo(context, data, callback)
+                        saveUserInfo(context, data, callback = callback)
                     }
                 }
             }
@@ -254,12 +255,10 @@ class MozoAuth private constructor() {
         })
     }
 
-    internal fun saveUserInfo(context: Context, profile: Profile, callback: ((success: Boolean) -> Unit)? = null) {
-        MozoWallet.getInstance().initWallet(context, profile) {
+    internal fun saveUserInfo(context: Context, profile: Profile, walletHelper: WalletHelper? = null, callback: ((success: Boolean) -> Unit)? = null) {
+        MozoWallet.getInstance().initWallet(context, profile, walletHelper) {
             GlobalScope.launch {
                 if (it) {
-
-
                     /* update local profile to match with server profile */
                     profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
                     mozoDB.profile().save(profile)

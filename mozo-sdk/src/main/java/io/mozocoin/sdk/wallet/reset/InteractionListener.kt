@@ -7,5 +7,7 @@ internal interface InteractionListener {
 
     fun getResetPinModel(): ResetPinViewModel
 
+    fun hideToolbarActions(left: Boolean, right: Boolean)
+
     fun requestEnterPin()
 }

@@ -74,7 +74,7 @@ class MozoWallet private constructor() {
         AddressBookActivity.start(MozoSDK.getInstance().context)
     }
 
-    internal fun initWallet(context: Context, profile: Profile /* server */, callback: ((success: Boolean) -> Unit)? = null) {
+    internal fun initWallet(context: Context, profile: Profile /* server */, walletHelper: WalletHelper? = null, callback: ((success: Boolean) -> Unit)? = null) {
         val flag = if (profile.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
             /* Server wallet is NOT existing, create a new one at local */
             mWallet = WalletHelper.create()
@@ -83,7 +83,7 @@ class MozoWallet private constructor() {
             SecurityActivity.KEY_CREATE_PIN
         } else {
 
-            mWallet = WalletHelper.initWithWalletInfo(profile.walletInfo)
+            mWallet = walletHelper ?: WalletHelper.initWithWalletInfo(profile.walletInfo)
             if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
                 /* Local wallet is existing but no private Key */
                 /* Required input previous PIN */
