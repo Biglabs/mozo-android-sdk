@@ -149,10 +149,14 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             setContentTitle(title)
             setSmallIcon(R.drawable.ic_mozo_notification)
             setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
-            setContentIntent(pendingIntent)
             setGroup(notificationGroup.name)
             setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
             setGroupSummary(true)
+            setDefaults(Notification.DEFAULT_ALL)
+            setAutoCancel(true)
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M)
+                setContentIntent(pendingIntent)
 
             NotificationManagerCompat.from(context).notify(notificationGroup.id, build())
         }
