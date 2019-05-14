@@ -8,8 +8,8 @@ import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
-import java.math.BigDecimal
-import java.text.DecimalFormat
+import io.mozocoin.sdk.utils.displayString
+import io.mozocoin.sdk.utils.safe
 
 enum class NotificationGroup(val id: Int) {
     BALANCE_SENT(100),
@@ -64,27 +64,27 @@ enum class NotificationGroup(val id: Int) {
 
             totalNotice = Math.max(totalNotice - 1, 1)
 
-            var totalAmount = getCurrentlyGroupExtras(context, notificationGroup.name, TOTAL_AMOUNT)
-                    ?.getDouble(TOTAL_AMOUNT, 0.0) ?: 0.0
+            var totalAmount = MozoTx.getInstance().amountNonDecimal(message.amount.safe())
+            getCurrentlyGroupExtras(context, notificationGroup.name, TOTAL_AMOUNT)
+                    ?.getString(TOTAL_AMOUNT)
+                    ?.let { totalString ->
+                        totalString.toBigDecimalOrNull()?.let {
+                            totalAmount = totalAmount.plus(it)
+                        }
+                    }
 
-            totalAmount += MozoTx.getInstance()
-                    .amountNonDecimal(message.amount ?: BigDecimal.ZERO)
-                    .toDouble()
-
-            totalAmount = DecimalFormat("#.##").format(totalAmount).toDouble()
-
-            groupExtras.putDouble(TOTAL_AMOUNT, totalAmount)
+            groupExtras.putString(TOTAL_AMOUNT, totalAmount.toString())
 
             return when (notificationGroup) {
                 BALANCE_SENT      -> context.getString(
                         R.string.mozo_notify_content_sent_group,
                         totalNotice,
-                        totalAmount.toString()
+                        totalAmount.displayString()
                 )
                 BALANCE_RECEIVE   -> context.getString(
                         R.string.mozo_notify_content_received_group,
                         totalNotice,
-                        totalAmount.toString()
+                        totalAmount.displayString()
                 )
                 CUSTOMER_COME_IN  -> context.getString(
                         R.string.mozo_notify_content_customer_join_group,
@@ -104,7 +104,7 @@ enum class NotificationGroup(val id: Int) {
                 else              -> context.getString(
                         R.string.mozo_notify_content_airdrop_group,
                         totalNotice,
-                        totalAmount.toString()
+                        totalAmount.displayString()
                 )
             }
         }
@@ -120,10 +120,10 @@ enum class NotificationGroup(val id: Int) {
         }
 
         fun getIcon(type: String?) = when (type) {
-            Constant.NOTIFY_EVENT_BALANCE_CHANGED -> R.drawable.ic_notification_balance_changed
-            Constant.NOTIFY_EVENT_CUSTOMER_CAME   -> R.drawable.ic_customer_came_grouped
-            Constant.NOTIFY_EVENT_AIRDROPPED      -> R.drawable.ic_notification_airdrops_grouped
-            else                                  -> R.drawable.ic_notification_invite_grouped
+            Constant.NOTIFY_EVENT_BALANCE_CHANGED -> R.drawable.im_notification_balance_changed_group
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME   -> R.drawable.im_notification_customer_came_group
+            Constant.NOTIFY_EVENT_AIRDROPPED      -> R.drawable.im_notification_airdrop_group
+            else                                  -> R.drawable.im_notification_airdrop_invite_group
         }
 
         fun getKey(message: BroadcastDataContent) = when (message.event) {

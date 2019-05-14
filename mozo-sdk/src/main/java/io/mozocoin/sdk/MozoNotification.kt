@@ -47,7 +47,7 @@ class MozoNotification {
             Constant.NOTIFY_EVENT_AIRDROPPED -> R.drawable.im_notification_airdrop
             Constant.NOTIFY_EVENT_AIRDROP_INVITE -> R.drawable.im_notification_airdrop_invite
             Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came
-            else -> R.drawable.im_notification_received_sent
+            else -> R.drawable.im_notification_balance_changed
         }
 
         @JvmStatic
