@@ -107,6 +107,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
         val context = MozoSDK.getInstance().context
         val notification = MozoNotification.prepareNotification(context, message)
+        val notificationGroup = NotificationGroup.getKey(message)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event!!)) {
             createChannel(message.event).join()
@@ -127,22 +128,12 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
+                .setGroup(notificationGroup.name)
 
-        groupNotification(context, message, notification, builder)
-    }
+        NotificationManagerCompat.from(context)
+                .notify(System.currentTimeMillis().toInt(), builder.build())
 
-    private fun groupNotification(
-            context: Context,
-            message: BroadcastDataContent,
-            notification: io.mozocoin.sdk.common.model.Notification,
-            notice: NotificationCompat.Builder) = synchronized(this) {
-
-        val notificationGroup = NotificationGroup.getKey(message)
-
-        notice.setGroup(notificationGroup.name)
-        NotificationManagerCompat.from(context).notify(System.currentTimeMillis().toInt(), notice.build())
-
-        NotificationCompat.Builder(context, message.event!!).apply {
+        NotificationCompat.Builder(context, message.event).apply {
             val line = "${notification.titleDisplay()} ${notification.contentDisplay()}"
             val items = NotificationGroup.getItems(context, message, extras, line)
             val title = NotificationGroup.getContentTitle(context, message) ?: line
@@ -158,7 +149,9 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             setContentTitle(title)
             setSmallIcon(R.drawable.ic_mozo_notification)
             setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
+            setContentIntent(pendingIntent)
             setGroup(notificationGroup.name)
+            setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
             setGroupSummary(true)
 
             NotificationManagerCompat.from(context).notify(notificationGroup.id, build())
