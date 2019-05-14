@@ -33,9 +33,21 @@ internal class ResetPinActivity : BaseActivity(), InteractionListener {
         replace(R.id.reset_pin_content_frame, fragments[0])
     }
 
+    override fun onBackPressed() {
+        val current = supportFragmentManager.findFragmentById(R.id.reset_pin_content_frame)
+        if (current !is EnterPinFragment) {
+            finish()
+        }
+    }
+
     override fun getCloseButton(): TextView? = reset_pin_toolbar?.button_close
 
     override fun getResetPinModel(): ResetPinViewModel = mModel
+
+    override fun hideToolbarActions(left: Boolean, right: Boolean) {
+        reset_pin_toolbar?.showBackButton(!left)
+        reset_pin_toolbar?.showCloseButton(!right)
+    }
 
     override fun requestEnterPin() {
         replace(R.id.reset_pin_content_frame, fragments[1], "enter_pin")

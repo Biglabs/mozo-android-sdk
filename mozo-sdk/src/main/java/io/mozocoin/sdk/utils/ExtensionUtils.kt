@@ -38,12 +38,14 @@ fun Activity.setMatchParent() {
 }
 
 fun FragmentActivity.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
+    if (isFinishing || isDestroyed) return
     supportFragmentManager.beginTransaction().replace(id, fragment).apply {
         if (backStackName != null) addToBackStack(backStackName)
     }.commit()
 }
 
 fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
+    if (!isAdded || isRemoving) return
     childFragmentManager.beginTransaction().run {
         childFragmentManager.fragments.forEach {
             hide(it)
