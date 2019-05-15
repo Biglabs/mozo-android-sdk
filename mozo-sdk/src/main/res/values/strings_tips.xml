@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tips_retailer_question">
+        <item>How do MozoX Tokens work as a rewards program?</item>
+        <item>How can I attract customers with MozoX?</item>
+        <item>Can I share Administrator rights with another manager at my store?</item>
+        <item>What are hashtags? Why do I need to choose them?</item>
+        <item>Can I get back MozoX Tokens after setting up an airdrop event?</item>
+        <item>When will MozoX tokens airdrop to my customers?</item>
+        <item>What is the difference between MozoX and other types of advertising?</item>
+    </string-array>
+
+    <string-array name="tips_retailer_answer">
+        <item>Beginning is as easy as downloading our app and purchasing the number of MozoX Tokens you’d like to buy. Soon after your purchase, MozoX Tokens will be transferred directly to your digital wallet and you can begin. By choosing how many MozoX Tokens to reward and when and where to reward them, store and venue operators can choose where they want their customers to go and how they interact with their products and services. By rewarding MozoX Tokens for visits, browsing, and purchases, customers are incentivized to go where you want them. Once enough MozoX Tokens have been accumulated, customers can redeem them for deals, discounts, and rewards.</item>
+        <item>By offering MozoX Tokens for visiting your venue, customers will have an incentive to come there and by offering discounts through a redemption program you are ensured that customers will want to keep collecting MozoX Tokens.</item>
+        <item>We do not recommend sharing Administrator rights with your employees. MozoX Retalier App allows for sub-accounts which grant permissions similar to the Administrator, except that they are not able to edit store information, beacon or sub-accounts. Please note that the sub-account wallet is set to zero when the sub-account is created. The Admiistrator will need to tranfer MozoX Tokens to a sub-account in order for the sub-account holder to create airdrop events..</item>
+        <item>Hashtags are a word or phrase preceded by a hash sign (#). On MozoX, hashtags are used to help identify your venue according to the description you want customers to discover you by.</item>
+        <item>One you have finalized and saved an airdrop event, you cannot retireve the MozoX Tokens set aside for the event. If the airdrop event status is &quot;Scheduled&quot; or &quot;Active&quot; you are obligated to use the MozoX tokens for the duration of the event. Once the event status is &quot;Ended&quot;, you can retrieve any MozoX Tokens that have not been airdropped to customers.</item>
+        <item>If they walk into beacon range of your store in the time the airdrop event happens, they will receive MozoX</item>
+        <item>With MozoX, you only reward customers when they physically enter your venue, so there is a 1:1 correlation between advertizing monies spent and customers in your store. Other advertising channels do not offer any guarantees that their clicks or banners will result in customers in your venue.</item>
+    </string-array>
+
+    <string-array name="tips_retailer_url">
+        <item>#home-faq-11</item>
+        <item>retailer/contact-us/#retailer-faq-about-4</item>
+        <item>retailer/contact-us/#retailer-faq-usage-2</item>
+        <item>retailer/contact-us/#retailer-faq-register-3</item>
+        <item>retailer/contact-us/#retailer-faq-settings-4</item>
+        <item>retailer/contact-us/#retailer-faq-usage-3</item>
+        <item>retailer/contact-us/#retailer-faq-about-5</item>
+    </string-array>
+
+
+    <string-array name="tips_shopper_question">
+        <item>How can I earn MozoX?</item>
+        <item>What are MozoX Tokens? What are MozoX Tokens use for?</item>
+        <item>How to send MozoX as gift to my friends?</item>
+        <item>How long I have to wait to get the next airdrop from the same event of the store?</item>
+        <item>Why do I need to turn on Bluetooth to get MozoX from airdrop events?</item>
+    </string-array>
+
+    <string-array name="tips_shopper_answer">
+        <item>You can easily see airdrop events of stores around or nearby you on MozoX map. When you visit these stores in the airdrop time, you will get Mozo. The more you discover stores the more you get MozoX</item>
+        <item>MozoX Tokens are digital utility tokens that can be used by merchants to reward customers for visiting their venues. Customers can collect MozoX Tokens and redeem them for discounts on products and services as determined by each merchant.</item>
+        <item>On the wallet screen, using the feature &quot;Send MozoX&quot; to send MozoX to your friend\'s wallet</item>
+        <item>The store set &quot;Airdrop Frequency&quot; for each event that they create. As you visit the store after that time, you will get the next airdrop. The frequency is usually 1 day.</item>
+        <item>Each store in MozoX system has one or more sensor Beacons. When the user visits the store and turns on Bluetooth, the beacon will interact with MozoX application via Bluetooth. So you can get airdrop automatically from the system.</item>
+    </string-array>
+
+    <string-array name="tips_shopper_url">
+        <item>#home-faq-10</item>
+        <item>#home-faq-shopper-2</item>
+        <item>#home-faq-shopper-3</item>
+        <item>#home-faq-shopper-4</item>
+        <item>#home-faq-shopper-5</item>
+    </string-array>
+</resources>

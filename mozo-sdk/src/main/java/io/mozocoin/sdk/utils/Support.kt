@@ -98,6 +98,12 @@ class Support {
             else -> Constant.DOMAIN_ETHER_SCAN_PRODUCTION
         }
 
+        internal fun domainLandingPage() = when (MozoSDK.serviceEnvironment) {
+            MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_LANDING_PAGE_DEV
+            MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_LANDING_PAGE_STAGING
+            else -> Constant.DOMAIN_LANDING_PAGE_PRODUCTION
+        }
+
         internal fun getDefaultCurrency() = ExchangeRateData(
                 ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, SharedPrefsUtils.getDefaultCurrencyRate()),
                 ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, BigDecimal.ZERO)
