@@ -30,6 +30,15 @@ internal class MozoAPIsService private constructor() {
 
     private val mozoAPIs: MozoAPIs by lazy { createService() }
 
+    fun checkSystemStatus(
+            context: Context,
+            callback: ((data: Status?, errorCode: String?) -> Unit)?
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.checkSystemStatus(), callback, null, false)
+        }
+    }
+
     fun getProfile(context: Context, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getProfile(), callback, retry)
@@ -277,6 +286,7 @@ internal class MozoAPIsService private constructor() {
             override fun onFailure(call: Call<T>, t: Throwable) {
                 callback?.invoke(null, null)
 
+                if(!handleError) return
                 if (context is BaseActivity || context is MozoAuthActivity || shouldHandleException(call)) {
                     if (context is Activity && (context.isFinishing || context.isDestroyed)) {
                         return

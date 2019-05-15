@@ -5,6 +5,12 @@ import retrofit2.Call
 import retrofit2.http.*
 
 internal interface MozoAPIs {
+    /**
+     * Check System status
+     */
+    @GET("system-status")
+    fun checkSystemStatus(): Call<Base<Status>>
+
     @GET("${MozoAPIsService.APIS_SOLOMON}/contacts")
     fun getContacts(): Call<Base<BaseData<Contact>>>
 
