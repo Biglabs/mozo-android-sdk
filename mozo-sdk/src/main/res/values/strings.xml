@@ -160,8 +160,8 @@
     <string name="mozo_payment_request_text_send_to">Send request to</string>
     <string name="mozo_payment_request_text_send_success">Send Request Successful</string>
     <string name="mozo_payment_request_text_sent">You sent Request MozoX to:</string>
-    <string name="mozo_payment_request_text_empty">Requested list is empty</string>
-    <string name="mozo_payment_request_text_empty_msg" translatable="false">When your friends send a request MozoX to you, it will display here.</string>
+    <string name="mozo_payment_request_text_empty">Requested List is empty or your connection is too slow</string>
+    <string name="mozo_payment_request_text_empty_msg" translatable="false">Any MozoX Request from your friends will be displayed here.</string>
     <string name="mozo_payment_request_item_label_from">From:</string>
     <string name="mozo_payment_request_item_label_amount">Request:</string>
     <string name="mozo_payment_request_item_amount" translatable="false">%s MozoX</string>
@@ -189,8 +189,8 @@
     <string name="mozo_transaction_view_button">View Transaction Detail</string>
     <string name="mozo_transaction_history_title">Transaction History</string>
     <string name="mozo_transaction_history_offchain_text">MozoX Offchain Wallet</string>
-    <string name="mozo_transaction_history_empty">Transaction history list is empty</string>
-    <string name="mozo_transaction_history_empty_msg" translatable="false">You can transfer MozoX to your friends or request them to send you MozoX by using MozoX Wallet</string>
+    <string name="mozo_transaction_history_empty">Transaction History is empty or your connection is too slow</string>
+    <string name="mozo_transaction_history_empty_msg" translatable="false">Transfer MozoX to your friends or request them to send you MozoX.</string>
 
     <string name="mozo_text_gender_none">None</string>
     <string name="mozo_text_gender_male">Male</string>
