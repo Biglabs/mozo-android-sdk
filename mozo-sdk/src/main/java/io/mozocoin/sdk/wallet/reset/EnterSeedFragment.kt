@@ -72,6 +72,8 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
             if (KeyEvent.KEYCODE_ENDCALL == actionId) {
                 reset_pin_sub_title?.requestFocus()
                 reset_pin_sub_title?.hideKeyboard()
+
+                checkAllInputs()
             }
             false
         }

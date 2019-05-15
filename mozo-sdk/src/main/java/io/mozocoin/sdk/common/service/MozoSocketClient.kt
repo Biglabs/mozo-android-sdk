@@ -65,13 +65,13 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         when (broadcast.event.toLowerCase()) {
                             /* Reload balance */
                             Constant.NOTIFY_EVENT_AIRDROP_INVITE,
-                            Constant.NOTIFY_EVENT_BALANCE_CHANGED  -> {
+                            Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                             }
                             Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
                                 MozoSDK.getInstance().contactViewModel.fetchStore(MozoSDK.getInstance().context)
                             }
-                            Constant.NOTIFY_EVENT_CONVERT          -> {
+                            Constant.NOTIFY_EVENT_CONVERT -> {
                                 EventBus.getDefault().post(MessageEvent.ConvertOnChain())
                             }
                         }
@@ -130,13 +130,11 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 .setContentIntent(pendingIntent)
                 .setGroup(notificationGroup.name)
 
-        NotificationManagerCompat.from(context)
-                .notify(System.currentTimeMillis().toInt(), builder.build())
-
-        NotificationCompat.Builder(context, message.event).apply {
+        val group = NotificationCompat.Builder(context, message.event).apply {
             val line = "${notification.titleDisplay()} ${notification.contentDisplay()}"
             val items = NotificationGroup.getItems(context, message, extras, line)
             val title = NotificationGroup.getContentTitle(context, message) ?: line
+            val totalText = NotificationGroup.getContentText(context, message, extras) ?: line
 
             setStyle(NotificationCompat.InboxStyle().run {
                 items?.forEach { addLine(it) }
@@ -144,21 +142,25 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 setBigContentTitle(title)
             })
 
-            color = context.color(R.color.mozo_color_primary)
-            NotificationGroup.getContentText(context, message, extras)?.let { setContentText(it) }
-            setContentTitle(title)
-            setSmallIcon(R.drawable.ic_mozo_notification)
-            setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
-            setGroup(notificationGroup.name)
-            setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-            setGroupSummary(true)
-            setDefaults(Notification.DEFAULT_ALL)
-            setAutoCancel(true)
-
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M)
                 setContentIntent(pendingIntent)
 
-            NotificationManagerCompat.from(context).notify(notificationGroup.id, build())
+            color = context.color(R.color.mozo_color_primary)
+            setAutoCancel(true)
+            setContentTitle(title)
+            setDefaults(Notification.DEFAULT_ALL)
+            setGroup(notificationGroup.name)
+            setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+            setGroupSummary(true)
+            setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
+            setNumber(items?.size ?: 0)
+            setSmallIcon(R.drawable.ic_mozo_notification)
+            setSubText(totalText)
+        }
+
+        NotificationManagerCompat.from(context).apply {
+            notify(System.currentTimeMillis().toInt(), builder.build())
+            notify(notificationGroup.id, group.build())
         }
     }
 

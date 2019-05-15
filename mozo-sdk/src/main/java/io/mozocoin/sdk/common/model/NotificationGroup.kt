@@ -78,32 +78,26 @@ enum class NotificationGroup(val id: Int) {
             return when (notificationGroup) {
                 BALANCE_SENT      -> context.getString(
                         R.string.mozo_notify_content_sent_group,
-                        totalNotice,
                         totalAmount.displayString()
                 )
                 BALANCE_RECEIVE   -> context.getString(
                         R.string.mozo_notify_content_received_group,
-                        totalNotice,
                         totalAmount.displayString()
                 )
                 CUSTOMER_COME_IN  -> context.getString(
                         R.string.mozo_notify_content_customer_join_group,
-                        totalNotice,
                         totalNotice
                 )
                 CUSTOMER_COME_OUT -> context.getString(
                         R.string.mozo_notify_content_customer_left_group,
-                        totalNotice,
                         totalNotice
                 )
                 INVITE            -> context.getString(
                         R.string.mozo_notify_content_invited_group,
-                        totalNotice,
                         totalNotice
                 )
                 else              -> context.getString(
                         R.string.mozo_notify_content_airdrop_group,
-                        totalNotice,
                         totalAmount.displayString()
                 )
             }

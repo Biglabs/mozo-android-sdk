@@ -136,12 +136,12 @@
     <string name="mozo_notify_title_come_in_group" translatable="false">Customers arrived</string>
     <string name="mozo_notify_title_just_left_group" translatable="false">Customers left</string>
     <string name="mozo_notify_title_invited_group" translatable="false">Your friends have joined MozoX</string>
-    <string name="mozo_notify_content_sent_group" translatable="false">%d more notifications, total sent: %s MozoX</string>
-    <string name="mozo_notify_content_received_group" translatable="false">%d more notifications, total received: %s MozoX </string>
-    <string name="mozo_notify_content_invited_group" translatable="false">%d more notifications, %d friends joined MozoX</string>
-    <string name="mozo_notify_content_airdrop_group" translatable="false">%d more notifications, total received from Airdrop Events: %s MozoX</string>
-    <string name="mozo_notify_content_customer_join_group" translatable="false">%d more notifications, %d customers arrived</string>
-    <string name="mozo_notify_content_customer_left_group" translatable="false">%d more notifications, %d customers have just left</string>
+    <string name="mozo_notify_content_sent_group" translatable="false">total sent: %s MozoX</string>
+    <string name="mozo_notify_content_received_group" translatable="false">total received: %s MozoX </string>
+    <string name="mozo_notify_content_invited_group" translatable="false">%d friends joined MozoX</string>
+    <string name="mozo_notify_content_airdrop_group" translatable="false">total received from Airdrop Events: %s MozoX</string>
+    <string name="mozo_notify_content_customer_join_group" translatable="false">%d customers arrived</string>
+    <string name="mozo_notify_content_customer_left_group" translatable="false">%d customers have just left</string>
 
     <string name="mozo_maintenance_title" translatable="false">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>
     <string name="mozo_maintenance_tips_title" translatable="false">Did you know?</string>
