@@ -125,23 +125,26 @@
     <string name="mozo_pin_reset_msg_processing" translatable="false">Reset PIN is processing</string>
     <string name="mozo_pin_reset_msg_done" translatable="false">PIN Reset Successful</string>
 
-    <string name="mozo_notify_title_come_in">Customer has entered</string>
-    <string name="mozo_notify_title_just_left">Customer has left</string>
+    <plurals name="mozo_notify_title_come_in">
+        <item quantity="one">Customer arrived</item>
+        <item quantity="other">Customers arrived</item>
+    </plurals>
+    <plurals name="mozo_notify_title_leave">
+        <item quantity="one">Customer depart</item>
+        <item quantity="other">Customers depart</item>
+    </plurals>
     <string name="mozo_notify_title_received">Received %s MozoX</string>
     <string name="mozo_notify_title_sent">Sent %s MozoX</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
     <string name="mozo_notify_content_invited">%s joined MozoX</string>
 
-    <string name="mozo_notify_title_come_in_group" translatable="false">Customers arrived</string>
-    <string name="mozo_notify_title_just_left_group" translatable="false">Customers left</string>
+    <string name="mozo_notify_content_customer_join_group" translatable="false">Total Customer Arrived: %d</string>
+    <string name="mozo_notify_content_customer_left_group" translatable="false">Total Customer Depart: %d</string>
     <string name="mozo_notify_title_invited_group" translatable="false">Your friends have joined MozoX</string>
-    <string name="mozo_notify_content_sent_group" translatable="false">total sent: %s MozoX</string>
-    <string name="mozo_notify_content_received_group" translatable="false">total received: %s MozoX </string>
-    <string name="mozo_notify_content_invited_group" translatable="false">%d friends joined MozoX</string>
-    <string name="mozo_notify_content_airdrop_group" translatable="false">total received from Airdrop Events: %s MozoX</string>
-    <string name="mozo_notify_content_customer_join_group" translatable="false">%d customers arrived</string>
-    <string name="mozo_notify_content_customer_left_group" translatable="false">%d customers have just left</string>
+    <string name="mozo_notify_content_sent_group" translatable="false">Total Sent: %s MozoX</string>
+    <string name="mozo_notify_content_received_group" translatable="false">Total Received: %s MozoX</string>
+    <string name="mozo_notify_content_invited_group" translatable="false">Total Friends have joined: %d</string>
 
     <string name="mozo_maintenance_title" translatable="false">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>
     <string name="mozo_maintenance_tips_title" translatable="false">Did you know?</string>

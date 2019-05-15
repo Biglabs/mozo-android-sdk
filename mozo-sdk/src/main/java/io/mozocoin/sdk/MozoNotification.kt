@@ -10,7 +10,10 @@ import io.mozocoin.sdk.common.model.Notification
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.transaction.TransactionDetails
-import io.mozocoin.sdk.utils.*
+import io.mozocoin.sdk.utils.Support
+import io.mozocoin.sdk.utils.censor
+import io.mozocoin.sdk.utils.displayString
+import io.mozocoin.sdk.utils.safe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -72,7 +75,11 @@ class MozoNotification {
                     content = context.getString(R.string.mozo_notify_content_invited, phone)
                 }
                 Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
-                    title = context.string(if (message.isComeIn) R.string.mozo_notify_title_come_in else R.string.mozo_notify_title_just_left)
+                    title = context.resources.getQuantityString(
+                            if (message.isComeIn) R.plurals.mozo_notify_title_come_in
+                            else R.plurals.mozo_notify_title_leave,
+                            1
+                    )
                     message.phoneNo?.let {
                         content = it.censor(3, 4)
                     }

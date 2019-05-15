@@ -133,7 +133,11 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         val group = NotificationCompat.Builder(context, message.event).apply {
             val line = "${notification.titleDisplay()} ${notification.contentDisplay()}"
             val items = NotificationGroup.getItems(context, message, extras, line)
-            val title = NotificationGroup.getContentTitle(context, message) ?: line
+            val title = NotificationGroup.getContentTitle(
+                    context,
+                    message,
+                    count = items?.size ?: 0
+            ) ?: line
             val totalText = NotificationGroup.getContentText(context, message, extras) ?: line
 
             setStyle(NotificationCompat.InboxStyle().run {

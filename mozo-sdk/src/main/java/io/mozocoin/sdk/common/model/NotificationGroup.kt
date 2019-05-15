@@ -62,8 +62,6 @@ enum class NotificationGroup(val id: Int) {
                     ?.filter { it.groupKey.contains(notificationGroup.name, true) }
                     ?.size ?: 0
 
-            totalNotice = Math.max(totalNotice - 1, 1)
-
             var totalAmount = MozoTx.getInstance().amountNonDecimal(message.amount.safe())
             getCurrentlyGroupExtras(context, notificationGroup.name, TOTAL_AMOUNT)
                     ?.getString(TOTAL_AMOUNT)
@@ -76,15 +74,15 @@ enum class NotificationGroup(val id: Int) {
             groupExtras.putString(TOTAL_AMOUNT, totalAmount.toString())
 
             return when (notificationGroup) {
-                BALANCE_SENT      -> context.getString(
+                BALANCE_SENT -> context.getString(
                         R.string.mozo_notify_content_sent_group,
                         totalAmount.displayString()
                 )
-                BALANCE_RECEIVE   -> context.getString(
+                BALANCE_RECEIVE -> context.getString(
                         R.string.mozo_notify_content_received_group,
                         totalAmount.displayString()
                 )
-                CUSTOMER_COME_IN  -> context.getString(
+                CUSTOMER_COME_IN -> context.getString(
                         R.string.mozo_notify_content_customer_join_group,
                         totalNotice
                 )
@@ -92,32 +90,29 @@ enum class NotificationGroup(val id: Int) {
                         R.string.mozo_notify_content_customer_left_group,
                         totalNotice
                 )
-                INVITE            -> context.getString(
+                INVITE -> context.getString(
                         R.string.mozo_notify_content_invited_group,
                         totalNotice
                 )
-                else              -> context.getString(
-                        R.string.mozo_notify_content_airdrop_group,
+                else -> context.getString(
+                        R.string.mozo_notify_content_received_group,
                         totalAmount.displayString()
                 )
             }
         }
 
-        fun getContentTitle(context: Context, message: BroadcastDataContent) = when (getKey(message)) {
-            CUSTOMER_COME_IN  -> context.getString(R.string.mozo_notify_title_come_in_group)
-
-            CUSTOMER_COME_OUT -> context.getString(R.string.mozo_notify_title_just_left_group)
-
-            INVITE            -> context.getString(R.string.mozo_notify_content_invited_group)
-
-            else              -> null
+        fun getContentTitle(context: Context, message: BroadcastDataContent, count: Int) = when (getKey(message)) {
+            CUSTOMER_COME_IN -> context.resources.getQuantityString(R.plurals.mozo_notify_title_come_in, count)
+            CUSTOMER_COME_OUT -> context.resources.getQuantityString(R.plurals.mozo_notify_title_leave, count)
+            INVITE -> context.getString(R.string.mozo_notify_content_invited_group)
+            else -> null
         }
 
         fun getIcon(type: String?) = when (type) {
             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> R.drawable.im_notification_balance_changed_group
-            Constant.NOTIFY_EVENT_CUSTOMER_CAME   -> R.drawable.im_notification_customer_came_group
-            Constant.NOTIFY_EVENT_AIRDROPPED      -> R.drawable.im_notification_airdrop_group
-            else                                  -> R.drawable.im_notification_airdrop_invite_group
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came_group
+            Constant.NOTIFY_EVENT_AIRDROPPED -> R.drawable.im_notification_airdrop_group
+            else -> R.drawable.im_notification_airdrop_invite_group
         }
 
         fun getKey(message: BroadcastDataContent) = when (message.event) {
@@ -126,13 +121,13 @@ enum class NotificationGroup(val id: Int) {
                     BALANCE_SENT
                 else BALANCE_RECEIVE
             }
-            Constant.NOTIFY_EVENT_CUSTOMER_CAME   -> {
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
                 if (message.isComeIn) CUSTOMER_COME_IN
                 else CUSTOMER_COME_OUT
             }
-            Constant.NOTIFY_EVENT_AIRDROP_INVITE  -> INVITE
+            Constant.NOTIFY_EVENT_AIRDROP_INVITE -> INVITE
 
-            else                                  -> AIRDROP
+            else -> AIRDROP
         }
     }
 }

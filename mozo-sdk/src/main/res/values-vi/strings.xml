@@ -106,8 +106,12 @@
     <string name="mozo_pin_msg_enter_incorrect">Sai mã PIN</string>
     <string name="mozo_pin_msg_error">Tạo ví thất bại</string>
 
-    <string name="mozo_notify_title_come_in">Khách vào cửa hàng</string>
-    <string name="mozo_notify_title_just_left">Khách vừa đi khỏi</string>
+    <plurals name="mozo_notify_title_come_in">
+        <item quantity="other">Khách vào cửa hàng</item>
+    </plurals>
+    <plurals name="mozo_notify_title_leave">
+        <item quantity="other">Khách vừa đi khỏi</item>
+    </plurals>
     <string name="mozo_notify_title_received">Đã nhận %s MozoX</string>
     <string name="mozo_notify_title_sent">Đã gửi %s MozoX</string>
     <string name="mozo_notify_content_from">Từ %s</string>

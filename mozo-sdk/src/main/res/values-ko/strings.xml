@@ -106,8 +106,12 @@
     <string name="mozo_pin_msg_enter_incorrect">PIN 코드가 잘못되었습니다</string>
     <string name="mozo_pin_msg_error">월렛 생성에 실패했습니다</string>
 
-    <string name="mozo_notify_title_come_in">고객이 상점에 방문하였습니다.</string>
-    <string name="mozo_notify_title_just_left">고객이 떠났습니다</string>
+    <plurals name="mozo_notify_title_come_in">
+        <item quantity="other">고객이 상점에 방문하였습니다.</item>
+    </plurals>
+    <plurals name="mozo_notify_title_leave">
+        <item quantity="other">고객이 떠났습니다</item>
+    </plurals>
     <string name="mozo_notify_title_received">MozoX %s 를 받았습니다.</string>
     <string name="mozo_notify_title_sent">MozoX %s 를 보냈습니다.</string>
     <string name="mozo_notify_content_from">%s 부터</string>
