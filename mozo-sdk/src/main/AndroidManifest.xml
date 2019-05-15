@@ -34,14 +34,6 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
 
         <activity
-            android:name=".ui.PermissionWrapperActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/MozoTheme.Transparent"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
-
-        <activity
             android:name=".ui.SecurityActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
