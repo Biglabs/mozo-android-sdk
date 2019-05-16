@@ -7,14 +7,16 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@android:id/icon"
-        android:layout_width="160dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintBottom_toTopOf="@android:id/text1"
-        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_max="160dp"
         app:srcCompat="@drawable/ic_content_maintenance" />
 
     <TextView
@@ -79,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
-                android:maxLines="12"
+                android:maxLines="9"
                 android:textColor="@color/mozo_color_title"
                 android:textSize="@dimen/mozo_text_size"
                 tools:text="@tools:sample/lorem/random" />
