@@ -79,9 +79,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
+                android:maxLines="12"
                 android:textColor="@color/mozo_color_title"
                 android:textSize="@dimen/mozo_text_size"
-                tools:maxLines="6"
                 tools:text="@tools:sample/lorem/random" />
 
             <io.mozocoin.sdk.ui.view.MozoIconTextView

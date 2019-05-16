@@ -67,6 +67,13 @@ internal class MaintenanceActivity : BaseActivity() {
         mSystemStatusCheckJob = null
     }
 
+    override fun onBackPressed() {
+        /**
+         * Not allowed to back to previous screen during Maintenance mode
+         * super.onBackPressed()
+         */
+    }
+
     private fun intervalStatusCheck() {
         mSystemStatusCheckJob?.cancel()
         mSystemStatusCheckJob = GlobalScope.launch {
