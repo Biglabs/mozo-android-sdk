@@ -12,11 +12,13 @@ import androidx.core.view.setPadding
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.ui.widget.onBackPress
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
 import kotlinx.coroutines.*
+import org.greenrobot.eventbus.EventBus
 
 internal class EnterPinFragment : ResetPinBaseFragment() {
 
@@ -89,7 +91,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
     override fun onCloseClicked() {
         if (!isVisible) return
 
-        activity?.finish()
+        EventBus.getDefault().post(MessageEvent.CloseActivities())
     }
 
     private fun showConfirmUI() {

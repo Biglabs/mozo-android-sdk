@@ -23,19 +23,16 @@ enum class NotificationGroup(val id: Int) {
         private const val NOTIFY_ITEM = "notify_item"
         private const val TOTAL_AMOUNT = "total_amount"
 
-        private fun getCurrentlyGroupExtras(context: Context, groupKey: String, key: String): Bundle? = synchronized(this) {
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+        private fun getCurrentlyGroupExtras(notificationManager: NotificationManager, groupKey: String, key: String): Bundle? = synchronized(this) {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                manager?.activeNotifications
-                        ?.firstOrNull {
-                            it.groupKey.contains(groupKey, true)
-                                    && it.notification.extras.containsKey(key)
-                        }?.notification?.extras
+                notificationManager.activeNotifications?.firstOrNull {
+                    it.groupKey.contains(groupKey, true) && it.notification.extras.containsKey(key)
+                }?.notification?.extras
             } else null
         }
 
-        fun getItems(context: Context, message: BroadcastDataContent, groupExtras: Bundle? = null, newItem: String? = null): List<String>? {
-            var items = getCurrentlyGroupExtras(context, getKey(message).name, NOTIFY_ITEM)
+        fun getItems(notificationManager: NotificationManager, message: BroadcastDataContent, groupExtras: Bundle? = null, newItem: String? = null): List<String>? {
+            var items = getCurrentlyGroupExtras(notificationManager, getKey(message).name, NOTIFY_ITEM)
                     ?.getString(NOTIFY_ITEM)
 
             groupExtras?.apply {
@@ -52,18 +49,17 @@ enum class NotificationGroup(val id: Int) {
             return items?.split("|")
         }
 
-        fun getContentText(context: Context, message: BroadcastDataContent, groupExtras: Bundle): String? {
+        fun getContentText(context: Context, notificationManager: NotificationManager, message: BroadcastDataContent, groupExtras: Bundle): String? {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                 return null
 
             val notificationGroup = getKey(message)
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-            var totalNotice = manager?.activeNotifications
-                    ?.filter { it.groupKey.contains(notificationGroup.name, true) }
-                    ?.size ?: 0
+            val totalNotice = notificationManager.activeNotifications?.filter {
+                it.groupKey.contains(notificationGroup.name, true)
+            }?.size ?: 0
 
             var totalAmount = MozoTx.getInstance().amountNonDecimal(message.amount.safe())
-            getCurrentlyGroupExtras(context, notificationGroup.name, TOTAL_AMOUNT)
+            getCurrentlyGroupExtras(notificationManager, notificationGroup.name, TOTAL_AMOUNT)
                     ?.getString(TOTAL_AMOUNT)
                     ?.let { totalString ->
                         totalString.toBigDecimalOrNull()?.let {

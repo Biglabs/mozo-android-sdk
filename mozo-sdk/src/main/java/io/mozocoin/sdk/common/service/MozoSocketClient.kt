@@ -119,7 +119,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 MozoNotification.prepareDataIntent(notification),
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val builder = NotificationCompat.Builder(context, message.event!!)
+        val singleNotify = NotificationCompat.Builder(context, message.event!!)
                 .setSmallIcon(R.drawable.ic_mozo_notification)
                 .setLargeIcon(context.bitmap(notification.icon()))
                 .setColor(context.color(R.color.mozo_color_primary))
@@ -129,16 +129,19 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
                 .setGroup(notificationGroup.name)
+        NotificationManagerCompat.from(context)
+                .notify(System.currentTimeMillis().toInt(), singleNotify.build())
+
 
         val group = NotificationCompat.Builder(context, message.event).apply {
             val line = "${notification.titleDisplay()} ${notification.contentDisplay()}"
-            val items = NotificationGroup.getItems(context, message, extras, line)
+            val items = NotificationGroup.getItems(notificationManager, message, extras, line)
             val title = NotificationGroup.getContentTitle(
                     context,
                     message,
                     count = items?.size ?: 0
             ) ?: line
-            val totalText = NotificationGroup.getContentText(context, message, extras) ?: line
+            val totalText = NotificationGroup.getContentText(context, notificationManager, message, extras) ?: line
 
             setStyle(NotificationCompat.InboxStyle().run {
                 items?.forEach { addLine(it) }
@@ -161,11 +164,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             setSmallIcon(R.drawable.ic_mozo_notification)
             setSubText(totalText)
         }
-
-        NotificationManagerCompat.from(context).apply {
-            notify(System.currentTimeMillis().toInt(), builder.build())
-            notify(notificationGroup.id, group.build())
-        }
+        NotificationManagerCompat.from(context).notify(notificationGroup.id, group.build())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

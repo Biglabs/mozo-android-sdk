@@ -13,6 +13,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.hideKeyboard
@@ -22,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
 import org.web3j.crypto.MnemonicUtils
 
 internal class EnterSeedFragment : ResetPinBaseFragment() {
@@ -186,7 +188,7 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
     override fun onCloseClicked() {
         if (!isVisible) return
         if (isCancelableRightButton) {
-            activity?.finish()
+            EventBus.getDefault().post(MessageEvent.CloseActivities())
 
         } else {
             reset_pin_sub_title?.requestFocus()
