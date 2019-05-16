@@ -118,6 +118,9 @@
     <string name="mozo_notify_content_to">Đến %s</string>
     <string name="mozo_notify_content_invited">%s đã tham gia MozoX</string>
 
+    <string name="mozo_notify_content_sent_group">Tổng: %s MozoX</string>
+    <string name="mozo_notify_content_received_group">Tổng: %s MozoX</string>
+
     <string name="mozo_payment_request_title">Yêu cầu MozoX</string>
     <string name="mozo_payment_request_amount">Tổng nhận</string>
     <string name="mozo_payment_request_tab_list">Danh sách được yêu cầu</string>

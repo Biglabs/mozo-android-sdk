@@ -142,8 +142,8 @@
     <string name="mozo_notify_content_customer_join_group" translatable="false">Total Customer Arrived: %d</string>
     <string name="mozo_notify_content_customer_left_group" translatable="false">Total Customer Depart: %d</string>
     <string name="mozo_notify_title_invited_group" translatable="false">Your friends have joined MozoX</string>
-    <string name="mozo_notify_content_sent_group" translatable="false">Total Sent: %s MozoX</string>
-    <string name="mozo_notify_content_received_group" translatable="false">Total Received: %s MozoX</string>
+    <string name="mozo_notify_content_sent_group" translatable="false">Total: %s MozoX</string>
+    <string name="mozo_notify_content_received_group" translatable="false">Total: %s MozoX</string>
     <string name="mozo_notify_content_invited_group" translatable="false">Total Friends have joined: %d</string>
 
     <string name="mozo_maintenance_title" translatable="false">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>

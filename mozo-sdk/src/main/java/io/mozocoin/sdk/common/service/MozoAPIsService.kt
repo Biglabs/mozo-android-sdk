@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.authentication.MozoAuthActivity
 import io.mozocoin.sdk.common.Constant
@@ -255,7 +256,10 @@ internal class MozoAPIsService private constructor() {
                     if (!body.isSuccess && handleError) {
 
                         if (context is Activity && !context.isFinishing && !context.isDestroyed) {
-                            ErrorCode.findByKey(body.errorCode)?.let {
+                            if (ErrorCode.ERROR_MAINTAINING.key.equals(body.errorCode, ignoreCase = true)) {
+                                MozoSDK.startMaintenanceMode(context)
+
+                            } else ErrorCode.findByKey(body.errorCode)?.let {
                                 if (it.shouldShowContactMessage()) {
                                     ErrorDialog.withContactError(context)
 
@@ -286,7 +290,7 @@ internal class MozoAPIsService private constructor() {
             override fun onFailure(call: Call<T>, t: Throwable) {
                 callback?.invoke(null, null)
 
-                if(!handleError) return
+                if (!handleError) return
                 if (context is BaseActivity || context is MozoAuthActivity || shouldHandleException(call)) {
                     if (context is Activity && (context.isFinishing || context.isDestroyed)) {
                         return
