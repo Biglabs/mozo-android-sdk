@@ -33,10 +33,29 @@ internal class MaintenanceActivity : BaseActivity() {
         button_read_more?.click {
             openTab(referenceUrl ?: return@click)
         }
+
+        randomTips()
     }
 
     override fun onResume() {
         super.onResume()
+        intervalStatusCheck()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mSystemStatusCheckJob?.cancel()
+        mSystemStatusCheckJob = null
+    }
+
+    override fun onBackPressed() {
+        /**
+         * Not allowed to back to previous screen during Maintenance mode
+         * super.onBackPressed()
+         */
+    }
+
+    private fun randomTips() {
         tipsQuestion = tipsQuestion ?: resources.getStringArray(
                 if (MozoSDK.isRetailerApp) R.array.tips_retailer_question
                 else R.array.tips_shopper_question
@@ -57,21 +76,6 @@ internal class MaintenanceActivity : BaseActivity() {
         maintenance_tips_title?.text = tipsQuestion?.getOrNull(index)
         maintenance_tips_content?.text = tipsAnswer?.getOrNull(index)
         referenceUrl = "https://${Support.domainLandingPage()}/${tipsUrls?.getOrNull(index) ?: ""}"
-
-        intervalStatusCheck()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mSystemStatusCheckJob?.cancel()
-        mSystemStatusCheckJob = null
-    }
-
-    override fun onBackPressed() {
-        /**
-         * Not allowed to back to previous screen during Maintenance mode
-         * super.onBackPressed()
-         */
     }
 
     private fun intervalStatusCheck() {

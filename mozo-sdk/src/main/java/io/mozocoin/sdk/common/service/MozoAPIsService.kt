@@ -257,7 +257,7 @@ internal class MozoAPIsService private constructor() {
 
                         if (context is Activity && !context.isFinishing && !context.isDestroyed) {
                             if (ErrorCode.ERROR_MAINTAINING.key.equals(body.errorCode, ignoreCase = true)) {
-                                MozoSDK.startMaintenanceMode(context)
+                                if (shouldHandleMaintenance(call)) MozoSDK.startMaintenanceMode(context)
 
                             } else ErrorCode.findByKey(body.errorCode)?.let {
                                 if (it.shouldShowContactMessage()) {
@@ -308,6 +308,14 @@ internal class MozoAPIsService private constructor() {
     private fun <T> shouldHandleException(call: Call<T>): Boolean {
         val path = call.request().url().encodedPath()
         return path.endsWith("/user-profile", true)
+    }
+
+    private fun <T> shouldHandleMaintenance(call: Call<T>): Boolean {
+        val path = call.request().url().encodedPath()
+        return when {
+            path.endsWith("system-status", true) -> false
+            else -> true
+        }
     }
 
     private fun createService(): MozoAPIs {
