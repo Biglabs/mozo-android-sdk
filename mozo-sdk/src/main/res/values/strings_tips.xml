@@ -23,14 +23,14 @@
     </string-array>
 
     <string-array name="tips_retailer_url">
-        <item>#home-faq-shopper-2</item>
-        <item>retailer/contact-us/#retailer-faq-about-4</item>
-        <item>retailer/contact-us/#retailer-faq-about-5</item>
+        <item>retailer/help-center/#retailer-faq-about-2</item>
+        <item>retailer/help-center#retailer-faq-about-4</item>
+        <item>retailer/help-center#retailer-faq-about-5</item>
         <item>#home-faq-11</item>
-        <item>retailer/contact-us/#retailer-faq-register-3</item>
-        <item>retailer/contact-us/#retailer-faq-settings-4</item>
-        <item>retailer/contact-us/#retailer-faq-usage-2</item>
-        <item>retailer/contact-us/#retailer-faq-usage-3</item>
+        <item>retailer/help-center#retailer-faq-register-3</item>
+        <item>retailer/help-center#retailer-faq-settings-4</item>
+        <item>retailer/help-center#retailer-faq-usage-2</item>
+        <item>retailer/help-center#retailer-faq-usage-3</item>
     </string-array>
 
 
@@ -51,7 +51,7 @@
     </string-array>
 
     <string-array name="tips_shopper_url">
-        <item>#home-faq-shopper-2</item>
+        <item>retailer/help-center/#retailer-faq-about-2</item>
         <item>#home-faq-10</item>
         <item>#home-faq-shopper-3</item>
         <item>#home-faq-shopper-4</item>
