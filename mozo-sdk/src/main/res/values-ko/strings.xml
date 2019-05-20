@@ -21,7 +21,8 @@
     <string name="mozo_dialog_loading_msg">인터페이스 만들기</string>
     <string name="mozo_dialog_copied_msg">클립 보드에 복사 됩니다</string>
 
-    <string name="mozo_dialog_error_network_msg">인터넷에 연결되어 있지 않습니다!</string>
+    <string name="mozo_dialog_error_network_msg">인터넷에 연결할 수 없습니다!</string>
+    <string name="mozo_dialog_error_network_msg_sub">인터넷 연결이 더 강력 해지면 당신의 요청이 자동으로 처리됩니다.</string>
     <string name="mozo_dialog_error_timeout_msg">타임 아웃, 다시 시도하시기를 바랍니다.</string>
     <string name="mozo_dialog_error_scan_invalid_msg">스캔 한 값이 유효하지 않습니다.</string>
     <string name="mozo_dialog_error_msg">오류가 발생했습니다.</string>
@@ -52,17 +53,21 @@
     <string name="mozo_button_continue">계속</string>
     <string name="mozo_button_close">닫기</string>
     <string name="mozo_button_clear">지우기</string>
+    <string name="mozo_button_done">완료</string>
     <string name="mozo_button_scan_qr_code">QR 코드 스캔</string>
     <string name="mozo_button_scan">스캔</string>
     <string name="mozo_button_show_qr_code">내 QR 코드 확대</string>
     <string name="mozo_button_send">보내기</string>
     <string name="mozo_button_save">저장</string>
     <string name="mozo_button_save_address">월렛 주소 저장</string>
+    <string name="mozo_button_submit">제출하기</string>
     <string name="mozo_button_retry">재시도</string>
     <string name="mozo_button_refresh">새로 고침</string>
     <string name="mozo_button_read_more">자세히 보기</string>
     <string name="mozo_button_next">다음 가기</string>
     <string name="mozo_button_try_again">다시 시도하십시오</string>
+
+    <string name="mozo_button_go_to_wallet">지갑으로 이동하기</string>
 
     <string name="mozo_backup_title">월렛 백업</string>
     <string name="mozo_backup_sub_title">복구 데이터 프레이즈 저장</string>
@@ -105,18 +110,38 @@
     <string name="mozo_pin_msg_enter_correct">정확한 PIN 코드입니다</string>
     <string name="mozo_pin_msg_enter_incorrect">PIN 코드가 잘못되었습니다</string>
     <string name="mozo_pin_msg_error">월렛 생성에 실패했습니다</string>
+    <string name="mozo_pin_forgot_title">PIN을 잊어 버리셨습니까?</string>
+    <string name="mozo_pin_forgot_msg">복구 문구를 사용하여 PIN 재설정하십시오.</string>
+    <string name="mozo_pin_reset_title">PIN 재설정</string>
+    <string name="mozo_pin_reset_sub_title">귀하의 12 복구 구문을 입력하십시오.</string>
+    <string name="mozo_pin_reset_header_create">새 보안 PIN 입력하십시오</string>
+    <string name="mozo_pin_reset_msg_error">복구 구문에 인식 할 수없는 문자가 포함되어 있습니다.</string>
+    <string name="mozo_pin_reset_msg_error_incorrect">Recovery phrases is not belong to your wallet.</string>
+    <string name="mozo_pin_reset_msg_checking">복구 구문 확인</string>
+    <string name="mozo_pin_reset_msg_processing">PIN 재설정 처리 중</string>
+    <string name="mozo_pin_reset_msg_done">PIN 재설정 성공합니다.</string>
 
     <plurals name="mozo_notify_title_come_in">
-        <item quantity="other">고객이 상점에 방문하였습니다.</item>
+        <item quantity="other">고객이 도착했습니다.</item>
     </plurals>
     <plurals name="mozo_notify_title_leave">
-        <item quantity="other">고객이 떠났습니다</item>
+        <item quantity="other">고객이 출발했습니다.</item>
     </plurals>
     <string name="mozo_notify_title_received">MozoX %s 를 받았습니다.</string>
     <string name="mozo_notify_title_sent">MozoX %s 를 보냈습니다.</string>
     <string name="mozo_notify_content_from">%s 부터</string>
     <string name="mozo_notify_content_to">%s 까지</string>
     <string name="mozo_notify_content_invited">%s는 MozoX에 가입했습니다.</string>
+
+    <string name="mozo_notify_content_customer_join_group">Total Customer Arrived: %d</string>
+    <string name="mozo_notify_content_customer_left_group">Total Customer Depart: %d</string>
+    <string name="mozo_notify_title_invited_group">Your friends have joined MozoX</string>
+    <string name="mozo_notify_content_sent_group">Total: %s MozoX</string>
+    <string name="mozo_notify_content_received_group">Total: %s MozoX</string>
+    <string name="mozo_notify_content_invited_group">Total Friends have joined: %d</string>
+
+    <string name="mozo_maintenance_title">죄송합니다. 유지 보수를 위해 대기 중입니다. 우리는 곧 돌아오겠습니다.</string>
+    <string name="mozo_maintenance_tips_title">당신이 알고 계십니까?</string>
 
     <string name="mozo_payment_request_title">MozoX 요청</string>
     <string name="mozo_payment_request_amount">수신 금액</string>
@@ -129,7 +154,8 @@
     <string name="mozo_payment_request_text_send_to">요청 보내기</string>
     <string name="mozo_payment_request_text_send_success">요청을 성공적으로 보냈습니다</string>
     <string name="mozo_payment_request_text_sent">에게 MozoX를 보내달라고 요청을 보냈습니다:</string>
-    <string name="mozo_payment_request_text_empty">요청한 리스트가 비어 있습니다</string>
+    <string name="mozo_payment_request_text_empty">요청한 리스트가 비어 있거나 연결 속도가 너무 느립니다.</string>
+    <string name="mozo_payment_request_text_empty_msg">친구들이 보낸 MozoX 요청은 여기에 표시됩니다.</string>
     <string name="mozo_payment_request_item_label_from">부터:</string>
     <string name="mozo_payment_request_item_label_amount">요청하기:</string>
 
@@ -156,7 +182,8 @@
     <string name="mozo_transaction_view_button">거래 세부 정보를 보기</string>
     <string name="mozo_transaction_history_title">거래 내역</string>
     <string name="mozo_transaction_history_offchain_text">MozoX Offchain 월렛</string>
-    <string name="mozo_transaction_history_empty">거래 내역 리스트가 비어 있습니다</string>
+    <string name="mozo_transaction_history_empty">거래 내역이 비어 있거나 연결 속도가 너무 느립니다.</string>
+    <string name="mozo_transaction_history_empty_msg">MozoX를 친구들에게 전송하거나 MozoX를 보내달라고 요청하십시오.</string>
 
     <string name="mozo_text_gender_none">아니요</string>
     <string name="mozo_text_gender_male">남성</string>

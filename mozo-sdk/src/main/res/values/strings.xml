@@ -21,7 +21,7 @@
     <string name="mozo_dialog_copied_msg">Copied to clipboard</string>
 
     <string name="mozo_dialog_error_network_msg">No internet connection!</string>
-    <string name="mozo_dialog_error_network_msg_sub" translatable="false">Once you have a stronger internet connection, we’ll automatically process your request.</string>
+    <string name="mozo_dialog_error_network_msg_sub">Once you have a stronger internet connection, we’ll automatically process your request.</string>
     <string name="mozo_dialog_error_timeout_msg">Time out, please try again.</string>
     <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
     <string name="mozo_dialog_error_msg">There is an error occurred.</string>
@@ -52,14 +52,14 @@
     <string name="mozo_button_continue">Continue</string>
     <string name="mozo_button_close">Close</string>
     <string name="mozo_button_clear">Clear</string>
-    <string name="mozo_button_done" translatable="false">Done</string>
+    <string name="mozo_button_done">Done</string>
     <string name="mozo_button_scan_qr_code">Scan QR Code</string>
     <string name="mozo_button_scan">Scan</string>
     <string name="mozo_button_show_qr_code">Enlarge QR Code</string>
     <string name="mozo_button_send">Send</string>
     <string name="mozo_button_save">Save</string>
     <string name="mozo_button_save_address">Save Wallet Address</string>
-    <string name="mozo_button_submit" translatable="false">Submit</string>
+    <string name="mozo_button_submit">Submit</string>
     <string name="mozo_button_retry">Retry</string>
     <string name="mozo_button_refresh">Refresh</string>
     <string name="mozo_button_read_more">Read more</string>
@@ -69,7 +69,7 @@
     <string name="mozo_button_contact_kakao" translatable="false">KakaoTalk</string>
     <string name="mozo_button_contact_zalo" translatable="false">Zalo</string>
 
-    <string name="mozo_button_go_to_wallet" translatable="false">Go to Wallet</string>
+    <string name="mozo_button_go_to_wallet">Go to Wallet</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">Store Recovery Phrase</string>
@@ -114,16 +114,16 @@
     <string name="mozo_pin_msg_enter_correct">Security PIN is correct</string>
     <string name="mozo_pin_msg_enter_incorrect">Incorrect Security PIN</string>
     <string name="mozo_pin_msg_error">Create Wallet failed</string>
-    <string name="mozo_pin_forgot_title" translatable="false">Forgot your PIN?</string>
-    <string name="mozo_pin_forgot_msg" translatable="false">Reset PIN by using recovery phrases</string>
-    <string name="mozo_pin_reset_title" translatable="false">Reset PIN</string>
-    <string name="mozo_pin_reset_sub_title" translatable="false">Type your 12 recover phrases</string>
-    <string name="mozo_pin_reset_header_create" translatable="false">Enter new Security PIN</string>
-    <string name="mozo_pin_reset_msg_error" translatable="false">Recovery phrases contains unrecognized words.</string>
-    <string name="mozo_pin_reset_msg_error_incorrect" translatable="false">Recovery phrases is not belong to your wallet.</string>
-    <string name="mozo_pin_reset_msg_checking" translatable="false">Checking recovery phrases</string>
-    <string name="mozo_pin_reset_msg_processing" translatable="false">Reset PIN is processing</string>
-    <string name="mozo_pin_reset_msg_done" translatable="false">PIN Reset Successful</string>
+    <string name="mozo_pin_forgot_title">Forgot your PIN?</string>
+    <string name="mozo_pin_forgot_msg">Reset PIN by using recovery phrases</string>
+    <string name="mozo_pin_reset_title">Reset PIN</string>
+    <string name="mozo_pin_reset_sub_title">Type your 12 recover phrases</string>
+    <string name="mozo_pin_reset_header_create">Enter new Security PIN</string>
+    <string name="mozo_pin_reset_msg_error">Recovery phrases contains unrecognized words.</string>
+    <string name="mozo_pin_reset_msg_error_incorrect">Recovery phrases is not belong to your wallet.</string>
+    <string name="mozo_pin_reset_msg_checking">Checking recovery phrases</string>
+    <string name="mozo_pin_reset_msg_processing">Reset PIN is processing</string>
+    <string name="mozo_pin_reset_msg_done">PIN Reset Successful</string>
 
     <plurals name="mozo_notify_title_come_in">
         <item quantity="one">Customer arrived</item>
@@ -139,15 +139,15 @@
     <string name="mozo_notify_content_to">To %s</string>
     <string name="mozo_notify_content_invited">%s joined MozoX</string>
 
-    <string name="mozo_notify_content_customer_join_group" translatable="false">Total Customer Arrived: %d</string>
-    <string name="mozo_notify_content_customer_left_group" translatable="false">Total Customer Depart: %d</string>
-    <string name="mozo_notify_title_invited_group" translatable="false">Your friends have joined MozoX</string>
-    <string name="mozo_notify_content_sent_group" translatable="false">Total: %s MozoX</string>
-    <string name="mozo_notify_content_received_group" translatable="false">Total: %s MozoX</string>
-    <string name="mozo_notify_content_invited_group" translatable="false">Total Friends have joined: %d</string>
+    <string name="mozo_notify_content_customer_join_group">Total Customer Arrived: %d</string>
+    <string name="mozo_notify_content_customer_left_group">Total Customer Depart: %d</string>
+    <string name="mozo_notify_title_invited_group">Your friends have joined MozoX</string>
+    <string name="mozo_notify_content_sent_group">Total: %s MozoX</string>
+    <string name="mozo_notify_content_received_group">Total: %s MozoX</string>
+    <string name="mozo_notify_content_invited_group">Total Friends have joined: %d</string>
 
-    <string name="mozo_maintenance_title" translatable="false">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>
-    <string name="mozo_maintenance_tips_title" translatable="false">Did you know?</string>
+    <string name="mozo_maintenance_title">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>
+    <string name="mozo_maintenance_tips_title">Did you know?</string>
 
     <string name="mozo_payment_request_title">Request MozoX</string>
     <string name="mozo_payment_request_amount">Receive Amount</string>
@@ -161,7 +161,7 @@
     <string name="mozo_payment_request_text_send_success">Send Request Successful</string>
     <string name="mozo_payment_request_text_sent">You sent Request MozoX to:</string>
     <string name="mozo_payment_request_text_empty">Requested List is empty or your connection is too slow</string>
-    <string name="mozo_payment_request_text_empty_msg" translatable="false">Any MozoX Request from your friends will be displayed here.</string>
+    <string name="mozo_payment_request_text_empty_msg">Any MozoX Request from your friends will be displayed here.</string>
     <string name="mozo_payment_request_item_label_from">From:</string>
     <string name="mozo_payment_request_item_label_amount">Request:</string>
     <string name="mozo_payment_request_item_amount" translatable="false">%s MozoX</string>
@@ -190,7 +190,7 @@
     <string name="mozo_transaction_history_title">Transaction History</string>
     <string name="mozo_transaction_history_offchain_text">MozoX Offchain Wallet</string>
     <string name="mozo_transaction_history_empty">Transaction History is empty or your connection is too slow</string>
-    <string name="mozo_transaction_history_empty_msg" translatable="false">Transfer MozoX to your friends or request them to send you MozoX.</string>
+    <string name="mozo_transaction_history_empty_msg">Transfer MozoX to your friends or request them to send you MozoX.</string>
 
     <string name="mozo_text_gender_none">None</string>
     <string name="mozo_text_gender_male">Male</string>
