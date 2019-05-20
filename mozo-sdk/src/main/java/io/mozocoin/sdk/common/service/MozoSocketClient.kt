@@ -60,7 +60,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         broadcast.event ?: return@let
 
                         /* Save notification to local storage */
-                        MozoNotification.save(broadcast)
+                        // MozoNotification.save(broadcast)
 
                         when (broadcast.event.toLowerCase()) {
                             /* Reload balance */
@@ -73,6 +73,9 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                             }
                             Constant.NOTIFY_EVENT_CONVERT -> {
                                 EventBus.getDefault().post(MessageEvent.ConvertOnChain())
+                            }
+                            Constant.NOTIFY_EVENT_PROFILE_CHANGED -> {
+                                MozoAuth.getInstance().syncProfile(MozoSDK.getInstance().context)
                             }
                         }
 
@@ -141,7 +144,12 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                     message,
                     count = items?.size ?: 0
             ) ?: line
-            val totalText = NotificationGroup.getContentText(context, notificationManager, message, extras) ?: line
+            val totalText = NotificationGroup.getContentText(
+                    context,
+                    notificationManager,
+                    message,
+                    extras
+            ) ?: line
 
             setStyle(NotificationCompat.InboxStyle().run {
                 items?.forEach { addLine(it) }

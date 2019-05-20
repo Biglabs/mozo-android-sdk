@@ -119,8 +119,8 @@
     <string name="mozo_pin_reset_title" translatable="false">Reset PIN</string>
     <string name="mozo_pin_reset_sub_title" translatable="false">Type your 12 recover phrases</string>
     <string name="mozo_pin_reset_header_create" translatable="false">Enter new Security PIN</string>
-    <string name="mozo_pin_reset_msg_error" translatable="false">Recovery phrase contains unrecognized words.</string>
-    <string name="mozo_pin_reset_msg_error_incorrect" translatable="false">Recover phrases is not belong to user wallet.</string>
+    <string name="mozo_pin_reset_msg_error" translatable="false">Recovery phrases contains unrecognized words.</string>
+    <string name="mozo_pin_reset_msg_error_incorrect" translatable="false">Recovery phrases is not belong to your wallet.</string>
     <string name="mozo_pin_reset_msg_checking" translatable="false">Checking recovery phrases</string>
     <string name="mozo_pin_reset_msg_processing" translatable="false">Reset PIN is processing</string>
     <string name="mozo_pin_reset_msg_done" translatable="false">PIN Reset Successful</string>

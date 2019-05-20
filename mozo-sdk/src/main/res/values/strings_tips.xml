@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tips_retailer_question">
-        <item>What are MozoX Tokens? What are MozoX Tokens use for?</item>
+        <item>What are MozoX Tokens? What are MozoX Tokens used for?</item>
         <item>How can I attract customers with MozoX?</item>
         <item>What is the difference between MozoX and other types of advertising?</item>
         <item>How do MozoX Tokens work as a rewards program using blockchain technology?</item>
@@ -13,13 +13,13 @@
 
     <string-array name="tips_retailer_answer">
         <item>MozoX Tokens are digital utility tokens that can be used by merchants to reward customers for visiting their venues. Customers can collect MozoX Tokens and redeem them for discounts on products and services as determined by each merchant.</item>
-        <item>By offering MozoX Tokens for visiting your venue, customers will have an incentive to come there and by offering discounts through a redemption program you are ensured that customers will want to keep collecting MozoX Tokens.</item>
-        <item>With MozoX, you only reward customers when they physically enter your venue, so there is a 1:1 correlation between advertising monies spent and customers in your store. Other advertising channels do not offer any guarantees that their clicks or banners will result in customers in your venue.</item>
-        <item>Customer will accumulate enough amount of reward tokens aka MozoX to redeem them with deals, discounts and promotions in the loyalty program. So they are incentivized to go to where retailers and venue operators set up airdrop events. By applying new technology blockchain, MozoX is more secure than any traditional loyalty applications. Furthermore, by incorporated with location based service technology, MozoX ensure that user really enter physically the venue.\nRetailer and venue operator will use MozoX Retailer App to set up airdrop event incorporated with a beacon, a specific location detector, that is required user should be in beacon range can receive MozoX. This will help Retailer and venue operator control the foot traffic. Furthermore, using MozoX Retailer App, Retailer and venue operator can set up the deals, discounts and promotions.\nCustomer will use MozoX App to browse, search, discover the airdrop events, deals, discounts and promotions setting up by Retailer and venu operators.\nMozoX App also help Retailer/venue operators and customer perform the deals, discount and promotion in effectiveness and efficiency way.</item>
-        <item>Hashtags are a word or phrase preceded by a hash sign (#). On MozoX, hashtags are used to help identify your venue according to the description you want customers to discover you by.</item>
-        <item>One you have finalized and saved an airdrop event, you cannot retrieve the MozoX Tokens set aside for the event. If the airdrop event status is &quot;Scheduled&quot; or &quot;Active&quot; you are obligated to use the MozoX tokens for the duration of the event.  Once the event status is &quot;Ended&quot;, you can retrieve any MozoX Tokens that have not been airdropped to customers.</item>
+        <item>By offering MozoX Tokens for visiting your venue, customers will have an incentive to come there and, by offering discounts through a redemption program, you are ensured that customers will want to keep collecting MozoX Tokens.</item>
+        <item>With MozoX, you only reward customers when they physically enter your venue, so there is a 1:1 correlation between advertising monies spent and customers at your venue. Other advertising channels do not offer any guarantees that their clicks or banners will result in customers in your venue.</item>
+        <item>Customers will accumulate enough reward tokens aka MozoX to redeem them for deals, discounts and promotions in the rewards program. So these customers now have an incentive to go to where retailers and venue operators are set up airdrop events. By applying blockchain technology, MozoX is more secure and convenient than any traditional loyalty applications. Furthermore, by incorporating with location based service technology, MozoX ensures that user really physically enter the venue.\nRetailers and venue operators use MozoX Retailer App to set up airdrop events through the use of a beacon, a specific location detector, that requires the users must be in range of the beacon inorder to receive MozoX. This will help Retailers and venue operators control their foot traffic. Additionally, using MozoX Retailer App, Retailers and venue operators can set up their deals, discounts and promotions.\nCustomers use MozoX App to browse, search, discover airdrop events, deals, discounts and promotions offered by both Retailer and venue operator.\nMozoX App(s) also help Retailers/venue operators and customers consummates the deals, discounts and promotions in effective and efficient way.</item>
+        <item>Hashtags are a words or phrases preceded by a hash sign (#). On MozoX, hashtags are used to help identify your venue according to the description you want customers to discover you by.</item>
+        <item>One you have finalized and saved an airdrop event, you cannot retrieve the MozoX Tokens set aside for the event. If the airdrop event status is &quot;Scheduled&quot; or &quot;Active&quot; you are obligated to use the MozoX tokens for the duration of the event. Once the event status is &quot;Ended&quot;, you can retrieve any MozoX Tokens that have not been airdropped to customers.</item>
         <item>We do not recommend sharing Administrator rights with your employees. MozoX Retailer App allows for sub-accounts which grant permissions similar to the Administrator, except that they are not able to edit store information, beacon or sub-accounts. Please note that the sub-account wallet is set to zero when the sub-account is created. The Administrator will need to transfer MozoX Tokens to a sub-account in order for the sub-account holder to create airdrop events..</item>
-        <item>If they walk into beacon range of your store in the time the airdrop event happens, they will receive MozoX</item>
+        <item>If customers walk into beacon range of your store during the time the airdrop event is happening, they will receive MozoX tokens.</item>
     </string-array>
 
     <string-array name="tips_retailer_url">
@@ -35,19 +35,19 @@
 
 
     <string-array name="tips_shopper_question">
-        <item>What are MozoX Tokens? What are MozoX Tokens use for?</item>
-        <item>How can I earn MozoX ?</item>
-        <item>How to send MozoX as gift to my friends ?</item>
-        <item>How long I have to wait to get the next airdrop from the same event of the store?</item>
+        <item>What are MozoX Tokens? What are MozoX Tokens used for?</item>
+        <item>How can I earn MozoX?</item>
+        <item>How can I send MozoX as a gift to my friends?</item>
+        <item>How long I have to wait to get the next airdrop from the same event of a store?</item>
         <item>Why do I need to turn on Bluetooth to get MozoX from airdrop events?</item>
     </string-array>
 
     <string-array name="tips_shopper_answer">
         <item>MozoX Tokens are digital utility tokens that can be used by merchants to reward customers for visiting their venues. Customers can collect MozoX Tokens and redeem them for discounts on products and services as determined by each merchant.</item>
-        <item>MozoX App provide functions so that you can discover airdrop events such as map view, list view, search… Check the airdrop time and go to store at appropriate time to receive MozoX. DO NOT forget to turn on bluetooth when you coming to store</item>
-        <item>On the wallet screen, using the feature &quot;Send MozoX&quot; to send MozoX to your friend\'s wallet.\nBest practise: \n\t- If your friend is with you, scan address QR code on his wallet screen. Remember to save your friend address to address book for later use.</item>
-        <item>The store set &quot;Airdrop Frequency&quot; for each event that they create. As you visit the store after that time, you will get the next airdrop. The frequency is usually 1 day.</item>
-        <item>Each store in MozoX system has one or more sensor Beacons. When the user visits the store and turns on Bluetooth, the beacon will interact with MozoX application via Bluetooth. So you can get airdrop automatically from the system.</item>
+        <item>MozoX App provides functions so that allow you to discover airdrop events using a map view or a list view, search… Check the airdrop date and time and then go to store during those dates and times to receive MozoX. DO NOT forget to turn on bluetooth when you enter the store</item>
+        <item>On the wallet screen, using the feature &quot;Send MozoX&quot; to send MozoX to your friend\'s wallet.\nBest practise:\n\t- If your friend is with you, you can simply scan QR code address on his wallet screen. Remember to save your friend\'s address to your MozoX address book for later use.</item>
+        <item>The store sets &quot;Airdrop Frequency&quot; for each event that they create. As you visit the store after that time, you will get the next airdrop. Its frequency is typically 1 day.</item>
+        <item>Each store in MozoX system has one or more beacons. When the users visit the store and turns on Bluetooth, the beacon will interact with MozoX application via Bluetooth, so you can get airdrop automatically from the system.</item>
     </string-array>
 
     <string-array name="tips_shopper_url">
