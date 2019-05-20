@@ -99,8 +99,8 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
             v.isSelected = false
             /**
              * Advanced: auto detect Clipboard to fill in seed phrase
-             * if (v.id == R.id.reset_pin_seed_1) detectClipboard()
              */
+            if (v.id == R.id.reset_pin_seed_1) detectClipboard()
         }
     }
 
