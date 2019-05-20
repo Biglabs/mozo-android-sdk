@@ -11,7 +11,6 @@ import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.wallet.reset.ResetPinActivity
-import io.mozocoin.sdk.ui.widget.onBackPress
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.view_toolbar.view.*
 import kotlinx.android.synthetic.main.view_wallet_security.*

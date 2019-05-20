@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.ui.widget.PinEntryEditText
 import io.mozocoin.sdk.utils.customtabs.CustomTabsHelper
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -195,3 +196,5 @@ fun BigDecimal.toGwei(): BigDecimal {
 }
 
 fun BigDecimal?.safe(): BigDecimal = this ?: BigDecimal.ZERO
+
+internal fun PinEntryEditText.onBackPress(action: suspend () -> Unit) = setOnBackPress(action)

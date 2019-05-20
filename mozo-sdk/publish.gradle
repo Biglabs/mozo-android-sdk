@@ -9,12 +9,18 @@ def artifactProjectId = 'mozo-sdk'
 def versionDecs = "MozoSDK v$mozo_sdk_version_name released: " + new Date()
 logger.quiet(versionDecs)
 
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "sources"
+}
+
 publishing {
     publications {
         Production(MavenPublication) {
-            artifact("$buildDir/outputs/aar/mozo-sdk-release.aar")
             groupId groupProjectId
             artifactId artifactProjectId
+            artifact("$buildDir/outputs/aar/mozo-sdk-release.aar")
+            artifact(sourceJar)
             version mozo_sdk_version_name
 
             pom.withXml {

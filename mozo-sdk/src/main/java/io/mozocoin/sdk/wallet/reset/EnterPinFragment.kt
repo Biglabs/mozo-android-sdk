@@ -14,7 +14,6 @@ import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.service.MozoAPIsService
-import io.mozocoin.sdk.ui.widget.onBackPress
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
 import kotlinx.coroutines.*
