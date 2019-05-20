@@ -30,6 +30,8 @@ class MozoWallet private constructor() {
     private var mReady4WalletCheckingJob: Job? = null
     private var mReady4WalletCheckingDelayed = 0L
 
+    internal var isDuringResetPinProcess = false
+
     init {
         MozoSDK.getInstance().profileViewModel.profileLiveData.observeForever {
             this.mProfile = it
@@ -91,18 +93,23 @@ class MozoWallet private constructor() {
             } else 0
         }
 
-        if (flag == 0) {
-            callback?.invoke(true)
-        } else {
-            mProfile = profile
-            mInitWalletCallback = callback
-            if (!EventBus.getDefault().isRegistered(this)) {
-                EventBus.getDefault().register(this)
+        when {
+            flag == 0 -> callback?.invoke(true)
+            isDuringResetPinProcess -> callback?.invoke(false)
+            else -> {
+                mProfile = profile
+                mInitWalletCallback = callback
+                if (!EventBus.getDefault().isRegistered(this)) {
+                    EventBus.getDefault().register(this)
+                }
+                SecurityActivity.start(context, flag)
+                /**
+                 * Handle after enter PIN at MozoWallet.onReceivePin
+                 */
+                /**
+                 * Handle after enter PIN at MozoWallet.onReceivePin
+                 */
             }
-            SecurityActivity.start(context, flag)
-            /**
-             * Handle after enter PIN at MozoWallet.onReceivePin
-             */
         }
     }
 
@@ -236,10 +243,10 @@ class MozoWallet private constructor() {
     }
 
     companion object {
+        private const val MAX_DELAY_TIME = 270000L /* 90s x 3 times */
+
         @Volatile
         private var instance: MozoWallet? = null
-
-        private const val MAX_DELAY_TIME = 270000L /* 90s x 3 times */
 
         @JvmStatic
         fun getInstance() = instance ?: synchronized(this) {
