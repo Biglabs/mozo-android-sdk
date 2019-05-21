@@ -39,7 +39,7 @@ class MozoWallet private constructor() {
         }
     }
 
-    fun getAddress() = mProfile?.walletInfo?.offchainAddress
+    fun getAddress() = mProfile?.walletInfo?.offchainAddress ?: mWallet?.offChainAddress
 
     /**
      * Returns the balance of current wallet.
@@ -103,9 +103,6 @@ class MozoWallet private constructor() {
                     EventBus.getDefault().register(this)
                 }
                 SecurityActivity.start(context, flag)
-                /**
-                 * Handle after enter PIN at MozoWallet.onReceivePin
-                 */
                 /**
                  * Handle after enter PIN at MozoWallet.onReceivePin
                  */

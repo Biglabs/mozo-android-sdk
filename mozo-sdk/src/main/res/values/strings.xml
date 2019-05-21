@@ -20,7 +20,7 @@
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
     <string name="mozo_dialog_copied_msg">Copied to clipboard</string>
 
-    <string name="mozo_dialog_error_network_msg">No internet connection!</string>
+    <string name="mozo_dialog_error_network_msg">No internet connection</string>
     <string name="mozo_dialog_error_network_msg_sub">Once you have a stronger internet connection, we’ll automatically process your request.</string>
     <string name="mozo_dialog_error_timeout_msg">Time out, please try again.</string>
     <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
@@ -120,7 +120,7 @@
     <string name="mozo_pin_reset_sub_title">Type your 12 recover phrases</string>
     <string name="mozo_pin_reset_header_create">Enter new Security PIN</string>
     <string name="mozo_pin_reset_msg_error">Recovery phrases contains unrecognized words.</string>
-    <string name="mozo_pin_reset_msg_error_incorrect">Recovery phrases is not belong to your wallet.</string>
+    <string name="mozo_pin_reset_msg_error_incorrect">Wallet Recovery Phrase is invalid.</string>
     <string name="mozo_pin_reset_msg_checking">Checking recovery phrases</string>
     <string name="mozo_pin_reset_msg_processing">Reset PIN is processing</string>
     <string name="mozo_pin_reset_msg_done">PIN Reset Successful</string>
@@ -140,7 +140,7 @@
     <string name="mozo_notify_content_invited">%s joined MozoX</string>
 
     <string name="mozo_notify_content_customer_join_group">Total Customer Arrived: %d</string>
-    <string name="mozo_notify_content_customer_left_group">Total Customer Depart: %d</string>
+    <string name="mozo_notify_content_customer_left_group">Total Customer Departed: %d</string>
     <string name="mozo_notify_title_invited_group">Your friends have joined MozoX</string>
     <string name="mozo_notify_content_sent_group">Total: %s MozoX</string>
     <string name="mozo_notify_content_received_group">Total: %s MozoX</string>

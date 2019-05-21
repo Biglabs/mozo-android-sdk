@@ -79,6 +79,10 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
             }
             false
         }
+        /**
+         * Advanced: auto detect Clipboard to fill in seed phrase
+         */
+        detectClipboard()
     }
 
     override fun onStart() {
@@ -97,13 +101,8 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
         } else {
             v.isActivated = false
             v.isSelected = false
-            /**
-             * Advanced: auto detect Clipboard to fill in seed phrase
-             */
-            if (v.id == R.id.reset_pin_seed_1) detectClipboard()
         }
     }
-
 
     private fun checkSingleInput(v: EditText) {
         val seed = v.text.toString()
@@ -156,6 +155,9 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
                 if (!isAdded || isRemoving) return@launch
 
                 if (isCorrectWallet) {
+                    withContext(Dispatchers.Main) {
+                        mInputView?.map { it.text = null }
+                    }
                     mInteractionListener?.getResetPinModel()?.setData(wallet)
                     mInteractionListener?.requestEnterPin()
                 } else {

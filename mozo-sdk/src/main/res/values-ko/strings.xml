@@ -21,7 +21,7 @@
     <string name="mozo_dialog_loading_msg">인터페이스 만들기</string>
     <string name="mozo_dialog_copied_msg">클립 보드에 복사 됩니다</string>
 
-    <string name="mozo_dialog_error_network_msg">인터넷에 연결할 수 없습니다!</string>
+    <string name="mozo_dialog_error_network_msg">인터넷에 연결할 수 없습니다</string>
     <string name="mozo_dialog_error_network_msg_sub">인터넷 연결이 더 강력 해지면 당신의 요청이 자동으로 처리됩니다.</string>
     <string name="mozo_dialog_error_timeout_msg">타임 아웃, 다시 시도하시기를 바랍니다.</string>
     <string name="mozo_dialog_error_scan_invalid_msg">스캔 한 값이 유효하지 않습니다.</string>
@@ -116,7 +116,7 @@
     <string name="mozo_pin_reset_sub_title">귀하의 12 복구 구문을 입력하십시오.</string>
     <string name="mozo_pin_reset_header_create">새 보안 PIN 입력하십시오</string>
     <string name="mozo_pin_reset_msg_error">복구 구문에 인식 할 수없는 문자가 포함되어 있습니다.</string>
-    <string name="mozo_pin_reset_msg_error_incorrect">Recovery phrases is not belong to your wallet.</string>
+    <string name="mozo_pin_reset_msg_error_incorrect">친구들이 모조X에 가입했습니다.</string>
     <string name="mozo_pin_reset_msg_checking">복구 구문 확인</string>
     <string name="mozo_pin_reset_msg_processing">PIN 재설정 처리 중</string>
     <string name="mozo_pin_reset_msg_done">PIN 재설정 성공합니다.</string>
@@ -133,12 +133,12 @@
     <string name="mozo_notify_content_to">%s 까지</string>
     <string name="mozo_notify_content_invited">%s는 MozoX에 가입했습니다.</string>
 
-    <string name="mozo_notify_content_customer_join_group">Total Customer Arrived: %d</string>
-    <string name="mozo_notify_content_customer_left_group">Total Customer Depart: %d</string>
-    <string name="mozo_notify_title_invited_group">Your friends have joined MozoX</string>
-    <string name="mozo_notify_content_sent_group">Total: %s MozoX</string>
-    <string name="mozo_notify_content_received_group">Total: %s MozoX</string>
-    <string name="mozo_notify_content_invited_group">Total Friends have joined: %d</string>
+    <string name="mozo_notify_content_customer_join_group">총 고객은 도착 : %d </string>
+    <string name="mozo_notify_content_customer_left_group">떠난 총 고객: %d</string>
+    <string name="mozo_notify_title_invited_group">친구들이 모조X에 가입했습니다.</string>
+    <string name="mozo_notify_content_sent_group">총: %s 모조X</string>
+    <string name="mozo_notify_content_received_group">총: %s 모조X</string>
+    <string name="mozo_notify_content_invited_group">총 가입한 친구 수 : %d</string>
 
     <string name="mozo_maintenance_title">죄송합니다. 유지 보수를 위해 대기 중입니다. 우리는 곧 돌아오겠습니다.</string>
     <string name="mozo_maintenance_tips_title">당신이 알고 계십니까?</string>

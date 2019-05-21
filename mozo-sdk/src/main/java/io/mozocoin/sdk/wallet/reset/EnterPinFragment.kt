@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntRange
-import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
@@ -93,6 +92,16 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
         EventBus.getDefault().post(MessageEvent.CloseActivities())
     }
 
+    private fun resetInputUI() {
+        mPinEntering = ""
+        reset_pin_enter_pin_header?.setText(R.string.mozo_pin_reset_header_create)
+        reset_pin_enter_pin_sub_content?.setText(R.string.mozo_pin_content)
+        reset_pin_enter_pin_input?.text = null
+        text_correct_pin?.gone()
+        text_incorrect_pin?.gone()
+        mInteractionListener?.hideToolbarActions(left = true, right = false)
+    }
+
     private fun showConfirmUI() {
         reset_pin_enter_pin_header?.setText(R.string.mozo_pin_confirm_sub_title)
         reset_pin_enter_pin_sub_content?.setText(R.string.mozo_pin_confirm_content)
@@ -150,10 +159,10 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
         GlobalScope.launch(Dispatchers.Main) {
             var icon = R.drawable.ic_error_general
             var title = R.string.mozo_dialog_error_msg
-            var showContent = false
             var buttonText = R.string.mozo_button_try_again
             var buttonClickCallback: (View) -> Unit = {
-                submit()
+                resetInputUI()
+                activity?.onBackPressed()
             }
             reset_pin_message_icon?.setPadding(0)
             mInteractionListener?.let {
@@ -179,13 +188,11 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                 MESSAGE_ERROR_NETWORK -> {
                     icon = R.drawable.ic_error_network
                     title = R.string.mozo_dialog_error_network_msg
-                    showContent = true
                 }
             }
 
             reset_pin_message_icon?.setImageResource(icon)
             reset_pin_message_title?.setText(title)
-            reset_pin_message_content?.isVisible = showContent
             reset_pin_message_retry_btn?.setText(buttonText)
             reset_pin_message_retry_btn?.click(buttonClickCallback)
             reset_pin_message_view?.visible()

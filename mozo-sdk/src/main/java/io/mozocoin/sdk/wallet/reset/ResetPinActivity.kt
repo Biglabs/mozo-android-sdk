@@ -48,7 +48,9 @@ internal class ResetPinActivity : BaseActivity(), InteractionListener {
         val current = supportFragmentManager.findFragmentById(R.id.reset_pin_content_frame)
         if (current !is EnterPinFragment) {
             finish()
+            return
         }
+        super.onBackPressed()
     }
 
     override fun getCloseButton(): TextView? = reset_pin_toolbar?.button_close

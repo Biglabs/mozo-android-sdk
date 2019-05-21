@@ -21,7 +21,7 @@
     <string name="mozo_dialog_loading_msg">Đang khởi tạo giao diện</string>
     <string name="mozo_dialog_copied_msg">Đã sao chép</string>
 
-    <string name="mozo_dialog_error_network_msg">Không có kết nối mạng!</string>
+    <string name="mozo_dialog_error_network_msg">Không có kết nối mạng</string>
     <string name="mozo_dialog_error_network_msg_sub">Khi kết nối internet mạnh hơn, hệ thống sẽ tự động xử lý yêu cầu của bạn.</string>
     <string name="mozo_dialog_error_timeout_msg">Quá hạn, xin thử lại.</string>
     <string name="mozo_dialog_error_scan_invalid_msg">Thông tin quét được không hợp lệ.</string>
@@ -116,7 +116,7 @@
     <string name="mozo_pin_reset_sub_title">Nhập 12 cụm từ khôi phục</string>
     <string name="mozo_pin_reset_header_create">Nhập mã PIN mới</string>
     <string name="mozo_pin_reset_msg_error">Cụm từ khôi phục chứa ký tự không hợp lệ</string>
-    <string name="mozo_pin_reset_msg_error_incorrect">Recovery phrases is not belong to your wallet.</string>
+    <string name="mozo_pin_reset_msg_error_incorrect">Cụm từ khôi phục không chính xác</string>
     <string name="mozo_pin_reset_msg_checking">Đang kiểm tra cụm từ khôi phục</string>
     <string name="mozo_pin_reset_msg_processing">Đang tạo lại mã PIN</string>
     <string name="mozo_pin_reset_msg_done">Tạo lại mã PIN thành công</string>
@@ -133,12 +133,12 @@
     <string name="mozo_notify_content_to">Đến %s</string>
     <string name="mozo_notify_content_invited">%s đã tham gia MozoX</string>
 
-    <string name="mozo_notify_content_customer_join_group">Total Customer Arrived: %d</string>
-    <string name="mozo_notify_content_customer_left_group">Total Customer Depart: %d</string>
-    <string name="mozo_notify_title_invited_group">Your friends have joined MozoX</string>
+    <string name="mozo_notify_content_customer_join_group">Tổng khách vừa đến: %d</string>
+    <string name="mozo_notify_content_customer_left_group">Tổng khách đã rời khỏi: %d</string>
+    <string name="mozo_notify_title_invited_group">Bạn bè của bạn đã tham gia MozoX</string>
     <string name="mozo_notify_content_sent_group">Tổng: %s MozoX</string>
     <string name="mozo_notify_content_received_group">Tổng: %s MozoX</string>
-    <string name="mozo_notify_content_invited_group">Total Friends have joined: %d</string>
+    <string name="mozo_notify_content_invited_group">Đã có %d người tham gia MozoX</string>
 
     <string name="mozo_maintenance_title">Rất tiếc, hệ thống đang bảo trì. Chúng tôi sẽ sớm quay lại.</string>
     <string name="mozo_maintenance_tips_title">Bạn có biết?</string>
