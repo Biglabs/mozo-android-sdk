@@ -165,7 +165,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             setContentTitle(title)
             setDefaults(Notification.DEFAULT_ALL)
             setGroup(notificationGroup.name)
-            setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+            setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
             setGroupSummary(true)
             setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
             setNumber(items?.size ?: 0)
