@@ -92,6 +92,11 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
     }
 
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.no_anim, R.anim.fade_out_short)
+    }
+
     /**
      * Initializes the authorization service configuration if necessary, either from the local
      * static values or by retrieving an OpenID discovery document.
@@ -198,7 +203,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        isAuthInProgress = false
+        isAuthInProgress = isAuthInProgress && resultCode == RESULT_CANCELED
         when {
             requestCode == KEY_DO_AUTHENTICATION && modeSignIn -> {
                 if (isSignOutWhenError) {
