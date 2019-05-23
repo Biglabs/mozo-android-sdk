@@ -4,12 +4,17 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
+import com.google.gson.Gson
+import io.mozocoin.sdk.MozoNotification
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.safe
+import java.math.BigDecimal
 
 enum class NotificationGroup(val id: Int) {
     BALANCE_SENT(100),
@@ -20,55 +25,48 @@ enum class NotificationGroup(val id: Int) {
     INVITE(105);
 
     companion object {
-        private const val NOTIFY_ITEM = "notify_item"
-        private const val TOTAL_AMOUNT = "total_amount"
-
-        private fun getCurrentlyGroupExtras(notificationManager: NotificationManager, groupKey: String, key: String): Bundle? = synchronized(this) {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                notificationManager.activeNotifications?.firstOrNull {
-                    it.groupKey.contains(groupKey, true) && it.notification.extras.containsKey(key)
-                }?.notification?.extras
-            } else null
-        }
-
-        fun getItems(notificationManager: NotificationManager, message: BroadcastDataContent, groupExtras: Bundle? = null, newItem: String? = null): List<String>? {
-            var items = getCurrentlyGroupExtras(notificationManager, getKey(message).name, NOTIFY_ITEM)
-                    ?.getString(NOTIFY_ITEM)
-
-            groupExtras?.apply {
-                items = if (items.isNullOrBlank())
-                    newItem
-                else {
-                    if (newItem != null)
-                        "$newItem|$items"
-                    else "$items"
+        private fun getCurrentlyGroupExtras(notificationManager: NotificationManager, groupKey: String): List<Bundle>? = synchronized(this) {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                notificationManager.activeNotifications?.mapNotNull {
+                    if (it.groupKey.contains(groupKey, true)) it.notification.extras
+                    else null
                 }
-                putString(NOTIFY_ITEM, items)
-            }
-
-            return items?.split("|")
+            else null
         }
 
-        fun getContentText(context: Context, notificationManager: NotificationManager, message: BroadcastDataContent, groupExtras: Bundle): String? {
+        fun getItems(context: Context, notificationManager: NotificationManager, message: BroadcastDataContent): List<CharSequence>? {
+            val gSon = Gson()
+            return getCurrentlyGroupExtras(notificationManager, getKey(message).name)?.mapNotNull {
+                it.getString(MozoSocketClient.EXTRAS_ITEM_DATA)?.let { data ->
+                    try {
+                        gSon.fromJson(data, BroadcastDataContent::class.java)
+                    } catch (ex: Exception) {
+                        null
+                    }
+                }?.also { content ->
+                    val notify = MozoNotification.prepareNotification(context, content)
+                    return@mapNotNull TextUtils.concat(notify.titleDisplay(), " ", notify.contentDisplay())
+                }
+
+                return@mapNotNull null
+            }
+        }
+
+        fun getContentText(context: Context, notificationManager: NotificationManager, notificationGroup: NotificationGroup): String? {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                 return null
 
-            val notificationGroup = getKey(message)
-            val totalNotice = notificationManager.activeNotifications?.filter {
-                it.groupKey.contains(notificationGroup.name, true)
-            }?.size ?: 0
+            val extras = getCurrentlyGroupExtras(notificationManager, notificationGroup.name)
 
-            var totalAmount = MozoTx.getInstance().amountNonDecimal(message.amount.safe())
-            getCurrentlyGroupExtras(notificationManager, notificationGroup.name, TOTAL_AMOUNT)
-                    ?.getString(TOTAL_AMOUNT)
-                    ?.let { totalString ->
-                        totalString.toBigDecimalOrNull()?.let {
-                            totalAmount = totalAmount.plus(it)
-                        }
-                    }
+            var totalAmount = BigDecimal.ZERO
+            extras?.forEach { bundle ->
+                bundle.getString(MozoSocketClient.EXTRAS_ITEM_AMOUNT)?.let {
+                    totalAmount = totalAmount.plus(it.toBigDecimalOrNull().safe())
+                }
+            }
+            totalAmount = MozoTx.getInstance().amountNonDecimal(totalAmount)
 
-            groupExtras.putString(TOTAL_AMOUNT, totalAmount.toString())
-
+            val totalNotice = extras?.size ?: 0
             return when (notificationGroup) {
                 BALANCE_SENT -> context.getString(
                         R.string.mozo_notify_content_sent_group,

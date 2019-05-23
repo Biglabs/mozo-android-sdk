@@ -211,6 +211,7 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showPinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {
         text_incorrect_pin.visible()
+        input_pin?.showKeyboard()
     }
 
     private fun hidePinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {

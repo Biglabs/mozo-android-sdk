@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
+import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -32,6 +33,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
     private val notificationManager: NotificationManager by lazy {
         MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
+
+    private var mShowGroupNotifyJob: Job? = null
 
     init {
         connect()
@@ -112,7 +115,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         val notification = MozoNotification.prepareNotification(context, message)
         val notificationGroup = NotificationGroup.getKey(message)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event!!)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                !notificationChannelExists(message.event ?: return@launch)) {
             createChannel(message.event).join()
         }
 
@@ -122,7 +126,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 MozoNotification.prepareDataIntent(notification),
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val singleNotify = NotificationCompat.Builder(context, message.event!!)
+        val singleNotify = NotificationCompat.Builder(context, message.event ?: return@launch)
                 .setSmallIcon(R.drawable.ic_mozo_notification)
                 .setLargeIcon(context.bitmap(notification.icon()))
                 .setColor(context.color(R.color.mozo_color_primary))
@@ -132,47 +136,65 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
                 .setGroup(notificationGroup.name)
+        singleNotify.extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
+        singleNotify.extras.putString(EXTRAS_ITEM_DATA, notification.raw)
         NotificationManagerCompat.from(context)
                 .notify(System.currentTimeMillis().toInt(), singleNotify.build())
 
 
-        val group = NotificationCompat.Builder(context, message.event).apply {
-            val line = "${notification.titleDisplay()} ${notification.contentDisplay()}"
-            val items = NotificationGroup.getItems(notificationManager, message, extras, line)
-            val title = NotificationGroup.getContentTitle(
-                    context,
-                    message,
-                    count = items?.size ?: 0
-            ) ?: line
-            val totalText = NotificationGroup.getContentText(
-                    context,
-                    notificationManager,
-                    message,
-                    extras
-            ) ?: line
+        doGroupNotificationDelayed(context, message, notification, notificationGroup, pendingIntent)
+    }
 
-            setStyle(NotificationCompat.InboxStyle().run {
-                items?.forEach { addLine(it) }
-                        ?: addLine(line)
-                setBigContentTitle(title)
-            })
+    private fun doGroupNotificationDelayed(
+            context: Context,
+            message: BroadcastDataContent,
+            notify: io.mozocoin.sdk.common.model.Notification,
+            notifyGroup: NotificationGroup,
+            pendingIntent: PendingIntent
+    ) {
 
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M)
-                setContentIntent(pendingIntent)
+        mShowGroupNotifyJob?.cancel()
+        mShowGroupNotifyJob = GlobalScope.launch {
+            delay(2000)
 
-            color = context.color(R.color.mozo_color_primary)
-            setAutoCancel(true)
-            setContentTitle(title)
-            setDefaults(Notification.DEFAULT_ALL)
-            setGroup(notificationGroup.name)
-            setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
-            setGroupSummary(true)
-            setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
-            setNumber(items?.size ?: 0)
-            setSmallIcon(R.drawable.ic_mozo_notification)
-            setSubText(totalText)
+            val group = NotificationCompat.Builder(context, message.event ?: return@launch)
+                    .apply {
+                        val line = TextUtils.concat(notify.titleDisplay(), " ", notify.contentDisplay())
+                        val items = NotificationGroup.getItems(context, notificationManager, message)
+                        val title = NotificationGroup.getContentTitle(
+                                context,
+                                message,
+                                count = items?.size ?: 0
+                        ) ?: line
+                        val totalText = NotificationGroup.getContentText(
+                                context,
+                                notificationManager,
+                                notifyGroup
+                        ) ?: line
+
+                        setStyle(NotificationCompat.InboxStyle().run {
+                            items?.forEach { addLine(it) }
+                                    ?: addLine(line)
+                            setBigContentTitle(title)
+                        })
+
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M)
+                            setContentIntent(pendingIntent)
+
+                        color = context.color(R.color.mozo_color_primary)
+                        setAutoCancel(true)
+                        setContentTitle(title)
+                        setDefaults(Notification.DEFAULT_ALL)
+                        setGroup(notifyGroup.name)
+                        setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                        setGroupSummary(true)
+                        setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
+                        setNumber(items?.size ?: 0)
+                        setSmallIcon(R.drawable.ic_mozo_notification)
+                        setSubText(totalText)
+                    }
+            NotificationManagerCompat.from(context).notify(notifyGroup.id, group.build())
         }
-        NotificationManagerCompat.from(context).notify(notificationGroup.id, group.build())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -191,6 +213,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     companion object {
         private const val TAG = "Socket"
+        internal const val EXTRAS_ITEM_AMOUNT = "EXTRAS_ITEM_AMOUNT"
+        internal const val EXTRAS_ITEM_DATA = "EXTRAS_ITEM_DATA"
 
         @Volatile
         private var instance: MozoSocketClient? = null

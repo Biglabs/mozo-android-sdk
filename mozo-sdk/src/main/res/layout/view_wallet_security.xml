@@ -192,12 +192,15 @@
 
         <TextView
             android:id="@+id/pin_forgot_msg"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/mozo_screen_padding"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="@dimen/mozo_screen_padding"
             android:background="?selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
+            android:gravity="center"
             android:padding="6dp"
             android:text="@string/mozo_pin_forgot_msg"
             android:textColor="@color/mozo_color_primary"
