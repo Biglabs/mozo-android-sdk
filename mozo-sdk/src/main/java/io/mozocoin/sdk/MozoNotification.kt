@@ -1,29 +1,152 @@
 package io.mozocoin.sdk
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.text.TextUtils
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.gson.Gson
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.OnNotificationReceiveListener
 import io.mozocoin.sdk.common.model.BroadcastDataContent
 import io.mozocoin.sdk.common.model.Notification
+import io.mozocoin.sdk.common.model.NotificationGroup
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.transaction.TransactionDetails
-import io.mozocoin.sdk.utils.Support
-import io.mozocoin.sdk.utils.censor
-import io.mozocoin.sdk.utils.displayString
-import io.mozocoin.sdk.utils.safe
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import io.mozocoin.sdk.utils.*
+import kotlinx.coroutines.*
 
 @Suppress("unused")
-class MozoNotification {
+class MozoNotification private constructor() {
+
+    private val notificationManager: NotificationManager by lazy {
+        MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
+
+    private var mShowGroupNotifyJob: Job? = null
+
+    internal fun showNotification(message: BroadcastDataContent) = GlobalScope.launch {
+        MozoSDK.getInstance().notifyActivityClass ?: return@launch
+
+        val context = MozoSDK.getInstance().context
+        val notification = prepareNotification(context, message)
+        val notificationGroup = NotificationGroup.getKey(message)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                !notificationChannelExists(message.event ?: return@launch)) {
+            createChannel(message.event).join()
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+                context,
+                REQUEST_CODE,
+                prepareDataIntent(notification),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val singleNotify = NotificationCompat.Builder(context, message.event ?: return@launch)
+                .setSmallIcon(R.drawable.ic_mozo_notification)
+                .setLargeIcon(context.bitmap(notification.icon()))
+                .setColor(context.color(R.color.mozo_color_primary))
+                .setContentTitle(notification.titleDisplay())
+                .setContentText(notification.contentDisplay())
+                .setAutoCancel(true)
+                .setDefaults(android.app.Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent)
+                .setGroup(notificationGroup.name)
+        singleNotify.extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
+        singleNotify.extras.putString(EXTRAS_ITEM_DATA, notification.raw)
+        NotificationManagerCompat.from(context)
+                .notify(System.currentTimeMillis().toInt(), singleNotify.build())
+
+
+        doGroupNotificationDelayed(context, message, notification, notificationGroup, pendingIntent)
+    }
+
+    private fun doGroupNotificationDelayed(
+            context: Context,
+            message: BroadcastDataContent,
+            notify: Notification,
+            notifyGroup: NotificationGroup,
+            pendingIntent: PendingIntent
+    ) {
+
+        mShowGroupNotifyJob?.cancel()
+        mShowGroupNotifyJob = GlobalScope.launch {
+            delay(2000)
+
+            val group = NotificationCompat.Builder(context, message.event ?: return@launch)
+                    .apply {
+                        val line = TextUtils.concat(notify.titleDisplay(), " ", notify.contentDisplay())
+                        val items = NotificationGroup.getItems(context, notificationManager, message)
+                        val title = NotificationGroup.getContentTitle(
+                                context,
+                                message,
+                                count = items?.size ?: 0
+                        ) ?: line
+                        val totalText = NotificationGroup.getContentText(
+                                context,
+                                notificationManager,
+                                notifyGroup
+                        ) ?: line
+
+                        setStyle(NotificationCompat.InboxStyle().run {
+                            items?.forEach { addLine(it) }
+                                    ?: addLine(line)
+                            setBigContentTitle(title)
+                        })
+
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M)
+                            setContentIntent(pendingIntent)
+
+                        color = context.color(R.color.mozo_color_primary)
+                        setAutoCancel(true)
+                        setContentTitle(title)
+                        setDefaults(android.app.Notification.DEFAULT_ALL)
+                        setGroup(notifyGroup.name)
+                        setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                        setGroupSummary(true)
+                        setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
+                        setNumber(items?.size ?: 0)
+                        setSmallIcon(R.drawable.ic_mozo_notification)
+                        setSubText(totalText)
+                    }
+            NotificationManagerCompat.from(context).notify(notifyGroup.id, group.build())
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createChannel(channel: String) = GlobalScope.launch(Dispatchers.Main) {
+        var channelName = channel.split("_")[0]
+        channelName = channelName.substring(0, 1).toUpperCase() + channelName.substring(1)
+
+        val notificationChannel = NotificationChannel(channel, channelName, NotificationManager.IMPORTANCE_HIGH)
+        notificationChannel.setShowBadge(true)
+        notificationChannel.lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
+        notificationManager.createNotificationChannel(notificationChannel)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun notificationChannelExists(channelId: String): Boolean = notificationManager.getNotificationChannel(channelId) != null
+
+
     companion object {
 
         const val REQUEST_CODE = 0x3020
         const val KEY_DATA = "mozo_notification_data"
+
+        internal const val EXTRAS_ITEM_AMOUNT = "EXTRAS_ITEM_AMOUNT"
+        internal const val EXTRAS_ITEM_DATA = "EXTRAS_ITEM_DATA"
+
+        private val ourInstance = MozoNotification()
+
+        @JvmStatic
+        internal fun getInstance(): MozoNotification = ourInstance
 
         internal fun shouldShowNotification(event: String?) = (if (MozoSDK.isRetailerApp)
             arrayOf(

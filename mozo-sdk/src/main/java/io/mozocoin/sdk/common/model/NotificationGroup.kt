@@ -11,7 +11,6 @@ import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
-import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.safe
 import java.math.BigDecimal
@@ -37,7 +36,7 @@ enum class NotificationGroup(val id: Int) {
         fun getItems(context: Context, notificationManager: NotificationManager, message: BroadcastDataContent): List<CharSequence>? {
             val gSon = Gson()
             return getCurrentlyGroupExtras(notificationManager, getKey(message).name)?.mapNotNull {
-                it.getString(MozoSocketClient.EXTRAS_ITEM_DATA)?.let { data ->
+                it.getString(MozoNotification.EXTRAS_ITEM_DATA)?.let { data ->
                     try {
                         gSon.fromJson(data, BroadcastDataContent::class.java)
                     } catch (ex: Exception) {
@@ -60,7 +59,7 @@ enum class NotificationGroup(val id: Int) {
 
             var totalAmount = BigDecimal.ZERO
             extras?.forEach { bundle ->
-                bundle.getString(MozoSocketClient.EXTRAS_ITEM_AMOUNT)?.let {
+                bundle.getString(MozoNotification.EXTRAS_ITEM_AMOUNT)?.let {
                     totalAmount = totalAmount.plus(it.toBigDecimalOrNull().safe())
                 }
             }

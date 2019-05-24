@@ -59,7 +59,6 @@ class MozoAuth private constructor() {
 
         } else {
             MozoSDK.getInstance().profileViewModel.clear()
-            MozoSocketClient.disconnect()
             /* notify for caller */
             mAuthListeners.forEach { l -> l.onAuthStateChanged(false) }
         }
@@ -108,6 +107,7 @@ class MozoAuth private constructor() {
 
     fun signOut(reSignIn: Boolean = false) {
         walletService.clear()
+        MozoSocketClient.disconnect()
         MozoAuthActivity.signOut(MozoSDK.getInstance().context) {
 
             onAuthorizeChanged(MessageEvent.Auth())
