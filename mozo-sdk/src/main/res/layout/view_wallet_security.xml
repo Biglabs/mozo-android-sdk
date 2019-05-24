@@ -30,17 +30,15 @@
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
                 app:buttonClose="true"
-                app:title="@string/mozo_pin_title"
-                tools:layout_height="84dp" />
+                app:title="@string/mozo_pin_title" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:fitsSystemWindows="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_marginTop="?actionBarSize"
+        android:animateLayoutChanges="true">
 
         <TextView
             android:id="@+id/sub_title_pin"
@@ -84,7 +82,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_content_pin"
-            app:layout_constraintVertical_bias="0.45"
             tools:visibility="visible" />
 
         <TextView
@@ -103,7 +100,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_content_pin"
-            app:layout_constraintVertical_bias="0.45" />
+            tools:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/error_container"
@@ -116,7 +113,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_content_pin"
-            app:layout_constraintVertical_bias="0.2">
+            app:layout_constraintVertical_bias="0.2"
+            tools:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -153,8 +151,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.45"
+            app:layout_constraintTop_toBottomOf="@id/text_content_pin"
+            app:layout_constraintVertical_bias="0.42"
             app:layout_constraintWidth_percent="0.6"
             app:pinAnimationType="fromBottom"
             app:pinLineColors="@color/mozo_color_pin_input"
@@ -179,6 +177,47 @@
             app:layout_constraintTop_toTopOf="@id/input_pin"
             tools:visibility="visible" />
 
+        <TextView
+            android:id="@+id/pin_forgot_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mozo_pin_forgot_title"
+            android:textColor="@color/mozo_color_title"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toTopOf="@id/pin_forgot_msg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_pin"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/pin_forgot_msg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/mozo_screen_padding"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="@dimen/mozo_screen_padding"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="@string/mozo_pin_forgot_msg"
+            android:textColor="@color/mozo_color_primary"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pin_forgot_title" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/pin_forgot_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="pin_forgot_title, pin_forgot_msg"
+            tools:visibility="visible" />
+
         <ProgressBar
             android:id="@+id/input_loading_indicator"
             android:layout_width="32dp"
@@ -187,18 +226,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.42" />
-
-        <TextView
-            android:id="@+id/input_loading_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_loading_indicator" />
+            app:layout_constraintTop_toBottomOf="@id/text_content_pin"
+            app:layout_constraintVertical_bias="0.45"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

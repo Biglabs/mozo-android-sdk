@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.authentication.MozoAuthActivity
 import io.mozocoin.sdk.common.Constant
@@ -30,6 +31,15 @@ internal class MozoAPIsService private constructor() {
 
     private val mozoAPIs: MozoAPIs by lazy { createService() }
 
+    fun checkSystemStatus(
+            context: Context,
+            callback: ((data: Status?, errorCode: String?) -> Unit)?
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.checkSystemStatus(), callback, null, false)
+        }
+    }
+
     fun getProfile(context: Context, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getProfile(), callback, retry)
@@ -48,6 +58,12 @@ internal class MozoAPIsService private constructor() {
     fun saveWallet(context: Context, walletInfo: WalletInfo, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.saveWallet(walletInfo), callback, retry)
+        }
+    }
+
+    fun resetWallet(context: Context, walletInfo: WalletInfo, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.resetWallet(walletInfo), callback, null, false)
         }
     }
 
@@ -240,7 +256,10 @@ internal class MozoAPIsService private constructor() {
                     if (!body.isSuccess && handleError) {
 
                         if (context is Activity && !context.isFinishing && !context.isDestroyed) {
-                            ErrorCode.findByKey(body.errorCode)?.let {
+                            if (ErrorCode.ERROR_MAINTAINING.key.equals(body.errorCode, ignoreCase = true)) {
+                                if (shouldHandleMaintenance(call)) MozoSDK.startMaintenanceMode(context)
+
+                            } else ErrorCode.findByKey(body.errorCode)?.let {
                                 if (it.shouldShowContactMessage()) {
                                     ErrorDialog.withContactError(context)
 
@@ -271,6 +290,7 @@ internal class MozoAPIsService private constructor() {
             override fun onFailure(call: Call<T>, t: Throwable) {
                 callback?.invoke(null, null)
 
+                if (!handleError) return
                 if (context is BaseActivity || context is MozoAuthActivity || shouldHandleException(call)) {
                     if (context is Activity && (context.isFinishing || context.isDestroyed)) {
                         return
@@ -288,6 +308,14 @@ internal class MozoAPIsService private constructor() {
     private fun <T> shouldHandleException(call: Call<T>): Boolean {
         val path = call.request().url().encodedPath()
         return path.endsWith("/user-profile", true)
+    }
+
+    private fun <T> shouldHandleMaintenance(call: Call<T>): Boolean {
+        val path = call.request().url().encodedPath()
+        return when {
+            path.endsWith("system-status", true) -> false
+            else -> true
+        }
     }
 
     private fun createService(): MozoAPIs {

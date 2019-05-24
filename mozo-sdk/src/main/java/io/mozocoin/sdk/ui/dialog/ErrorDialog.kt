@@ -75,7 +75,10 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         errorType = type ?: argument.getInt(ERROR_TYPE, errorType)
         errorMessage = argument.getString(ERROR_MESSAGE)
 
-        image_error_type?.visible()
+        visible(arrayOf(
+                image_error_type,
+                text_title_error
+        ))
         gone(arrayOf(
                 button_contact_telegram,
                 button_contact_zalo,
@@ -86,19 +89,25 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         when (errorType) {
             TYPE_GENERAL -> {
                 image_error_type?.setImageResource(R.drawable.ic_error_general)
-                text_msg_error?.setText(R.string.mozo_dialog_error_msg)
+                text_title_error?.setText(R.string.mozo_dialog_error_msg)
             }
             TYPE_NETWORK -> {
                 image_error_type?.setImageResource(R.drawable.ic_error_network)
-                text_msg_error?.setText(R.string.mozo_dialog_error_network_msg)
+                text_title_error?.setText(R.string.mozo_dialog_error_network_msg)
+                text_msg_error?.setText(R.string.mozo_dialog_error_network_msg_sub)
+                text_msg_error?.visible()
             }
             TYPE_TIMEOUT -> {
                 image_error_type?.setImageResource(R.drawable.ic_error_timeout)
-                text_msg_error?.setText(R.string.mozo_dialog_error_timeout_msg)
+                text_title_error?.setText(R.string.mozo_dialog_error_timeout_msg)
             }
             TYPE_WITH_CONTACT -> {
-                image_error_type?.gone()
+                gone(arrayOf(
+                        image_error_type,
+                        text_title_error
+                ))
                 visible(arrayOf(
+                        text_msg_error,
                         button_contact_telegram,
                         button_contact_zalo,
                         button_contact_kakao

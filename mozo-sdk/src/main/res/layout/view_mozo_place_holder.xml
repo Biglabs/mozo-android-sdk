@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/place_holder_icon"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        tools:src="@drawable/ic_mozo_offchain" />
+
+    <TextView
+        android:id="@+id/place_holder_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:gravity="center"
+        android:textColor="@color/mozo_color_section_text"
+        android:textSize="16sp"
+        tools:text="@tools:sample/lorem" />
+
+    <TextView
+        android:id="@+id/place_holder_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:layout_marginBottom="@dimen/mozo_screen_padding"
+        android:gravity="center"
+        android:textColor="@color/mozo_color_section_text"
+        android:textSize="13sp"
+        tools:maxLines="10"
+        tools:text="@tools:sample/lorem/random" />
+
+    <Button
+        android:id="@+id/place_holder_primary_button"
+        style="@style/MozoButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        tools:text="@string/mozo_button_ok"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/place_holder_second_button"
+        style="@style/MozoButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        tools:text="@string/mozo_button_cancel"
+        tools:visibility="visible" />
+</LinearLayout>

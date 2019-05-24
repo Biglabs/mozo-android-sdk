@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingStart="40dp"
-    android:paddingEnd="40dp"
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp"
     tools:background="#3ccc">
 
     <ImageView
@@ -21,18 +21,35 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_msg_error"
+        android:id="@+id/text_title_error"
         android:layout_width="215dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/mozo_dialog_error_network_msg"
+        android:textColor="@color/mozo_color_text_main"
+        android:textSize="@dimen/mozo_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_error_type"
+        app:layout_goneMarginTop="40dp" />
+
+    <TextView
+        android:id="@+id/text_msg_error"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/mozo_dialog_error_msg"
         android:textColor="@color/mozo_color_text_main"
         android:textSize="@dimen/mozo_text_size"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_error_type"
-        app:layout_goneMarginTop="40dp" />
+        app:layout_constraintTop_toBottomOf="@id/text_title_error"
+        app:layout_goneMarginTop="40dp"
+        tools:visibility="visible" />
 
     <io.mozocoin.sdk.ui.view.MozoIconTextView
         android:id="@+id/button_contact_telegram"

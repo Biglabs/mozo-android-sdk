@@ -5,8 +5,10 @@ import android.os.Handler
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.authentication.MozoAuthActivity
+import io.mozocoin.sdk.authentication.ProfileChangeListener
 import io.mozocoin.sdk.common.Gender
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.UserInfo
 import io.mozocoin.sdk.common.service.MozoAPIsService
@@ -28,6 +30,7 @@ class MozoAuth private constructor() {
 
     private val authStateManager: AuthStateManager by lazy { AuthStateManager.getInstance(MozoSDK.getInstance().context) }
     private var mAuthListeners: MutableList<AuthStateListener> = mutableListOf()
+    private var mProfileChangeListeners: MutableList<ProfileChangeListener>? = null
 
     internal var isInitialized = false
 
@@ -133,15 +136,6 @@ class MozoAuth private constructor() {
         }
     }
 
-    fun addAuthStateListener(listener: AuthStateListener) {
-        this.mAuthListeners.add(listener)
-        initialize()
-    }
-
-    fun removeAuthStateListener(listener: AuthStateListener) {
-        this.mAuthListeners.remove(listener)
-    }
-
     fun getAccessToken() = authStateManager.current.accessToken
 
     /**
@@ -231,7 +225,7 @@ class MozoAuth private constructor() {
 
             GlobalScope.launch {
                 if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
-                    saveUserInfo(context, data, callback)
+                    saveUserInfo(context, data, callback = callback)
                     return@launch
                 }
 
@@ -245,7 +239,7 @@ class MozoAuth private constructor() {
                     ) {
                         callback?.invoke(true) // No need recover wallet
                     } else {
-                        saveUserInfo(context, data, callback)
+                        saveUserInfo(context, data, callback = callback)
                     }
                 }
             }
@@ -254,12 +248,10 @@ class MozoAuth private constructor() {
         })
     }
 
-    private fun saveUserInfo(context: Context, profile: Profile, callback: ((success: Boolean) -> Unit)? = null) {
-        MozoWallet.getInstance().initWallet(context, profile) {
+    internal fun saveUserInfo(context: Context, profile: Profile, walletHelper: WalletHelper? = null, callback: ((success: Boolean) -> Unit)? = null) {
+        MozoWallet.getInstance().initWallet(context, profile, walletHelper) {
             GlobalScope.launch {
                 if (it) {
-
-
                     /* update local profile to match with server profile */
                     profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
                     mozoDB.profile().save(profile)
@@ -289,7 +281,29 @@ class MozoAuth private constructor() {
         )
         mozoDB.userInfo().save(userInfo)
         MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
+
         return@async userInfo
+    }
+
+
+    fun addAuthStateListener(listener: AuthStateListener) {
+        this.mAuthListeners.add(listener)
+        initialize()
+    }
+
+    fun removeAuthStateListener(listener: AuthStateListener) {
+        this.mAuthListeners.remove(listener)
+    }
+
+    fun addProfileChangeListener(listener: ProfileChangeListener) {
+        if (mProfileChangeListeners == null) {
+            mProfileChangeListeners = mutableListOf()
+        }
+        mProfileChangeListeners?.add(listener)
+    }
+
+    fun removeProfileChangeListener(listener: ProfileChangeListener) {
+        this.mProfileChangeListeners?.remove(listener)
     }
 
     companion object {
@@ -302,5 +316,9 @@ class MozoAuth private constructor() {
                     instance = MozoAuth()
                     instance!!
                 }
+
+        internal fun invokeProfileChangeListener(userInfo: UserInfo) {
+            instance?.mProfileChangeListeners?.forEach { it.onProfileChanged(userInfo) }
+        }
     }
 }

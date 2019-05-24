@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.ui.widget.PinEntryEditText
 import io.mozocoin.sdk.utils.customtabs.CustomTabsHelper
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -38,13 +39,22 @@ fun Activity.setMatchParent() {
 }
 
 fun FragmentActivity.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
+    if (isFinishing || isDestroyed) return
     supportFragmentManager.beginTransaction().replace(id, fragment).apply {
         if (backStackName != null) addToBackStack(backStackName)
     }.commit()
 }
 
 fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
-    childFragmentManager.beginTransaction().replace(id, fragment).apply {
+    if (!isAdded || isRemoving) return
+    childFragmentManager.beginTransaction().run {
+        childFragmentManager.fragments.forEach {
+            hide(it)
+        }
+
+        if (fragment.isAdded) show(fragment)
+        else add(id, fragment)
+    }.apply {
         if (backStackName != null) addToBackStack(backStackName)
     }.commit()
 }
@@ -186,3 +196,5 @@ fun BigDecimal.toGwei(): BigDecimal {
 }
 
 fun BigDecimal?.safe(): BigDecimal = this ?: BigDecimal.ZERO
+
+internal fun PinEntryEditText.onBackPress(action: suspend () -> Unit) = setOnBackPress(action)

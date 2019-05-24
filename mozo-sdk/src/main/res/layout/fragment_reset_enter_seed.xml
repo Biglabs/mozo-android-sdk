@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/mozo_screen_margin">
+
+            <TextView
+                android:id="@+id/reset_pin_sub_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_padding"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="@dimen/mozo_screen_padding"
+                android:enabled="false"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:text="@string/mozo_pin_reset_sub_title"
+                android:textColor="@color/mozo_color_seed_input"
+                android:textSize="@dimen/mozo_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_1"
+                style="@style/MozoTextViewStyle.Seed"
+                android:layout_marginTop="67dp"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_2"
+                app:layout_constraintEnd_toStartOf="@id/reset_pin_seed_7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom1" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_1"
+                android:text="1."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_1"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_1"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_2"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_3"
+                app:layout_constraintEnd_toStartOf="@id/reset_pin_seed_8"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reset_pin_seed_1"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom2" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_2"
+                android:text="2."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_2"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_2"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_3"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_4"
+                app:layout_constraintEnd_toStartOf="@id/reset_pin_seed_9"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reset_pin_seed_2"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom3" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_3"
+                android:text="3."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_3"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_3"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_4"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_5"
+                app:layout_constraintEnd_toStartOf="@id/reset_pin_seed_10"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reset_pin_seed_3"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom4" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_4"
+                android:text="4."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_4"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_4"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_5"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_6"
+                app:layout_constraintEnd_toStartOf="@id/reset_pin_seed_11"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reset_pin_seed_4"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom5" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_5"
+                android:text="5."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_5"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_5"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_6"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_7"
+                app:layout_constraintEnd_toStartOf="@id/reset_pin_seed_12"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reset_pin_seed_5"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom6" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_6"
+                android:text="6."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_6"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_6"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_7"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_8"
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/reset_pin_seed_1"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_7"
+                android:text="7."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_7"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_7"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_8"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_9"
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/reset_pin_seed_2"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_8"
+                android:text="8."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_8"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_8"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_9"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_10"
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/reset_pin_seed_3"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_9"
+                android:text="9."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_9"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_9"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_10"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_11"
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/reset_pin_seed_4"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_10"
+                android:text="10."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_10"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_10"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_11"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusForward="@id/reset_pin_seed_12"
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/reset_pin_seed_5"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_11"
+                android:text="11."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_11"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_11"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/reset_pin_seed_12"
+                style="@style/MozoTextViewStyle.Seed"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/reset_pin_seed_6"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/reset_pin_seed_12"
+                android:text="12."
+                app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_12"
+                app:layout_constraintStart_toStartOf="@id/reset_pin_seed_12"
+                tools:ignore="HardcodedText" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/reset_pin_loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:focusable="false"
+        android:visibility="gone"
+        tools:ignore="KeyboardInaccessibleWidget">
+
+        <ProgressBar
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:text="@string/mozo_pin_reset_msg_checking"
+            android:textColor="@color/mozo_color_title"
+            android:textSize="@dimen/mozo_text_size" />
+    </FrameLayout>
+</FrameLayout>

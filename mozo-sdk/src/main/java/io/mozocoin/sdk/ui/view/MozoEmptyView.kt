@@ -13,9 +13,8 @@ import io.mozocoin.sdk.utils.dp2Px
 
 class MozoEmptyView : MozoIconTextView {
 
-    constructor(context: Context) : this(context, null, 0)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         gravity = Gravity.CENTER
         setTypeface(typeface, Typeface.ITALIC)
         setTextColor(context.color(R.color.mozo_color_line))

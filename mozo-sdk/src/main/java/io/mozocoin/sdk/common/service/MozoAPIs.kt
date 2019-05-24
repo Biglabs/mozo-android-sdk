@@ -5,6 +5,12 @@ import retrofit2.Call
 import retrofit2.http.*
 
 internal interface MozoAPIs {
+    /**
+     * Check System status
+     */
+    @GET("system-status")
+    fun checkSystemStatus(): Call<Base<Status>>
+
     @GET("${MozoAPIsService.APIS_SOLOMON}/contacts")
     fun getContacts(): Call<Base<BaseData<Contact>>>
 
@@ -28,6 +34,9 @@ internal interface MozoAPIs {
 
     @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/walletAll")
     fun saveWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>
+
+    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/wallet/reset-pin")
+    fun resetWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>
 
     @GET("${MozoAPIsService.APIS_SOLOMON}/solo/contract/solo-token/balance/{address}")
     fun getBalance(@Path("address") address: String): Call<Base<BalanceInfo>>

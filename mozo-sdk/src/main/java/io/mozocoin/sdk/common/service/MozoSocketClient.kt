@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
+import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -18,6 +19,7 @@ import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.BroadcastData
 import io.mozocoin.sdk.common.model.BroadcastDataContent
+import io.mozocoin.sdk.common.model.NotificationGroup
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
@@ -32,6 +34,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
+    private var mShowGroupNotifyJob: Job? = null
+
     init {
         connect()
     }
@@ -42,7 +46,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
     }
 
     override fun onMessage(s: String?) {
-        "message $s".logAsInfo(TAG)
+        "${instance.toString()} : message $s".logAsInfo(TAG)
         s?.run {
             if (equals("1|X", ignoreCase = true)) {
                 sendPing()
@@ -59,7 +63,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         broadcast.event ?: return@let
 
                         /* Save notification to local storage */
-                        MozoNotification.save(broadcast)
+                        // MozoNotification.save(broadcast)
 
                         when (broadcast.event.toLowerCase()) {
                             /* Reload balance */
@@ -72,6 +76,9 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                             }
                             Constant.NOTIFY_EVENT_CONVERT -> {
                                 EventBus.getDefault().post(MessageEvent.ConvertOnChain())
+                            }
+                            Constant.NOTIFY_EVENT_PROFILE_CHANGED -> {
+                                MozoAuth.getInstance().syncProfile(MozoSDK.getInstance().context)
                             }
                         }
 
@@ -106,8 +113,10 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
         val context = MozoSDK.getInstance().context
         val notification = MozoNotification.prepareNotification(context, message)
+        val notificationGroup = NotificationGroup.getKey(message)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !notificationChannelExists(message.event!!)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                !notificationChannelExists(message.event ?: return@launch)) {
             createChannel(message.event).join()
         }
 
@@ -117,7 +126,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 MozoNotification.prepareDataIntent(notification),
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val builder = NotificationCompat.Builder(context, message.event!!)
+        val singleNotify = NotificationCompat.Builder(context, message.event ?: return@launch)
                 .setSmallIcon(R.drawable.ic_mozo_notification)
                 .setLargeIcon(context.bitmap(notification.icon()))
                 .setColor(context.color(R.color.mozo_color_primary))
@@ -126,10 +135,65 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
-        withContext(Dispatchers.Main) {
-            NotificationManagerCompat
-                    .from(context)
-                    .notify(System.currentTimeMillis().toInt(), builder.build())
+                .setGroup(notificationGroup.name)
+        singleNotify.extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
+        singleNotify.extras.putString(EXTRAS_ITEM_DATA, notification.raw)
+        NotificationManagerCompat.from(context)
+                .notify(System.currentTimeMillis().toInt(), singleNotify.build())
+
+
+        doGroupNotificationDelayed(context, message, notification, notificationGroup, pendingIntent)
+    }
+
+    private fun doGroupNotificationDelayed(
+            context: Context,
+            message: BroadcastDataContent,
+            notify: io.mozocoin.sdk.common.model.Notification,
+            notifyGroup: NotificationGroup,
+            pendingIntent: PendingIntent
+    ) {
+
+        mShowGroupNotifyJob?.cancel()
+        mShowGroupNotifyJob = GlobalScope.launch {
+            delay(2000)
+
+            val group = NotificationCompat.Builder(context, message.event ?: return@launch)
+                    .apply {
+                        val line = TextUtils.concat(notify.titleDisplay(), " ", notify.contentDisplay())
+                        val items = NotificationGroup.getItems(context, notificationManager, message)
+                        val title = NotificationGroup.getContentTitle(
+                                context,
+                                message,
+                                count = items?.size ?: 0
+                        ) ?: line
+                        val totalText = NotificationGroup.getContentText(
+                                context,
+                                notificationManager,
+                                notifyGroup
+                        ) ?: line
+
+                        setStyle(NotificationCompat.InboxStyle().run {
+                            items?.forEach { addLine(it) }
+                                    ?: addLine(line)
+                            setBigContentTitle(title)
+                        })
+
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M)
+                            setContentIntent(pendingIntent)
+
+                        color = context.color(R.color.mozo_color_primary)
+                        setAutoCancel(true)
+                        setContentTitle(title)
+                        setDefaults(Notification.DEFAULT_ALL)
+                        setGroup(notifyGroup.name)
+                        setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                        setGroupSummary(true)
+                        setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
+                        setNumber(items?.size ?: 0)
+                        setSmallIcon(R.drawable.ic_mozo_notification)
+                        setSubText(totalText)
+                    }
+            NotificationManagerCompat.from(context).notify(notifyGroup.id, group.build())
         }
     }
 
@@ -149,6 +213,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     companion object {
         private const val TAG = "Socket"
+        internal const val EXTRAS_ITEM_AMOUNT = "EXTRAS_ITEM_AMOUNT"
+        internal const val EXTRAS_ITEM_DATA = "EXTRAS_ITEM_DATA"
 
         @Volatile
         private var instance: MozoSocketClient? = null
@@ -223,4 +289,5 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             "stop retry connect".logAsInfo(TAG)
         }
     }
+
 }

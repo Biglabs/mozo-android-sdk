@@ -520,5 +520,3 @@ internal class PinEntryEditText : AppCompatEditText {
         const val DEFAULT_MASK = "\u25CF"
     }
 }
-
-internal fun PinEntryEditText.onBackPress(action: suspend () -> Unit) = setOnBackPress(action)
