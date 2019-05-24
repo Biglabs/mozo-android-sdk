@@ -1,5 +1,6 @@
 package io.mozocoin.sdk.wallet.reset
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
@@ -176,6 +177,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
 
             when (type) {
                 MESSAGE_SUCCESS -> {
+                    activity?.setResult(RESULT_OK)
                     icon = R.drawable.ic_check_green
                     title = R.string.mozo_pin_reset_msg_done
                     buttonText = R.string.mozo_button_done

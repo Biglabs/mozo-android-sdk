@@ -10,8 +10,8 @@ import androidx.core.widget.TextViewCompat
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
-import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import io.mozocoin.sdk.utils.*
+import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import kotlinx.android.synthetic.main.view_toolbar.view.*
 import kotlinx.android.synthetic.main.view_wallet_security.*
 import kotlinx.android.synthetic.main.view_wallet_security_backup.*
@@ -66,6 +66,13 @@ internal class SecurityActivity : BaseActivity() {
             EventBus.getDefault().post(MessageEvent.UserCancel())
         }
         super.onDestroy()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == RC_REST_PIN) {
+            hidePinInputWrongUI()
+        }
     }
 
     private fun showBackupUI() {
@@ -143,7 +150,7 @@ internal class SecurityActivity : BaseActivity() {
         }
         input_pin_checker_status?.gone()
         pin_forgot_msg?.click {
-            startActivity(Intent(this, ResetPinActivity::class.java))
+            startActivityForResult(Intent(this, ResetPinActivity::class.java), RC_REST_PIN)
         }
     }
 
@@ -312,6 +319,7 @@ internal class SecurityActivity : BaseActivity() {
 
     companion object {
         private const val KEY_MODE = "KEY_MODE"
+        private const val RC_REST_PIN = 555
 
         const val KEY_CREATE_PIN = 0x001
         const val KEY_ENTER_PIN = 0x002
