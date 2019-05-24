@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tips_retailer_question">
+        <item>Đồng MozoX là gì? Nó được dùng để làm gì?</item>
+        <item>Làm thế nào để thu hút khách hàng bằng MozoX?</item>
+        <item>Sự khác biệt giữa MozoX và các biện pháp truyền thông quảng cáo khác?</item>
+        <item>MozoX hoạt động ra sao để được xem là hệ thống điểm thưởng dùng công nghệ blockchain?</item>
+        <item>Hashtag là gì? Tại sao phải chọn hashtag khi thiết lập thông tin cửa hàng?</item>
+        <item>Tôi có thể thu hồi lại MozoX sau khi đã thiết lập sự kiện airdrop không?</item>
+        <item>Làm thế nào để chia sẻ quyền quản lý cho những người quản lý khác tại cửa hàng của tôi?</item>
+        <item>Khi nào thì MozoX được airdrop cho khách hàng của tôi?</item>
+    </string-array>
+
+    <string-array name="tips_retailer_answer">
+        <item>MozoX là điểm thưởng dùng công nghệ blockchain mà người bán hàng có thể lì xì cho khách hàng khi họ đến cửa hàng. Người nhận được lì xì có thể dùng nó để được hưởng khuyến mãi do người bán hàng tạo ra.</item>
+        <item>Khách hàng sẽ dùng điểm thưởng đổi khuyến mãi do người bán hàng tạo ra nên có động lực đi đến cửa hàng để thu thập điểm thưởng.</item>
+        <item>Với MozoX, bạn chỉ lì xì cho khách hàng thực sự đến cửa hàng của bạn nên tỉ lệ chuyển đổi là 1:1 trong mối tương quan giữa số tiền bỏ ra và lượt khách đến cửa hàng của bạn. Các kênh quảng cáo truyền thống chỉ bảo đảm người dùng bấm xem thông tin trực tuyến của bạn chứ không chắc chắn người dùng sẽ đến cửa hàng.</item>
+        <item>Khách hàng sẽ phải tích lũy đủ điểm thưởng MozoX để có thể quy đổi các chương trình hậu mãi, giảm giá và khuyến mãi trong các chương trình dành riêng cho khách hàng thân thiết. Do đó họ có động lực để đi đến những nơi đã được thiết lập chương trình lì xì bởi người bán hàng và nhà điều hành dịch vụ. Ứng dụng công nghệ mới blockchain, MozoX bảo bảo tính an toàn hơn hẳn tất cả các ứng dụng cổ điển trong lĩnh vực này. Ngoài ra, kết hợp với công nghệ định vị, MozoX bảo đảm lượt khách đến đúng vị trí mong muốn.\nNgười bán hàng và nhà điều hành dịch vụ sẽ dùng MozoX Retailer App để thiết lập các chương trình lì xì gắn với beacon, loại thiết bị định vị bảo đảm khách hàng phải đến nơi cần đến. Công cụ này giúp họ có thể làm chủ được cách bố trí lượt khách. Hơn nữa, họ có thể thiết lập các chương trình hậu mãi, giảm giá và khuyến mãi với MozoX Retailer App.\nKhách hàng sẽ dùng MozoX App để duyệt, tìm kiếm và khám phá tất cả các chương trình lì xì, hậu mãi, giảm giá và khuyến mãi được thiết lập bởi người bán hàng và nhà điều hành dịch vụ.\nCác MozoX App còn hỗ trợ việc thực hiện các giao dịch hậu mãi, giảm giá và khuyến mãi một cách hiệu quả.</item>
+        <item>Hashtag là một cụm từ bắt đầu bằng dấu #. Người dùng MozoX sẽ khám phá cửa hàng của bạn bằng những từ khóa là hashtag mà bạn đã thiết lập.</item>
+        <item>Bạn không thể lấy lại MozoX khi trạng thái của sự kiện Airdrop là &quot;Hẹn giờ&quot;, &quot;Đang chạy&quot; hoặc &quot;Hết MozoX&quot;. Nhưng bạn có thể rút MozoX khi trạng thái của sự kiện Airdrop là &quot;kết thúc&quot; và sự kiện airdrop không sử dụng hết MozoX</item>
+        <item>Bạn có thể chia sẻ quyền quản lý bằng cách thêm họ như tài khoản phụ. Tài khoản phụ sẽ có quyền tương tự như tài khoản chính, ngoại trừ việc không thể chỉnh sửa thông tin store, beacon và tài khoản phụ. Lưu ý rằng ví của tài khoản phụ khi mới tạo ra là 0 MozoX. Để ví của tài khoản phụ có tiền, bạn có thể chuyển MozoX cho họ</item>
+        <item>Nếu họ bước vào vùng phát sóng của beacon trong cửa hàng khi sự kiện đang diễn ra thì họ sẽ nhận được airdrop</item>
+    </string-array>
+
+
+    <string-array name="tips_shopper_question">
+        <item>Đồng MozoX là gì? Nó được dùng để làm gì?</item>
+        <item>Làm sao để nhận được MozoX?</item>
+        <item>Làm thế nào để tặng MozoX cho bạn bè của tôi ?</item>
+        <item>Cách bao lâu tôi có thể nhận tiếp MozoX từ cùng một cửa hàng khi tôi đến?</item>
+        <item>Tại sao tôi phải bật Bluetooth để nhận MozoX từ sự kiện Airdrop</item>
+    </string-array>
+
+    <string-array name="tips_shopper_answer">
+        <item>MozoX là điểm thưởng dùng công nghệ blockchain mà người bán hàng có thể lì xì cho khách hàng khi họ đến cửa hàng. Người nhận được lì xì có thể dùng nó để được hưởng khuyến mãi do người bán hàng tạo ra.</item>
+        <item>MozoX App cung cấp khá nhiều công cụ để bạn khám phá những địa điểm có lì xì như bản đồ, danh sách, tìm kiếm… Chọn thời gian thích hợp và đi đến cửa hàng. Nhớ bật bluetooth để nhận MozoX.</item>
+        <item>Sử dụng tính năng &quot;Gởi&quot; trên màn hình &quot;Ví&quot; của bạn và gởi MozoX tới địa chỉ ví người bạn muốn gởi.\nMẹo: \n\t- Nếu bạn của bạn ở bên cạnh, quét mã QR trên màn hình &quot;Ví&quot; của họ để chuyển. Nhớ lưu vào danh bạ để sau này sử dụng.</item>
+        <item>Mỗi cửa hàng sẽ thiết lập &quot;Tần suất Airdrop&quot; cho mỗi sự kiện Airdrop mà họ tạo. Chỉ cần bạn đến sau khoảng thời gian này, bạn có thể nhận MozoX lần nữa. Thông thường sẽ là mỗi lần một ngày.</item>
+        <item>Mỗi cửa hàng đều gắn một thiết bị cảm biến beacon. Khi bạn đến cửa hàng và bật Bluetooth, thiết bị này sẽ nhận dạng và hệ thống sẽ tự động Airdrop MozoX cho bạn.</item>
+    </string-array>
+</resources>

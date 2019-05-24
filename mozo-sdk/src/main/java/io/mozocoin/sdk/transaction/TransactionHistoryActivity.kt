@@ -44,9 +44,9 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
         list_history_refresh?.apply {
             mozoSetup()
             setOnRefreshListener(this@TransactionHistoryActivity)
+            isRefreshing = true
         }
 
-        historyAdapter.setEmptyView(list_history_empty_view)
         list_history.setHasFixedSize(true)
         list_history.itemAnimator = DefaultItemAnimator()
         list_history.adapter = historyAdapter
@@ -61,6 +61,10 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
                 R.id.history_filter_received -> historyAdapter.filter(TransactionHistoryRecyclerAdapter.FILTER_RECEIVED)
                 R.id.history_filter_sent -> historyAdapter.filter(TransactionHistoryRecyclerAdapter.FILTER_SENT)
             }
+        }
+
+        list_history_empty_view?.onPrimaryClicked = {
+            onBackPressed()
         }
     }
 
@@ -88,6 +92,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
                 page = currentPage,
                 callback = { data, _ ->
                     list_history_refresh?.isRefreshing = false
+                    historyAdapter.mEmptyView = list_history_empty_view
 
                     if (data?.items == null) {
                         historyAdapter.setCanLoadMore(false)

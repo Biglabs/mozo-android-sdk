@@ -30,6 +30,8 @@ class MozoWallet private constructor() {
     private var mReady4WalletCheckingJob: Job? = null
     private var mReady4WalletCheckingDelayed = 0L
 
+    internal var isDuringResetPinProcess = false
+
     init {
         MozoSDK.getInstance().profileViewModel.profileLiveData.observeForever {
             this.mProfile = it
@@ -37,7 +39,7 @@ class MozoWallet private constructor() {
         }
     }
 
-    fun getAddress() = mProfile?.walletInfo?.offchainAddress
+    fun getAddress() = mProfile?.walletInfo?.offchainAddress ?: mWallet?.offChainAddress
 
     /**
      * Returns the balance of current wallet.
@@ -74,7 +76,7 @@ class MozoWallet private constructor() {
         AddressBookActivity.start(MozoSDK.getInstance().context)
     }
 
-    internal fun initWallet(context: Context, profile: Profile /* server */, callback: ((success: Boolean) -> Unit)? = null) {
+    internal fun initWallet(context: Context, profile: Profile /* server */, walletHelper: WalletHelper? = null, callback: ((success: Boolean) -> Unit)? = null) {
         val flag = if (profile.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
             /* Server wallet is NOT existing, create a new one at local */
             mWallet = WalletHelper.create()
@@ -83,7 +85,7 @@ class MozoWallet private constructor() {
             SecurityActivity.KEY_CREATE_PIN
         } else {
 
-            mWallet = WalletHelper.initWithWalletInfo(profile.walletInfo)
+            mWallet = walletHelper ?: WalletHelper.initWithWalletInfo(profile.walletInfo)
             if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
                 /* Local wallet is existing but no private Key */
                 /* Required input previous PIN */
@@ -91,18 +93,20 @@ class MozoWallet private constructor() {
             } else 0
         }
 
-        if (flag == 0) {
-            callback?.invoke(true)
-        } else {
-            mProfile = profile
-            mInitWalletCallback = callback
-            if (!EventBus.getDefault().isRegistered(this)) {
-                EventBus.getDefault().register(this)
+        when {
+            flag == 0 -> callback?.invoke(true)
+            isDuringResetPinProcess -> callback?.invoke(false)
+            else -> {
+                mProfile = profile
+                mInitWalletCallback = callback
+                if (!EventBus.getDefault().isRegistered(this)) {
+                    EventBus.getDefault().register(this)
+                }
+                SecurityActivity.start(context, flag)
+                /**
+                 * Handle after enter PIN at MozoWallet.onReceivePin
+                 */
             }
-            SecurityActivity.start(context, flag)
-            /**
-             * Handle after enter PIN at MozoWallet.onReceivePin
-             */
         }
     }
 
@@ -236,10 +240,10 @@ class MozoWallet private constructor() {
     }
 
     companion object {
+        private const val MAX_DELAY_TIME = 270000L /* 90s x 3 times */
+
         @Volatile
         private var instance: MozoWallet? = null
-
-        private const val MAX_DELAY_TIME = 270000L /* 90s x 3 times */
 
         @JvmStatic
         fun getInstance() = instance ?: synchronized(this) {

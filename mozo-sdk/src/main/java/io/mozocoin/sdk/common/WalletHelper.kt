@@ -12,7 +12,7 @@ internal class WalletHelper {
     private var mnemonic: String? = null
     private var mnemonicEncrypted: String? = null
 
-    private var offChainAddress: String? = null
+    var offChainAddress: String? = null
     private var offChainPrivateKey: String? = null
 
     private var onChainAddress: String? = null

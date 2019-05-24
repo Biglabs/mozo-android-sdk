@@ -56,7 +56,7 @@ internal class TransactionHistoryRecyclerAdapter(
             }
         }
     }
-    private var mEmptyView: View? = null
+    var mEmptyView: View? = null
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -136,10 +136,6 @@ internal class TransactionHistoryRecyclerAdapter(
 
     fun setCanLoadMore(loadMore: Boolean) {
         isCanLoadMode = loadMore
-    }
-
-    fun setEmptyView(view: View) {
-        mEmptyView = view
     }
 
     fun notifyData() {

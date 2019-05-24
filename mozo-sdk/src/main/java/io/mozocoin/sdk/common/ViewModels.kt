@@ -132,6 +132,7 @@ internal object ViewModels {
 
         fun updateUserInfo(u: UserInfo) = GlobalScope.launch(Dispatchers.Main) {
             userInfoLiveData.value = u
+            MozoAuth.invokeProfileChangeListener(u)
         }
 
         fun hasWallet() = profileLiveData.value?.walletInfo != null

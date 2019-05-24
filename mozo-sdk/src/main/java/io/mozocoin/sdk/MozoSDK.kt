@@ -16,13 +16,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.OnNotificationReceiveListener
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoSocketClient
+import io.mozocoin.sdk.ui.MaintenanceActivity
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.customtabs.CustomTabsActivityLifecycleCallbacks
 import io.mozocoin.sdk.utils.logAsInfo
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 class MozoSDK private constructor(internal val context: Context) : ViewModelStoreOwner {
@@ -198,6 +201,16 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         fun readyForWallet(isReady: Boolean) {
             isReadyForWallet = isReady
+        }
+
+        @JvmStatic
+        fun startMaintenanceMode(context: Context) {
+            context.startActivity(Intent(context, MaintenanceActivity::class.java))
+        }
+
+        @JvmStatic
+        fun stopMaintenanceMode() {
+            EventBus.getDefault().post(MessageEvent.StopMaintenanceMode())
         }
     }
 }

@@ -112,6 +112,8 @@ internal class AddressBookActivity : BaseActivity() {
     }
 
     override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
         isStartForResult = intent?.getBooleanExtra(FLAG_START_FOR_RESULT, isStartForResult)
                 ?: isStartForResult
         address_book_toolbar?.apply {

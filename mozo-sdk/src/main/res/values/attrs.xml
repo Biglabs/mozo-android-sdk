@@ -18,9 +18,10 @@
     </declare-styleable>
 
     <declare-styleable name="MozoToolbar">
-        <attr name="title" format="string" />
+        <attr name="title" format="reference|string" />
         <attr name="buttonBack" format="boolean" />
         <attr name="buttonClose" format="boolean" />
+        <attr name="buttonCloseText" format="reference|string" />
     </declare-styleable>
 
     <declare-styleable name="MozoRecyclerView">
@@ -34,6 +35,21 @@
 
     <declare-styleable name="MozoIconTextView">
         <attr name="drawableSize" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="MozoPlaceHolderView">
+        <attr name="holder_icon" format="reference" />
+        <attr name="holder_iconSize" format="dimension" />
+        <attr name="holder_title" format="reference|string" />
+        <attr name="holder_titleColor" format="color" />
+        <attr name="holder_content" format="reference|string" />
+        <attr name="holder_contentColor" format="color" />
+        <attr name="holder_primaryButtonEnable" format="boolean" />
+        <attr name="holder_primaryButtonText" format="reference|string" />
+        <attr name="holder_primaryButtonVisible" format="boolean" />
+        <attr name="holder_secondButtonEnable" format="boolean" />
+        <attr name="holder_secondButtonText" format="reference|string" />
+        <attr name="holder_secondButtonVisible" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="MozoWalletView">

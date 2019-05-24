@@ -27,6 +27,9 @@ import kotlinx.android.synthetic.main.fragment_payment_list.*
 class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val requests = arrayListOf<PaymentRequest>()
+    private val adapter = PaymentRequestRecyclerAdapter(requests) {
+        TransactionDetails.start(this.context!!, requests[it])
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_payment_list, container, false)
@@ -37,7 +40,6 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         payment_request_swipe_refresh.mozoSetup()
         payment_request_swipe_refresh.setOnRefreshListener(this)
 
-        val adapter = PaymentRequestRecyclerAdapter(requests, payment_request_empty_view, onItemClickListener)
         payment_request_recycler.setHasFixedSize(true)
         payment_request_recycler.itemAnimator = DefaultItemAnimator()
         payment_request_recycler.adapter = adapter
@@ -76,17 +78,20 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
     }
 
     private fun fetchData() {
+        payment_request_swipe_refresh?.isRefreshing = true
         MozoAPIsService.getInstance().getPaymentRequests(
                 context ?: return,
                 Constant.PAGING_START_INDEX,
                 100, { data, _ ->
+            payment_request_swipe_refresh?.isRefreshing = false
+            adapter.emptyView = payment_request_empty_view
             data ?: return@getPaymentRequests
             data.items ?: return@getPaymentRequests
 
             requests.clear()
             requests.addAll(data.items!!)
-            payment_request_swipe_refresh?.isRefreshing = false
-            payment_request_recycler?.adapter?.notifyDataSetChanged()
+            adapter.notifyDataSetChanged()
+
         }, this::fetchData)
     }
 
@@ -96,10 +101,6 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         requests.removeAt(position)
         payment_request_recycler?.adapter?.notifyItemRemoved(position)
         MozoAPIsService.getInstance().deletePaymentRequest(context ?: return, itemId)
-    }
-
-    private val onItemClickListener: (position: Int) -> Unit = {
-        TransactionDetails.start(this.context!!, requests[it])
     }
 
     override fun onRefresh() {

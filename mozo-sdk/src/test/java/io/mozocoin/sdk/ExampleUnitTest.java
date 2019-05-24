@@ -1,4 +1,4 @@
-package com.biglabs.mozo.sdk;
+package io.mozocoin.sdk;
 
 import org.junit.Test;
 

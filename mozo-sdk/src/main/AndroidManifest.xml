@@ -34,20 +34,12 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
 
         <activity
-            android:name=".ui.PermissionWrapperActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/MozoTheme.Transparent"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
-
-        <activity
             android:name=".ui.SecurityActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".transaction.payment.PaymentRequestActivity"
@@ -112,6 +104,14 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
         <activity
+            android:name=".wallet.reset.ResetPinActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+
+        <activity
             android:name="net.openid.appauth.AuthorizationManagementActivity"
             android:exported="false"
             android:launchMode="singleTask"
@@ -130,5 +130,13 @@
                 <data android:scheme="com.biglabs.mozosdk.${applicationId}" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.MaintenanceActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
     </application>
 </manifest>

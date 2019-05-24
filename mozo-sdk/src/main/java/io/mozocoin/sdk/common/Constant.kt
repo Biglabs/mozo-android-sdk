@@ -43,6 +43,10 @@ class Constant {
         internal const val DOMAIN_ETHER_SCAN_STAGING = "ropsten.etherscan.io"
         internal const val DOMAIN_ETHER_SCAN_PRODUCTION = "etherscan.io"
 
+        internal const val DOMAIN_LANDING_PAGE_DEV = "dev.mozocoin.io"
+        internal const val DOMAIN_LANDING_PAGE_STAGING = "staging.mozocoin.io"
+        internal const val DOMAIN_LANDING_PAGE_PRODUCTION = "mozocoin.io"
+
         internal const val SOCKET_CHANNEL_SHOPPER = "shopper"
         internal const val SOCKET_CHANNEL_RETAILER = "retailer"
         internal const val SOCKET_RETRY_START_TIME = 5000L

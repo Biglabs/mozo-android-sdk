@@ -11,12 +11,12 @@ import io.mozocoin.sdk.common.Gender
 data class UserInfo(
         @NonNull @PrimaryKey var id: Long = 0L,
         val userId: String,
-        @ColumnInfo(name = "phoneNumber") val phoneNumber: String? = null,
-        @ColumnInfo(name = "fullName") val fullName: String? = null,
-        @ColumnInfo(name = "avatarUrl") val avatarUrl: String? = null,
-        @ColumnInfo(name = "birthday") val birthday: Long = 0L,
-        @ColumnInfo(name = "email") val email: String? = null,
-        @ColumnInfo(name = "gender") val gender: String? = null
+        @ColumnInfo(name = "phoneNumber") var phoneNumber: String? = null,
+        @ColumnInfo(name = "fullName") var fullName: String? = null,
+        @ColumnInfo(name = "avatarUrl") var avatarUrl: String? = null,
+        @ColumnInfo(name = "birthday") var birthday: Long = 0L,
+        @ColumnInfo(name = "email") var email: String? = null,
+        @ColumnInfo(name = "gender") var gender: String? = null
 ) {
     @Ignore
     fun gender() = Gender.find(gender)
