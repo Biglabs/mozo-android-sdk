@@ -1,6 +1,7 @@
 package io.mozocoin.sdk.utils
 
 import android.util.Log
+import android.util.Patterns
 import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoSDK
 import java.security.MessageDigest
@@ -33,15 +34,9 @@ fun String.isIdcard(): Boolean {
     return matches(p18) || matches(p15)
 }
 
-fun String.isPhone(): Boolean {
-    val p = "^1([34578])\\d{9}\$".toRegex()
-    return matches(p)
-}
+fun String.isPhone(): Boolean = !isNullOrEmpty() && Patterns.PHONE.matcher(this).matches()
 
-fun String.isEmail(): Boolean {
-    val p = "^(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w+)+)\$".toRegex()
-    return matches(p)
-}
+fun String.isEmail(): Boolean = !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
 
 fun String.isNumeric(): Boolean {
     val p = "^[0-9]+$".toRegex()
