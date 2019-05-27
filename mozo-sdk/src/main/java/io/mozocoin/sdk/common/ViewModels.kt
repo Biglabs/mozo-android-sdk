@@ -87,7 +87,7 @@ internal object ViewModels {
         }
 
         fun fetchExchangeRate(context: Context) {
-            exchangeRateLiveData.value = Support.getDefaultCurrency()
+            exchangeRateLiveData.value = exchangeRateLiveData.value ?: Support.getDefaultCurrency()
             updateBalanceAndRate()
 
             MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().language, { data, _ ->
