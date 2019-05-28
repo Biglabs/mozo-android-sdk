@@ -28,6 +28,7 @@ import java.util.*
 class Support {
     companion object {
 
+        @JvmStatic
         fun scanQRCode(activity: Activity) {
             IntentIntegrator(activity)
                     .setCaptureActivity(ScannerQRActivity::class.java)
@@ -37,6 +38,7 @@ class Support {
                     .initiateScan()
         }
 
+        @JvmStatic
         fun scanQRCode(fragment: Fragment) {
             IntentIntegrator.forSupportFragment(fragment)
                     .setCaptureActivity(ScannerQRActivity::class.java)
@@ -46,6 +48,7 @@ class Support {
                     .initiateScan()
         }
 
+        @JvmStatic
         fun generateQRCode(str: String, size: Int): Bitmap = BarcodeEncoder().encodeBitmap(
                 str,
                 BarcodeFormat.QR_CODE,
@@ -54,9 +57,13 @@ class Support {
                 hashMapOf(EncodeHintType.MARGIN to 0)
         )
 
+        @JvmStatic
         fun toAmountNonDecimal(amount: BigDecimal, decimal: Int): BigDecimal = toAmountNonDecimal(amount, decimal.toDouble())
+
+        @JvmStatic
         fun toAmountNonDecimal(amount: BigDecimal, decimal: Double): BigDecimal = amount.divide(Math.pow(10.0, decimal).toBigDecimal())
 
+        @JvmStatic
         fun parsePaymentRequest(content: String): Array<String> {
             // mozox:0xbc049e92d22a6e544d1032b243310ac167ac2f9a?amount=1028
             if (content.startsWith("mozox:")) {
@@ -69,10 +76,14 @@ class Support {
             return emptyArray()
         }
 
+        @JvmStatic
         fun getDisplayDate(context: Context, time: Long, pattern: String): String = if (time <= 0)
             context.getString(R.string.mozo_view_text_just_now)
         else
             SimpleDateFormat(pattern, Locale.getDefault()).format(Date(time))
+
+        @JvmStatic
+        fun homePage() = "https://${domainHomePage()}"
 
         internal fun domainAPI() = when (MozoSDK.serviceEnvironment) {
             MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_API_DEV
@@ -98,7 +109,7 @@ class Support {
             else -> Constant.DOMAIN_ETHER_SCAN_PRODUCTION
         }
 
-        internal fun domainLandingPage() = when (MozoSDK.serviceEnvironment) {
+        internal fun domainHomePage() = when (MozoSDK.serviceEnvironment) {
             MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_LANDING_PAGE_DEV
             MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_LANDING_PAGE_STAGING
             else -> Constant.DOMAIN_LANDING_PAGE_PRODUCTION
