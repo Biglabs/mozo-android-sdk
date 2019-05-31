@@ -142,10 +142,10 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
             }
             MozoAPIsService.getInstance().resetWallet(
                     context ?: return@withContext,
-                    data?.buildWalletInfo() ?: return@withContext) { profile, _ ->
+                    data?.buildWalletInfo() ?: return@withContext) { profile, error ->
 
                 if (profile == null) {
-                    showMessage(MESSAGE_ERROR_COMMON)
+                    showMessage(if (error == null) MESSAGE_ERROR_NETWORK else MESSAGE_ERROR_COMMON)
                     return@resetWallet
                 }
 
