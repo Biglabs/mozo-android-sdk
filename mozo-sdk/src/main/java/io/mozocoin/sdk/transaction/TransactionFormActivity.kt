@@ -20,6 +20,7 @@ import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.model.TransactionHistory.CREATOR.MY_ADDRESS
 import io.mozocoin.sdk.common.model.TransactionResponse
+import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.contact.AddressAddActivity
 import io.mozocoin.sdk.contact.AddressBookActivity
 import io.mozocoin.sdk.ui.BaseActivity
@@ -185,7 +186,12 @@ internal class TransactionFormActivity : BaseActivity() {
                     }
                 }
             } else {
-                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN_FOR_SEND, KEY_VERIFY_PIN)
+                MozoAPIsService.getInstance().checkNetworkStatus(this, { status, _ ->
+                    status ?: return@checkNetworkStatus
+                    SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN_FOR_SEND, KEY_VERIFY_PIN)
+                }, {
+                    button_submit?.performClick()
+                })
             }
         }
     }
