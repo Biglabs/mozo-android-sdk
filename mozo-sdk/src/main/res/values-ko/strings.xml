@@ -129,9 +129,13 @@
     </plurals>
     <string name="mozo_notify_title_received">MozoX %s 를 받았습니다.</string>
     <string name="mozo_notify_title_sent">MozoX %s 를 보냈습니다.</string>
+    <string name="mozo_notify_title_airdrop_bonus">%s 개 보너스 모조X를 가지고 있습니다.</string>
     <string name="mozo_notify_content_from">%s 부터</string>
     <string name="mozo_notify_content_to">%s 까지</string>
     <string name="mozo_notify_content_invited">%s는 MozoX에 가입했습니다.</string>
+    <string name="mozo_notify_content_airdrop_sign_up">우리와 함께 가입을 위하여</string>
+    <string name="mozo_notify_content_airdrop_founder">검증 된 상점이 되기 위하여</string>
+    <string name="mozo_notify_content_airdrop_1k_retailer">처음 1,000 명의 MozoX 소매 업체가 되십시오.</string>
 
     <string name="mozo_notify_content_customer_join_group">총 고객은 도착 : %d </string>
     <string name="mozo_notify_content_customer_left_group">떠난 총 고객: %d</string>

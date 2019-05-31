@@ -135,13 +135,13 @@
     </plurals>
     <string name="mozo_notify_title_received">Received %s MozoX</string>
     <string name="mozo_notify_title_sent">Sent %s MozoX</string>
-    <string name="mozo_notify_title_airdrop_bonus" translatable="false">You got %s Bonus MozoX</string>
+    <string name="mozo_notify_title_airdrop_bonus">You got %s Bonus MozoX</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
     <string name="mozo_notify_content_invited">%s joined MozoX</string>
-    <string name="mozo_notify_content_airdrop_sign_up" translatable="false">For signing up with us</string>
-    <string name="mozo_notify_content_airdrop_founder" translatable="false">For being verified store</string>
-    <string name="mozo_notify_content_airdrop_1k_retailer" translatable="false">For being a 1st 1,000 MozoX Retailers</string>
+    <string name="mozo_notify_content_airdrop_sign_up">For signing up with us</string>
+    <string name="mozo_notify_content_airdrop_founder">For being verified store</string>
+    <string name="mozo_notify_content_airdrop_1k_retailer">For being a 1st 1,000 MozoX Retailers</string>
 
     <string name="mozo_notify_content_customer_join_group">Total Customer Arrived: %d</string>
     <string name="mozo_notify_content_customer_left_group">Total Customer Departed: %d</string>

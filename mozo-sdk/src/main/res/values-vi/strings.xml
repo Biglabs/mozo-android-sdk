@@ -129,9 +129,13 @@
     </plurals>
     <string name="mozo_notify_title_received">Đã nhận %s MozoX</string>
     <string name="mozo_notify_title_sent">Đã gửi %s MozoX</string>
+    <string name="mozo_notify_title_airdrop_bonus">Bạn được thưởng %s MozoX</string>
     <string name="mozo_notify_content_from">Từ %s</string>
     <string name="mozo_notify_content_to">Đến %s</string>
     <string name="mozo_notify_content_invited">%s đã tham gia MozoX</string>
+    <string name="mozo_notify_content_airdrop_sign_up">Khi đăng nhập thành công</string>
+    <string name="mozo_notify_content_airdrop_founder">Khi cửa hàng của bạn gia nhập MozoX thành công</string>
+    <string name="mozo_notify_content_airdrop_1k_retailer">Trở thành một trong 1,000 nhà bán lẻ MozoX đầu tiên</string>
 
     <string name="mozo_notify_content_customer_join_group">Tổng khách vừa đến: %d</string>
     <string name="mozo_notify_content_customer_left_group">Tổng khách đã rời khỏi: %d</string>
