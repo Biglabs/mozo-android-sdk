@@ -16,17 +16,13 @@ import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.logAsError
 import io.mozocoin.sdk.utils.setMatchParent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import net.openid.appauth.*
 import net.openid.appauth.browser.BrowserBlacklist
 import net.openid.appauth.browser.Browsers
 import net.openid.appauth.browser.VersionRange
 import net.openid.appauth.browser.VersionedBrowserMatcher
 import org.greenrobot.eventbus.EventBus
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
 internal class MozoAuthActivity : FragmentActivity() {
@@ -38,7 +34,6 @@ internal class MozoAuthActivity : FragmentActivity() {
 
     private val mAuthRequest = AtomicReference<AuthorizationRequest>()
     private val mAuthIntent = AtomicReference<CustomTabsIntent>()
-    private var mAuthIntentLatch = CountDownLatch(1)
 
     private var modeSignIn = true
     private var signOutConfiguration: AuthorizationServiceConfiguration? = null
@@ -164,7 +159,6 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     private fun warmUpBrowser() {
-        mAuthIntentLatch = CountDownLatch(1)
         val customTabs = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri())
                 .setShowTitle(true)
                 .setInstantAppsEnabled(false)
@@ -177,7 +171,6 @@ internal class MozoAuthActivity : FragmentActivity() {
         customTabs.intent.putExtras(extras)
 
         mAuthIntent.set(customTabs)
-        mAuthIntentLatch.countDown()
     }
 
     /**
@@ -185,11 +178,7 @@ internal class MozoAuthActivity : FragmentActivity() {
      * and a user-provided `login_hint` if available.
      */
     private fun doAuth() = GlobalScope.launch(Dispatchers.Main) {
-        try {
-            mAuthIntentLatch.await()
-        } catch (ex: Exception) {
-            finishAuth(ex)
-        }
+        delay(500)
 
         isAuthInProgress = true
         startActivityForResult(
