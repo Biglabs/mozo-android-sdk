@@ -21,6 +21,7 @@ import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.transaction.TransactionDetails
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
+import java.util.concurrent.atomic.AtomicInteger
 
 @Suppress("unused")
 class MozoNotification private constructor() {
@@ -62,7 +63,7 @@ class MozoNotification private constructor() {
         singleNotify.extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
         singleNotify.extras.putString(EXTRAS_ITEM_DATA, notification.raw)
         NotificationManagerCompat.from(context)
-                .notify(System.currentTimeMillis().toInt(), singleNotify.build())
+                .notify(atomicInteger.incrementAndGet(), singleNotify.build())
 
 
         doGroupNotificationDelayed(context, message, notification, notificationGroup, pendingIntent)
@@ -144,6 +145,8 @@ class MozoNotification private constructor() {
         internal const val EXTRAS_ITEM_DATA = "EXTRAS_ITEM_DATA"
 
         private val ourInstance = MozoNotification()
+
+        private val atomicInteger = AtomicInteger(0)
 
         @JvmStatic
         internal fun getInstance(): MozoNotification = ourInstance
