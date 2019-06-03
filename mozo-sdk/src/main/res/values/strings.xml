@@ -130,8 +130,8 @@
         <item quantity="other">Customers arrived</item>
     </plurals>
     <plurals name="mozo_notify_title_leave">
-        <item quantity="one">Customer depart</item>
-        <item quantity="other">Customers depart</item>
+        <item quantity="one">Customer departed</item>
+        <item quantity="other">Customers departed</item>
     </plurals>
     <string name="mozo_notify_title_received">Received %s MozoX</string>
     <string name="mozo_notify_title_sent">Sent %s MozoX</string>

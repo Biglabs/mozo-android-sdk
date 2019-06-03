@@ -7,6 +7,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -150,8 +151,8 @@ internal class AddressBookActivity : BaseActivity() {
             contacts.addAll(contactsBackup.filter {
                 (it.name ?: "").contains(name, ignoreCase = true)
             })
-            launch(Dispatchers.Main) {
-                if (contacts.isEmpty()) view_empty_state.visible() else view_empty_state.gone()
+            withContext(Dispatchers.Main) {
+                view_empty_state?.isVisible = contacts.isEmpty()
                 mAdapter.notifyData(true)
             }
         }

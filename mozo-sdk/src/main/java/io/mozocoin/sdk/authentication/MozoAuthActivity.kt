@@ -16,7 +16,10 @@ import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.logAsError
 import io.mozocoin.sdk.utils.setMatchParent
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import net.openid.appauth.*
 import net.openid.appauth.browser.BrowserBlacklist
 import net.openid.appauth.browser.Browsers
@@ -38,7 +41,6 @@ internal class MozoAuthActivity : FragmentActivity() {
     private var mAuthIntentLatch = CountDownLatch(1)
 
     private var modeSignIn = true
-    private var signOutConfiguration: AuthorizationServiceConfiguration? = null
     private var isSignOutBeforeIn = false
     private var isSignOutWhenError = false
 
@@ -102,18 +104,17 @@ internal class MozoAuthActivity : FragmentActivity() {
         mAuthRequest.set(null)
         mAuthIntent.set(null)
 
-        val logoutUrl = getString(R.string.auth_logout_uri, Support.domainAuth())
-        signOutConfiguration = AuthorizationServiceConfiguration(
-                logoutUrl.toUri(),
-                logoutUrl.toUri(),
-                null
-        )
-        mAuthStateManager.replace(AuthState(
-                AuthorizationServiceConfiguration(
-                        getString(R.string.auth_end_point_authorization, Support.domainAuth()).toUri(),
-                        getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
+        val signInEndPoint = getString(R.string.auth_end_point_authorization, Support.domainAuth()).toUri()
+        val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
+        val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
+        mAuthStateManager.replace(
+                AuthState(
+                        AuthorizationServiceConfiguration(
+                                if (modeSignIn) signInEndPoint else signOutEndpoint,
+                                tokenEndpoint
+                        )
                 )
-        ))
+        )
 
 //        if (modeSignIn) {
 //            doSignOutFirst()
@@ -134,17 +135,15 @@ internal class MozoAuthActivity : FragmentActivity() {
                 if (MozoSDK.isRetailerApp) R.string.auth_client_id_retailer
                 else R.string.auth_client_id_shopper
         )
-        val configuration = if (modeSignIn) mAuthStateManager.current.authorizationServiceConfiguration
-        else signOutConfiguration
 
-        if (configuration == null) {
+        if (mAuthStateManager.current.authorizationServiceConfiguration == null) {
             cancelAuth()
             return
         }
 
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
         val authRequestBuilder = AuthorizationRequest.Builder(
-                configuration,
+                mAuthStateManager.current.authorizationServiceConfiguration!!,
                 clientId,
                 ResponseTypeValues.CODE,
                 Uri.parse(redirectUrl)
