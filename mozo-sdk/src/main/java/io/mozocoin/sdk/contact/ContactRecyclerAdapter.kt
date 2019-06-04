@@ -1,5 +1,7 @@
 package io.mozocoin.sdk.contact
 
+import android.view.View
+import androidx.core.view.isVisible
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.Contact
@@ -11,7 +13,17 @@ internal class ContactRecyclerAdapter(
         private val itemClick: ((contact: Contact) -> Unit)? = null
 ) : SectionedRecyclerViewAdapter() {
 
-    fun notifyData(hideEmptySection: Boolean = false) {
+    var mEmptyView: View? = null
+    var isShowEmptyView = true
+
+    override fun getItemCount(): Int {
+        val count = super.getItemCount()
+        mEmptyView?.isVisible = isShowEmptyView && count == 0
+        return count
+    }
+
+    fun notifyData(hideEmptySection: Boolean = false, showEmptyView: Boolean) {
+        isShowEmptyView = showEmptyView
         removeAllSections()
 
         Constant.getAlphabets().map {
