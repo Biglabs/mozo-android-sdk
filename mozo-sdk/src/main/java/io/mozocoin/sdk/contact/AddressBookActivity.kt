@@ -126,6 +126,8 @@ internal class AddressBookActivity : BaseActivity() {
     private fun loadData() {
         contacts.clear()
         contactsBackup.clear()
+        view_empty_state.gone()
+
         when (address_book_tabs?.checkedRadioButtonId ?: R.id.address_book_tab_user) {
             R.id.address_book_tab_user -> {
                 contacts.addAll(MozoSDK.getInstance().contactViewModel.users())
@@ -138,7 +140,8 @@ internal class AddressBookActivity : BaseActivity() {
         }
 
         list_contacts_refresh.isRefreshing = false
-        mAdapter.notifyData(true)
+        mAdapter.mEmptyView = list_contacts_empty_view
+        mAdapter.notifyData(true, showEmptyView = true)
     }
 
     private fun searchByName(name: String) {
@@ -152,8 +155,8 @@ internal class AddressBookActivity : BaseActivity() {
                 (it.name ?: "").contains(name, ignoreCase = true)
             })
             withContext(Dispatchers.Main) {
-                view_empty_state?.isVisible = contacts.isEmpty()
-                mAdapter.notifyData(true)
+                if (contacts.isEmpty()) view_empty_state.visible() else view_empty_state.gone()
+                mAdapter.notifyData(true, showEmptyView = false)
             }
         }
     }

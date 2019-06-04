@@ -149,6 +149,18 @@
             tools:listitem="@layout/item_contact" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <io.mozocoin.sdk.ui.view.MozoEmptyView
+        android:id="@+id/list_contacts_empty_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/mozo_address_book_no_result"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/list_contacts_refresh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/list_contacts_refresh"
+        tools:visibility="visible" />
+
     <View
         android:id="@+id/address_book_top_bar_hover"
         android:layout_width="0dp"
