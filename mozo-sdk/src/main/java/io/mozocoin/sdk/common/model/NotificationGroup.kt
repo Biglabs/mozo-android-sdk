@@ -107,8 +107,8 @@ enum class NotificationGroup(val id: Int) {
         fun getIcon(type: String?) = when (type) {
             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> R.drawable.im_notification_balance_changed_group
             Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came_group
-            Constant.NOTIFY_EVENT_AIRDROPPED -> R.drawable.im_notification_airdrop_group
-            else -> R.drawable.im_notification_airdrop_invite_group
+            Constant.NOTIFY_EVENT_AIRDROP_INVITE -> R.drawable.im_notification_airdrop_invite_group
+            else -> R.drawable.im_notification_airdrop_group
         }
 
         fun getKey(message: BroadcastDataContent) = when (message.event) {
