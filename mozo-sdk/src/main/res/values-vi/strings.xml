@@ -72,7 +72,7 @@
     <string name="mozo_backup_title">Sao lưu ví</string>
     <string name="mozo_backup_sub_title">Kí tự dùng khôi phục ví</string>
     <string name="mozo_backup_content">Ghi lại những từ này và cất giữ ở nơi an toàn để khôi phục lại ví khi cần thiết.</string>
-    <string name="mozo_backup_warning">*Nếu mất bản ghi này, ví của bạn sẽ không thể khôi phục.</string>
+    <string name="mozo_backup_warning">Nếu mất bản ghi này, ví của bạn sẽ không thể khôi phục.</string>
     <string name="mozo_backup_confirm_msg">Tôi đã ghi lại xong</string>
 
     <string name="mozo_convert_title">Đổi thành MozoX Offchain</string>

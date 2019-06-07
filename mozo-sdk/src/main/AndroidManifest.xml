@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.mozocoin.sdk">
 
@@ -9,7 +10,7 @@
     <application
         android:hardwareAccelerated="true"
         android:supportsRtl="true">
-
+        <activity android:name=".ui.SeedWordVerificationActivity"></activity>
         <activity
             android:name=".contact.AddressAddActivity"
             android:excludeFromRecents="true"
@@ -17,7 +18,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
-
         <activity
             android:name=".contact.AddressBookActivity"
             android:excludeFromRecents="true"
@@ -25,14 +25,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
         <activity
             android:name=".authentication.MozoAuthActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:theme="@style/MozoTheme.Transparent.Dim"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
-
         <activity
             android:name=".ui.SecurityActivity"
             android:excludeFromRecents="true"
@@ -40,7 +38,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".transaction.payment.PaymentRequestActivity"
             android:excludeFromRecents="true"
@@ -48,7 +45,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".transaction.TransactionFormActivity"
             android:excludeFromRecents="true"
@@ -56,7 +52,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".transaction.TransactionHistoryActivity"
             android:excludeFromRecents="true"
@@ -64,7 +59,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-
         <activity
             android:name=".transaction.TransactionDetails"
             android:excludeFromRecents="true"
@@ -72,14 +66,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-
         <activity
             android:name=".ui.ScannerQRActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-
         <activity
             android:name=".wallet.ConvertOnChainActivity"
             android:excludeFromRecents="true"
@@ -87,7 +79,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".wallet.ConvertOnInOffActivity"
             android:excludeFromRecents="true"
@@ -95,14 +86,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-
         <activity
             android:name=".wallet.ConvertBroadcastActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-
         <activity
             android:name=".wallet.reset.ResetPinActivity"
             android:excludeFromRecents="true"
@@ -110,14 +99,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
-
         <activity
             android:name="net.openid.appauth.AuthorizationManagementActivity"
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-
         <activity
             android:name="net.openid.appauth.RedirectUriReceiverActivity"
             android:screenOrientation="portrait">
@@ -130,7 +117,6 @@
                 <data android:scheme="com.biglabs.mozosdk.${applicationId}" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.MaintenanceActivity"
             android:excludeFromRecents="true"
@@ -139,4 +125,5 @@
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
     </application>
+
 </manifest>

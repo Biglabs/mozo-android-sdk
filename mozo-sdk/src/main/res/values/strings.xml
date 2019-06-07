@@ -72,9 +72,9 @@
     <string name="mozo_button_go_to_wallet">Go to Wallet</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
-    <string name="mozo_backup_sub_title">Store Recovery Phrase</string>
+    <string name="mozo_backup_sub_title">This is your Recovery Phrase</string>
     <string name="mozo_backup_content">Please write it down on paper and keep it in a safe place as you would with money</string>
-    <string name="mozo_backup_warning">*If you lose your Recovery Phrase, your wallet cannot be recovered.</string>
+    <string name="mozo_backup_warning">If you lose your Recovery Phrase, your wallet cannot be recovered.</string>
     <string name="mozo_backup_confirm_msg">I have safely stored Recovery Phrase</string>
 
     <string name="mozo_convert_title">Convert To Offchain</string>
@@ -220,4 +220,11 @@
     <string name="mozo_view_text_view_all">View All</string>
     <string name="mozo_view_text_just_now">Just now</string>
     <string name="mozo_view_text_token_list">Token List:</string>
+
+    <string name="mozo_view_text_verify" translatable="false">Verify</string>
+    <string name="mozo_view_text_verify_describe" translatable="false">Using the completed Recovery Phrase as a reference, please enter the following words from your Recovery Phrase to complete the back up process.</string>
+    <string name="mozo_button_finish" translatable="false">Finish</string>
+    <string name="mozo_view_textyour_wallet_is_backed_up" translatable="false">Your wallet is backed up</string>
+    <string name="mozo_view_text_backup_wallet_describe" translatable="false">Be sure to store your recovery phrase in a secure place. If this app is deleted, your wallet cannot be recovered without it.</string>
+    <string name="mozo_text_backup_wallet_gotit" translatable="false">Got It</string>
 </resources>

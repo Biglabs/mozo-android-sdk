@@ -72,7 +72,7 @@
     <string name="mozo_backup_title">월렛 백업</string>
     <string name="mozo_backup_sub_title">복구 데이터 프레이즈 저장</string>
     <string name="mozo_backup_content">이 프레이즈를 적어 안전한 장소에 보관하십시오.</string>
-    <string name="mozo_backup_warning">* 복구 데이터 문구를 분실하면 월렛을 복구 할 수 없습니다.</string>
+    <string name="mozo_backup_warning">복구 데이터 문구를 분실하면 월렛을 복구 할 수 없습니다.</string>
     <string name="mozo_backup_confirm_msg">복구 문구를 안전하게 저장했습니다.</string>
 
     <string name="mozo_convert_title">Offchain으로 변환하기</string>

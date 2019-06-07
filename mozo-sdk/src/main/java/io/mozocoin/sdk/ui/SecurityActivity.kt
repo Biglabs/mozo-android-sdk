@@ -4,9 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import android.view.View
-import android.widget.TextView
-import androidx.core.widget.TextViewCompat
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
@@ -38,11 +39,11 @@ internal class SecurityActivity : BaseActivity() {
         mFinishJob = null
 
         when (mRequestCode) {
-            KEY_CREATE_PIN -> showBackupUI()
-            KEY_ENTER_PIN -> showPinInputRestoreUI()
-            KEY_VERIFY_PIN -> showPinVerifyUI()
+            KEY_CREATE_PIN          -> showBackupUI()
+            KEY_ENTER_PIN           -> showPinInputRestoreUI()
+            KEY_VERIFY_PIN          -> showPinVerifyUI()
             KEY_VERIFY_PIN_FOR_SEND -> showPinVerifyUI()
-            else -> {
+            else                    -> {
                 finishAndRemoveTask()
             }
         }
@@ -83,14 +84,13 @@ internal class SecurityActivity : BaseActivity() {
             setDisplayHomeAsUpEnabled(false)
         }
 
-        val paddingVertical = resources.dp2Px(10f).toInt()
-        val paddingHorizontal = resources.dp2Px(8f).toInt()
-        MozoWallet.getInstance().getWallet(true)?.mnemonicPhrases()?.map {
-            val word = TextView(this@SecurityActivity)
-            word.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
-            word.text = it
-            TextViewCompat.setTextAppearance(word, R.style.MozoTheme_SeedWords)
-            seed_view.addView(word)
+        val words = MozoWallet.getInstance().getWallet(true)?.mnemonicPhrases()?.toMutableList()
+        seed_view.adapter = SeedWordAdapter(words ?: mutableListOf())
+        txt_warning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
+            setSpan(ImageSpan(this@SecurityActivity, R.drawable.ic_warning),
+                0,
+                1,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         }
 
         button_stored_confirm.click {
@@ -98,7 +98,10 @@ internal class SecurityActivity : BaseActivity() {
             button_continue.isEnabled = it.isSelected
         }
 
-        button_continue.click { showPinInputUI() }
+        button_continue.click {
+            showPinInputUI()
+            //startActivity(Intent(this, SeedWordVerificationActivity::class.java))
+        }
     }
 
     private fun showPinInputUI() {
@@ -128,17 +131,17 @@ internal class SecurityActivity : BaseActivity() {
                                     mPIN = this
                                     showPinInputConfirmUI()
                                 }
-                                mPIN == this -> {
+                                mPIN == this   -> {
                                     input_pin_checker_status.isSelected = true
                                     submitForResult()
                                 }
-                                else -> {
+                                else           -> {
                                     input_pin_checker_status.isSelected = false
                                     showPinInputWrongUI()
                                 }
                             }
                         }
-                        else -> submitForResult()
+                        else           -> submitForResult()
                     }
                 }
             }
@@ -223,30 +226,23 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun hidePinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {
         input_pin_checker_status.isSelected = false
-        if (text_incorrect_pin.visibility != View.GONE)
-            text_incorrect_pin.gone()
+        if (text_incorrect_pin.visibility != View.GONE) text_incorrect_pin.gone()
     }
 
     private fun showLoadingUI() = GlobalScope.launch(Dispatchers.Main) {
-        gone(arrayOf(
-                text_correct_pin,
-                text_incorrect_pin,
-                input_pin,
-                input_pin_checker_status,
-                text_content_pin,
-                error_container,
-                pin_forgot_group
-        ))
+        gone(arrayOf(text_correct_pin,
+            text_incorrect_pin,
+            input_pin,
+            input_pin_checker_status,
+            text_content_pin,
+            error_container,
+            pin_forgot_group))
 
-        visible(arrayOf(
-                input_loading_indicator
-        ))
+        visible(arrayOf(input_loading_indicator))
     }
 
     private fun hideLoadingUI() {
-        gone(arrayOf(
-                input_loading_indicator
-        ))
+        gone(arrayOf(input_loading_indicator))
     }
 
     private fun showErrorAndRetryUI() = GlobalScope.launch(Dispatchers.Main) {
@@ -279,7 +275,7 @@ internal class SecurityActivity : BaseActivity() {
             val isCorrect = MozoWallet.getInstance().validatePinAsync(mPIN).await()
 
             when (mRequestCode) {
-                KEY_ENTER_PIN -> {
+                KEY_ENTER_PIN                           -> {
                     showLoadingUI().join()
                     MozoWallet.getInstance().syncOnChainWallet(this@SecurityActivity, mPIN) {
                         if (isCorrect) {
@@ -291,8 +287,7 @@ internal class SecurityActivity : BaseActivity() {
                         }
                     }
                 }
-                KEY_VERIFY_PIN,
-                KEY_VERIFY_PIN_FOR_SEND -> {
+                KEY_VERIFY_PIN, KEY_VERIFY_PIN_FOR_SEND -> {
                     initVerifyUI(!isCorrect).join()
                     if (isCorrect) {
                         mFinishJob = finishResult {

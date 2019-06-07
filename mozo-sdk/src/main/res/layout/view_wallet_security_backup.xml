@@ -65,8 +65,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@android:id/text1" />
 
-        <TextView
-            android:id="@android:id/message"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_warning"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/mozo_screen_padding"
@@ -75,44 +75,27 @@
             android:gravity="center"
             android:text="@string/mozo_backup_warning"
             android:textColor="@color/mozo_color_error"
+            android:textSize="24sp"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@android:id/text2" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/mozo_color_line"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/seed_view" />
-
-        <com.google.android.flexbox.FlexboxLayout
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/seed_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/mozo_screen_padding"
             android:layout_marginEnd="@dimen/mozo_screen_padding"
-            android:padding="12dp"
-            app:alignContent="space_around"
-            app:alignItems="center"
-            app:flexWrap="wrap"
-            app:justifyContent="space_around"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/button_stored_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@android:id/message"
+            app:layout_constraintTop_toBottomOf="@id/txt_warning"
             app:layout_constraintVertical_bias="0.2"
-            tools:layout_height="50dp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/mozo_color_line"
-            app:layout_constraintBottom_toBottomOf="@id/seed_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:spanCount="6"
+            tools:listitem="@layout/item_seed_word" />
 
         <LinearLayout
             android:id="@+id/button_stored_confirm"
