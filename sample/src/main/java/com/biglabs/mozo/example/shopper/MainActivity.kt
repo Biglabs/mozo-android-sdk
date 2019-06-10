@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoNotification
-import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.ui.MozoWalletFragment

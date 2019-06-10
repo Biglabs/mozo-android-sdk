@@ -1,34 +1,88 @@
-package io.mozocoin.sdk.ui
+package io.mozocoin.sdk.ui.setting
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isGone
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.ui.BaseActivity
+import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.onTextChanged
 import io.mozocoin.sdk.utils.visible
 import kotlinx.android.synthetic.main.activity_seed_word_verification.*
+import kotlinx.android.synthetic.main.view_wallet_security_backup.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import org.web3j.crypto.MnemonicUtils
 import kotlin.random.Random
 
-class SeedWordVerificationActivity : AppCompatActivity() {
+internal class BackupWalletActivity : BaseActivity() {
 
-    private val words = mutableListOf<String>()
     private val allWords = mutableListOf<String>()
+    private val words = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val walletInfo = MozoWallet.getInstance().getWallet(false)?.buildWalletInfo()
+        if (walletInfo?.pin.isNullOrEmpty()) {
+            EventBus.getDefault().register(this)
+            SecurityActivity.startVerify(this)
+
+        } else onReceivedPin(MessageEvent.Pin(
+            walletInfo?.pin ?: "",
+            SecurityActivity.KEY_VERIFY_PIN)
+        )
+    }
+
+    private fun displaySeedWords() = GlobalScope.launch(Dispatchers.Main) {
+        setContentView(R.layout.view_wallet_security_backup)
+
+        seed_view.adapter = SeedWordAdapter(words)
+        txt_warning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
+            setSpan(ImageSpan(this@BackupWalletActivity, R.drawable.ic_warning),
+                0,
+                1,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        }
+
+        button_stored_confirm.click {
+            it.isSelected = !it.isSelected
+            button_continue.isEnabled = it.isSelected
+        }
+
+        button_continue.click {
+            verifySeedWords()
+        }
+    }
+
+    @Subscribe
+    fun onReceivedPin(event: MessageEvent.Pin) {
+        EventBus.getDefault().unregister(this)
+
+        val w = MozoWallet.getInstance().getWallet(false)
+            ?.decrypt(event.pin)
+            ?.mnemonicPhrases()
+            ?.toMutableList()
+        words.addAll(w ?: return)
+        displaySeedWords()
+    }
+
+    private fun verifySeedWords() {
         setContentView(R.layout.activity_seed_word_verification)
 
-        words.addAll(MozoWallet.getInstance().getWallet(true)?.mnemonicPhrases() ?: listOf())
         allWords.addAll(MnemonicUtils.getWords() ?: listOf())
 
         initWidget()
-
-        tb_verify.onClosePress = ::finish
 
         button_finish.click {
             if (lo_success.isGone) {
@@ -85,6 +139,11 @@ class SeedWordVerificationActivity : AppCompatActivity() {
                     && edit_verify_seed_3.text.toString() == words.getOrNull(txt_index_3.text.toString().toInt() - 1)
                     && edit_verify_seed_4.text.toString() == words.getOrNull(txt_index_4.text.toString().toInt() - 1)
 
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
     }
 
 }
