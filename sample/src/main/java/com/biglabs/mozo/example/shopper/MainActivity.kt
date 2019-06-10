@@ -7,9 +7,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoNotification
-import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.ui.MozoWalletFragment
@@ -20,13 +22,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
 
-        tabhost?.apply {
-            setup(this@MainActivity, supportFragmentManager, android.R.id.tabcontent)
-            addTab(newTabSpec("home").setIndicator("Home"), HomeFragment::class.java, null)
-            addTab(newTabSpec("wallet").setIndicator("Wallet"), MozoWalletFragment::class.java, null)
-            addTab(newTabSpec("notification").setIndicator("Notification"), NotificationFragment::class.java, null)
-        }
+        tab_layout?.setupWithViewPager(pager ?: return)
+        pager?.adapter = TabsPagerAdapter(supportFragmentManager)
 
         MozoAuth.getInstance().addAuthStateListener(object : AuthStateListener() {
 
@@ -80,6 +79,29 @@ class MainActivity : AppCompatActivity() {
     private fun handleNotification(intent: Intent?) {
         intent?.let {
             MozoNotification.openDetails(this, it)
+        }
+    }
+
+    class TabsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
+        private val fragments = arrayOf(
+                HomeFragment(),
+                MozoWalletFragment.getInstance(),
+                NotificationFragment()
+        )
+
+        private val titles = arrayOf(
+                "Home",
+                "Wallet",
+                "Notify"
+        )
+
+        override fun getItem(position: Int): Fragment = fragments[position]
+
+        override fun getCount(): Int = fragments.size
+
+        override fun getPageTitle(position: Int): CharSequence {
+            return titles[position]
         }
     }
 }
