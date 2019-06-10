@@ -149,7 +149,7 @@ class MozoWallet private constructor() {
                     MessageDialog(context, context.string(ErrorCode.ERROR_WALLET_DIFFERENT.message))
                             .setAction(R.string.mozo_button_restore) {
                                 EventBus.getDefault().post(MessageEvent.CloseActivities())
-                                MozoAuth.getInstance().signOut(true)
+                                MozoAuth.getInstance().signOut()
                             }
                             .cancelable(false)
                             .show()
