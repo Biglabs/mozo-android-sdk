@@ -21,7 +21,7 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MozoTheme"  />
+            android:theme="@style/MozoTheme" />
         <activity
             android:name=".contact.AddressAddActivity"
             android:excludeFromRecents="true"
@@ -110,6 +110,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+        <activity
+            android:name=".wallet.CreateWalletActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="net.openid.appauth.AuthorizationManagementActivity"
             android:exported="false"

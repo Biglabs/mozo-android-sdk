@@ -15,6 +15,7 @@ import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.string
+import io.mozocoin.sdk.wallet.CreateWalletActivity
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -77,21 +78,30 @@ class MozoWallet private constructor() {
     }
 
     internal fun initWallet(context: Context, profile: Profile /* server */, walletHelper: WalletHelper? = null, callback: ((success: Boolean) -> Unit)? = null) {
-        val flag = if (profile.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
+        if (profile.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
             /* Server wallet is NOT existing, create a new one at local */
             mWallet = WalletHelper.create()
 
             /* Required input new PIN */
-            SecurityActivity.KEY_CREATE_PIN
-        } else {
-
-            mWallet = walletHelper ?: WalletHelper.initWithWalletInfo(profile.walletInfo)
-            if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
-                /* Local wallet is existing but no private Key */
-                /* Required input previous PIN */
-                SecurityActivity.KEY_ENTER_PIN
-            } else 0
+            //SecurityActivity.KEY_CREATE_PIN
+            mProfile = profile
+            mInitWalletCallback = callback
+            if (!EventBus.getDefault().isRegistered(this)) {
+                EventBus.getDefault().register(this)
+            }
+            CreateWalletActivity.start(context)
+            /**
+             * Handle after enter PIN at MozoWallet.onReceivePin
+             */
+            return
         }
+
+        mWallet = walletHelper ?: WalletHelper.initWithWalletInfo(profile.walletInfo)
+        val flag = if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
+            /* Local wallet is existing but no private Key */
+            /* Required input previous PIN */
+            SecurityActivity.KEY_ENTER_PIN
+        } else 0
 
         when {
             flag == 0 -> callback?.invoke(true)

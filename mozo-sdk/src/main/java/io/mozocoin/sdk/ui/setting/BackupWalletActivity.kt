@@ -15,8 +15,8 @@ import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.onTextChanged
 import io.mozocoin.sdk.utils.visible
-import kotlinx.android.synthetic.main.activity_seed_word_verification.*
-import kotlinx.android.synthetic.main.view_wallet_security_backup.*
+import kotlinx.android.synthetic.main.view_wallet_confirm_phrases.*
+import kotlinx.android.synthetic.main.view_wallet_display_phrases.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -45,7 +45,7 @@ internal class BackupWalletActivity : BaseActivity() {
     }
 
     private fun displaySeedWords() = GlobalScope.launch(Dispatchers.Main) {
-        setContentView(R.layout.view_wallet_security_backup)
+        setContentView(R.layout.view_wallet_display_phrases)
 
         seed_view.adapter = SeedWordAdapter(words)
         txt_warning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
@@ -78,7 +78,7 @@ internal class BackupWalletActivity : BaseActivity() {
     }
 
     private fun verifySeedWords() {
-        setContentView(R.layout.activity_seed_word_verification)
+        setContentView(R.layout.view_wallet_confirm_phrases)
 
         allWords.addAll(MnemonicUtils.getWords() ?: listOf())
 

@@ -37,8 +37,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
-        android:animateLayoutChanges="true">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        tools:layout_marginTop="?android:actionBarSize">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@android:id/text1"

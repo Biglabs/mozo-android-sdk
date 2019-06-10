@@ -15,8 +15,8 @@ import io.mozocoin.sdk.ui.setting.SeedWordAdapter
 import io.mozocoin.sdk.utils.*
 import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import kotlinx.android.synthetic.main.view_toolbar.view.*
+import kotlinx.android.synthetic.main.view_wallet_display_phrases.*
 import kotlinx.android.synthetic.main.view_wallet_security.*
-import kotlinx.android.synthetic.main.view_wallet_security_backup.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 
@@ -40,11 +40,11 @@ internal class SecurityActivity : BaseActivity() {
         mFinishJob = null
 
         when (mRequestCode) {
-            KEY_CREATE_PIN          -> showBackupUI()
-            KEY_ENTER_PIN           -> showPinInputRestoreUI()
-            KEY_VERIFY_PIN          -> showPinVerifyUI()
+            KEY_CREATE_PIN -> showRecoveryPhraseUI()
+            KEY_ENTER_PIN -> showPinInputRestoreUI()
+            KEY_VERIFY_PIN -> showPinVerifyUI()
             KEY_VERIFY_PIN_FOR_SEND -> showPinVerifyUI()
-            else                    -> {
+            else -> {
                 finishAndRemoveTask()
             }
         }
@@ -77,8 +77,8 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
-    private fun showBackupUI() {
-        setContentView(R.layout.view_wallet_security_backup)
+    private fun showRecoveryPhraseUI() {
+        setContentView(R.layout.view_wallet_display_phrases)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.apply {
             setDisplayShowHomeEnabled(false)
@@ -89,9 +89,9 @@ internal class SecurityActivity : BaseActivity() {
         seed_view.adapter = SeedWordAdapter(words ?: mutableListOf())
         txt_warning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
             setSpan(ImageSpan(this@SecurityActivity, R.drawable.ic_warning),
-                0,
-                1,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                    0,
+                    1,
+                    Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         }
 
         button_stored_confirm.click {
@@ -100,8 +100,13 @@ internal class SecurityActivity : BaseActivity() {
         }
 
         button_continue.click {
-            showPinInputUI()
+            showConfirmPhraseUI()
         }
+    }
+
+    private fun showConfirmPhraseUI() {
+        setContentView(R.layout.view_wallet_confirm_phrases)
+
     }
 
     private fun showPinInputUI() {
@@ -131,17 +136,17 @@ internal class SecurityActivity : BaseActivity() {
                                     mPIN = this
                                     showPinInputConfirmUI()
                                 }
-                                mPIN == this   -> {
+                                mPIN == this -> {
                                     input_pin_checker_status.isSelected = true
                                     submitForResult()
                                 }
-                                else           -> {
+                                else -> {
                                     input_pin_checker_status.isSelected = false
                                     showPinInputWrongUI()
                                 }
                             }
                         }
-                        else           -> submitForResult()
+                        else -> submitForResult()
                     }
                 }
             }
@@ -231,12 +236,12 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showLoadingUI() = GlobalScope.launch(Dispatchers.Main) {
         gone(arrayOf(text_correct_pin,
-            text_incorrect_pin,
-            input_pin,
-            input_pin_checker_status,
-            text_content_pin,
-            error_container,
-            pin_forgot_group))
+                text_incorrect_pin,
+                input_pin,
+                input_pin_checker_status,
+                text_content_pin,
+                error_container,
+                pin_forgot_group))
 
         visible(arrayOf(input_loading_indicator))
     }
@@ -275,7 +280,7 @@ internal class SecurityActivity : BaseActivity() {
             val isCorrect = MozoWallet.getInstance().validatePinAsync(mPIN).await()
 
             when (mRequestCode) {
-                KEY_ENTER_PIN                           -> {
+                KEY_ENTER_PIN -> {
                     showLoadingUI().join()
                     MozoWallet.getInstance().syncOnChainWallet(this@SecurityActivity, mPIN) {
                         if (isCorrect) {
