@@ -34,6 +34,12 @@ class MozoAuth private constructor() {
 
     internal var isInitialized = false
 
+    init {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+    }
+
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
         if (auth.exception is UserCancelException) {
@@ -95,33 +101,19 @@ class MozoAuth private constructor() {
     fun signIn() {
         initialize()
         walletService.clear()
-        if (!EventBus.getDefault().isRegistered(this@MozoAuth)) {
-            EventBus.getDefault().register(this@MozoAuth)
-        }
         MozoAuthActivity.signIn(MozoSDK.getInstance().context)
     }
 
     fun signOut() {
-        signOut(false)
-    }
+        authStateManager.clearSession()
 
-    fun signOut(reSignIn: Boolean = false) {
         walletService.clear()
+        GlobalScope.launch { mozoDB.clear() }
+
         MozoSocketClient.disconnect()
-        MozoAuthActivity.signOut(MozoSDK.getInstance().context) {
+        onAuthorizeChanged(MessageEvent.Auth())
 
-            onAuthorizeChanged(MessageEvent.Auth())
-
-            GlobalScope.launch {
-                mozoDB.clear()
-                authStateManager.clearSession()
-
-                if (reSignIn) {
-                    delay(1000)
-                    signIn()
-                }
-            }
-        }
+        MozoAuthActivity.signOut(MozoSDK.getInstance().context)
     }
 
     fun isSignedIn() = authStateManager.current.isAuthorized
