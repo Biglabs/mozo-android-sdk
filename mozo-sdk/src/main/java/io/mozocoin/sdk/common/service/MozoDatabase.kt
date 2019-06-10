@@ -13,7 +13,7 @@ import io.mozocoin.sdk.common.model.Notification
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.UserInfo
 
-@Database(entities = [UserInfo::class, Profile::class, Notification::class], version = 5, exportSchema = false)
+@Database(entities = [UserInfo::class, Profile::class, Notification::class], version = 6, exportSchema = false)
 internal abstract class MozoDatabase : RoomDatabase() {
 
     abstract fun userInfo(): UserInfoDao
@@ -72,11 +72,18 @@ internal abstract class MozoDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE Profile ADD COLUMN pin TEXT")
+            }
+        }
+
         fun getInstance(context: Context) = instance ?: synchronized(this) {
             instance = Room.databaseBuilder(context.applicationContext, MozoDatabase::class.java, "mozo.db")
                     .addMigrations(MIGRATION_2_3)
                     .addMigrations(MIGRATION_3_4)
                     .addMigrations(MIGRATION_4_5)
+                    .addMigrations(MIGRATION_5_6)
                     .fallbackToDestructiveMigration()
                     .build()
             return@synchronized instance!!
