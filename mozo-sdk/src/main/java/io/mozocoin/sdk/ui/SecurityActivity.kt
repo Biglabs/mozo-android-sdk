@@ -11,6 +11,7 @@ import android.view.View
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.ui.setting.SeedWordAdapter
 import io.mozocoin.sdk.utils.*
 import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import kotlinx.android.synthetic.main.view_toolbar.view.*
@@ -100,7 +101,6 @@ internal class SecurityActivity : BaseActivity() {
 
         button_continue.click {
             showPinInputUI()
-            //startActivity(Intent(this, SeedWordVerificationActivity::class.java))
         }
     }
 

@@ -227,4 +227,6 @@
     <string name="mozo_view_textyour_wallet_is_backed_up" translatable="false">Your wallet is backed up</string>
     <string name="mozo_view_text_backup_wallet_describe" translatable="false">Be sure to store your recovery phrase in a secure place. If this app is deleted, your wallet cannot be recovered without it.</string>
     <string name="mozo_text_backup_wallet_gotit" translatable="false">Got It</string>
+    <string name="mozo_setting_title" translatable="false">Setting</string>
+    <string name="mozo_view_text_change_security_pin" translatable="false">Change Security PIN</string>
 </resources>

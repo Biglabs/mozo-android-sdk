@@ -10,7 +10,18 @@
     <application
         android:hardwareAccelerated="true"
         android:supportsRtl="true">
-        <activity android:name=".ui.SeedWordVerificationActivity"></activity>
+        <activity
+            android:name=".ui.setting.BackupWalletActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme" />
+        <activity
+            android:name=".ui.setting.SettingActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"  />
         <activity
             android:name=".contact.AddressAddActivity"
             android:excludeFromRecents="true"
