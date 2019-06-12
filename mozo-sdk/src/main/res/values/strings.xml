@@ -236,4 +236,5 @@
     <string name="mozo_text_backup_wallet_gotit" translatable="false">Got It</string>
     <string name="mozo_setting_title" translatable="false">Setting</string>
     <string name="mozo_view_text_change_security_pin" translatable="false">Change Security PIN</string>
+    <string name="mozo_backup_wallet_invalid_recovery_phrase" translatable="false">Invalid Recovery Phrase</string>
 </resources>
