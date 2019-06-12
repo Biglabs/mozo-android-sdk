@@ -1,7 +1,6 @@
 package io.mozocoin.sdk.wallet.backup
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
@@ -9,9 +8,9 @@ import android.text.SpannableString
 import android.text.style.ImageSpan
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
+import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
-import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
@@ -24,8 +23,6 @@ import kotlinx.android.synthetic.main.view_wallet_display_phrases.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import org.web3j.crypto.MnemonicUtils
 import kotlin.random.Random
 
@@ -34,31 +31,66 @@ internal class BackupWalletActivity : BaseActivity() {
     private val requestSecurityPin = 0x10
 
     private val allWords = mutableListOf<String>()
-    private val words = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.view_loading)
+        MozoAuth.getInstance().syncProfile(this) {
+            if (!it) return@syncProfile
 
-        val walletInfo = MozoWallet.getInstance().getWallet(false)?.buildWalletInfo()
-        if (walletInfo?.pin.isNullOrEmpty()) {
-            EventBus.getDefault().register(this)
-            SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN, requestSecurityPin)
+            val wallet = MozoWallet.getInstance().getWallet(false)
+            if (wallet == null) {
+                // TODO OMG current wallet is null ?
+                finish()
+                return@syncProfile
+            }
 
-        } else onReceivedPin(MessageEvent.Pin(
-            walletInfo?.pin ?: "",
-            SecurityActivity.KEY_VERIFY_PIN)
-        )
+            if (wallet.isUnlocked()) {
+                displaySeedWords()
+
+            } else {
+                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN, requestSecurityPin)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            requestSecurityPin -> {
+                if (resultCode != RESULT_OK) {
+                    finish()
+                    return
+                }
+                GlobalScope.launch {
+                    val pin = data?.getStringExtra(SecurityActivity.KEY_DATA)
+                    if (pin.isNullOrEmpty()) {
+                        finish()
+                        return@launch
+                    }
+
+                    MozoWallet.getInstance().getWallet(false)?.decrypt(pin)
+                    displaySeedWords()
+                }
+            }
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     private fun displaySeedWords() = GlobalScope.launch(Dispatchers.Main) {
+        val words = MozoWallet.getInstance().getWallet(false)?.mnemonicPhrases()?.toMutableList()
+        if (words.isNullOrEmpty()) {
+            finish()
+            return@launch
+        }
+
         setContentView(R.layout.view_wallet_display_phrases)
 
         seed_view.adapter = SeedWordAdapter(words)
         txt_warning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
             setSpan(ImageSpan(this@BackupWalletActivity, R.drawable.ic_warning),
-                0,
-                1,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                    0,
+                    1,
+                    Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         }
 
         button_stored_confirm.click {
@@ -69,18 +101,6 @@ internal class BackupWalletActivity : BaseActivity() {
         button_continue.click {
             startVerifySeedWords()
         }
-    }
-
-    @Subscribe
-    fun onReceivedPin(event: MessageEvent.Pin) {
-        EventBus.getDefault().unregister(this)
-
-        val w = MozoWallet.getInstance().getWallet(false)
-            ?.decrypt(event.pin)
-            ?.mnemonicPhrases()
-            ?.toMutableList()
-        words.addAll(w ?: return)
-        displaySeedWords()
     }
 
     private fun startVerifySeedWords() {
@@ -100,10 +120,10 @@ internal class BackupWalletActivity : BaseActivity() {
         txt_index_4.text = "${randoms[3] + 1}"
 
         val edits = listOf(
-            edit_verify_seed_1,
-            edit_verify_seed_2,
-            edit_verify_seed_3,
-            edit_verify_seed_4
+                edit_verify_seed_1,
+                edit_verify_seed_2,
+                edit_verify_seed_3,
+                edit_verify_seed_4
         )
 
         edits.forEach { edit ->
@@ -141,7 +161,7 @@ internal class BackupWalletActivity : BaseActivity() {
 
             if (!validWords())
                 return@click MessageDialog.show(this,
-                    getString(R.string.mozo_backup_wallet_invalid_recovery_phrase))
+                        getString(R.string.mozo_backup_wallet_invalid_recovery_phrase))
 
             button_finish.text = getString(R.string.mozo_text_backup_wallet_gotit)
             toolbar_mozo.showCloseButton(false)
@@ -166,23 +186,11 @@ internal class BackupWalletActivity : BaseActivity() {
         }
     }
 
-    private fun validWords() =
-        edit_verify_seed_1.text.toString() == words.getOrNull(txt_index_1.text.toString().toInt() - 1)
+    private fun validWords(): Boolean {
+        val words = MozoWallet.getInstance().getWallet(false)?.mnemonicPhrases()?.toMutableList()
+        return !words.isNullOrEmpty() && edit_verify_seed_1.text.toString() == words.getOrNull(txt_index_1.text.toString().toInt() - 1)
                 && edit_verify_seed_2.text.toString() == words.getOrNull(txt_index_2.text.toString().toInt() - 1)
                 && edit_verify_seed_3.text.toString() == words.getOrNull(txt_index_3.text.toString().toInt() - 1)
                 && edit_verify_seed_4.text.toString() == words.getOrNull(txt_index_4.text.toString().toInt() - 1)
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode != Activity.RESULT_OK && requestCode == requestSecurityPin) {
-            finish()
-        }
     }
-
-    override fun onDestroy() {
-        EventBus.getDefault().unregister(this)
-        super.onDestroy()
-    }
-
 }
