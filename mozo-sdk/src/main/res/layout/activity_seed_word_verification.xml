@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:focusableInTouchMode="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -35,6 +36,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lo_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize"
@@ -75,7 +77,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@android:id/text2"
             tools:ignore="UnusedAttribute"
-            tools:text="Mom1" />
+            tools:text="Mom1">
+
+            <requestFocus />
+        </androidx.appcompat.widget.AppCompatEditText>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txt_index_1"
@@ -205,7 +210,6 @@
             android:layout_marginStart="@dimen/mozo_screen_padding"
             android:layout_marginEnd="@dimen/mozo_screen_padding"
             android:layout_marginBottom="30dp"
-            android:enabled="false"
             android:text="@string/mozo_button_finish"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

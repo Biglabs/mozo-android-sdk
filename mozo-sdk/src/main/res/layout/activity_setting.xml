@@ -39,7 +39,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?android:actionBarSize"
         android:divider="@drawable/dr_divider_menu"
-        android:dividerPadding="15dp"
+        android:dividerPadding="@dimen/mozo_list_padding"
         android:orientation="vertical"
         android:paddingTop="@dimen/mozo_list_padding"
         android:showDividers="middle|end" >
@@ -51,7 +51,7 @@
             android:drawableStart="@drawable/ic_setting_change_security_pin"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
-            android:padding="15dp"
+            android:padding="@dimen/mozo_list_padding"
             android:text="@string/mozo_view_text_change_security_pin"
             app:drawableSize="24dp" />
 
@@ -62,7 +62,7 @@
             android:drawableStart="@drawable/ic_setting_backup_wallet"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
-            android:padding="15dp"
+            android:padding="@dimen/mozo_list_padding"
             android:text="@string/mozo_backup_title"
             app:drawableSize="24dp" />
     </LinearLayout>
