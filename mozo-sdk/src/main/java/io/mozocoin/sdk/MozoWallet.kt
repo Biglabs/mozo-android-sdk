@@ -15,7 +15,7 @@ import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.string
-import io.mozocoin.sdk.wallet.CreateWalletActivity
+import io.mozocoin.sdk.wallet.create.CreateWalletActivity
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

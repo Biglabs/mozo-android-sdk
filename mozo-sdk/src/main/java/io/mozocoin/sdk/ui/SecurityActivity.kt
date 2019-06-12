@@ -11,7 +11,7 @@ import android.view.View
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
-import io.mozocoin.sdk.ui.setting.SeedWordAdapter
+import io.mozocoin.sdk.wallet.backup.SeedWordAdapter
 import io.mozocoin.sdk.utils.*
 import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import kotlinx.android.synthetic.main.view_toolbar.view.*
@@ -79,11 +79,6 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showRecoveryPhraseUI() {
         setContentView(R.layout.view_wallet_display_phrases)
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar?.apply {
-            setDisplayShowHomeEnabled(false)
-            setDisplayHomeAsUpEnabled(false)
-        }
 
         val words = MozoWallet.getInstance().getWallet(true)?.mnemonicPhrases()?.toMutableList()
         seed_view.adapter = SeedWordAdapter(words ?: mutableListOf())
@@ -100,22 +95,12 @@ internal class SecurityActivity : BaseActivity() {
         }
 
         button_continue.click {
-            showConfirmPhraseUI()
+            showPinInputUI()
         }
-    }
-
-    private fun showConfirmPhraseUI() {
-        setContentView(R.layout.view_wallet_confirm_phrases)
-
     }
 
     private fun showPinInputUI() {
         setContentView(R.layout.view_wallet_security)
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar?.apply {
-            setDisplayShowHomeEnabled(false)
-            setDisplayHomeAsUpEnabled(false)
-        }
 
         pin_toolbar.screen_title.setText(R.string.mozo_pin_title)
         sub_title_pin.setText(R.string.mozo_pin_sub_title)

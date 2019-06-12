@@ -26,7 +26,7 @@
             app:contentInsetStart="0dp">
 
             <io.mozocoin.sdk.ui.widget.MozoToolbar
-                android:id="@+id/tb_verify"
+                android:id="@+id/toolbar_mozo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".ui.setting.SettingActivity">
+    tools:context=".ui.SettingsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -37,12 +36,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?android:actionBarSize"
         android:divider="@drawable/dr_divider_menu"
         android:dividerPadding="@dimen/mozo_list_padding"
         android:orientation="vertical"
         android:paddingTop="@dimen/mozo_list_padding"
-        android:showDividers="middle|end" >
+        android:showDividers="middle|end"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <io.mozocoin.sdk.ui.view.MozoIconTextView
             android:id="@+id/button_change_security_pin"

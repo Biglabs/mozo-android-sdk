@@ -1,4 +1,4 @@
-package io.mozocoin.sdk.wallet
+package io.mozocoin.sdk.wallet.create
 
 import android.content.Context
 import android.content.Intent

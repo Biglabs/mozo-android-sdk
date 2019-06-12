@@ -1,4 +1,4 @@
-package io.mozocoin.sdk.ui.setting
+package io.mozocoin.sdk.wallet.backup
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -144,7 +144,7 @@ internal class BackupWalletActivity : BaseActivity() {
                     getString(R.string.mozo_backup_wallet_invalid_recovery_phrase))
 
             button_finish.text = getString(R.string.mozo_text_backup_wallet_gotit)
-            tb_verify.showCloseButton(false)
+            toolbar_mozo.showCloseButton(false)
             //TODO call API
             lo_success.visible()
         }

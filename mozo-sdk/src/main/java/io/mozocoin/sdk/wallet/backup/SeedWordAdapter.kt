@@ -1,4 +1,4 @@
-package io.mozocoin.sdk.ui.setting
+package io.mozocoin.sdk.wallet.backup
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

@@ -11,18 +11,6 @@
         android:hardwareAccelerated="true"
         android:supportsRtl="true">
         <activity
-            android:name=".ui.setting.BackupWalletActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/MozoTheme" />
-        <activity
-            android:name=".ui.setting.SettingActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/MozoTheme" />
-        <activity
             android:name=".contact.AddressAddActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
@@ -84,6 +72,13 @@
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
+            android:name=".ui.SettingsActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
             android:name=".wallet.ConvertOnChainActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
@@ -104,19 +99,25 @@
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
+            android:name=".wallet.backup.BackupWalletActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme" />
+        <activity
+            android:name=".wallet.create.CreateWalletActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
             android:name=".wallet.reset.ResetPinActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
-        <activity
-            android:name=".wallet.CreateWalletActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/MozoTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="net.openid.appauth.AuthorizationManagementActivity"
             android:exported="false"
