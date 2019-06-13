@@ -31,6 +31,8 @@ internal class WalletHelper {
         this.offChainAddress = walletInfo.offchainAddress
         this.onChainAddress = walletInfo.onchainAddress
         this.pinEncrypted = walletInfo.pin
+
+        if (!this.pinEncrypted.isNullOrEmpty()) decrypt()
     }
 
     private fun initAddresses() {
