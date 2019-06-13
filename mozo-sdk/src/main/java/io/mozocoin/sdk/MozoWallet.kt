@@ -14,6 +14,7 @@ import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.UserCancelException
+import io.mozocoin.sdk.utils.logAsInfo
 import io.mozocoin.sdk.utils.string
 import io.mozocoin.sdk.wallet.create.CreateWalletActivity
 import kotlinx.coroutines.*
@@ -120,7 +121,7 @@ class MozoWallet private constructor() {
         }
     }
 
-    internal fun executeSaveWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+    internal fun executeSaveWallet(context: Context, pin: String?, callback: ((isSuccess: Boolean) -> Unit)? = null) {
         mReady4WalletCheckingJob?.cancel()
 
         if (!MozoSDK.isReadyForWallet && mReady4WalletCheckingDelayed < MAX_DELAY_TIME) {
@@ -140,11 +141,21 @@ class MozoWallet private constructor() {
             return
         }
 
-        val wallet = getWallet()?.encrypt(pin)?.buildWalletInfo()
+        /**
+         * Only encrypt wallet if pin is not null during create wallet manual process
+         */
+        if (pin != null) getWallet()?.encrypt(pin)
+
+        val wallet = getWallet()?.buildWalletInfo()
         mProfile!!.apply { walletInfo = wallet }
 
+        if (wallet == null) {
+            callback?.invoke(false)
+            return
+        }
+
         /* save wallet info to server */
-        syncWalletInfo(wallet ?: return, context, callback)
+        syncWalletInfo(wallet, context, callback)
     }
 
     private fun syncWalletInfo(walletInfo: WalletInfo, context: Context, callback: ((isSuccess: Boolean) -> Unit)? = null) {
@@ -201,10 +212,17 @@ class MozoWallet private constructor() {
     }
 
     @Subscribe
-    internal fun onUserCancelErrorDialog(@Suppress("UNUSED_PARAMETER") event: MessageEvent.UserCancelErrorDialog) {
+    internal fun onCreateWalletDone(event: MessageEvent.CreateWalletAutomatic) {
+        event.toString().logAsInfo()
         EventBus.getDefault().unregister(this@MozoWallet)
 
-        MozoAuth.getInstance().signOut()
+        if (mInitWalletCallback != null) {
+            mInitWalletCallback?.invoke(mWallet?.isUnlocked() == true)
+            mInitWalletCallback = null
+        } else {
+            /* load data to variables */
+            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+        }
     }
 
     @Subscribe
@@ -223,6 +241,13 @@ class MozoWallet private constructor() {
             /* load data to variables */
             MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
         }
+    }
+
+    @Subscribe
+    internal fun onUserCancelErrorDialog(@Suppress("UNUSED_PARAMETER") event: MessageEvent.UserCancelErrorDialog) {
+        EventBus.getDefault().unregister(this@MozoWallet)
+
+        MozoAuth.getInstance().signOut()
     }
 
     @Subscribe

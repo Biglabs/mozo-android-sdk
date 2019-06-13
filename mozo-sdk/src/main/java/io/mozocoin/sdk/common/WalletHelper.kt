@@ -1,6 +1,7 @@
 package io.mozocoin.sdk.common
 
 import io.mozocoin.sdk.BuildConfig
+import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.utils.CryptoUtils
 import org.web3j.crypto.Credentials
@@ -12,11 +13,13 @@ internal class WalletHelper {
     private var mnemonic: String? = null
     private var mnemonicEncrypted: String? = null
 
-    var offChainAddress: String? = null
+    internal var offChainAddress: String? = null
     private var offChainPrivateKey: String? = null
 
     private var onChainAddress: String? = null
     private var onChainPrivateKey: String? = null
+
+    private var pinEncrypted: String? = null
 
     constructor(mnemonic: String) {
         this.mnemonic = mnemonic
@@ -27,6 +30,7 @@ internal class WalletHelper {
         this.mnemonicEncrypted = walletInfo.encryptSeedPhrase
         this.offChainAddress = walletInfo.offchainAddress
         this.onChainAddress = walletInfo.onchainAddress
+        this.pinEncrypted = walletInfo.pin
     }
 
     private fun initAddresses() {
@@ -45,10 +49,20 @@ internal class WalletHelper {
 
     fun mnemonicPhrases() = mnemonic?.split(" ")
 
-    fun encrypt(pin: String): WalletHelper {
+    fun encrypt(pin: String? = null): WalletHelper {
         if (!mnemonic.isNullOrEmpty() && mnemonicEncrypted.isNullOrEmpty()) {
+            val pinRaw = pin ?: ByteArray(6)
+                    .apply { SecureRandom().nextBytes(this) }
+                    .joinToString(separator = "", transform = {
+                        it.toString().replace("-", "")[0].toString()
+                    })
+
+            MozoAuth.getInstance().getPinSecret()?.let { secret ->
+                pinEncrypted = CryptoUtils.encrypt(pinRaw, secret)
+            }
+
             try {
-                mnemonicEncrypted = CryptoUtils.encrypt(mnemonic!!, pin)
+                mnemonicEncrypted = CryptoUtils.encrypt(mnemonic!!, pinRaw)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -56,14 +70,20 @@ internal class WalletHelper {
         return this
     }
 
-    fun decrypt(pin: String): WalletHelper {
+    fun decrypt(pin: String? = null): WalletHelper {
         if (mnemonic.isNullOrEmpty() && !mnemonicEncrypted.isNullOrEmpty()) {
+
+            val pinRaw = pin ?: MozoAuth.getInstance().getPinSecret()?.let { secret ->
+                if (pinEncrypted != null) CryptoUtils.decrypt(pinEncrypted!!, secret) else null
+            }
+
             try {
-                mnemonic = CryptoUtils.decrypt(mnemonicEncrypted!!, pin)
+                mnemonic = CryptoUtils.decrypt(mnemonicEncrypted!!, pinRaw!!)
                 if (mnemonic != null && MnemonicUtils.validateMnemonic(mnemonic)) {
                     initAddresses()
                 }
             } catch (ignore: Exception) {
+                /*  maybe pinRaw = null */
             }
         }
         return this
@@ -79,7 +99,7 @@ internal class WalletHelper {
         }
     }
 
-    fun buildWalletInfo() = WalletInfo(mnemonicEncrypted, offChainAddress, onChainAddress)
+    fun buildWalletInfo() = WalletInfo(mnemonicEncrypted, offChainAddress, onChainAddress, pinEncrypted)
 
     fun buildOffChainCredentials() = if (isUnlocked() && !offChainPrivateKey.isNullOrEmpty())
         Credentials.create(offChainPrivateKey)

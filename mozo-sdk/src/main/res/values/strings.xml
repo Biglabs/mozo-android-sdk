@@ -102,11 +102,12 @@
     <string name="mozo_convert_on_in_off_eth_balance">Your ETH balance is: &lt;b>%s&lt;/b></string>
 
     <string name="mozo_create_wallet_title">Create MozoX Wallet</string>
-    <string name="mozo_create_wallet_auto_section">Create Wallet Automatic</string>
+    <string name="mozo_create_wallet_auto_section">Create Wallet Automatically</string>
     <string name="mozo_create_wallet_auto_explain">Your Recovery Phrase* and security PIN will be auto generated and remembered by our system.</string>
     <string name="mozo_create_wallet_manual_section">Create Wallet Manually</string>
     <string name="mozo_create_wallet_manual_explain">You will need to back up your Recovery Phrase and security PIN created by you.</string>
     <string name="mozo_create_wallet_hint_explain"><b>*What are Recovery Phrase?</b>\n\nRecovery Phrase are random set of words used to secure your digital wallet. You should write down these words in order so that in the event you lose your digital wallet of forget your PIN, you can recover your wallet and/or reset your PIN.</string>
+    <string name="mozo_create_wallet_creating">Creating your MozoX wallet…</string>
 
     <string name="mozo_pin_title">Create Security PIN</string>
     <string name="mozo_pin_title_restore">Restore Wallet</string>
