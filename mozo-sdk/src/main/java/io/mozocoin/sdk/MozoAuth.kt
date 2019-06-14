@@ -205,6 +205,10 @@ class MozoAuth private constructor() {
     }
 
     internal fun syncProfile(context: Context, callback: ((success: Boolean) -> Unit)? = null) {
+        if (!MozoAuth.getInstance().isSignedIn()) {
+            callback?.invoke(false)
+            return
+        }
         MozoAPIsService.getInstance().getProfile(context, { data, _ ->
             callback?.invoke(false)
             if (data == null) {
