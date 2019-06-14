@@ -12,7 +12,8 @@ open class MozoIconTextView : AppCompatTextView {
     protected var drawableRect: Rect? = null
 
     constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, android.R.attr.textViewStyle)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.MozoIconTextView)
         try {
             drawableSize = typeArray.getDimensionPixelSize(R.styleable.MozoIconTextView_drawableSize, drawableSize)
