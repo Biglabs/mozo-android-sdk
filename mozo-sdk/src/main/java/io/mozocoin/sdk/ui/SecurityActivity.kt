@@ -33,7 +33,6 @@ internal class SecurityActivity : BaseActivity() {
     private var mRequestCode = -1
     private var willReturnsResult = false
     private var mFinishJob: Job? = null
-    private val allWords = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,8 +111,6 @@ internal class SecurityActivity : BaseActivity() {
     private fun showRecoveryPhraseConfirmationUI() {
         setContentView(R.layout.view_wallet_confirm_phrases)
 
-        allWords.addAll(MnemonicUtils.getWords() ?: listOf())
-
         val randoms = randomItems()
         txt_index_1.text = "${randoms[0] + 1}"
         txt_index_2.text = "${randoms[1] + 1}"
@@ -139,7 +136,7 @@ internal class SecurityActivity : BaseActivity() {
 
             edit.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    val exist = allWords.contains(edit.text.toString())
+                    val exist = MnemonicUtils.getWords().contains(edit.text.toString())
                     edit.isActivated = exist
                     edit.isSelected = !exist
                 } else {
