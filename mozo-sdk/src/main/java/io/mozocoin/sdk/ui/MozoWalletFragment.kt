@@ -13,6 +13,7 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.find
@@ -104,7 +105,7 @@ class MozoWalletFragment : Fragment() {
         }
 
         if (MozoAuth.getInstance().isSignedIn()) {
-            MozoAuth.getInstance().isSignUpCompleted {
+            MozoAuth.getInstance().isSignUpCompleted(context ?: MozoSDK.getInstance().context) {
                 if (unLoadedTabPosition > -1) loadFragment(unLoadedTabPosition)
                 unLoadedTabPosition = -1
             }

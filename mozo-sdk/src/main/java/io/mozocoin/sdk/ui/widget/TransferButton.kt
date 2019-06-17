@@ -31,7 +31,7 @@ internal class TransferButton : BaseButton {
     }
 
     override fun onClick(view: View) {
-        MozoAuth.getInstance().isSignUpCompleted {
+        MozoAuth.getInstance().isSignUpCompleted(view.context) {
             if (it) doTransfer()
             else {
                 needToContinue = true

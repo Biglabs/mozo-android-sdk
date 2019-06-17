@@ -121,10 +121,10 @@ class MozoAuth private constructor() {
 
     fun isSignedIn() = authStateManager.current.isAuthorized
 
-    fun isSignUpCompleted(callback: (isCompleted: Boolean) -> Unit) {
-        MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
+    fun isSignUpCompleted(context: Context, callback: (isCompleted: Boolean) -> Unit) {
+        MozoSDK.getInstance().profileViewModel.fetchData(context) {
             if (it == null) {
-                syncProfile(MozoSDK.getInstance().context) { isSuccess ->
+                syncProfile(context) { isSuccess ->
                     callback.invoke(authStateManager.current.isAuthorized && isSuccess)
                 }
             } else callback.invoke(authStateManager.current.isAuthorized && MozoSDK.getInstance().profileViewModel.hasWallet())

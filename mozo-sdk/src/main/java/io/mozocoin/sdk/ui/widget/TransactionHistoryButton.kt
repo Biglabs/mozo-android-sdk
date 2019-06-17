@@ -32,7 +32,7 @@ internal class TransactionHistoryButton : BaseButton {
     }
 
     override fun onClick(view: View) {
-        MozoAuth.getInstance().isSignUpCompleted {
+        MozoAuth.getInstance().isSignUpCompleted(view.context) {
             if (it) doOpenTxHistory()
             else {
                 needToContinue = true

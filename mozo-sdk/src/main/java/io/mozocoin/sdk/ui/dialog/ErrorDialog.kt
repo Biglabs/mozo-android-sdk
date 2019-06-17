@@ -1,6 +1,7 @@
 package io.mozocoin.sdk.ui.dialog
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -184,14 +185,17 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
                 }
                 onRetry?.let { MozoSDK.getInstance().retryCallbacks?.add(it) }
 
-                if (instance?.isShowing == true) {
-                    instance?.updateUI(type)
-                } else {
-                    val bundle = Bundle()
-                    bundle.putInt(ERROR_TYPE, type)
-                    instance = ErrorDialog(this, bundle)
-                    instance!!.identifier = this.toString()
-                    instance!!.show()
+                when {
+                    instance?.isShowing == true -> instance?.updateUI(type)
+                    this !is Application -> {
+                        val bundle = Bundle()
+                        bundle.putInt(ERROR_TYPE, type)
+                        instance = ErrorDialog(this, bundle)
+                        instance!!.identifier = this.toString()
+                        instance!!.show()
+                    }
+                    else -> {
+                    }
                 }
             }
         }
