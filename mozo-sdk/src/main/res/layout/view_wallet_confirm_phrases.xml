@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:focusableInTouchMode="true">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -35,184 +34,192 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/lo_content"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        tools:layout_marginTop="?android:actionBarSize">
+        android:layout_marginTop="?android:actionBarSize"
+        android:fillViewport="true">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@android:id/text1"
-            style="@style/MozoTheme.SubTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="@string/mozo_view_text_verify"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@android:id/text2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/mozo_screen_padding"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="@dimen/mozo_screen_padding"
-            android:gravity="center"
-            android:text="@string/mozo_view_text_verify_describe"
-            android:textColor="@color/mozo_color_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@android:id/text1" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edit_verify_seed_1"
-            style="@style/MozoTextViewStyle.Seed"
-            android:layout_marginTop="15dp"
-            android:importantForAutofill="no"
-            android:nextFocusDown="@id/edit_verify_seed_2"
-            app:layout_constraintEnd_toStartOf="@id/edit_verify_seed_3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@android:id/text2"
-            tools:ignore="UnusedAttribute"
-            tools:text="Mom1">
-
-            <requestFocus />
-        </androidx.appcompat.widget.AppCompatEditText>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_index_1"
-            style="@style/MozoTextViewStyle.SeedIndex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/edit_verify_seed_1"
-            app:layout_constraintBaseline_toBaselineOf="@id/edit_verify_seed_1"
-            app:layout_constraintStart_toStartOf="@id/edit_verify_seed_1"
-            tools:text="1." />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edit_verify_seed_3"
-            style="@style/MozoTextViewStyle.Seed"
-            android:importantForAutofill="no"
-            android:nextFocusDown="@id/edit_verify_seed_4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/edit_verify_seed_1"
-            app:layout_constraintTop_toBottomOf="@android:id/text2"
-            tools:ignore="UnusedAttribute"
-            tools:text="Mom1" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_index_3"
-            style="@style/MozoTextViewStyle.SeedIndex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/edit_verify_seed_3"
-            app:layout_constraintBaseline_toBaselineOf="@id/edit_verify_seed_3"
-            app:layout_constraintStart_toStartOf="@id/edit_verify_seed_3"
-            tools:text="3." />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edit_verify_seed_2"
-            style="@style/MozoTextViewStyle.Seed"
-            android:layout_marginTop="15dp"
-            android:importantForAutofill="no"
-            android:nextFocusDown="@id/edit_verify_seed_3"
-            app:layout_constraintEnd_toStartOf="@id/edit_verify_seed_4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_verify_seed_1"
-            tools:ignore="UnusedAttribute"
-            tools:text="Mom1" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_index_2"
-            style="@style/MozoTextViewStyle.SeedIndex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/edit_verify_seed_1"
-            app:layout_constraintBaseline_toBaselineOf="@id/edit_verify_seed_2"
-            app:layout_constraintStart_toStartOf="@id/edit_verify_seed_2"
-            tools:text="2." />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edit_verify_seed_4"
-            style="@style/MozoTextViewStyle.Seed"
-            android:imeOptions="actionDone"
-            android:importantForAutofill="no"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/edit_verify_seed_2"
-            app:layout_constraintTop_toBottomOf="@id/edit_verify_seed_3"
-            tools:ignore="UnusedAttribute"
-            tools:text="Mom1" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_index_4"
-            style="@style/MozoTextViewStyle.SeedIndex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/edit_verify_seed_4"
-            app:layout_constraintBaseline_toBaselineOf="@id/edit_verify_seed_4"
-            app:layout_constraintStart_toStartOf="@id/edit_verify_seed_4"
-            tools:text="4." />
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/lo_success"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lo_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone"
-            app:constraint_referenced_ids="img_check,txt_describe" />
+            android:layout_height="wrap_content">
 
-        <io.mozocoin.sdk.ui.view.MozoIconTextView
-            android:id="@+id/img_check"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_check_green"
-            android:drawablePadding="15dp"
-            android:gravity="center"
-            android:text="@string/mozo_view_textyour_wallet_is_backed_up"
-            android:textAllCaps="true"
-            android:textColor="@color/mozo_color_text_main"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:drawableSize="100dp"
-            app:layout_constraintBottom_toTopOf="@id/txt_describe"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3"
-            app:layout_constraintVertical_chainStyle="packed" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@android:id/text1"
+                style="@style/MozoTheme.SubTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@string/mozo_view_text_verify"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_describe"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/mozo_screen_padding"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="@dimen/mozo_screen_padding"
-            android:gravity="center"
-            android:text="@string/mozo_view_text_backup_wallet_describe"
-            android:textColor="@color/mozo_color_title"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toTopOf="@id/button_finish"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/img_check" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@android:id/text2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_padding"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/mozo_screen_padding"
+                android:gravity="center"
+                android:text="@string/mozo_view_text_verify_describe"
+                android:textColor="@color/mozo_color_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@android:id/text1" />
 
-        <Button
-            android:id="@+id/button_finish"
-            style="@style/MozoButtonStyle.Floating"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="@dimen/mozo_screen_padding"
-            android:layout_marginEnd="@dimen/mozo_screen_padding"
-            android:layout_marginBottom="30dp"
-            android:text="@string/mozo_button_finish"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_verify_seed_1"
+                style="@style/MozoTextViewStyle.Seed"
+                android:layout_marginTop="15dp"
+                android:importantForAutofill="no"
+                android:nextFocusDown="@id/edit_verify_seed_2"
+                app:layout_constraintEnd_toStartOf="@id/edit_verify_seed_3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@android:id/text2"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom1">
+
+                <requestFocus />
+            </androidx.appcompat.widget.AppCompatEditText>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_index_1"
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/edit_verify_seed_1"
+                app:layout_constraintBaseline_toBaselineOf="@id/edit_verify_seed_1"
+                app:layout_constraintStart_toStartOf="@id/edit_verify_seed_1"
+                tools:text="1." />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_verify_seed_3"
+                style="@style/MozoTextViewStyle.Seed"
+                android:importantForAutofill="no"
+                android:nextFocusDown="@id/edit_verify_seed_4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/edit_verify_seed_1"
+                app:layout_constraintTop_toBottomOf="@android:id/text2"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom1" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_index_3"
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/edit_verify_seed_3"
+                app:layout_constraintBaseline_toBaselineOf="@id/edit_verify_seed_3"
+                app:layout_constraintStart_toStartOf="@id/edit_verify_seed_3"
+                tools:text="3." />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_verify_seed_2"
+                style="@style/MozoTextViewStyle.Seed"
+                android:layout_marginTop="15dp"
+                android:importantForAutofill="no"
+                android:nextFocusDown="@id/edit_verify_seed_3"
+                app:layout_constraintEnd_toStartOf="@id/edit_verify_seed_4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_verify_seed_1"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom1" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_index_2"
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/edit_verify_seed_1"
+                app:layout_constraintBaseline_toBaselineOf="@id/edit_verify_seed_2"
+                app:layout_constraintStart_toStartOf="@id/edit_verify_seed_2"
+                tools:text="2." />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_verify_seed_4"
+                style="@style/MozoTextViewStyle.Seed"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/edit_verify_seed_2"
+                app:layout_constraintTop_toBottomOf="@id/edit_verify_seed_3"
+                tools:ignore="UnusedAttribute"
+                tools:text="Mom1" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_index_4"
+                style="@style/MozoTextViewStyle.SeedIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/edit_verify_seed_4"
+                app:layout_constraintBaseline_toBaselineOf="@id/edit_verify_seed_4"
+                app:layout_constraintStart_toStartOf="@id/edit_verify_seed_4"
+                tools:text="4." />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/lo_success"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:constraint_referenced_ids="img_check,txt_describe" />
+
+            <io.mozocoin.sdk.ui.view.MozoIconTextView
+                android:id="@+id/img_check"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_check_green"
+                android:drawablePadding="15dp"
+                android:gravity="center"
+                android:text="@string/mozo_view_textyour_wallet_is_backed_up"
+                android:textAllCaps="true"
+                android:textColor="@color/mozo_color_text_main"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:drawableSize="100dp"
+                app:layout_constraintBottom_toTopOf="@id/txt_describe"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.3"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_describe"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_padding"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="@dimen/mozo_screen_padding"
+                android:gravity="center"
+                android:text="@string/mozo_view_text_backup_wallet_describe"
+                android:textColor="@color/mozo_color_title"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@id/button_finish"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/img_check" />
+
+            <Button
+                android:id="@+id/button_finish"
+                style="@style/MozoButtonStyle.Floating"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="@dimen/mozo_screen_padding"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="@dimen/mozo_screen_padding"
+                android:layout_marginBottom="30dp"
+                android:text="@string/mozo_button_finish"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_verify_seed_4"
+                app:layout_constraintVertical_bias="1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

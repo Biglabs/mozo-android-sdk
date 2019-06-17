@@ -37,7 +37,7 @@ class MozoWallet private constructor() {
     init {
         MozoSDK.getInstance().profileViewModel.profileLiveData.observeForever {
             this.mProfile = it
-            mWallet = WalletHelper.initWithWalletInfo(it?.walletInfo)
+            mWallet = WalletHelper.initWithWalletInfo(it?.walletInfo, mWallet)
         }
     }
 
@@ -92,7 +92,7 @@ class MozoWallet private constructor() {
             }
             CreateWalletActivity.start(context)
             /**
-             * Handle after enter PIN at MozoWallet.onReceivePin
+             * Handle after enter PIN at MozoWallet.onCreateWalletDone
              */
             return
         }

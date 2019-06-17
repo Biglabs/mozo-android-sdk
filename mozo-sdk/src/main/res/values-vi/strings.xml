@@ -97,6 +97,14 @@
     <string name="mozo_convert_on_in_off_warning">Số dư ETH: &lt;b>%s&lt;/b>&lt;br/>Bạn cần chuyển &lt;b>%s ETH&lt;/b> vào ví MozoX Offchain này để trả phí giao dịch</string>
     <string name="mozo_convert_on_in_off_eth_balance">Số dư ETH: &lt;b>%s&lt;/b></string>
 
+    <string name="mozo_create_wallet_title">Tạo ví MozoX</string>
+    <string name="mozo_create_wallet_auto_section">Tạo ví tự động</string>
+    <string name="mozo_create_wallet_auto_explain">Cụm từ khôi phục* và mã PIN được tự động tạo và ghi nhớ bởi hệ thống.</string>
+    <string name="mozo_create_wallet_manual_section">Tạo ví do bạn điều khiển</string>
+    <string name="mozo_create_wallet_manual_explain">Bạn cần phải ghi lại cụm từ khôi phục và tự tạo mã PIN của riêng mình.</string>
+    <string name="mozo_create_wallet_hint_explain"><b>*Cụm từ khôi phục là gì?</b>\n\nCụm từ khôi phục là một tập các từ được phát sinh ngẫu nhiên bởi thuật toán. Bạn phải ghi lại những từ này phòng trường hợp mất thiết bị hoặc quên mã PIN, bạn có thể dùng nó để phục hồi ví hoặc tạo PIN mới.</string>
+    <string name="mozo_create_wallet_creating">Đang tạo ví MozoX…</string>
+
     <string name="mozo_pin_title">Tạo mã PIN</string>
     <string name="mozo_pin_title_restore">Khôi phục lại ví</string>
     <string name="mozo_pin_title_verify">Xác nhận mã PIN</string>

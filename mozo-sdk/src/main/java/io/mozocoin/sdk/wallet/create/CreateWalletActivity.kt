@@ -27,7 +27,14 @@ internal class CreateWalletActivity : BaseActivity() {
         }
 
         button_create_manual?.click {
-            SecurityActivity.start(this, SecurityActivity.KEY_CREATE_PIN)
+            SecurityActivity.start(this, SecurityActivity.KEY_CREATE_PIN, KEY_CREATE_WALLET_MANUAL)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == KEY_CREATE_WALLET_MANUAL) {
+            finish()
         }
     }
 
@@ -50,6 +57,8 @@ internal class CreateWalletActivity : BaseActivity() {
     }
 
     companion object {
+        private const val KEY_CREATE_WALLET_MANUAL = 331
+
         @JvmStatic
         fun start(context: Context) {
             Intent(context, CreateWalletActivity::class.java).apply {

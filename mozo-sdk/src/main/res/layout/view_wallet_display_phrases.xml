@@ -25,6 +25,7 @@
             app:contentInsetStart="0dp">
 
             <io.mozocoin.sdk.ui.widget.MozoToolbar
+                android:id="@+id/toolbar_mozo_display_phrases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"

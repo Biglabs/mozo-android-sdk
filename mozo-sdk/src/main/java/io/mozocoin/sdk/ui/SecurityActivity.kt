@@ -8,17 +8,22 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
-import io.mozocoin.sdk.wallet.backup.SeedWordAdapter
+import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
+import io.mozocoin.sdk.wallet.backup.SeedWordAdapter
 import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import kotlinx.android.synthetic.main.view_toolbar.view.*
+import kotlinx.android.synthetic.main.view_wallet_confirm_phrases.*
 import kotlinx.android.synthetic.main.view_wallet_display_phrases.*
 import kotlinx.android.synthetic.main.view_wallet_security.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
+import org.web3j.crypto.MnemonicUtils
+import kotlin.random.Random
 
 internal class SecurityActivity : BaseActivity() {
 
@@ -28,6 +33,7 @@ internal class SecurityActivity : BaseActivity() {
     private var mRequestCode = -1
     private var willReturnsResult = false
     private var mFinishJob: Job? = null
+    private val allWords = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +85,7 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showRecoveryPhraseUI() {
         setContentView(R.layout.view_wallet_display_phrases)
+        toolbar_mozo_display_phrases?.showBackButton(true)
 
         val words = MozoWallet.getInstance().getWallet(true)?.mnemonicPhrases()?.toMutableList()
         seed_view.adapter = SeedWordAdapter(words ?: mutableListOf())
@@ -95,9 +102,96 @@ internal class SecurityActivity : BaseActivity() {
         }
 
         button_continue.click {
+            showRecoveryPhraseConfirmationUI()
+        }
+    }
+
+    /**
+     * START Recovery phrases confirmation
+     */
+    private fun showRecoveryPhraseConfirmationUI() {
+        setContentView(R.layout.view_wallet_confirm_phrases)
+
+        allWords.addAll(MnemonicUtils.getWords() ?: listOf())
+
+        val randoms = randomItems()
+        txt_index_1.text = "${randoms[0] + 1}"
+        txt_index_2.text = "${randoms[1] + 1}"
+        txt_index_3.text = "${randoms[2] + 1}"
+        txt_index_4.text = "${randoms[3] + 1}"
+
+        val edits = listOf(
+                edit_verify_seed_1,
+                edit_verify_seed_2,
+                edit_verify_seed_3,
+                edit_verify_seed_4
+        )
+
+        edits.forEach { edit ->
+            edit.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    edit.clearFocus()
+                    edit.hideKeyboard()
+                }
+
+                false
+            }
+
+            edit.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    val exist = allWords.contains(edit.text.toString())
+                    edit.isActivated = exist
+                    edit.isSelected = !exist
+                } else {
+                    edit.isActivated = false
+                    edit.isSelected = false
+                }
+            }
+        }
+
+        lo_content.click {
+            currentFocus?.clearFocus()
+            currentFocus?.hideKeyboard()
+        }
+
+        currentFocus?.showKeyboard()
+
+        button_finish.click {
+            if (!validWords())
+                return@click MessageDialog.show(this,
+                        getString(R.string.mozo_backup_wallet_invalid_recovery_phrase))
+
             showPinInputUI()
         }
     }
+
+    private fun randomItems(): MutableList<Int> {
+        fun random(from: Int, to: Int, except: Int): Int {
+            val i = Random.nextInt(from, to)
+            return if (i == except)
+                random(from, to, except)
+            else i
+        }
+
+        mutableListOf(Random.nextInt(0, 6)).apply {
+            add(random(0, 6, first()))
+            add(Random.nextInt(6, 12))
+            add(random(6, 12, this[2]))
+            return this
+        }
+    }
+
+    private fun validWords(): Boolean {
+        val words = MozoWallet.getInstance().getWallet(false)?.mnemonicPhrases()?.toMutableList()
+        return !words.isNullOrEmpty() && edit_verify_seed_1.text.toString() == words.getOrNull(txt_index_1.text.toString().toInt() - 1)
+                && edit_verify_seed_2.text.toString() == words.getOrNull(txt_index_2.text.toString().toInt() - 1)
+                && edit_verify_seed_3.text.toString() == words.getOrNull(txt_index_3.text.toString().toInt() - 1)
+                && edit_verify_seed_4.text.toString() == words.getOrNull(txt_index_4.text.toString().toInt() - 1)
+    }
+
+    /**
+     * END Recovery phrases confirmation
+     */
 
     private fun showPinInputUI() {
         setContentView(R.layout.view_wallet_security)

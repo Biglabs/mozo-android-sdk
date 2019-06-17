@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.view_wallet_display_phrases.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import org.web3j.crypto.MnemonicUtils
 import kotlin.random.Random
 
@@ -84,6 +86,13 @@ internal class BackupWalletActivity : BaseActivity() {
         }
 
         setContentView(R.layout.view_wallet_display_phrases)
+        toolbar_mozo_display_phrases?.apply {
+            showBackButton(true)
+            onBackPress = {
+                EventBus.getDefault().post(MessageEvent.CloseActivities())
+            }
+            showCloseButton(false)
+        }
 
         seed_view.adapter = SeedWordAdapter(words)
         txt_warning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {

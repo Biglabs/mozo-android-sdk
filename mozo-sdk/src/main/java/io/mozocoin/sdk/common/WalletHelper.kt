@@ -4,6 +4,8 @@ import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.utils.CryptoUtils
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.MnemonicUtils
 import java.security.SecureRandom
@@ -32,7 +34,11 @@ internal class WalletHelper {
         this.onChainAddress = walletInfo.onchainAddress
         this.pinEncrypted = walletInfo.pin
 
-        if (!this.pinEncrypted.isNullOrEmpty()) decrypt()
+        if (!this.pinEncrypted.isNullOrEmpty()) {
+            GlobalScope.launch {
+                decrypt()
+            }
+        }
     }
 
     private fun initAddresses() {
@@ -134,7 +140,10 @@ internal class WalletHelper {
                 )
         )
 
-        fun initWithWalletInfo(walletInfo: WalletInfo?): WalletHelper? {
+        fun initWithWalletInfo(walletInfo: WalletInfo?, lastHelper: WalletHelper? = null): WalletHelper? {
+            if (lastHelper != null && lastHelper.buildWalletInfo() == walletInfo) {
+                return lastHelper
+            }
             return WalletHelper(walletInfo ?: return null)
         }
     }
