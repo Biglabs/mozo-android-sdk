@@ -62,7 +62,7 @@ class MozoTx private constructor() {
         })
     }
 
-    internal fun createTransaction(context: Context, output: String, amount: String, pin: String, callback: (response: TransactionResponse?, doRetry: Boolean) -> Unit) {
+    internal fun createTransaction(context: Context, output: String, amount: String, pin: String?, callback: (response: TransactionResponse?, doRetry: Boolean) -> Unit) {
         val myAddress = MozoWallet.getInstance().getAddress()
         if (myAddress == null) {
             callback.invoke(null, false)

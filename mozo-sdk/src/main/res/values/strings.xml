@@ -132,6 +132,7 @@
     <string name="mozo_pin_reset_msg_checking">Checking recovery phrases</string>
     <string name="mozo_pin_reset_msg_processing">Reset PIN is processing</string>
     <string name="mozo_pin_reset_msg_done">PIN Reset Successful</string>
+    <string name="mozo_pin_auto_sign_notice">System is using automatically generated PIN to sign your transaction and send it to network…</string>
 
     <plurals name="mozo_notify_title_come_in">
         <item quantity="one">Customer arrived</item>

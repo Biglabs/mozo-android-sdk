@@ -128,6 +128,7 @@
     <string name="mozo_pin_reset_msg_checking">Đang kiểm tra cụm từ khôi phục</string>
     <string name="mozo_pin_reset_msg_processing">Đang tạo lại mã PIN</string>
     <string name="mozo_pin_reset_msg_done">Tạo lại mã PIN thành công</string>
+    <string name="mozo_pin_auto_sign_notice">Đang dùng mã PIN được tự động tạo bởi hệ thống để ký giao dịch và gởi đến máy chủ…</string>
 
     <plurals name="mozo_notify_title_come_in">
         <item quantity="other">Khách vừa đến</item>

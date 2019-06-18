@@ -74,6 +74,7 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != RESULT_OK) return
         when {
             requestCode == KEY_PICK_ADDRESS -> {
@@ -83,7 +84,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
             requestCode == KEY_VERIFY_PIN -> {
-                sendTx(data?.getStringExtra(SecurityActivity.KEY_DATA) ?: return)
+                sendTx(data?.getStringExtra(SecurityActivity.KEY_DATA))
             }
             data != null -> {
                 IntentIntegrator
@@ -103,7 +104,6 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun sendTx(pin: String?) {
-        if (pin == null) return
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         val amount = output_amount?.text.toString()
 

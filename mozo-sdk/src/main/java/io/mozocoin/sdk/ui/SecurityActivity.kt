@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
@@ -34,6 +35,8 @@ internal class SecurityActivity : BaseActivity() {
     private var willReturnsResult = false
     private var mFinishJob: Job? = null
 
+    private var isAllowBackPress = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mPINLength = getInteger(R.integer.security_pin_length)
@@ -47,8 +50,13 @@ internal class SecurityActivity : BaseActivity() {
         when (mRequestCode) {
             KEY_CREATE_PIN -> showRecoveryPhraseUI()
             KEY_ENTER_PIN -> showPinInputRestoreUI()
-            KEY_VERIFY_PIN -> showPinVerifyUI()
-            KEY_VERIFY_PIN_FOR_SEND -> showPinVerifyUI()
+            KEY_VERIFY_PIN,
+            KEY_VERIFY_PIN_FOR_SEND -> {
+                if (MozoWallet.getInstance().getWallet()?.isUnlocked() == true) {
+                    showMsg4AutoPin()
+
+                } else showPinVerifyUI()
+            }
             else -> {
                 finishAndRemoveTask()
             }
@@ -80,6 +88,10 @@ internal class SecurityActivity : BaseActivity() {
         if (resultCode == RESULT_OK && requestCode == RC_REST_PIN) {
             hidePinInputWrongUI()
         }
+    }
+
+    override fun onBackPressed() {
+        if (isAllowBackPress) super.onBackPressed()
     }
 
     private fun showRecoveryPhraseUI() {
@@ -190,6 +202,18 @@ internal class SecurityActivity : BaseActivity() {
      * END Recovery phrases confirmation
      */
 
+    private fun showMsg4AutoPin() {
+        isAllowBackPress = false
+        setContentView(R.layout.view_wallet_auto_pin_notice)
+        Handler().postDelayed({
+            EventBus.getDefault().post(MessageEvent.Pin(null, mRequestCode))
+            setResult(RESULT_OK, Intent().putExtra(KEY_DATA, mPIN))
+            willReturnsResult = true
+            finish()
+
+        }, 2000)
+    }
+
     private fun showPinInputUI() {
         setContentView(R.layout.view_wallet_security)
 
@@ -298,6 +322,7 @@ internal class SecurityActivity : BaseActivity() {
     private fun showPinInputCorrectUI() = GlobalScope.launch(Dispatchers.Main) {
         showPinCreatedUI().join()
         text_correct_pin.setText(R.string.mozo_pin_msg_enter_correct)
+        isAllowBackPress = false
     }
 
     private fun showPinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {
@@ -311,6 +336,7 @@ internal class SecurityActivity : BaseActivity() {
     }
 
     private fun showLoadingUI() = GlobalScope.launch(Dispatchers.Main) {
+        isAllowBackPress = false
         gone(arrayOf(text_correct_pin,
                 text_incorrect_pin,
                 input_pin,
@@ -323,6 +349,7 @@ internal class SecurityActivity : BaseActivity() {
     }
 
     private fun hideLoadingUI() {
+        isAllowBackPress = true
         gone(arrayOf(input_loading_indicator))
     }
 
