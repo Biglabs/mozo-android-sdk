@@ -37,7 +37,9 @@ class MozoWallet private constructor() {
     init {
         MozoSDK.getInstance().profileViewModel.profileLiveData.observeForever {
             this.mProfile = it
-            mWallet = WalletHelper.initWithWalletInfo(it?.walletInfo, mWallet)
+            GlobalScope.launch {
+                mWallet = WalletHelper.initWithWalletInfo(it?.walletInfo, mWallet)
+            }
         }
     }
 
@@ -97,26 +99,30 @@ class MozoWallet private constructor() {
             return
         }
 
-        mWallet = walletHelper ?: WalletHelper.initWithWalletInfo(profile.walletInfo)
-        val flag = if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
-            /* Local wallet is existing but no private Key */
-            /* Required input previous PIN */
-            SecurityActivity.KEY_ENTER_PIN
-        } else 0
+        GlobalScope.launch {
+            mWallet = walletHelper ?: WalletHelper.initWithWalletInfo(profile.walletInfo)
+            val flag = if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
+                /* Local wallet is existing but no private Key */
+                /* Required input previous PIN */
+                SecurityActivity.KEY_ENTER_PIN
+            } else 0
 
-        when {
-            flag == 0 -> callback?.invoke(true)
-            isDuringResetPinProcess -> callback?.invoke(false)
-            else -> {
-                mProfile = profile
-                mInitWalletCallback = callback
-                if (!EventBus.getDefault().isRegistered(this)) {
-                    EventBus.getDefault().register(this)
+            withContext(Dispatchers.Main) {
+                when {
+                    flag == 0 -> callback?.invoke(true)
+                    isDuringResetPinProcess -> callback?.invoke(false)
+                    else -> {
+                        mProfile = profile
+                        mInitWalletCallback = callback
+                        if (!EventBus.getDefault().isRegistered(this)) {
+                            EventBus.getDefault().register(this)
+                        }
+                        SecurityActivity.start(context, flag)
+                        /**
+                         * Handle after enter PIN at MozoWallet.onReceivePin
+                         */
+                    }
                 }
-                SecurityActivity.start(context, flag)
-                /**
-                 * Handle after enter PIN at MozoWallet.onReceivePin
-                 */
             }
         }
     }
@@ -201,14 +207,16 @@ class MozoWallet private constructor() {
             callback?.invoke(true)
     }
 
-    @Suppress("UNUSED_VALUE")
     internal fun validatePinAsync(pin: String) = GlobalScope.async {
         if (mWallet == null) {
             mWallet = WalletHelper.initWithWalletInfo(mProfile?.walletInfo)
         }
 
-        val verifyPin = mWallet?.verifyPin(pin)
-        return@async pin.isNotEmpty() && verifyPin == true
+        if (mWallet?.isUnlocked() == false) {
+            mWallet?.decrypt(pin)
+        }
+
+        return@async pin.isNotEmpty() && mWallet?.isUnlocked() == true
     }
 
     @Subscribe
