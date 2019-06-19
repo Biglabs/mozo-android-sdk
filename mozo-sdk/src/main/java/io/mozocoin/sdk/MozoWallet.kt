@@ -114,8 +114,8 @@ class MozoWallet private constructor() {
                     else -> {
                         mProfile = profile
                         mInitWalletCallback = callback
-                        if (!EventBus.getDefault().isRegistered(this)) {
-                            EventBus.getDefault().register(this)
+                        if (!EventBus.getDefault().isRegistered(this@MozoWallet)) {
+                            EventBus.getDefault().register(this@MozoWallet)
                         }
                         SecurityActivity.start(context, flag)
                         /**
