@@ -145,9 +145,6 @@ internal class MozoAuthActivity : FragmentActivity() {
                     )
 
         } else /* SIGN OUT */ {
-            val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
-            val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
-
             val signInRequest = AuthorizationRequest.Builder(
                     mAuthStateManager.current.authorizationServiceConfiguration!!,
                     clientId,
@@ -164,6 +161,8 @@ internal class MozoAuthActivity : FragmentActivity() {
                     )
                     .build()
 
+            val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
+            val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
             AuthorizationRequest.Builder(
                     AuthorizationServiceConfiguration(
                             signOutEndpoint,
@@ -186,7 +185,6 @@ internal class MozoAuthActivity : FragmentActivity() {
                     )
         }
 
-        authRequestBuilder.build().toUri().toString().logAsError("logout url")
         mAuthRequest.set(authRequestBuilder.build())
 
         warmUpBrowser()

@@ -146,7 +146,7 @@ internal class SecurityActivity : BaseActivity() {
                 false
             }
 
-            edit.setOnFocusChangeListener { _, hasFocus ->
+            edit.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     val exist = MnemonicUtils.getWords().contains(edit.text.toString())
                     edit.isActivated = exist

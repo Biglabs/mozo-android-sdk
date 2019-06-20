@@ -212,11 +212,8 @@ class MozoWallet private constructor() {
             mWallet = WalletHelper.initWithWalletInfo(mProfile?.walletInfo)
         }
 
-        if (mWallet?.isUnlocked() == false) {
-            mWallet?.decrypt(pin)
-        }
-
-        return@async pin.isNotEmpty() && mWallet?.isUnlocked() == true
+        val verifyPin = mWallet?.verifyPin(pin)
+        return@async pin.isNotEmpty() && verifyPin == true
     }
 
     @Subscribe

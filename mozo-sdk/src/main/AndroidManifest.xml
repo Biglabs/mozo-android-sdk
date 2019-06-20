@@ -79,6 +79,13 @@
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
+            android:name=".wallet.ChangePinActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
             android:name=".wallet.ConvertOnChainActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"

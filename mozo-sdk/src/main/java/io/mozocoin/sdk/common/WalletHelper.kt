@@ -51,6 +51,12 @@ internal class WalletHelper {
 
     fun mnemonicPhrases() = mnemonic?.split(" ")
 
+    fun lock() {
+        mnemonic = null
+        offChainPrivateKey = null
+        onChainPrivateKey = null
+    }
+
     fun encrypt(pin: String? = null): WalletHelper {
         if (!mnemonic.isNullOrEmpty() && mnemonicEncrypted.isNullOrEmpty()) {
             val pinRaw = pin ?: ByteArray(6)
@@ -89,6 +95,16 @@ internal class WalletHelper {
             }
         }
         return this
+    }
+
+    fun verifyPin(pin: String): Boolean {
+        mnemonicEncrypted ?: return false
+        return try {
+            val raw = CryptoUtils.decrypt(mnemonicEncrypted!!, pin)
+            !raw.isNullOrEmpty() && MnemonicUtils.validateMnemonic(raw)
+        } catch (ignore: Exception) {
+            false
+        }
     }
 
     fun buildWalletInfo() = WalletInfo(mnemonicEncrypted, offChainAddress, onChainAddress, pinEncrypted)

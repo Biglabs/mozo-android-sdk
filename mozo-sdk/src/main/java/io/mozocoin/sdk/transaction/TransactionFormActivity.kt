@@ -24,7 +24,6 @@ import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.contact.AddressAddActivity
 import io.mozocoin.sdk.contact.AddressBookActivity
 import io.mozocoin.sdk.ui.BaseActivity
-import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.view_transaction_form.*
 import kotlinx.android.synthetic.main.view_transaction_sent.*
@@ -83,9 +82,6 @@ internal class TransactionFormActivity : BaseActivity() {
                     showContactInfoUI()
                 }
             }
-            requestCode == KEY_VERIFY_PIN -> {
-                sendTx(data?.getStringExtra(SecurityActivity.KEY_DATA))
-            }
             data != null -> {
                 IntentIntegrator
                         .parseActivityResult(requestCode, resultCode, data)
@@ -103,15 +99,15 @@ internal class TransactionFormActivity : BaseActivity() {
         }
     }
 
-    private fun sendTx(pin: String?) {
+    private fun sendTx() {
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
         val amount = output_amount?.text.toString()
 
         showLoading()
-        MozoTx.getInstance().createTransaction(this, address, amount, pin) { response, doRetry ->
+        MozoTx.getInstance().createTransaction(this, address, amount) { response, doRetry ->
             if (doRetry) {
                 showLoading()
-                sendTx(pin)
+                sendTx()
             } else {
                 hideLoading()
                 history.addressTo = address
@@ -139,11 +135,11 @@ internal class TransactionFormActivity : BaseActivity() {
             hideErrorAddressUI()
             updateSubmitButton()
         }
-        output_receiver_address.setOnFocusChangeListener { _, hasFocus ->
+        output_receiver_address?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             output_receiver_address_label.isSelected = hasFocus
             output_receiver_address_underline.isSelected = hasFocus
         }
-        output_amount.onTextChanged {
+        output_amount?.onTextChanged {
             hideErrorAmountUI()
             updateSubmitButton()
 
@@ -165,7 +161,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
         }
-        output_amount?.setOnFocusChangeListener { _, hasFocus ->
+        output_amount?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             output_amount_label?.isSelected = hasFocus
             output_amount_underline?.isSelected = hasFocus
         }
@@ -188,7 +184,7 @@ internal class TransactionFormActivity : BaseActivity() {
             } else {
                 MozoAPIsService.getInstance().checkNetworkStatus(this, { status, _ ->
                     status ?: return@checkNetworkStatus
-                    SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN_FOR_SEND, KEY_VERIFY_PIN)
+                    sendTx()
                 }, {
                     button_submit?.performClick()
                 })
@@ -435,7 +431,6 @@ internal class TransactionFormActivity : BaseActivity() {
 
     companion object {
         private const val KEY_PICK_ADDRESS = 0x0021
-        private const val KEY_VERIFY_PIN = 0x0022
         private const val KEY_DATA_ADDRESS = "key_data_address"
         private const val KEY_DATA_AMOUNT = "key_data_amount"
 
