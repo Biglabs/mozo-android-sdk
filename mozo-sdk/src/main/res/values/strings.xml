@@ -53,6 +53,8 @@
     <string name="mozo_button_close">Close</string>
     <string name="mozo_button_clear">Clear</string>
     <string name="mozo_button_done">Done</string>
+    <string name="mozo_button_finish">Finish</string>
+    <string name="mozo_button_got_it">Got It</string>
     <string name="mozo_button_scan_qr_code">Scan QR Code</string>
     <string name="mozo_button_scan">Scan</string>
     <string name="mozo_button_show_qr_code">Enlarge QR Code</string>
@@ -76,6 +78,11 @@
     <string name="mozo_backup_content">Please write it down on paper and keep it in a safe place as you would with money</string>
     <string name="mozo_backup_warning">If you lose your Recovery Phrase, your wallet cannot be recovered.</string>
     <string name="mozo_backup_confirm_msg">I have safely stored Recovery Phrase</string>
+    <string name="mozo_backup_sub_title_verify">Verify</string>
+    <string name="mozo_backup_content_verify">Using the completed Recovery Phrase as a reference, please enter the following words from your Recovery Phrase to complete the back up process.</string>
+    <string name="mozo_backup_success_title">Your wallet is backed up</string>
+    <string name="mozo_backup_success_content">Be sure to store your recovery phrase in a secure place. If this app is deleted, your wallet cannot be recovered without it.</string>
+    <string name="mozo_backup_confirm_failed">Invalid Recovery Phrase</string>
 
     <string name="mozo_convert_title">Convert To Offchain</string>
     <string name="mozo_convert_amount_hint">Enter amount to convert MozoX Offchain</string>
@@ -112,12 +119,18 @@
     <string name="mozo_pin_title">Create Security PIN</string>
     <string name="mozo_pin_title_restore">Restore Wallet</string>
     <string name="mozo_pin_title_verify">Security PIN Confirmation</string>
+    <string name="mozo_pin_title_change">Change Security PIN</string>
     <string name="mozo_pin_sub_title">Enter your Security PIN</string>
     <string name="mozo_pin_sub_title_restore">Enter your Security PIN\nto restore wallet</string>
     <string name="mozo_pin_sub_title_send">Enter your Security PIN\nto send MozoX</string>
     <string name="mozo_pin_content">Security PIN must be 6 digit numbers</string>
     <string name="mozo_pin_confirm_sub_title">Confirm Security PIN</string>
     <string name="mozo_pin_confirm_content">Re-enter your PIN</string>
+    <string name="mozo_pin_change_sub_enter_current">Enter your current security pin</string>
+    <string name="mozo_pin_change_sub_confirm_new">Confirm new security pin</string>
+    <string name="mozo_pin_change_confirm_content">Re-enter your new PIN</string>
+    <string name="mozo_pin_change_processing">Change PIN is processing..</string>
+    <string name="mozo_pin_change_success">Change Security PIN Successful</string>
     <string name="mozo_pin_msg_create_success">Create Security PIN successful</string>
     <string name="mozo_pin_msg_enter_correct">Security PIN is correct</string>
     <string name="mozo_pin_msg_enter_incorrect">Incorrect Security PIN</string>
@@ -179,6 +192,11 @@
     <string name="mozo_payment_request_item_label_amount">Request:</string>
     <string name="mozo_payment_request_item_amount" translatable="false">%s MozoX</string>
 
+    <string name="mozo_settings_title">Setting</string>
+    <string name="mozo_settings_under_construction">Under Construction</string>
+    <string name="mozo_settings_menu_currencies">Currencies</string>
+    <string name="mozo_settings_menu_change_password">Change password</string>
+
     <string name="mozo_transfer_title">Send MozoX</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>
     <string name="mozo_transfer_from">From MozoX Offchain Wallet</string>
@@ -229,14 +247,4 @@
     <string name="mozo_view_text_view_all">View All</string>
     <string name="mozo_view_text_just_now">Just now</string>
     <string name="mozo_view_text_token_list">Token List:</string>
-
-    <string name="mozo_view_text_verify" translatable="false">Verify</string>
-    <string name="mozo_view_text_verify_describe" translatable="false">Using the completed Recovery Phrase as a reference, please enter the following words from your Recovery Phrase to complete the back up process.</string>
-    <string name="mozo_button_finish" translatable="false">Finish</string>
-    <string name="mozo_view_textyour_wallet_is_backed_up" translatable="false">Your wallet is backed up</string>
-    <string name="mozo_view_text_backup_wallet_describe" translatable="false">Be sure to store your recovery phrase in a secure place. If this app is deleted, your wallet cannot be recovered without it.</string>
-    <string name="mozo_text_backup_wallet_gotit" translatable="false">Got It</string>
-    <string name="mozo_setting_title" translatable="false">Setting</string>
-    <string name="mozo_view_text_change_security_pin" translatable="false">Change Security PIN</string>
-    <string name="mozo_backup_wallet_invalid_recovery_phrase" translatable="false">Invalid Recovery Phrase</string>
 </resources>

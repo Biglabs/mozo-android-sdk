@@ -6,7 +6,7 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.ui.BaseActivity
-import io.mozocoin.sdk.ui.SecurityActivity
+import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
 
 internal class ChangePinActivity : BaseActivity() {
 
@@ -35,23 +35,31 @@ internal class ChangePinActivity : BaseActivity() {
         MozoAuth.getInstance().syncProfile(this) {
             if (!it) return@syncProfile
 
-            val wallet = MozoWallet.getInstance().getWallet(false)
+            val wallet = MozoWallet.getInstance().getWallet()
             if (wallet == null) {
                 // TODO OMG current wallet is null ?
                 finish()
                 return@syncProfile
             }
 
-            if (wallet.isUnlocked()) {
-                //displaySeedWords()
-
-            } else {
-                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN, 0)
-            }
+            setContentView(R.layout.activity_change_pin)
+            if (wallet.isUnlocked()) showPinInputNewUI()
+            else showPinInputUI()
         }
     }
 
-    companion object {
+    private fun showPinInputUI() {
+        reset_pin_enter_pin_header?.setText(R.string.mozo_pin_change_sub_enter_current)
+        // showPinInputNewUI()
+    }
 
+    private fun showPinInputNewUI() {
+        reset_pin_enter_pin_header?.setText(R.string.mozo_pin_reset_header_create)
+        // showPinInputConfirmUI()
+    }
+
+    private fun showPinInputConfirmUI() {
+        reset_pin_enter_pin_header?.setText(R.string.mozo_pin_change_sub_confirm_new)
+        reset_pin_enter_pin_sub_content?.setText(R.string.mozo_pin_change_confirm_content)
     }
 }

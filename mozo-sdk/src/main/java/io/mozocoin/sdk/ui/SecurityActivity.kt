@@ -168,7 +168,7 @@ internal class SecurityActivity : BaseActivity() {
         button_finish.click {
             if (!validWords())
                 return@click MessageDialog.show(this,
-                        getString(R.string.mozo_backup_wallet_invalid_recovery_phrase))
+                        getString(R.string.mozo_backup_confirm_failed))
 
             showPinInputUI()
         }

@@ -326,6 +326,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun finishAuth(exception: Exception? = null) = GlobalScope.launch(Dispatchers.Main) {
         EventBus.getDefault().post(MessageEvent.Auth(exception))
         finish()
+        authenticationInProgress = false
     }
 
     private fun cancelAuth() {
@@ -355,6 +356,7 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
 
         fun signOut(context: Context) {
+            authenticationInProgress = false
             start(context, signIn = false)
         }
     }

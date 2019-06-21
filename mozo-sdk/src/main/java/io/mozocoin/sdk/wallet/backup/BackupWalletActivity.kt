@@ -32,8 +32,6 @@ import kotlin.random.Random
 
 internal class BackupWalletActivity : BaseActivity() {
 
-    private val requestSecurityPin = 0x10
-
     private val allWords = mutableListOf<String>()
     private var randomIndex: MutableList<Int>? = null
     private var randomWord = arrayOf("", "", "", "")
@@ -61,7 +59,7 @@ internal class BackupWalletActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            requestSecurityPin -> {
+            REQUEST_SECURITY_PIN -> {
                 if (resultCode != RESULT_OK) {
                     finish()
                     return
@@ -96,7 +94,7 @@ internal class BackupWalletActivity : BaseActivity() {
                 displaySeedWords()
 
             } else {
-                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN, requestSecurityPin)
+                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN, REQUEST_SECURITY_PIN)
             }
         }
     }
@@ -203,10 +201,11 @@ internal class BackupWalletActivity : BaseActivity() {
 
             if (!validWords())
                 return@click MessageDialog.show(this,
-                        getString(R.string.mozo_backup_wallet_invalid_recovery_phrase))
+                        getString(R.string.mozo_backup_confirm_failed))
 
-            button_finish.text = getString(R.string.mozo_text_backup_wallet_gotit)
+            button_finish.text = getString(R.string.mozo_button_got_it)
             toolbar_mozo.showCloseButton(false)
+            it.hideKeyboard()
             //TODO call API
             lo_success.visible()
         }
@@ -233,5 +232,9 @@ internal class BackupWalletActivity : BaseActivity() {
                 && edit_verify_seed_2.text.toString() == randomWord[1]
                 && edit_verify_seed_3.text.toString() == randomWord[2]
                 && edit_verify_seed_4.text.toString() == randomWord[3]
+    }
+
+    companion object {
+        private const val REQUEST_SECURITY_PIN = 0x10
     }
 }

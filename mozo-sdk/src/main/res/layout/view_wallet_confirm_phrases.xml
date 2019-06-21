@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="@string/mozo_view_text_verify"
+                android:text="@string/mozo_backup_sub_title_verify"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +64,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="@dimen/mozo_screen_padding"
                 android:gravity="center"
-                android:text="@string/mozo_view_text_verify_describe"
+                android:text="@string/mozo_backup_content_verify"
                 android:textColor="@color/mozo_color_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -161,13 +161,18 @@
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/lo_success"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:background="@android:color/white"
                 android:clickable="true"
-                android:focusable="true"
+                android:focusable="false"
                 android:visibility="gone"
-                app:constraint_referenced_ids="img_check,txt_describe" />
+                app:constraint_referenced_ids="img_check,txt_describe"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="KeyboardInaccessibleWidget" />
 
             <io.mozocoin.sdk.ui.view.MozoIconTextView
                 android:id="@+id/img_check"
@@ -176,7 +181,7 @@
                 android:drawableTop="@drawable/ic_check_green"
                 android:drawablePadding="15dp"
                 android:gravity="center"
-                android:text="@string/mozo_view_textyour_wallet_is_backed_up"
+                android:text="@string/mozo_backup_success_title"
                 android:textAllCaps="true"
                 android:textColor="@color/mozo_color_text_main"
                 android:textSize="15sp"
@@ -197,7 +202,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="@dimen/mozo_screen_padding"
                 android:gravity="center"
-                android:text="@string/mozo_view_text_backup_wallet_describe"
+                android:text="@string/mozo_backup_success_content"
                 android:textColor="@color/mozo_color_title"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toTopOf="@id/button_finish"
