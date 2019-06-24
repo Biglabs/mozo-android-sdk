@@ -56,6 +56,17 @@
         <requestFocus />
     </io.mozocoin.sdk.ui.widget.PinEntryEditText>
 
+    <ProgressBar
+        android:id="@+id/reset_pin_progress"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reset_pin_enter_pin_sub_content"
+        app:layout_constraintVertical_bias="0.42" />
+
     <TextView
         android:id="@+id/text_correct_pin"
         android:layout_width="wrap_content"
@@ -122,60 +133,8 @@
             android:textSize="@dimen/mozo_text_size" />
     </FrameLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
         android:id="@+id/reset_pin_message_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/white"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/reset_pin_message_icon"
-            android:layout_width="102dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="42dp"
-            android:contentDescription="@string/mozo_dialog_error_msg"
-            android:src="@drawable/ic_error_network"
-            app:layout_constraintBottom_toTopOf="@id/reset_pin_message_title"
-            app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.4"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
-            android:id="@+id/reset_pin_message_title"
-            android:layout_width="215dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="@string/mozo_dialog_error_network_msg"
-            android:textColor="@color/mozo_color_text_main"
-            android:textSize="@dimen/mozo_text_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/reset_pin_message_retry_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reset_pin_message_icon"
-            app:layout_goneMarginTop="40dp" />
-
-        <Button
-            android:id="@+id/reset_pin_message_retry_btn"
-            style="@style/MozoButtonStyle.Rounded"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="27dp"
-            android:layout_marginBottom="40dp"
-            android:text="@string/mozo_button_try_again"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reset_pin_message_title" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        layout="@layout/view_message_progress_status"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

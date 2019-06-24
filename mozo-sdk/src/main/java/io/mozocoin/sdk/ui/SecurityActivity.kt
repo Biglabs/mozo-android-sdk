@@ -223,7 +223,6 @@ internal class SecurityActivity : BaseActivity() {
 
         input_pin?.apply {
             onBackPress { finishAndRemoveTask() }
-            setMaxLength(mPINLength)
             onTextChanged {
                 hidePinInputWrongUI()
                 it?.toString()?.run {

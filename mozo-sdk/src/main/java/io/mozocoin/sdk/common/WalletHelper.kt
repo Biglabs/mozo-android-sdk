@@ -65,8 +65,12 @@ internal class WalletHelper {
                         it.toString().replace("-", "")[0].toString()
                     })
 
-            MozoAuth.getInstance().getPinSecret()?.let { secret ->
-                pinEncrypted = CryptoUtils.encrypt(pinRaw, secret)
+            if (pin.isNullOrEmpty()) {
+                MozoAuth.getInstance().getPinSecret()?.let { secret ->
+                    pinEncrypted = CryptoUtils.encrypt(pinRaw, secret)
+                }
+            } else {
+                pinEncrypted = null
             }
 
             try {
@@ -92,6 +96,19 @@ internal class WalletHelper {
                 }
             } catch (ignore: Exception) {
                 /*  maybe pinRaw = null */
+            }
+        }
+        return this
+    }
+
+    fun changePin(pin: String): WalletHelper {
+        if (!mnemonic.isNullOrEmpty()) {
+            pinEncrypted = null
+
+            try {
+                mnemonicEncrypted = CryptoUtils.encrypt(mnemonic!!, pin)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
         return this

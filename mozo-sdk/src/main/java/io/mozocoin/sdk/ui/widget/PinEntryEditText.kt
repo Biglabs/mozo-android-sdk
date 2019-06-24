@@ -25,10 +25,6 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
-import androidx.core.text.TextUtilsCompat
-import androidx.core.view.ViewCompat
-import androidx.appcompat.widget.AppCompatEditText
 import android.text.InputFilter
 import android.text.InputType
 import android.text.TextUtils
@@ -37,6 +33,10 @@ import android.util.TypedValue
 import android.view.*
 import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.ContextCompat
+import androidx.core.text.TextUtilsCompat
+import androidx.core.view.ViewCompat
 import io.mozocoin.sdk.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -125,6 +125,8 @@ internal class PinEntryEditText : AppCompatEditText {
         invalidate()
     }
 
+    fun getMaxLength() = mMaxLength
+
     fun setMask(mask: String?) {
         mMask = mask
         mMaskChars = null
@@ -184,7 +186,8 @@ internal class PinEntryEditText : AppCompatEditText {
 
         setBackgroundResource(0)
 
-        mMaxLength = attrs.getAttributeIntValue(XML_NAMESPACE_ANDROID, "maxLength", 4)
+        mMaxLength = (filters.find { it is InputFilter.LengthFilter } as? InputFilter.LengthFilter)?.max
+                ?: mMaxLength
         mNumChars = mMaxLength.toFloat()
 
         //Disable copy paste
@@ -290,10 +293,10 @@ internal class PinEntryEditText : AppCompatEditText {
                 }
             }
 
-            if (mSpace < 0) {
-                startX += (rtlFlag.toFloat() * mCharSize * 2f).toInt()
+            startX += if (mSpace < 0) {
+                (rtlFlag.toFloat() * mCharSize * 2f).toInt()
             } else {
-                startX += (rtlFlag * (mCharSize + mSpace)).toInt()
+                (rtlFlag * (mCharSize + mSpace)).toInt()
             }
             mCharBottom[i] = mLineCoords!![i].bottom - mTextBottomPadding
             i++
@@ -515,8 +518,6 @@ internal class PinEntryEditText : AppCompatEditText {
     }
 
     companion object {
-        private const val XML_NAMESPACE_ANDROID = "http://schemas.android.com/apk/res/android"
-
         const val DEFAULT_MASK = "\u25CF"
     }
 }

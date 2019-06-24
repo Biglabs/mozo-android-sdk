@@ -16,6 +16,7 @@ import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
+import kotlinx.android.synthetic.main.view_message_progress_status.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 
@@ -165,7 +166,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                 resetInputUI()
                 activity?.onBackPressed()
             }
-            reset_pin_message_icon?.setPadding(0)
+            view_message_icon?.setPadding(0)
             mInteractionListener?.let {
                 it.hideToolbarActions(left = true, right = false)
                 it.getCloseButton()?.apply {
@@ -184,7 +185,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                     buttonClickCallback = {
                         activity?.finish()
                     }
-                    reset_pin_message_icon?.setPadding(resources.dp2Px(16f).toInt())
+                    view_message_icon?.setPadding(resources.dp2Px(16f).toInt())
                     mInteractionListener?.hideToolbarActions(left = true, right = true)
                 }
                 MESSAGE_ERROR_NETWORK -> {
@@ -193,10 +194,10 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                 }
             }
 
-            reset_pin_message_icon?.setImageResource(icon)
-            reset_pin_message_title?.setText(title)
-            reset_pin_message_retry_btn?.setText(buttonText)
-            reset_pin_message_retry_btn?.click(buttonClickCallback)
+            view_message_icon?.setImageResource(icon)
+            view_message_title?.setText(title)
+            view_message_retry_btn?.setText(buttonText)
+            view_message_retry_btn?.click(buttonClickCallback)
             reset_pin_message_view?.visible()
         }
     }
