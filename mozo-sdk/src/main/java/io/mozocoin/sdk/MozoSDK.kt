@@ -60,7 +60,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 ErrorDialog.retry()
                 if (!MozoAuth.getInstance().isInitialized) return
 
-                MozoAuth.getInstance().isSignUpCompleted {
+                MozoAuth.getInstance().isSignUpCompleted(context) {
                     if (!it) return@isSignUpCompleted
                     MozoSocketClient.connect()
                     contactViewModel.fetchData(context)

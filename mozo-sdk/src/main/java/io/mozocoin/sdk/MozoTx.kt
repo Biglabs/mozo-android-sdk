@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.web3j.crypto.Sign
 import org.web3j.utils.Numeric
 import java.math.BigDecimal
+import kotlin.math.pow
 
 class MozoTx private constructor() {
 
@@ -62,7 +63,7 @@ class MozoTx private constructor() {
         })
     }
 
-    internal fun createTransaction(context: Context, output: String, amount: String, pin: String, callback: (response: TransactionResponse?, doRetry: Boolean) -> Unit) {
+    internal fun createTransaction(context: Context, output: String, amount: String, callback: (response: TransactionResponse?, doRetry: Boolean) -> Unit) {
         val myAddress = MozoWallet.getInstance().getAddress()
         if (myAddress == null) {
             callback.invoke(null, false)
@@ -83,33 +84,28 @@ class MozoTx private constructor() {
                 return@createTx
             }
 
-            val wallet = MozoWallet.getInstance().getWallet()?.decrypt(pin)
-            "My Wallet: ${wallet.toString()}".logAsInfo(TAG)
-            val credentials = wallet?.buildOffChainCredentials()
-            if (wallet != null && credentials != null) {
-
-                val toSign = data.toSign.firstOrNull()
-                if (toSign == null) {
-                    callback.invoke(null, true)
-                    return@createTx
+            val toSign = data.toSign.firstOrNull()
+            if (toSign == null) {
+                callback.invoke(null, true)
+                return@createTx
+            }
+            signMessage(context, toSign) { _, signature, publicKey ->
+                if (signature.isEmpty() || publicKey.isEmpty()) {
+                    callback.invoke(null, false)
+                    return@signMessage
                 }
-                val signatureData = Sign.signMessage(Numeric.hexStringToByteArray(toSign), credentials.ecKeyPair, false)
 
-                val signature = CryptoUtils.serializeSignature(signatureData)
-                val pubKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
                 data.signatures = arrayListOf(signature)
-                data.publicKeys = arrayListOf(pubKey)
+                data.publicKeys = arrayListOf(publicKey)
 
                 MozoAPIsService.getInstance().sendTransaction(context, data, { txResponse, _ ->
                     callback.invoke(txResponse, false)
                 }, {
                     callback.invoke(null, true)
                 })
-            } else {
-                callback.invoke(null, false)
             }
         }, {
-            createTransaction(context, output, amount, pin, callback)
+            createTransaction(context, output, amount, callback)
         })
     }
 
@@ -139,6 +135,7 @@ class MozoTx private constructor() {
         if (messagesToSign!!.isNotEmpty() && callbackToSign != null && event.requestCode == SecurityActivity.KEY_VERIFY_PIN) {
             GlobalScope.launch {
                 val wallet = MozoWallet.getInstance().getWallet()?.decrypt(event.pin)
+                "My Wallet: ${wallet.toString()}".logAsInfo(TAG)
                 val credentials = if (isOnChainMessageSigning) wallet?.buildOnChainCredentials() else wallet?.buildOffChainCredentials()
                 val result = if (credentials != null) {
                     val publicKey = Numeric.toHexStringWithPrefixSafe(credentials.ecKeyPair.publicKey)
@@ -156,6 +153,7 @@ class MozoTx private constructor() {
                     emptyList()
                 }
 
+                wallet?.lock()
                 isOnChainMessageSigning = false
                 withContext(Dispatchers.Main) {
                     callbackToSign?.invoke(result)
@@ -170,10 +168,10 @@ class MozoTx private constructor() {
     }
 
     fun amountWithDecimal(amount: String): BigDecimal = amountWithDecimal(amount.toBigDecimal())
-    fun amountWithDecimal(amount: BigDecimal): BigDecimal = amount.multiply(Math.pow(10.0, decimal).toBigDecimal())
+    fun amountWithDecimal(amount: BigDecimal): BigDecimal = amount.multiply(10.0.pow(decimal).toBigDecimal())
 
     fun amountNonDecimal(amount: String): BigDecimal = amountNonDecimal(amount.toBigDecimal())
-    fun amountNonDecimal(amount: BigDecimal): BigDecimal = amount.divide(Math.pow(10.0, decimal).toBigDecimal())
+    fun amountNonDecimal(amount: BigDecimal): BigDecimal = amount.divide(10.0.pow(decimal).toBigDecimal())
 
     fun openTransactionHistory(context: Context) {
         TransactionHistoryActivity.start(context)
@@ -182,17 +180,15 @@ class MozoTx private constructor() {
     internal fun signOnChainMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {
         isOnChainMessageSigning = true
         signMessages(context, message) {
-            it.firstOrNull()?.run {
-                callback.invoke(first, second, third)
-            }
+            val trip = it.firstOrNull()
+            callback.invoke(trip?.first ?: "", trip?.second ?: "", trip?.third ?: "")
         }
     }
 
     fun signMessage(context: Context, message: String, callback: (message: String, signature: String, publicKey: String) -> Unit) {
         signMessages(context, message) {
-            it.firstOrNull()?.run {
-                callback.invoke(first, second, third)
-            }
+            val trip = it.firstOrNull()
+            callback.invoke(trip?.first ?: "", trip?.second ?: "", trip?.third ?: "")
         }
     }
 

@@ -4,19 +4,27 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import android.view.View
-import android.widget.TextView
-import androidx.core.widget.TextViewCompat
+import android.view.inputmethod.EditorInfo
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
+import io.mozocoin.sdk.wallet.backup.SeedWordAdapter
 import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import kotlinx.android.synthetic.main.view_toolbar.view.*
+import kotlinx.android.synthetic.main.view_wallet_confirm_phrases.*
+import kotlinx.android.synthetic.main.view_wallet_display_phrases.*
 import kotlinx.android.synthetic.main.view_wallet_security.*
-import kotlinx.android.synthetic.main.view_wallet_security_backup.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
+import org.web3j.crypto.MnemonicUtils
+import kotlin.random.Random
 
 internal class SecurityActivity : BaseActivity() {
 
@@ -26,6 +34,8 @@ internal class SecurityActivity : BaseActivity() {
     private var mRequestCode = -1
     private var willReturnsResult = false
     private var mFinishJob: Job? = null
+
+    private var isAllowBackPress = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +48,15 @@ internal class SecurityActivity : BaseActivity() {
         mFinishJob = null
 
         when (mRequestCode) {
-            KEY_CREATE_PIN -> showBackupUI()
+            KEY_CREATE_PIN -> showRecoveryPhraseUI()
             KEY_ENTER_PIN -> showPinInputRestoreUI()
-            KEY_VERIFY_PIN -> showPinVerifyUI()
-            KEY_VERIFY_PIN_FOR_SEND -> showPinVerifyUI()
+            KEY_VERIFY_PIN,
+            KEY_VERIFY_PIN_FOR_SEND -> {
+                if (MozoWallet.getInstance().getWallet()?.isUnlocked() == true) {
+                    showMsg4AutoPin()
+
+                } else showPinVerifyUI()
+            }
             else -> {
                 finishAndRemoveTask()
             }
@@ -75,22 +90,21 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
-    private fun showBackupUI() {
-        setContentView(R.layout.view_wallet_security_backup)
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar?.apply {
-            setDisplayShowHomeEnabled(false)
-            setDisplayHomeAsUpEnabled(false)
-        }
+    override fun onBackPressed() {
+        if (isAllowBackPress) super.onBackPressed()
+    }
 
-        val paddingVertical = resources.dp2Px(10f).toInt()
-        val paddingHorizontal = resources.dp2Px(8f).toInt()
-        MozoWallet.getInstance().getWallet(true)?.mnemonicPhrases()?.map {
-            val word = TextView(this@SecurityActivity)
-            word.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
-            word.text = it
-            TextViewCompat.setTextAppearance(word, R.style.MozoTheme_SeedWords)
-            seed_view.addView(word)
+    private fun showRecoveryPhraseUI() {
+        setContentView(R.layout.view_wallet_display_phrases)
+        toolbar_mozo_display_phrases?.showBackButton(true)
+
+        val words = MozoWallet.getInstance().getWallet(true)?.mnemonicPhrases()?.toMutableList()
+        seed_view.adapter = SeedWordAdapter(words ?: mutableListOf())
+        txt_warning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
+            setSpan(ImageSpan(this@SecurityActivity, R.drawable.ic_warning),
+                    0,
+                    1,
+                    Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         }
 
         button_stored_confirm.click {
@@ -98,16 +112,110 @@ internal class SecurityActivity : BaseActivity() {
             button_continue.isEnabled = it.isSelected
         }
 
-        button_continue.click { showPinInputUI() }
+        button_continue.click {
+            showRecoveryPhraseConfirmationUI()
+        }
+    }
+
+    /**
+     * START Recovery phrases confirmation
+     */
+    private fun showRecoveryPhraseConfirmationUI() {
+        setContentView(R.layout.view_wallet_confirm_phrases)
+
+        val randoms = randomItems()
+        txt_index_1.text = "${randoms[0] + 1}"
+        txt_index_2.text = "${randoms[1] + 1}"
+        txt_index_3.text = "${randoms[2] + 1}"
+        txt_index_4.text = "${randoms[3] + 1}"
+
+        val edits = listOf(
+                edit_verify_seed_1,
+                edit_verify_seed_2,
+                edit_verify_seed_3,
+                edit_verify_seed_4
+        )
+
+        edits.forEach { edit ->
+            edit.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    edit.clearFocus()
+                    edit.hideKeyboard()
+                }
+
+                false
+            }
+
+            edit.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    val exist = MnemonicUtils.getWords().contains(edit.text.toString())
+                    edit.isActivated = exist
+                    edit.isSelected = !exist
+                } else {
+                    edit.isActivated = false
+                    edit.isSelected = false
+                }
+            }
+        }
+
+        lo_content.click {
+            currentFocus?.clearFocus()
+            currentFocus?.hideKeyboard()
+        }
+
+        currentFocus?.showKeyboard()
+
+        button_finish.click {
+            if (!validWords())
+                return@click MessageDialog.show(this,
+                        getString(R.string.mozo_backup_confirm_failed))
+
+            showPinInputUI()
+        }
+    }
+
+    private fun randomItems(): MutableList<Int> {
+        fun random(from: Int, to: Int, except: Int): Int {
+            val i = Random.nextInt(from, to)
+            return if (i == except)
+                random(from, to, except)
+            else i
+        }
+
+        mutableListOf(Random.nextInt(0, 6)).apply {
+            add(random(0, 6, first()))
+            add(Random.nextInt(6, 12))
+            add(random(6, 12, this[2]))
+            return this
+        }
+    }
+
+    private fun validWords(): Boolean {
+        val words = MozoWallet.getInstance().getWallet(false)?.mnemonicPhrases()?.toMutableList()
+        return !words.isNullOrEmpty() && edit_verify_seed_1.text.toString() == words.getOrNull(txt_index_1.text.toString().toInt() - 1)
+                && edit_verify_seed_2.text.toString() == words.getOrNull(txt_index_2.text.toString().toInt() - 1)
+                && edit_verify_seed_3.text.toString() == words.getOrNull(txt_index_3.text.toString().toInt() - 1)
+                && edit_verify_seed_4.text.toString() == words.getOrNull(txt_index_4.text.toString().toInt() - 1)
+    }
+
+    /**
+     * END Recovery phrases confirmation
+     */
+
+    private fun showMsg4AutoPin() {
+        isAllowBackPress = false
+        setContentView(R.layout.view_wallet_auto_pin_notice)
+        Handler().postDelayed({
+            EventBus.getDefault().post(MessageEvent.Pin(null, mRequestCode))
+            setResult(RESULT_OK, Intent().putExtra(KEY_DATA, mPIN))
+            willReturnsResult = true
+            finish()
+
+        }, 2000)
     }
 
     private fun showPinInputUI() {
         setContentView(R.layout.view_wallet_security)
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar?.apply {
-            setDisplayShowHomeEnabled(false)
-            setDisplayHomeAsUpEnabled(false)
-        }
 
         pin_toolbar.screen_title.setText(R.string.mozo_pin_title)
         sub_title_pin.setText(R.string.mozo_pin_sub_title)
@@ -214,6 +322,7 @@ internal class SecurityActivity : BaseActivity() {
     private fun showPinInputCorrectUI() = GlobalScope.launch(Dispatchers.Main) {
         showPinCreatedUI().join()
         text_correct_pin.setText(R.string.mozo_pin_msg_enter_correct)
+        isAllowBackPress = false
     }
 
     private fun showPinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {
@@ -223,30 +332,25 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun hidePinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {
         input_pin_checker_status.isSelected = false
-        if (text_incorrect_pin.visibility != View.GONE)
-            text_incorrect_pin.gone()
+        if (text_incorrect_pin.visibility != View.GONE) text_incorrect_pin.gone()
     }
 
     private fun showLoadingUI() = GlobalScope.launch(Dispatchers.Main) {
-        gone(arrayOf(
-                text_correct_pin,
+        isAllowBackPress = false
+        gone(arrayOf(text_correct_pin,
                 text_incorrect_pin,
                 input_pin,
                 input_pin_checker_status,
                 text_content_pin,
                 error_container,
-                pin_forgot_group
-        ))
+                pin_forgot_group))
 
-        visible(arrayOf(
-                input_loading_indicator
-        ))
+        visible(arrayOf(input_loading_indicator))
     }
 
     private fun hideLoadingUI() {
-        gone(arrayOf(
-                input_loading_indicator
-        ))
+        isAllowBackPress = true
+        gone(arrayOf(input_loading_indicator))
     }
 
     private fun showErrorAndRetryUI() = GlobalScope.launch(Dispatchers.Main) {
@@ -291,8 +395,7 @@ internal class SecurityActivity : BaseActivity() {
                         }
                     }
                 }
-                KEY_VERIFY_PIN,
-                KEY_VERIFY_PIN_FOR_SEND -> {
+                KEY_VERIFY_PIN, KEY_VERIFY_PIN_FOR_SEND -> {
                     initVerifyUI(!isCorrect).join()
                     if (isCorrect) {
                         mFinishJob = finishResult {

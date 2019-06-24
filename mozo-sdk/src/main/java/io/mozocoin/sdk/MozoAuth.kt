@@ -2,6 +2,7 @@ package io.mozocoin.sdk
 
 import android.content.Context
 import android.os.Handler
+import android.util.Base64
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.authentication.MozoAuthActivity
@@ -20,6 +21,8 @@ import kotlinx.coroutines.*
 import net.openid.appauth.AuthorizationException
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.json.JSONObject
+import java.nio.charset.Charset
 import java.util.*
 
 @Suppress("RedundantSuspendModifier", "unused")
@@ -118,10 +121,10 @@ class MozoAuth private constructor() {
 
     fun isSignedIn() = authStateManager.current.isAuthorized
 
-    fun isSignUpCompleted(callback: (isCompleted: Boolean) -> Unit) {
-        MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
+    fun isSignUpCompleted(context: Context, callback: (isCompleted: Boolean) -> Unit) {
+        MozoSDK.getInstance().profileViewModel.fetchData(context) {
             if (it == null) {
-                syncProfile(MozoSDK.getInstance().context) { isSuccess ->
+                syncProfile(context) { isSuccess ->
                     callback.invoke(authStateManager.current.isAuthorized && isSuccess)
                 }
             } else callback.invoke(authStateManager.current.isAuthorized && MozoSDK.getInstance().profileViewModel.hasWallet())
@@ -129,6 +132,19 @@ class MozoAuth private constructor() {
     }
 
     fun getAccessToken() = authStateManager.current.accessToken
+
+    /**
+     * Get pin_secret from token
+     */
+    internal fun getPinSecret(): String? = try {
+        authStateManager.current.accessToken?.split(".")?.getOrNull(1)?.let { payload ->
+            JSONObject(
+                    String(Base64.decode(payload, Base64.URL_SAFE), Charset.forName("utf-8"))
+            ).getString("pin_secret")
+        }
+    } catch (ignored: Exception) {
+        null
+    }
 
     /**
      *  Get current user information

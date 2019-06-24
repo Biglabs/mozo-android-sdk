@@ -54,6 +54,8 @@
     <string name="mozo_button_close">Đóng</string>
     <string name="mozo_button_clear">Xóa</string>
     <string name="mozo_button_done">Xong</string>
+    <string name="mozo_button_finish">Hoàn tất</string>
+    <string name="mozo_button_got_it">Tôi đã hiểu</string>
     <string name="mozo_button_scan_qr_code">Quét QR Code</string>
     <string name="mozo_button_scan">Quét</string>
     <string name="mozo_button_show_qr_code">Phóng to QR Code</string>
@@ -72,8 +74,12 @@
     <string name="mozo_backup_title">Sao lưu ví</string>
     <string name="mozo_backup_sub_title">Kí tự dùng khôi phục ví</string>
     <string name="mozo_backup_content">Ghi lại những từ này và cất giữ ở nơi an toàn để khôi phục lại ví khi cần thiết.</string>
-    <string name="mozo_backup_warning">*Nếu mất bản ghi này, ví của bạn sẽ không thể khôi phục.</string>
+    <string name="mozo_backup_warning">Nếu mất bản ghi này, ví của bạn sẽ không thể khôi phục.</string>
     <string name="mozo_backup_confirm_msg">Tôi đã ghi lại xong</string>
+    <string name="mozo_backup_sub_title_verify">Soát lại</string>
+    <string name="mozo_backup_content_verify">Xin vui lòng nhập những từ theo đúng thứ tự trong cụm từ khôi phục mà bạn đã sao lưu để hoàn tất quá trình sao lưu ví.</string>
+    <string name="mozo_backup_success_title">Ví của bạn đã sao lưu xong.</string>
+    <string name="mozo_backup_success_content">Nhớ cất giữ cụm từ khôi phục vào nơi bí mật một cách an toàn. Bạn bắt buộc phải có nó để khôi phục lại ví trong trường hợp mất thiết bị.</string>
 
     <string name="mozo_convert_title">Đổi thành MozoX Offchain</string>
     <string name="mozo_convert_amount_hint">Nhập số lượng đổi thành MozoX Offchain</string>
@@ -97,15 +103,29 @@
     <string name="mozo_convert_on_in_off_warning">Số dư ETH: &lt;b>%s&lt;/b>&lt;br/>Bạn cần chuyển &lt;b>%s ETH&lt;/b> vào ví MozoX Offchain này để trả phí giao dịch</string>
     <string name="mozo_convert_on_in_off_eth_balance">Số dư ETH: &lt;b>%s&lt;/b></string>
 
+    <string name="mozo_create_wallet_title">Tạo ví MozoX</string>
+    <string name="mozo_create_wallet_auto_section">Tạo ví tự động</string>
+    <string name="mozo_create_wallet_auto_explain">Cụm từ khôi phục* và mã PIN được tự động tạo và ghi nhớ bởi hệ thống.</string>
+    <string name="mozo_create_wallet_manual_section">Tạo ví do bạn điều khiển</string>
+    <string name="mozo_create_wallet_manual_explain">Bạn cần phải ghi lại cụm từ khôi phục và tự tạo mã PIN của riêng mình.</string>
+    <string name="mozo_create_wallet_hint_explain"><b>*Cụm từ khôi phục là gì?</b>\n\nCụm từ khôi phục là một tập các từ được phát sinh ngẫu nhiên bởi thuật toán. Bạn phải ghi lại những từ này phòng trường hợp mất thiết bị hoặc quên mã PIN, bạn có thể dùng nó để phục hồi ví hoặc tạo PIN mới.</string>
+    <string name="mozo_create_wallet_creating">Đang tạo ví MozoX…</string>
+
     <string name="mozo_pin_title">Tạo mã PIN</string>
     <string name="mozo_pin_title_restore">Khôi phục lại ví</string>
     <string name="mozo_pin_title_verify">Xác nhận mã PIN</string>
+    <string name="mozo_pin_title_change">Thay đổi mã PIN</string>
     <string name="mozo_pin_sub_title">Nhập mã PIN</string>
     <string name="mozo_pin_sub_title_restore">Nhập mã PIN\nđể khôi phục lại ví</string>
     <string name="mozo_pin_sub_title_send">Nhập mã PIN\nđể gửi MozoX</string>
     <string name="mozo_pin_content">Mã PIN phải đủ 6 số</string>
     <string name="mozo_pin_confirm_sub_title">Xác nhận mã PIN</string>
     <string name="mozo_pin_confirm_content">Nhập lại mã PIN</string>
+    <string name="mozo_pin_change_sub_enter_current">Nhập mã PIN hiện tại</string>
+    <string name="mozo_pin_change_sub_confirm_new">Xác nhận mã PIN</string>
+    <string name="mozo_pin_change_confirm_content">Nhập lại mã PIN mới</string>
+    <string name="mozo_pin_change_processing">Đang xử lý thay đổi mã PIN..</string>
+    <string name="mozo_pin_change_success">Thay đổi mã PIN thành công</string>
     <string name="mozo_pin_msg_create_success">Tạo mã PIN thành công</string>
     <string name="mozo_pin_msg_enter_correct">Mã PIN chính xác</string>
     <string name="mozo_pin_msg_enter_incorrect">Sai mã PIN</string>
@@ -120,6 +140,7 @@
     <string name="mozo_pin_reset_msg_checking">Đang kiểm tra cụm từ khôi phục</string>
     <string name="mozo_pin_reset_msg_processing">Đang tạo lại mã PIN</string>
     <string name="mozo_pin_reset_msg_done">Tạo lại mã PIN thành công</string>
+    <string name="mozo_pin_auto_sign_notice">Đang dùng mã PIN được tự động tạo bởi hệ thống để ký giao dịch và gởi đến máy chủ…</string>
 
     <plurals name="mozo_notify_title_come_in">
         <item quantity="other">Khách vừa đến</item>
@@ -162,6 +183,11 @@
     <string name="mozo_payment_request_text_empty_msg">Bất kỳ yêu cầu MozoX nào từ bạn bè sẽ được hiển thị tại đây.</string>
     <string name="mozo_payment_request_item_label_from">Từ:</string>
     <string name="mozo_payment_request_item_label_amount">Yêu cầu:</string>
+
+    <string name="mozo_settings_title">Cài đặt</string>
+    <string name="mozo_settings_under_construction">Đang phát triển</string>
+    <string name="mozo_settings_menu_currencies">Đơn vị tiền</string>
+    <string name="mozo_settings_menu_change_password">Đổi mật khẩu</string>
 
     <string name="mozo_transfer_title">Gửi MozoX</string>
     <string name="mozo_transfer_confirmation">Xác nhận</string>

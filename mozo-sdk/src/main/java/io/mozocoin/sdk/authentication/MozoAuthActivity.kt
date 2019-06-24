@@ -115,7 +115,6 @@ internal class MozoAuthActivity : FragmentActivity() {
         initializeAuthRequest()
     }
 
-    var encodedUri = ""
     private fun initializeAuthRequest() {
         val appScheme = getString(R.string.auth_redirect_uri, "com.biglabs.mozosdk.${applicationInfo.packageName}")
         val clientId = getString(
@@ -146,9 +145,6 @@ internal class MozoAuthActivity : FragmentActivity() {
                     )
 
         } else /* SIGN OUT */ {
-            val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
-            val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
-
             val signInRequest = AuthorizationRequest.Builder(
                     mAuthStateManager.current.authorizationServiceConfiguration!!,
                     clientId,
@@ -165,15 +161,8 @@ internal class MozoAuthActivity : FragmentActivity() {
                     )
                     .build()
 
-            encodedUri = signInRequest.toUri().toString()
-            encodedUri.logAsError("signInRequest url")
-//
-//            encodedUri = URLDecoder.decode(encodedUri, "utf-8")
-//
-//            val finalSignInUri = encodedUri.toUri()
-//
-//            finalSignInUri.toString().logAsError("final signIn Uri")
-
+            val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
+            val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
             AuthorizationRequest.Builder(
                     AuthorizationServiceConfiguration(
                             signOutEndpoint,
@@ -196,9 +185,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                     )
         }
 
-        authRequestBuilder.build().toUri().toString().logAsError("logout url")
         mAuthRequest.set(authRequestBuilder.build())
-
 
         warmUpBrowser()
         doAuth()
@@ -244,6 +231,8 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
         isAuthInProgress = isAuthInProgress && resultCode == RESULT_CANCELED
         when {
             requestCode == KEY_DO_AUTHENTICATION -> {
@@ -337,6 +326,7 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun finishAuth(exception: Exception? = null) = GlobalScope.launch(Dispatchers.Main) {
         EventBus.getDefault().post(MessageEvent.Auth(exception))
         finish()
+        authenticationInProgress = false
     }
 
     private fun cancelAuth() {
@@ -366,6 +356,7 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
 
         fun signOut(context: Context) {
+            authenticationInProgress = false
             start(context, signIn = false)
         }
     }

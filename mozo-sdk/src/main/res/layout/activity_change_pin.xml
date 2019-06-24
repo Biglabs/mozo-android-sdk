@@ -29,14 +29,12 @@
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
                 app:buttonBack="true"
-                app:buttonClose="true"
-                app:buttonCloseText="@string/mozo_button_submit"
-                app:title="@string/mozo_pin_reset_title" />
+                app:title="@string/mozo_pin_title_change" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/reset_pin_content_frame"
+    <include
+        layout="@layout/fragment_reset_enter_pin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?android:actionBarSize" />
