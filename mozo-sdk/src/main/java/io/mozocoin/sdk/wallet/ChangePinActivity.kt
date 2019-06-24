@@ -6,6 +6,7 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.ui.BaseActivity
+import io.mozocoin.sdk.utils.showKeyboard
 import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
 
 internal class ChangePinActivity : BaseActivity() {
@@ -50,6 +51,10 @@ internal class ChangePinActivity : BaseActivity() {
 
     private fun showPinInputUI() {
         reset_pin_enter_pin_header?.setText(R.string.mozo_pin_change_sub_enter_current)
+        reset_pin_enter_pin_input?.apply {
+            setMaxLength(6)
+            showKeyboard()
+        }
         // showPinInputNewUI()
     }
 

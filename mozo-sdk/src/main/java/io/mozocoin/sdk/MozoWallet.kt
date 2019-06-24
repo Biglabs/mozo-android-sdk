@@ -20,6 +20,7 @@ import io.mozocoin.sdk.wallet.create.CreateWalletActivity
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.math.BigDecimal
 
 @Suppress("unused")
@@ -89,9 +90,7 @@ class MozoWallet private constructor() {
             //SecurityActivity.KEY_CREATE_PIN
             mProfile = profile
             mInitWalletCallback = callback
-            if (!EventBus.getDefault().isRegistered(this)) {
-                EventBus.getDefault().register(this)
-            }
+            registerEventBus()
             CreateWalletActivity.start(context)
             /**
              * Handle after enter PIN at MozoWallet.onCreateWalletDone
@@ -114,9 +113,7 @@ class MozoWallet private constructor() {
                     else -> {
                         mProfile = profile
                         mInitWalletCallback = callback
-                        if (!EventBus.getDefault().isRegistered(this@MozoWallet)) {
-                            EventBus.getDefault().register(this@MozoWallet)
-                        }
+                        registerEventBus()
                         SecurityActivity.start(context, flag)
                         /**
                          * Handle after enter PIN at MozoWallet.onReceivePin
@@ -165,9 +162,7 @@ class MozoWallet private constructor() {
     }
 
     private fun syncWalletInfo(walletInfo: WalletInfo, context: Context, callback: ((isSuccess: Boolean) -> Unit)? = null) {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
+        registerEventBus()
         MozoAPIsService.getInstance().saveWallet(context, walletInfo, { data, errorCode ->
             when (errorCode) {
                 ErrorCode.ERROR_WALLET_ADDRESS_IN_USED.key,
@@ -248,14 +243,14 @@ class MozoWallet private constructor() {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     internal fun onUserCancelErrorDialog(@Suppress("UNUSED_PARAMETER") event: MessageEvent.UserCancelErrorDialog) {
         EventBus.getDefault().unregister(this@MozoWallet)
 
         MozoAuth.getInstance().signOut()
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     internal fun onCancelPin(@Suppress("UNUSED_PARAMETER") event: MessageEvent.UserCancel) {
         EventBus.getDefault().unregister(this@MozoWallet)
 
@@ -277,6 +272,17 @@ class MozoWallet private constructor() {
     internal fun clear() {
         mWallet = null
         mProfile = null
+    }
+
+    private fun registerEventBus() {
+        try {
+            if (!EventBus.getDefault().isRegistered(this@MozoWallet)) {
+                EventBus.getDefault().register(this@MozoWallet)
+            }
+        } catch (ignored: Exception) {
+            EventBus.getDefault().unregister(this@MozoWallet)
+            EventBus.getDefault().register(this@MozoWallet)
+        }
     }
 
     companion object {

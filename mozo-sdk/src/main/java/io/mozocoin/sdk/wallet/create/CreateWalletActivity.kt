@@ -17,6 +17,8 @@ import org.greenrobot.eventbus.EventBus
 
 internal class CreateWalletActivity : BaseActivity() {
 
+    private var isInProgress = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_wallet)
@@ -31,9 +33,15 @@ internal class CreateWalletActivity : BaseActivity() {
         }
     }
 
+    override fun onDestroy() {
+        if (isInProgress) EventBus.getDefault().post(MessageEvent.UserCancel())
+        super.onDestroy()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == KEY_CREATE_WALLET_MANUAL) {
+            isInProgress = false
             finish()
         }
     }
@@ -51,6 +59,7 @@ internal class CreateWalletActivity : BaseActivity() {
     private fun doCreateWallet() = GlobalScope.launch {
         MozoWallet.getInstance().getWallet(true)?.encrypt()
         MozoWallet.getInstance().executeSaveWallet(this@CreateWalletActivity, null) {
+            isInProgress = false
             EventBus.getDefault().post(MessageEvent.CreateWalletAutomatic())
             finish()
         }

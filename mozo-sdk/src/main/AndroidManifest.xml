@@ -84,7 +84,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".wallet.ConvertOnChainActivity"
             android:excludeFromRecents="true"
@@ -114,7 +114,7 @@
         <activity
             android:name=".wallet.create.CreateWalletActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
