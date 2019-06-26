@@ -18,6 +18,7 @@ import io.mozocoin.sdk.utils.*
 import io.mozocoin.sdk.wallet.backup.SeedWordAdapter
 import io.mozocoin.sdk.wallet.reset.ResetPinActivity
 import kotlinx.android.synthetic.main.view_toolbar.view.*
+import kotlinx.android.synthetic.main.view_wallet_auto_pin_notice.*
 import kotlinx.android.synthetic.main.view_wallet_confirm_phrases.*
 import kotlinx.android.synthetic.main.view_wallet_display_phrases.*
 import kotlinx.android.synthetic.main.view_wallet_security.*
@@ -53,7 +54,8 @@ internal class SecurityActivity : BaseActivity() {
             KEY_VERIFY_PIN,
             KEY_VERIFY_PIN_FOR_SEND -> {
                 if (MozoWallet.getInstance().getWallet()?.isUnlocked() == true) {
-                    showMsg4AutoPin()
+                    if (SharedPrefsUtils.getShowAutoPinNotice()) showMsg4AutoPin()
+                    else executeAutoPin()
 
                 } else showPinVerifyUI()
             }
@@ -202,16 +204,29 @@ internal class SecurityActivity : BaseActivity() {
      * END Recovery phrases confirmation
      */
 
+    private var isShowAutoPinNotice = true
+
     private fun showMsg4AutoPin() {
         isAllowBackPress = false
         setContentView(R.layout.view_wallet_auto_pin_notice)
-        Handler().postDelayed({
-            EventBus.getDefault().post(MessageEvent.Pin(null, mRequestCode))
-            setResult(RESULT_OK, Intent().putExtra(KEY_DATA, mPIN))
-            willReturnsResult = true
-            finish()
 
-        }, 2000)
+        button_dnt_show_again?.click {
+            it.isSelected = !it.isSelected
+            isShowAutoPinNotice = !it.isSelected
+        }
+
+        Handler().postDelayed({
+            SharedPrefsUtils.setShowAutoPinNotice(isShowAutoPinNotice)
+            executeAutoPin()
+
+        }, 10000)
+    }
+
+    private fun executeAutoPin() {
+        EventBus.getDefault().post(MessageEvent.Pin(null, mRequestCode))
+        setResult(RESULT_OK, Intent().putExtra(KEY_DATA, mPIN))
+        willReturnsResult = true
+        finish()
     }
 
     private fun showPinInputUI() {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,4 +21,36 @@
         android:text="@string/mozo_pin_auto_sign_notice"
         android:textColor="@color/mozo_color_title"
         android:textSize="16sp" />
+
+    <FrameLayout
+        android:id="@+id/button_dnt_show_again"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/mozo_dr_btn_border_primary">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@android:color/transparent"
+            android:clickable="false"
+            android:enabled="false"
+            android:gravity="center"
+            android:stateListAnimator="@null"
+            android:text="@string/mozo_pin_msg_dont_show_again"
+            android:textAllCaps="false"
+            android:textColor="@color/mozo_color_primary"
+            android:textSize="13sp"
+            android:textStyle="normal"
+            app:icon="@drawable/mozo_dr_btn_check"
+            app:iconGravity="textStart"
+            app:iconPadding="15dp"
+            app:iconSize="30dp"
+            app:iconTint="@android:color/transparent"
+            app:iconTintMode="screen" />
+    </FrameLayout>
 </FrameLayout>

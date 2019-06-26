@@ -135,6 +135,7 @@
     <string name="mozo_pin_msg_enter_correct">Security PIN is correct</string>
     <string name="mozo_pin_msg_enter_incorrect">Incorrect Security PIN</string>
     <string name="mozo_pin_msg_error">Create Wallet failed</string>
+    <string name="mozo_pin_msg_dont_show_again">Don’t show again</string>
     <string name="mozo_pin_forgot_title">Forgot your PIN?</string>
     <string name="mozo_pin_forgot_msg">Reset PIN by using recovery phrases</string>
     <string name="mozo_pin_reset_title">Reset PIN</string>

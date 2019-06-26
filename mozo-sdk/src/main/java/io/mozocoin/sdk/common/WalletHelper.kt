@@ -52,6 +52,12 @@ internal class WalletHelper {
     fun mnemonicPhrases() = mnemonic?.split(" ")
 
     fun lock() {
+        if (!this.pinEncrypted.isNullOrEmpty()) {
+            /**
+             * No need to lock the Wallet if security PIN be created automatically
+             */
+            return
+        }
         mnemonic = null
         offChainPrivateKey = null
         onChainPrivateKey = null
