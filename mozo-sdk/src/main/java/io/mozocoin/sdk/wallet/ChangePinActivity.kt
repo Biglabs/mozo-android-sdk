@@ -12,10 +12,7 @@ import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.activity_change_pin.*
 import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
 import kotlinx.android.synthetic.main.view_message_progress_status.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 internal class ChangePinActivity : BaseActivity() {
 
@@ -103,14 +100,16 @@ internal class ChangePinActivity : BaseActivity() {
         }
     }
 
-    private fun showPinInputUI() {
+    private fun showPinInputUI() = GlobalScope.launch(Dispatchers.Main) {
+        delay(200)
         mInputStep = STEP_INPUT_CURRENT
         reset_pin_enter_pin_header?.setText(R.string.mozo_pin_change_sub_enter_current)
         reset_pin_enter_pin_input?.text = null
         reset_pin_enter_pin_input?.focus()
     }
 
-    private fun showPinInputNewUI() {
+    private fun showPinInputNewUI() = GlobalScope.launch(Dispatchers.Main) {
+        delay(200)
         mInputStep = STEP_INPUT_NEW
         lastInputPin = null
         hideLoadingUI()
@@ -119,7 +118,8 @@ internal class ChangePinActivity : BaseActivity() {
         reset_pin_enter_pin_input?.focus()
     }
 
-    private fun showPinInputConfirmUI() {
+    private fun showPinInputConfirmUI() = GlobalScope.launch(Dispatchers.Main) {
+        delay(200)
         mInputStep = STEP_INPUT_CONFIRM
         reset_pin_enter_pin_header?.setText(R.string.mozo_pin_change_sub_confirm_new)
         reset_pin_enter_pin_sub_content?.setText(R.string.mozo_pin_change_confirm_content)
@@ -139,7 +139,8 @@ internal class ChangePinActivity : BaseActivity() {
         reset_pin_progress?.gone()
     }
 
-    private fun showErrorMsg() {
+    private fun showErrorMsg() = GlobalScope.launch(Dispatchers.Main) {
+        delay(200)
         hideLoadingUI()
         reset_pin_enter_pin_input?.text = null
         reset_pin_enter_pin_input?.focus()
