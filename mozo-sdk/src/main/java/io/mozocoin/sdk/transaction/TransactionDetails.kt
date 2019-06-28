@@ -64,7 +64,7 @@ internal class TransactionDetails : BaseActivity() {
                     if (amount > currentBalance) {
                         MessageDialog.show(this, R.string.mozo_dialog_error_not_enough_msg)
                     } else
-                        TransactionFormActivity.start(this, targetAddress, data.lastOrNull())
+                        TransactionFormActivity.start(this, targetAddress, amount.toString())
                 }
             }
         }

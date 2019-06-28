@@ -24,6 +24,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.pow
 
 class Support {
     companion object {
@@ -61,7 +62,7 @@ class Support {
         fun toAmountNonDecimal(amount: BigDecimal, decimal: Int): BigDecimal = toAmountNonDecimal(amount, decimal.toDouble())
 
         @JvmStatic
-        fun toAmountNonDecimal(amount: BigDecimal, decimal: Double): BigDecimal = amount.divide(Math.pow(10.0, decimal).toBigDecimal())
+        fun toAmountNonDecimal(amount: BigDecimal, decimal: Double): BigDecimal = amount.divide(10.0.pow(decimal).toBigDecimal())
 
         @JvmStatic
         fun parsePaymentRequest(content: String): Array<String> {

@@ -208,6 +208,8 @@ class MozoTx private constructor() {
         TransactionFormActivity.start(MozoSDK.getInstance().context)
     }
 
+    fun mozoDecimal() = decimal
+
     companion object {
         private const val TAG = "Transaction"
 

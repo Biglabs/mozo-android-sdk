@@ -324,7 +324,7 @@
             android:autofillHints="@string/mozo_transfer_amount_hint"
             android:background="@android:color/transparent"
             android:hint="@string/mozo_transfer_amount_hint"
-            android:inputType="numberDecimal"
+            android:inputType="number"
             android:lines="1"
             android:paddingTop="10dp"
             android:paddingBottom="50dp"
