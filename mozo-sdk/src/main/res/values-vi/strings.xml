@@ -72,10 +72,10 @@
     <string name="mozo_button_go_to_wallet">Chuyển đến Ví</string>
 
     <string name="mozo_backup_title">Sao lưu ví</string>
-    <string name="mozo_backup_sub_title">Kí tự dùng khôi phục ví</string>
-    <string name="mozo_backup_content">Ghi lại những từ này và cất giữ ở nơi an toàn để khôi phục lại ví khi cần thiết.</string>
-    <string name="mozo_backup_warning">Nếu mất bản ghi này, ví của bạn sẽ không thể khôi phục.</string>
-    <string name="mozo_backup_confirm_msg">Tôi đã ghi lại xong</string>
+    <string name="mozo_backup_sub_title">Cụm từ khôi phục</string>
+    <string name="mozo_backup_content">Xin vui lòng ghi cụm từ khôi phục vào giấy và giữ nó ở một nơi bí mật.</string>
+    <string name="mozo_backup_warning">Nếu bạn mất cụm từ khôi phục, ví của bạn sẽ không thể khôi phục được.</string>
+    <string name="mozo_backup_confirm_msg">Tôi đã sao lưu cụm từ khôi phục.</string>
     <string name="mozo_backup_sub_title_verify">Soát lại</string>
     <string name="mozo_backup_content_verify">Xin vui lòng nhập những từ theo đúng thứ tự trong cụm từ khôi phục mà bạn đã sao lưu để hoàn tất quá trình sao lưu ví.</string>
     <string name="mozo_backup_success_title">Ví của bạn đã sao lưu xong.</string>
@@ -124,7 +124,7 @@
     <string name="mozo_pin_change_sub_enter_current">Nhập mã PIN hiện tại</string>
     <string name="mozo_pin_change_sub_confirm_new">Xác nhận mã PIN</string>
     <string name="mozo_pin_change_confirm_content">Nhập lại mã PIN mới</string>
-    <string name="mozo_pin_change_processing">Đang xử lý thay đổi mã PIN..</string>
+    <string name="mozo_pin_change_processing">Đang xử lý thay đổi mã PIN…</string>
     <string name="mozo_pin_change_success">Thay đổi mã PIN thành công</string>
     <string name="mozo_pin_msg_create_success">Tạo mã PIN thành công</string>
     <string name="mozo_pin_msg_enter_correct">Mã PIN chính xác</string>

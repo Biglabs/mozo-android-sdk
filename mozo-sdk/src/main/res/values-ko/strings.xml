@@ -71,11 +71,11 @@
 
     <string name="mozo_button_go_to_wallet">지갑으로 이동하기</string>
 
-    <string name="mozo_backup_title">월렛 백업</string>
-    <string name="mozo_backup_sub_title">복구 데이터 프레이즈 저장</string>
-    <string name="mozo_backup_content">이 프레이즈를 적어 안전한 장소에 보관하십시오.</string>
-    <string name="mozo_backup_warning">복구 데이터 문구를 분실하면 월렛을 복구 할 수 없습니다.</string>
-    <string name="mozo_backup_confirm_msg">복구 문구를 안전하게 저장했습니다.</string>
+    <string name="mozo_backup_title">지갑 백업하기</string>
+    <string name="mozo_backup_sub_title">당신의 복구 문구입니다.</string>
+    <string name="mozo_backup_content">종이에 써 놓고 자산 관리 만큼 안전한 곳에 보관하세요.</string>
+    <string name="mozo_backup_warning">복구 문구 없으면 당신의 지갑을 복구할 수 없습니다.</string>
+    <string name="mozo_backup_confirm_msg">나는 복구 문구를 안전하게 보관했습니다.</string>
     <string name="mozo_backup_sub_title_verify">인증</string>
     <string name="mozo_backup_content_verify">완성된 복구 문구 사용 참고를 삼아, 복구 문구에 있는 이 글자들을 입력해서 백업 과정 마무리하세요.</string>
     <string name="mozo_backup_success_title">당신의 지갑은 백업되었습니다.</string>
