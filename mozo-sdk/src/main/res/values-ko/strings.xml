@@ -134,7 +134,7 @@
     <string name="mozo_pin_forgot_msg">복구 문구를 사용하여 PIN 재설정하십시오.</string>
     <string name="mozo_pin_reset_title">PIN 재설정</string>
     <string name="mozo_pin_reset_sub_title">귀하의 12 복구 구문을 입력하십시오.</string>
-    <string name="mozo_pin_reset_header_create">새 보안 PIN 입력하십시오</string>
+    <string name="mozo_pin_reset_header_create">새로운 보안 PIN 입력</string>
     <string name="mozo_pin_reset_msg_error">복구 구문에 인식 할 수없는 문자가 포함되어 있습니다.</string>
     <string name="mozo_pin_reset_msg_error_incorrect">친구들이 모조X에 가입했습니다.</string>
     <string name="mozo_pin_reset_msg_checking">복구 구문 확인</string>
