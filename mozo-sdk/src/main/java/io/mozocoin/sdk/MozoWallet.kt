@@ -234,6 +234,7 @@ class MozoWallet private constructor() {
             else {
                 mWallet!!.decrypt(event.pin)
                 mInitWalletCallback?.invoke(mWallet!!.isUnlocked())
+                mWallet!!.lock()
             }
 
             mInitWalletCallback = null

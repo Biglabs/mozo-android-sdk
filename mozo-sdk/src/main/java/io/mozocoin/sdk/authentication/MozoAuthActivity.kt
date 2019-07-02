@@ -253,12 +253,8 @@ internal class MozoAuthActivity : FragmentActivity() {
                     val appScheme = getString(R.string.auth_redirect_uri, "com.biglabs.mozosdk.${applicationInfo.packageName}")
 
                     val dataJsonObj = JSONObject(dataJson)
-
                     (dataJsonObj.get("request") as JSONObject).put("redirectUri", appScheme)
-
                     data.putExtra(AuthorizationResponse.EXTRA_RESPONSE, dataJsonObj.toString())
-
-                    dataJsonObj.toString().logAsError("dataJson Obj")
                 }
 
                 val response = AuthorizationResponse.fromIntent(data)
