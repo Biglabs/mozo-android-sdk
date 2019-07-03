@@ -8,8 +8,8 @@ import java.math.BigDecimal
 class SharedPrefsUtils private constructor() {
     companion object {
         private const val KEY_NEED_SYNC_WALLET = "SYNC_WALLET_INFO"
-
         private const val KEY_CURRENCY_RATE = "KEY_CURRENCY_RATE"
+        private const val KEY_SHOW_AUTO_PIN_NOTICE = "KEY_SHOW_AUTO_PIN_NOTICE"
 
         private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX = "KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX"
         private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT = "KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT"
@@ -55,6 +55,16 @@ class SharedPrefsUtils private constructor() {
         @JvmStatic
         fun getLastAmountConvertOnChainInOffChain(): String? {
             return manager().getString(KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT, null)
+        }
+
+        @JvmStatic
+        fun getShowAutoPinNotice(): Boolean {
+            return manager().getBoolean(KEY_SHOW_AUTO_PIN_NOTICE, true)
+        }
+
+        @JvmStatic
+        fun setShowAutoPinNotice(isShow: Boolean) {
+            manager().edit().putBoolean(KEY_SHOW_AUTO_PIN_NOTICE, isShow).apply()
         }
     }
 }

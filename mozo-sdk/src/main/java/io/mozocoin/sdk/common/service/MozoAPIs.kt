@@ -32,7 +32,7 @@ internal interface MozoAPIs {
     @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/settings")
     fun saveSettings(notificationThreshold: Int = 0): Call<Base<Profile>>
 
-    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/walletAll")
+    @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/v1/walletAll")
     fun saveWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>
 
     @PUT("${MozoAPIsService.APIS_SOLOMON}/user-profile/wallet/reset-pin")

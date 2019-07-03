@@ -1,27 +1,19 @@
 package io.mozocoin.sdk.common.service
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.os.Build
-import android.text.TextUtils
-import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.google.gson.Gson
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoNotification
 import io.mozocoin.sdk.MozoSDK
-import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.BroadcastData
-import io.mozocoin.sdk.common.model.BroadcastDataContent
-import io.mozocoin.sdk.common.model.NotificationGroup
-import io.mozocoin.sdk.utils.*
-import kotlinx.coroutines.*
+import io.mozocoin.sdk.utils.Support
+import io.mozocoin.sdk.utils.logAsInfo
+import io.mozocoin.sdk.utils.md5
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
@@ -30,23 +22,17 @@ import java.util.*
 
 internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
 
-    private val notificationManager: NotificationManager by lazy {
-        MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    }
-
-    private var mShowGroupNotifyJob: Job? = null
-
-    init {
-        connect()
-    }
-
     override fun onOpen(serverHandshake: ServerHandshake?) {
         "open [status: ${serverHandshake?.httpStatus}, url: $uri]".logAsInfo(TAG)
         stopRetryConnect()
     }
 
     override fun onMessage(s: String?) {
-        "${instance.toString()} : message $s".logAsInfo(TAG)
+        "message $s".logAsInfo(TAG)
+        if (instance == null) {
+            "Received a message while instance NULL".logAsInfo(TAG)
+            return
+        }
         s?.run {
             if (equals("1|X", ignoreCase = true)) {
                 sendPing()
@@ -84,7 +70,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
                         /* Do show notification on system tray */
                         if (MozoNotification.shouldShowNotification(broadcast.event)) {
-                            showNotification(broadcast)
+                            MozoNotification.getInstance().showNotification(broadcast)
                         } else if (!MozoSDK.shouldShowNotification) {
                             "Notification received but not be shown".logAsInfo(TAG)
                         }
@@ -108,116 +94,16 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         doRetryConnect()
     }
 
-    private fun showNotification(message: BroadcastDataContent) = GlobalScope.launch {
-        MozoSDK.getInstance().notifyActivityClass ?: return@launch
-
-        val context = MozoSDK.getInstance().context
-        val notification = MozoNotification.prepareNotification(context, message)
-        val notificationGroup = NotificationGroup.getKey(message)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-                !notificationChannelExists(message.event ?: return@launch)) {
-            createChannel(message.event).join()
-        }
-
-        val pendingIntent = PendingIntent.getActivity(
-                context,
-                MozoNotification.REQUEST_CODE,
-                MozoNotification.prepareDataIntent(notification),
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val singleNotify = NotificationCompat.Builder(context, message.event ?: return@launch)
-                .setSmallIcon(R.drawable.ic_mozo_notification)
-                .setLargeIcon(context.bitmap(notification.icon()))
-                .setColor(context.color(R.color.mozo_color_primary))
-                .setContentTitle(notification.titleDisplay())
-                .setContentText(notification.contentDisplay())
-                .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setContentIntent(pendingIntent)
-                .setGroup(notificationGroup.name)
-        singleNotify.extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
-        singleNotify.extras.putString(EXTRAS_ITEM_DATA, notification.raw)
-        NotificationManagerCompat.from(context)
-                .notify(System.currentTimeMillis().toInt(), singleNotify.build())
-
-
-        doGroupNotificationDelayed(context, message, notification, notificationGroup, pendingIntent)
-    }
-
-    private fun doGroupNotificationDelayed(
-            context: Context,
-            message: BroadcastDataContent,
-            notify: io.mozocoin.sdk.common.model.Notification,
-            notifyGroup: NotificationGroup,
-            pendingIntent: PendingIntent
-    ) {
-
-        mShowGroupNotifyJob?.cancel()
-        mShowGroupNotifyJob = GlobalScope.launch {
-            delay(2000)
-
-            val group = NotificationCompat.Builder(context, message.event ?: return@launch)
-                    .apply {
-                        val line = TextUtils.concat(notify.titleDisplay(), " ", notify.contentDisplay())
-                        val items = NotificationGroup.getItems(context, notificationManager, message)
-                        val title = NotificationGroup.getContentTitle(
-                                context,
-                                message,
-                                count = items?.size ?: 0
-                        ) ?: line
-                        val totalText = NotificationGroup.getContentText(
-                                context,
-                                notificationManager,
-                                notifyGroup
-                        ) ?: line
-
-                        setStyle(NotificationCompat.InboxStyle().run {
-                            items?.forEach { addLine(it) }
-                                    ?: addLine(line)
-                            setBigContentTitle(title)
-                        })
-
-                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M)
-                            setContentIntent(pendingIntent)
-
-                        color = context.color(R.color.mozo_color_primary)
-                        setAutoCancel(true)
-                        setContentTitle(title)
-                        setDefaults(Notification.DEFAULT_ALL)
-                        setGroup(notifyGroup.name)
-                        setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
-                        setGroupSummary(true)
-                        setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
-                        setNumber(items?.size ?: 0)
-                        setSmallIcon(R.drawable.ic_mozo_notification)
-                        setSubText(totalText)
-                    }
-            NotificationManagerCompat.from(context).notify(notifyGroup.id, group.build())
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel(channel: String) = GlobalScope.launch(Dispatchers.Main) {
-        var channelName = channel.split("_")[0]
-        channelName = channelName.substring(0, 1).toUpperCase() + channelName.substring(1)
-
-        val notificationChannel = NotificationChannel(channel, channelName, NotificationManager.IMPORTANCE_HIGH)
-        notificationChannel.setShowBadge(true)
-        notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        notificationManager.createNotificationChannel(notificationChannel)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun notificationChannelExists(channelId: String): Boolean = notificationManager.getNotificationChannel(channelId) != null
-
     companion object {
         private const val TAG = "Socket"
-        internal const val EXTRAS_ITEM_AMOUNT = "EXTRAS_ITEM_AMOUNT"
-        internal const val EXTRAS_ITEM_DATA = "EXTRAS_ITEM_DATA"
 
         @Volatile
         private var instance: MozoSocketClient? = null
+
+        private val sessionUUID = UUID.randomUUID()
+
+        @Volatile
+        private var initializeJob: Job? = null
 
         @Volatile
         private var retryConnectJob: Job? = null
@@ -227,40 +113,54 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
         @Synchronized
         fun connect() {
-            if (instance?.isOpen == true) {
-                disconnect()
-            }
-            instance = null
-
             MozoTokenService.newInstance().checkSession(MozoSDK.getInstance().context, { isExpired ->
+                "Check session result: isExpired = $isExpired".logAsInfo(TAG)
                 val accessToken = MozoAuth.getInstance().getAccessToken()
-                if (isExpired || accessToken.isNullOrEmpty()) return@checkSession
+                if (isExpired || accessToken.isNullOrEmpty()) {
+                    disconnect()
+                    return@checkSession
+                }
 
-                val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
-                val userId = MozoSDK.getInstance().profileViewModel.getProfile()?.userId
-                val uuid = StringBuilder()
-                        .append(UUID.randomUUID())
-                        .append("-")
-                        .append(userId)
-                        .append("-")
-                        .append(channel).toString().md5()
+                initializeJob?.cancel()
+                initializeJob = GlobalScope.launch {
+                    delay(500)
 
-                instance = MozoSocketClient(
-                        URI("wss://${Support.domainSocket()}/websocket/user/$uuid/$channel"),
-                        mutableMapOf(
-                                "Authorization" to "bearer $accessToken",
-                                "Content-Type" to "application/json",
-                                "X-atmo-protocol" to "true",
-                                "X-Atmosphere-Framework" to "2.3.3-javascript",
-                                "X-Atmosphere-tracking-id" to "0",
-                                "X-Atmosphere-Transport" to "websocket"
-                        )
-                )
+                    disconnect().join()
+
+                    val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
+                    val userId = MozoSDK.getInstance().profileViewModel.getProfile()?.userId
+                    val uuid = StringBuilder()
+                            .append(sessionUUID)
+                            .append("-")
+                            .append(userId)
+                            .append("-")
+                            .append(channel).toString().md5()
+
+                    instance = MozoSocketClient(
+                            URI("wss://${Support.domainSocket()}/websocket/user/$uuid/$channel"),
+                            mutableMapOf(
+                                    "Authorization" to "bearer $accessToken",
+                                    "Content-Type" to "application/json",
+                                    "X-atmo-protocol" to "true",
+                                    "X-Atmosphere-Framework" to "2.3.3-javascript",
+                                    "X-Atmosphere-tracking-id" to "0",
+                                    "X-Atmosphere-Transport" to "websocket"
+                            )
+                    )
+                    try {
+                        if (instance?.isConnecting == false)
+                            instance?.connectBlocking()
+                    } catch (ignore: Exception) {
+                        doRetryConnect()
+                    }
+                }
             })
         }
 
-        fun disconnect() {
+        @JvmStatic
+        fun disconnect() = GlobalScope.launch {
             try {
+                instance?.closeBlocking()
                 instance?.closeConnection(-1, "proactive disconnect")
             } finally {
                 instance = null
@@ -272,13 +172,14 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
             retryConnectJob?.cancel()
             retryConnectJob = GlobalScope.launch {
                 delay(retryConnectTime)
-
                 "retry connect time: $retryConnectTime".logAsInfo(TAG)
-                connect()
                 retryConnectTime *= 2
                 if (retryConnectTime > Constant.SOCKET_RETRY_START_TIME * Math.pow(2.0, 8.0)) {
                     retryConnectTime = Constant.SOCKET_RETRY_START_TIME
                 }
+
+                if (MozoSDK.isNetworkAvailable()) connect()
+                else doRetryConnect()
             }
         }
 

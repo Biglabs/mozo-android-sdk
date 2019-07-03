@@ -11,7 +11,6 @@ import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
-import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.safe
 import java.math.BigDecimal
@@ -22,7 +21,10 @@ enum class NotificationGroup(val id: Int) {
     CUSTOMER_COME_IN(102),
     CUSTOMER_COME_OUT(103),
     AIRDROP(104),
-    INVITE(105);
+    AIRDROP_SIGN_UP(105),
+    AIRDROP_FOUNDER(106),
+    AIRDROP_TOP_1K(107),
+    INVITE(108);
 
     companion object {
         private fun getCurrentlyGroupExtras(notificationManager: NotificationManager, groupKey: String): List<Bundle>? = synchronized(this) {
@@ -37,7 +39,7 @@ enum class NotificationGroup(val id: Int) {
         fun getItems(context: Context, notificationManager: NotificationManager, message: BroadcastDataContent): List<CharSequence>? {
             val gSon = Gson()
             return getCurrentlyGroupExtras(notificationManager, getKey(message).name)?.mapNotNull {
-                it.getString(MozoSocketClient.EXTRAS_ITEM_DATA)?.let { data ->
+                it.getString(MozoNotification.EXTRAS_ITEM_DATA)?.let { data ->
                     try {
                         gSon.fromJson(data, BroadcastDataContent::class.java)
                     } catch (ex: Exception) {
@@ -60,7 +62,7 @@ enum class NotificationGroup(val id: Int) {
 
             var totalAmount = BigDecimal.ZERO
             extras?.forEach { bundle ->
-                bundle.getString(MozoSocketClient.EXTRAS_ITEM_AMOUNT)?.let {
+                bundle.getString(MozoNotification.EXTRAS_ITEM_AMOUNT)?.let {
                     totalAmount = totalAmount.plus(it.toBigDecimalOrNull().safe())
                 }
             }
@@ -105,8 +107,8 @@ enum class NotificationGroup(val id: Int) {
         fun getIcon(type: String?) = when (type) {
             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> R.drawable.im_notification_balance_changed_group
             Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came_group
-            Constant.NOTIFY_EVENT_AIRDROPPED -> R.drawable.im_notification_airdrop_group
-            else -> R.drawable.im_notification_airdrop_invite_group
+            Constant.NOTIFY_EVENT_AIRDROP_INVITE -> R.drawable.im_notification_airdrop_invite_group
+            else -> R.drawable.im_notification_airdrop_group
         }
 
         fun getKey(message: BroadcastDataContent) = when (message.event) {
@@ -120,6 +122,9 @@ enum class NotificationGroup(val id: Int) {
                 else CUSTOMER_COME_OUT
             }
             Constant.NOTIFY_EVENT_AIRDROP_INVITE -> INVITE
+            Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP -> AIRDROP_SIGN_UP
+            Constant.NOTIFY_EVENT_AIRDROP_FOUNDER -> AIRDROP_FOUNDER
+            Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER -> AIRDROP_TOP_1K
 
             else -> AIRDROP
         }

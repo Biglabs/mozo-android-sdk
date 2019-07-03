@@ -11,7 +11,7 @@ import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.view_address_add_new.*
+import kotlinx.android.synthetic.main.activity_address_add_new.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -25,7 +25,7 @@ internal class AddressAddActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.view_address_add_new)
+        setContentView(R.layout.activity_address_add_new)
 
         mShowMessageDuration = getInteger(R.integer.security_pin_show_msg_duration).toLong()
 

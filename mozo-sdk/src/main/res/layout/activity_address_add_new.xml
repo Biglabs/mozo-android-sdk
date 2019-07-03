@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".contact.AddressAddActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp"
+        app:layout_insetEdge="none">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:contentInsetEnd="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp">
+
+            <io.mozocoin.sdk.ui.widget.MozoToolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                app:buttonBack="true"
+                app:buttonClose="true"
+                app:title="@string/mozo_button_save_address" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:actionBarSize"
+        android:animateLayoutChanges="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mozo_address_add_input_name_label"
+            android:textColor="@color/mozo_color_primary"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/input_contact_name"
+            app:layout_constraintStart_toStartOf="@id/input_contact_name" />
+
+        <EditText
+            android:id="@+id/input_contact_name"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="@dimen/mozo_screen_margin"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="@dimen/mozo_screen_margin"
+            android:background="@android:color/transparent"
+            android:hint="@string/mozo_address_add_input_name_hint"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            android:maxLength="50"
+            android:textColor="@color/mozo_color_text_main"
+            android:textColorHint="@color/mozo_color_section_text"
+            android:textSize="@dimen/mozo_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="o" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/mozo_color_primary"
+            app:layout_constraintBottom_toBottomOf="@id/input_contact_name"
+            app:layout_constraintEnd_toEndOf="@id/input_contact_name"
+            app:layout_constraintStart_toStartOf="@id/input_contact_name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mozo_address_add_label"
+            android:textColor="@color/mozo_color_section_text"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/text_contact_address"
+            app:layout_constraintStart_toStartOf="@id/input_contact_name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text_contact_address"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="@dimen/mozo_screen_margin"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="@dimen/mozo_screen_margin"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:textColor="@color/mozo_color_text_main"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_contact_name"
+            tools:text="0x97309d360C015695cf50892f035E516ccA1898F0" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/mozo_color_un_active"
+            app:layout_constraintEnd_toEndOf="@id/input_contact_name"
+            app:layout_constraintStart_toStartOf="@id/input_contact_name"
+            app:layout_constraintTop_toBottomOf="@id/text_contact_address" />
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/loading_container"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="30dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_contact_address"
+            app:layout_constraintVertical_bias="0.3"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/text_msg_saved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:drawableStart="@drawable/ic_check_green"
+            android:drawablePadding="9dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/mozo_address_add_msg_saved"
+            android:textColor="@color/mozo_color_correct"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_contact_address"
+            app:layout_constraintVertical_bias="0.15"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/button_save"
+            style="@style/MozoButtonStyle.Floating"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/mozo_dr_btn_no_radius"
+            android:enabled="false"
+            android:text="@string/mozo_button_save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

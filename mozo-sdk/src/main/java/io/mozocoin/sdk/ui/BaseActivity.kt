@@ -2,6 +2,8 @@ package io.mozocoin.sdk.ui
 
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import kotlinx.android.synthetic.main.view_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -22,6 +24,20 @@ internal open class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+    }
+
+    override fun setContentView(layoutResID: Int) {
+        super.setContentView(layoutResID)
+        setSupportActionBar(findViewById(R.id.toolbar))
+    }
+
+    @CallSuper
+    override fun setSupportActionBar(toolbar: Toolbar?) {
+        super.setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayShowHomeEnabled(false)
+            setDisplayHomeAsUpEnabled(false)
+        }
     }
 
     override fun setTitle(titleId: Int) {

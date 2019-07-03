@@ -96,7 +96,7 @@ class MozoWalletView : ConstraintLayout {
             click { context.copyWithToast(mAddress) }
             doOnLayout { btn ->
                 textAddressView?.let {
-                    val layoutParams = it.layoutParams as ConstraintLayout.LayoutParams
+                    val layoutParams = it.layoutParams as LayoutParams
                     layoutParams.marginEnd = btn.width
                     layoutParams.goneEndMargin = btn.width
                     it.layoutParams = layoutParams

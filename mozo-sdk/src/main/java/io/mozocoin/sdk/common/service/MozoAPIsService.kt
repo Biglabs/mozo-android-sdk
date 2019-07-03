@@ -40,6 +40,16 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
+    fun checkNetworkStatus(
+            context: Context,
+            callback: ((data: Status?, errorCode: String?) -> Unit)?,
+            retry: (() -> Unit)? = null
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.checkSystemStatus(), callback, retry)
+        }
+    }
+
     fun getProfile(context: Context, callback: ((data: Profile?, errorCode: String?) -> Unit)? = null, retry: (() -> Unit)? = null) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getProfile(), callback, retry)

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.InputFilter
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -20,10 +19,10 @@ import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.model.TransactionHistory.CREATOR.MY_ADDRESS
 import io.mozocoin.sdk.common.model.TransactionResponse
+import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.contact.AddressAddActivity
 import io.mozocoin.sdk.contact.AddressBookActivity
 import io.mozocoin.sdk.ui.BaseActivity
-import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.view_transaction_form.*
 import kotlinx.android.synthetic.main.view_transaction_sent.*
@@ -41,6 +40,9 @@ internal class TransactionFormActivity : BaseActivity() {
     private val history = TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
     private var updateTxStatusJob: Job? = null
 
+    private var isCanBackToEdit = true
+    private var mInputAmount = BigDecimal.ZERO
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_transaction_form)
@@ -56,9 +58,11 @@ internal class TransactionFormActivity : BaseActivity() {
         val address = intent?.getStringExtra(KEY_DATA_ADDRESS)
         val amount = intent?.getStringExtra(KEY_DATA_AMOUNT)
         if (address != null && amount != null) {
+            isCanBackToEdit = false
             selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
             output_receiver_address.setText(address)
             output_amount.setText(amount)
+            mInputAmount = amount.toBigDecimal()
             showConfirmationUI()
             button_submit.performClick()
         }
@@ -73,6 +77,7 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != RESULT_OK) return
         when {
             requestCode == KEY_PICK_ADDRESS -> {
@@ -80,9 +85,6 @@ internal class TransactionFormActivity : BaseActivity() {
                     selectedContact = getParcelableExtra(AddressBookActivity.KEY_SELECTED_ADDRESS)
                     showContactInfoUI()
                 }
-            }
-            requestCode == KEY_VERIFY_PIN -> {
-                sendTx(data?.getStringExtra(SecurityActivity.KEY_DATA) ?: return)
             }
             data != null -> {
                 IntentIntegrator
@@ -101,20 +103,18 @@ internal class TransactionFormActivity : BaseActivity() {
         }
     }
 
-    private fun sendTx(pin: String?) {
-        if (pin == null) return
+    private fun sendTx() {
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
-        val amount = output_amount?.text.toString()
 
         showLoading()
-        MozoTx.getInstance().createTransaction(this, address, amount, pin) { response, doRetry ->
+        MozoTx.getInstance().createTransaction(this, address, mInputAmount.toString()) { response, doRetry ->
             if (doRetry) {
                 showLoading()
-                sendTx(pin)
+                sendTx()
             } else {
                 hideLoading()
                 history.addressTo = address
-                history.amount = MozoTx.getInstance().amountWithDecimal(amount)
+                history.amount = MozoTx.getInstance().amountWithDecimal(mInputAmount)
                 history.time = Calendar.getInstance().timeInMillis / 1000L
                 showResultUI(response)
             }
@@ -122,11 +122,12 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (output_receiver_address?.isEnabled == true) {
-            super.onBackPressed()
-        } else {
-            showInputUI()
-            showContactInfoUI()
+        when (isCanBackToEdit) {
+            false -> super.onBackPressed()
+            else -> {
+                showInputUI()
+                showContactInfoUI()
+            }
         }
     }
 
@@ -138,33 +139,28 @@ internal class TransactionFormActivity : BaseActivity() {
             hideErrorAddressUI()
             updateSubmitButton()
         }
-        output_receiver_address.setOnFocusChangeListener { _, hasFocus ->
+        output_receiver_address?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             output_receiver_address_label.isSelected = hasFocus
             output_receiver_address_underline.isSelected = hasFocus
         }
-        output_amount.onTextChanged {
-            hideErrorAmountUI()
-            updateSubmitButton()
 
-            it?.toString()?.run {
-                if (this.isEmpty()) {
-                    output_amount_rate?.text = ""
-                    text_preview_rate?.text = ""
-                    return@run
-                }
-                if (this.startsWith(".")) {
-                    output_amount?.setText(String.format(Locale.US, "0%s", this))
-                    output_amount?.setSelection(this.length + 1)
-                    return@run
-                }
-                GlobalScope.launch(Dispatchers.Main) {
-                    val amount = BigDecimal(this@run)
+        output_amount?.onAmountInputChanged(
+                textChanged = {
+                    hideErrorAmountUI()
+                    updateSubmitButton()
+                    if (it.isNullOrEmpty()) {
+                        output_amount_rate?.text = ""
+                        text_preview_rate?.text = ""
+                    }
+                },
+                amountChanged = { amount ->
+                    mInputAmount = amount
                     output_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
                     text_preview_rate?.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(currentRate), true)
                 }
-            }
-        }
-        output_amount?.setOnFocusChangeListener { _, hasFocus ->
+        )
+
+        output_amount?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             output_amount_label?.isSelected = hasFocus
             output_amount_underline?.isSelected = hasFocus
         }
@@ -185,7 +181,12 @@ internal class TransactionFormActivity : BaseActivity() {
                     }
                 }
             } else {
-                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN_FOR_SEND, KEY_VERIFY_PIN)
+                MozoAPIsService.getInstance().checkNetworkStatus(this, { status, _ ->
+                    status ?: return@checkNetworkStatus
+                    sendTx()
+                }, {
+                    button_submit?.performClick()
+                })
             }
         }
     }
@@ -195,7 +196,13 @@ internal class TransactionFormActivity : BaseActivity() {
             currentBalance = balanceNonDecimal
             currentRate = rate
             Support.formatSpendableText(text_spendable, currentBalance.displayString())
-            output_amount?.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, decimal))
+
+            if (!isCanBackToEdit) {
+                text_preview_rate?.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(
+                        mInputAmount.multiply(currentRate),
+                        true
+                )
+            }
         }
     }
 
@@ -271,7 +278,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 text_spendable,
                 button_clear
         ))
-        text_preview_amount?.text = output_amount.text
+        text_preview_amount?.text = mInputAmount.displayString()
         visible(arrayOf(
                 send_state_container,
                 confirmation_state_separator,
@@ -404,21 +411,12 @@ internal class TransactionFormActivity : BaseActivity() {
         if (fromScan) return isValidAddress
 
         var isValidAmount = true
-        var amount = output_amount.text.toString()
-        if (amount.startsWith(".")) {
-            amount = "0$amount"
-        }
-        if (amount.endsWith(".")) {
-            amount = "${amount}0"
-        }
-        output_amount.setText(amount)
-        val bigAmount = BigDecimal(amount)
         when {
-            bigAmount > currentBalance -> {
+            mInputAmount > currentBalance -> {
                 showErrorAmountUI(R.string.mozo_transfer_amount_error_not_enough)
                 isValidAmount = false
             }
-            bigAmount <= BigDecimal.ZERO -> {
+            mInputAmount <= BigDecimal.ZERO -> {
                 showErrorAmountUI(R.string.mozo_transfer_amount_error_too_low)
                 isValidAmount = false
             }
@@ -429,7 +427,6 @@ internal class TransactionFormActivity : BaseActivity() {
 
     companion object {
         private const val KEY_PICK_ADDRESS = 0x0021
-        private const val KEY_VERIFY_PIN = 0x0022
         private const val KEY_DATA_ADDRESS = "key_data_address"
         private const val KEY_DATA_AMOUNT = "key_data_amount"
 

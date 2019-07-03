@@ -8,7 +8,10 @@ import android.content.res.Resources
 import android.graphics.Typeface
 import android.net.Uri
 import android.text.Editable
+import android.text.InputFilter
+import android.text.InputType
 import android.text.TextWatcher
+import android.text.method.DigitsKeyListener
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -24,12 +27,16 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.ui.widget.PinEntryEditText
 import io.mozocoin.sdk.utils.customtabs.CustomTabsHelper
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
+import java.util.*
+import kotlin.math.pow
 
 fun Activity.setMatchParent() {
     val attrs = window.attributes
@@ -168,9 +175,50 @@ fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            removeTextChangedListener(this)
             block(s)
+            addTextChangedListener(this)
         }
     })
+}
+
+fun EditText.onAmountInputChanged(textChanged: ((String?) -> Unit)? = null, amountChanged: (BigDecimal) -> Unit) {
+    inputType = InputType.TYPE_CLASS_NUMBER
+    keyListener = DigitsKeyListener.getInstance("0123456789" + DecimalFormatSymbols.getInstance().decimalSeparator)
+    filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, MozoTx.getInstance().mozoDecimal().toInt()))
+
+    onTextChanged {
+        textChanged?.invoke(it?.toString())
+
+        if (it.isNullOrEmpty()) return@onTextChanged
+        if (it.startsWith(DecimalFormatSymbols.getInstance().decimalSeparator)) {
+            setText(String.format(Locale.US, "0%s", it))
+            setSelection(it.length + 1)
+            return@onTextChanged
+        }
+
+        var separatorIndex = it.lastIndexOf(DecimalFormatSymbols.getInstance().decimalSeparator) + 1
+        if (separatorIndex > 0) {
+            separatorIndex = it.length - separatorIndex
+        }
+
+        var rawAmount = it.replace(Regex("([,.·' ])"), "")
+        if (separatorIndex > 0) {
+            rawAmount = StringBuilder(rawAmount).insert(rawAmount.length - separatorIndex, ".").toString()
+        }
+
+        val amount = BigDecimal(rawAmount)
+        if (
+                !it.endsWith(DecimalFormatSymbols.getInstance().decimalSeparator) &&
+                !it.endsWith("${DecimalFormatSymbols.getInstance().decimalSeparator}0")
+        ) {
+            val amountDisplay = NumberFormat.getNumberInstance().format(amount)
+            setText(amountDisplay)
+            setSelection(amountDisplay.length)
+        }
+
+        amountChanged(amount)
+    }
 }
 
 fun SwipeRefreshLayout.mozoSetup() {
@@ -188,11 +236,11 @@ fun BigDecimal?.displayString(scale: Int = 6): String {
 }
 
 fun BigDecimal.toWei(): BigDecimal {
-    return this.multiply(Math.pow(10.0, 9.0).toBigDecimal())
+    return this.multiply(10.0.pow(9.0).toBigDecimal())
 }
 
 fun BigDecimal.toGwei(): BigDecimal {
-    return this.divide(Math.pow(10.0, 9.0).toBigDecimal())
+    return this.divide(10.0.pow(9.0).toBigDecimal())
 }
 
 fun BigDecimal?.safe(): BigDecimal = this ?: BigDecimal.ZERO

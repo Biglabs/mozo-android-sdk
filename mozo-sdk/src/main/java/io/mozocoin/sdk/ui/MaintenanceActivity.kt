@@ -75,7 +75,7 @@ internal class MaintenanceActivity : BaseActivity() {
 
         maintenance_tips_title?.text = tipsQuestion?.getOrNull(index)
         maintenance_tips_content?.text = tipsAnswer?.getOrNull(index)
-        referenceUrl = "https://${Support.domainLandingPage()}/${tipsUrls?.getOrNull(index) ?: ""}"
+        referenceUrl = "https://${Support.domainHomePage()}/${tipsUrls?.getOrNull(index) ?: ""}"
     }
 
     private fun intervalStatusCheck() {

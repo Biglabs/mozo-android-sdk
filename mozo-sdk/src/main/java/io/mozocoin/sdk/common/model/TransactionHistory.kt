@@ -6,6 +6,7 @@ import androidx.room.Ignore
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.utils.displayString
 import java.math.BigDecimal
+import kotlin.math.pow
 
 data class TransactionHistory(
         var txHash: String?,
@@ -41,7 +42,7 @@ data class TransactionHistory(
             parcel.readLong(),
             parcel.readString())
 
-    fun amountInDecimal(): BigDecimal = amount.divide(Math.pow(10.0, decimal.toDouble()).toBigDecimal())
+    fun amountInDecimal(): BigDecimal = amount.divide(10.0.pow(decimal.toDouble()).toBigDecimal())
 
     fun amountDisplay(): String = amountInDecimal().displayString(12)
 

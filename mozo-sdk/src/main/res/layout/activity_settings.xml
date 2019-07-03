@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.SettingsActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp"
+        app:layout_insetEdge="none">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:contentInsetEnd="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp">
+
+            <io.mozocoin.sdk.ui.widget.MozoToolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                app:buttonBack="true"
+                app:title="@string/mozo_settings_title" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/dr_divider_menu"
+        android:dividerPadding="@dimen/mozo_list_padding"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/mozo_list_padding"
+        android:showDividers="middle|end"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:id="@+id/button_currencies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.3"
+            android:background="?android:selectableItemBackground"
+            android:drawableStart="@drawable/ic_setting_currencies"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:padding="@dimen/mozo_list_padding"
+            android:text="@string/mozo_settings_menu_currencies"
+            app:drawableSize="24dp" />
+
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:id="@+id/button_change_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.3"
+            android:background="?android:selectableItemBackground"
+            android:drawableStart="@drawable/ic_setting_change_password"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:padding="@dimen/mozo_list_padding"
+            android:text="@string/mozo_settings_menu_change_password"
+            app:drawableSize="24dp" />
+
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:id="@+id/button_change_security_pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:drawableStart="@drawable/ic_setting_change_security_pin"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:padding="@dimen/mozo_list_padding"
+            android:text="@string/mozo_pin_title_change"
+            app:drawableSize="24dp" />
+
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:id="@+id/button_backup_wallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:drawableStart="@drawable/ic_setting_backup_wallet"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:padding="@dimen/mozo_list_padding"
+            android:text="@string/mozo_backup_title"
+            app:drawableSize="24dp" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
