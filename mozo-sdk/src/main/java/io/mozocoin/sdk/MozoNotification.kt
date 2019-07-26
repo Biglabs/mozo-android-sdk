@@ -184,7 +184,7 @@ class MozoNotification private constructor() {
             Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
             Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
             Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER -> R.drawable.im_notification_airdrop_bonus
-            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME,
             Constant.NOTIFY_EVENT_PROMO_PURCHASED -> R.drawable.im_notification_customer_came
             Constant.NOTIFY_EVENT_PROMO_USED -> R.drawable.im_notification_promo_used
             else -> R.drawable.im_notification_balance_changed
@@ -237,7 +237,7 @@ class MozoNotification private constructor() {
                 }
                 Constant.NOTIFY_EVENT_PROMO_USED -> {
                     title = context.getString(R.string.mozo_notify_title_promo_used)
-                    content = message.storeName
+                    content = context.getString(R.string.mozo_notify_title_promo_used_content, message.storeName)
                 }
                 Constant.NOTIFY_EVENT_PROMO_PURCHASED -> {
                     title = context.getString(R.string.mozo_notify_title_promo_purchased)

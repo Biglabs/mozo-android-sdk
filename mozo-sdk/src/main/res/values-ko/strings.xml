@@ -80,6 +80,7 @@
     <string name="mozo_backup_content_verify">완성된 복구 문구 사용 참고를 삼아, 복구 문구에 있는 이 글자들을 입력해서 백업 과정 마무리하세요.</string>
     <string name="mozo_backup_success_title">당신의 지갑은 백업되었습니다.</string>
     <string name="mozo_backup_success_content">복구 문구를 안전한 곳에서 보관했다는 것을 확인하세요. 이 앱은 삭제되면 복구 문구 없이 지갑 복구를 못합니다.</string>
+    <string name="mozo_backup_confirm_failed">잘못된 복구 문구</string>
 
     <string name="mozo_convert_title">Offchain으로 변환하기</string>
     <string name="mozo_convert_amount_hint">MozoX Offchain을 변환 할 금액을 입력하십시오.</string>
@@ -130,6 +131,7 @@
     <string name="mozo_pin_msg_enter_correct">정확한 PIN 코드입니다</string>
     <string name="mozo_pin_msg_enter_incorrect">PIN 코드가 잘못되었습니다</string>
     <string name="mozo_pin_msg_error">월렛 생성에 실패했습니다</string>
+    <string name="mozo_pin_msg_dont_show_again">다시 보지 않습니다.</string>
     <string name="mozo_pin_forgot_title">PIN을 잊어 버리셨습니까?</string>
     <string name="mozo_pin_forgot_msg">복구 문구를 사용하여 PIN 재설정하십시오.</string>
     <string name="mozo_pin_reset_title">PIN 재설정</string>
@@ -151,6 +153,9 @@
     <string name="mozo_notify_title_received">MozoX %s 를 받았습니다.</string>
     <string name="mozo_notify_title_sent">MozoX %s 를 보냈습니다.</string>
     <string name="mozo_notify_title_airdrop_bonus">%s 개 보너스 모조X를 가지고 있습니다.</string>
+    <string name="mozo_notify_title_promo_used">사용한 프로모션</string>
+    <string name="mozo_notify_title_promo_used_content">%s에</string>
+    <string name="mozo_notify_title_promo_purchased">프로모션을 구매한 구매자</string>
     <string name="mozo_notify_content_from">%s 부터</string>
     <string name="mozo_notify_content_to">%s 까지</string>
     <string name="mozo_notify_content_invited">%s는 MozoX에 가입했습니다.</string>

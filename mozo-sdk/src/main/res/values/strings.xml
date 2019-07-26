@@ -160,6 +160,7 @@
     <string name="mozo_notify_title_sent">Sent %s MozoX</string>
     <string name="mozo_notify_title_airdrop_bonus">You got %s Bonus MozoX</string>
     <string name="mozo_notify_title_promo_used">Promotion used</string>
+    <string name="mozo_notify_title_promo_used_content">At %s</string>
     <string name="mozo_notify_title_promo_purchased">Shopper purchased promotion</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>

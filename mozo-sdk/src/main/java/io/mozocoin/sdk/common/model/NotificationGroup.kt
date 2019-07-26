@@ -24,7 +24,8 @@ enum class NotificationGroup(val id: Int) {
     AIRDROP_SIGN_UP(105),
     AIRDROP_FOUNDER(106),
     AIRDROP_TOP_1K(107),
-    INVITE(108);
+    INVITE(108),
+    PROMO(109);
 
     companion object {
         private fun getCurrentlyGroupExtras(notificationManager: NotificationManager, groupKey: String): List<Bundle>? = synchronized(this) {
@@ -90,6 +91,7 @@ enum class NotificationGroup(val id: Int) {
                         R.string.mozo_notify_content_invited_group,
                         totalNotice
                 )
+                PROMO -> ""
                 else -> context.getString(
                         R.string.mozo_notify_content_received_group,
                         totalAmount.displayString()
@@ -106,7 +108,9 @@ enum class NotificationGroup(val id: Int) {
 
         fun getIcon(type: String?) = when (type) {
             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> R.drawable.im_notification_balance_changed_group
-            Constant.NOTIFY_EVENT_CUSTOMER_CAME -> R.drawable.im_notification_customer_came_group
+            Constant.NOTIFY_EVENT_CUSTOMER_CAME,
+            Constant.NOTIFY_EVENT_PROMO_PURCHASED -> R.drawable.im_notification_customer_came_group
+            Constant.NOTIFY_EVENT_PROMO_USED -> R.drawable.im_notification_promo_used
             Constant.NOTIFY_EVENT_AIRDROP_INVITE -> R.drawable.im_notification_airdrop_invite_group
             else -> R.drawable.im_notification_airdrop_group
         }
@@ -125,6 +129,9 @@ enum class NotificationGroup(val id: Int) {
             Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP -> AIRDROP_SIGN_UP
             Constant.NOTIFY_EVENT_AIRDROP_FOUNDER -> AIRDROP_FOUNDER
             Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER -> AIRDROP_TOP_1K
+
+            Constant.NOTIFY_EVENT_PROMO_PURCHASED -> PROMO
+            Constant.NOTIFY_EVENT_PROMO_USED -> PROMO
 
             else -> AIRDROP
         }

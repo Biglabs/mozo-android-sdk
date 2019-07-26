@@ -80,6 +80,7 @@
     <string name="mozo_backup_content_verify">Xin vui lòng nhập những từ theo đúng thứ tự trong cụm từ khôi phục mà bạn đã sao lưu để hoàn tất quá trình sao lưu ví.</string>
     <string name="mozo_backup_success_title">Ví của bạn đã sao lưu xong.</string>
     <string name="mozo_backup_success_content">Nhớ cất giữ cụm từ khôi phục vào nơi bí mật một cách an toàn. Bạn bắt buộc phải có nó để khôi phục lại ví trong trường hợp mất thiết bị.</string>
+    <string name="mozo_backup_confirm_failed">Chuỗi ký tự phục hồi không hợp lệ</string>
 
     <string name="mozo_convert_title">Đổi thành MozoX Offchain</string>
     <string name="mozo_convert_amount_hint">Nhập số lượng đổi thành MozoX Offchain</string>
@@ -130,6 +131,7 @@
     <string name="mozo_pin_msg_enter_correct">Mã PIN chính xác</string>
     <string name="mozo_pin_msg_enter_incorrect">Sai mã PIN</string>
     <string name="mozo_pin_msg_error">Tạo ví thất bại</string>
+    <string name="mozo_pin_msg_dont_show_again">Không hiện lại</string>
     <string name="mozo_pin_forgot_title">Quên mã PIN?</string>
     <string name="mozo_pin_forgot_msg">Đặt lại mã PIN bằng cách sử dụng cụm từ khôi phục</string>
     <string name="mozo_pin_reset_title">Tạo lại mã PIN</string>
@@ -151,6 +153,9 @@
     <string name="mozo_notify_title_received">Đã nhận %s MozoX</string>
     <string name="mozo_notify_title_sent">Đã gửi %s MozoX</string>
     <string name="mozo_notify_title_airdrop_bonus">Bạn được thưởng %s MozoX</string>
+    <string name="mozo_notify_title_promo_used">Khuyến mãi đã sử dụng</string>
+    <string name="mozo_notify_title_promo_used_content">Tại %s</string>
+    <string name="mozo_notify_title_promo_purchased">Khách hàng đã mua khuyến mãi</string>
     <string name="mozo_notify_content_from">Từ %s</string>
     <string name="mozo_notify_content_to">Đến %s</string>
     <string name="mozo_notify_content_invited">%s đã tham gia MozoX</string>
