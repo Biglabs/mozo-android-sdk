@@ -13,7 +13,8 @@ data class BroadcastDataContent(
         var time: Long,
         @SerializedName(value = "phoneNo", alternate = ["phoneNumSignUp"]) val phoneNo: String?,
         val isComeIn: Boolean,
-        val storeName: String
+        val storeName: String,
+        val promoName: String? = null
 ) {
     override fun toString(): String =
             "{event=$event, from=$from, to=$to, amount=$amount, decimal=$decimal, symbol=$symbol, time=$time, phoneNo=$phoneNo, comeIn=$isComeIn, storeName=$storeName}"

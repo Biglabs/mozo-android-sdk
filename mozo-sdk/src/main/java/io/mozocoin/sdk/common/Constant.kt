@@ -21,6 +21,8 @@ class Constant {
         const val NOTIFY_EVENT_STORE_BOOK_ADDED = "store_book_added"
         const val NOTIFY_EVENT_CONVERT = "convert_onchain_to_offchain"
         const val NOTIFY_EVENT_PROFILE_CHANGED = "profile_changed"
+        const val NOTIFY_EVENT_PROMO_USED = "promotion_used"
+        const val NOTIFY_EVENT_PROMO_PURCHASED = "promotion_purchased"
 
         internal const val DEFAULT_DECIMAL = 2
         internal const val DEFAULT_CURRENCY = "USD"

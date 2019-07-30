@@ -56,10 +56,9 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
     override fun dismiss() {
         try {
             MozoSDK.getInstance().retryCallbacks?.clear()
-            super.dismiss()
-        } finally {
             dismissCallback?.onDismiss(this)
-            instance = null
+            super.dismiss()
+        } catch (ignore: Exception) {
         }
     }
 

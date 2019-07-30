@@ -12,6 +12,7 @@ import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.utils.color
+import kotlin.math.max
 
 @Entity(tableName = "notifications")
 class Notification(
@@ -28,9 +29,13 @@ class Notification(
 
     fun titleDisplay() = SpannableString(title).apply {
         set(0, length, StyleSpan(Typeface.BOLD))
-        if (!Constant.NOTIFY_EVENT_CUSTOMER_CAME.equals(type, ignoreCase = true))
+        if (
+                !Constant.NOTIFY_EVENT_CUSTOMER_CAME.equals(type, ignoreCase = true) &&
+                !Constant.NOTIFY_EVENT_PROMO_USED.equals(type, ignoreCase = true) &&
+                !Constant.NOTIFY_EVENT_PROMO_PURCHASED.equals(type, ignoreCase = true)
+        )
             set(
-                    Math.max(indexOfFirst { it.isDigit() }, 0),
+                    max(indexOfFirst { it.isDigit() }, 0),
                     length,
                     ForegroundColorSpan(MozoSDK.getInstance().context.color(R.color.mozo_color_primary))
             )

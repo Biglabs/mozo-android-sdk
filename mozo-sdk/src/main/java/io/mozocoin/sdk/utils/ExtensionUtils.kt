@@ -1,6 +1,5 @@
 package io.mozocoin.sdk.utils
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -14,7 +13,6 @@ import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
 import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
@@ -37,13 +35,6 @@ import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.pow
-
-fun Activity.setMatchParent() {
-    val attrs = window.attributes
-    attrs.width = ViewGroup.LayoutParams.MATCH_PARENT
-    attrs.height = ViewGroup.LayoutParams.MATCH_PARENT
-    window.attributes = attrs
-}
 
 fun FragmentActivity.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? = null) {
     if (isFinishing || isDestroyed) return
