@@ -19,6 +19,7 @@ import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import java.util.*
+import kotlin.math.pow
 
 internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
 
@@ -174,11 +175,11 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 delay(retryConnectTime)
                 "retry connect time: $retryConnectTime".logAsInfo(TAG)
                 retryConnectTime *= 2
-                if (retryConnectTime > Constant.SOCKET_RETRY_START_TIME * Math.pow(2.0, 8.0)) {
+                if (retryConnectTime > Constant.SOCKET_RETRY_START_TIME * 2.0.pow(8.0)) {
                     retryConnectTime = Constant.SOCKET_RETRY_START_TIME
                 }
 
-                if (MozoSDK.isNetworkAvailable()) connect()
+                if (NetworkSchedulerService.isNetworkAvailable()) connect()
                 else doRetryConnect()
             }
         }

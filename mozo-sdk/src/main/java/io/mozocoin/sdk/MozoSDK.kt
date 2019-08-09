@@ -3,14 +3,15 @@ package io.mozocoin.sdk
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.content.ComponentCallbacks
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkRequest
 import android.net.Uri
+import android.view.View
 import androidx.annotation.IntDef
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
@@ -20,19 +21,13 @@ import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.OnNotificationReceiveListener
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.MozoDatabase
-import io.mozocoin.sdk.common.service.MozoSocketClient
+import io.mozocoin.sdk.common.service.NetworkSchedulerService
 import io.mozocoin.sdk.ui.MaintenanceActivity
-import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.customtabs.CustomTabsActivityLifecycleCallbacks
-import io.mozocoin.sdk.utils.logAsInfo
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 class MozoSDK private constructor(internal val context: Context) : ViewModelStoreOwner {
-
-    internal val connectivityManager: ConnectivityManager by lazy {
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    }
 
     private val mViewModelStore: ViewModelStore by lazy { ViewModelStore() }
     internal val profileViewModel: ViewModels.ProfileViewModel by lazy {
@@ -47,6 +42,8 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     internal var notifyActivityClass: Class<out Activity>? = null
 
+    internal var remindAnchorView: View? = null
+
     internal var onNotificationReceiveListener: OnNotificationReceiveListener? = null
 
     internal var retryCallbacks: ArrayList<(() -> Unit)>? = null
@@ -54,24 +51,16 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
     override fun getViewModelStore(): ViewModelStore = mViewModelStore
 
     private fun registerNetworkCallback() {
-        val networkRequest = NetworkRequest.Builder().build()
-        connectivityManager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network?) {
-                ErrorDialog.retry()
-                if (!MozoAuth.getInstance().isInitialized) return
+        val myJob = JobInfo.Builder(0, ComponentName(context, NetworkSchedulerService::class.java))
+                .setRequiresCharging(true)
+                .setMinimumLatency(1000)
+                .setOverrideDeadline(2000)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+//                .setPersisted(true)
+                .build()
 
-                MozoAuth.getInstance().isSignUpCompleted(context) {
-                    if (!it) return@isSignUpCompleted
-                    MozoSocketClient.connect()
-                    contactViewModel.fetchData(context)
-                }
-            }
-
-            override fun onLost(network: Network?) {
-                "Network lost".logAsInfo()
-                MozoSocketClient.disconnect()
-            }
-        })
+        val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        jobScheduler.schedule(myJob)
     }
 
     @Suppress("unused")
@@ -102,11 +91,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @Volatile
         internal var shouldShowNotification = true
-
-        internal fun isNetworkAvailable(): Boolean {
-            val activeNetwork = getInstance().connectivityManager.activeNetworkInfo
-            return activeNetwork?.isConnected == true
-        }
 
         @JvmStatic
         @Synchronized
@@ -168,6 +152,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         fun attachNotificationReceiverActivity(activity: Class<out Activity>) {
             getInstance().notifyActivityClass = activity
+        }
+
+        @JvmStatic
+        fun attachViewForRemindSystem(anchorView: View) {
+            getInstance().remindAnchorView = anchorView
         }
 
         @JvmStatic
