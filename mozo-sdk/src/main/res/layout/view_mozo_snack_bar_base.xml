@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:layout_margin="@dimen/mozo_screen_margin"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="68dp"
     android:background="@drawable/dr_mozo_snack_bar"
     android:theme="@style/ThemeOverlay.AppCompat.Dark" />

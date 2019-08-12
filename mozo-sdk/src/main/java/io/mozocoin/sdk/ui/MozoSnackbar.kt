@@ -11,13 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityManager
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.snackbar.SnackbarContentLayout
 import io.mozocoin.sdk.R
 
 @Suppress("unused")
@@ -41,9 +41,7 @@ class MozoSnackbar(
      */
     @SuppressLint("RestrictedApi")
     fun setText(message: CharSequence): MozoSnackbar {
-        val contentLayout = view.getChildAt(0) as SnackbarContentLayout
-        val tv = contentLayout.messageView
-        tv.text = message
+        view.findViewById<TextView>(R.id.snackbar_text)?.text = message
         return this
     }
 
@@ -74,20 +72,20 @@ class MozoSnackbar(
      */
     @SuppressLint("RestrictedApi")
     fun setAction(text: CharSequence, listener: View.OnClickListener?): MozoSnackbar {
-        val contentLayout = this.view.getChildAt(0) as SnackbarContentLayout
-        val tv = contentLayout.actionView
-        if (TextUtils.isEmpty(text) || listener == null) {
-            tv.visibility = View.GONE
-            tv.setOnClickListener(null)
-            hasAction = false
-        } else {
-            hasAction = true
-            tv.visibility = View.VISIBLE
-            tv.text = text
-            tv.setOnClickListener { view ->
-                listener.onClick(view)
-                // Now dismiss the Snackbar
-                dispatchDismiss(BaseCallback.DISMISS_EVENT_ACTION)
+        view.findViewById<TextView>(R.id.snackbar_action)?.run {
+            if (TextUtils.isEmpty(text) || listener == null) {
+                visibility = View.GONE
+                setOnClickListener(null)
+                hasAction = false
+            } else {
+                hasAction = true
+                visibility = View.VISIBLE
+                setText(text)
+                setOnClickListener { view ->
+                    listener.onClick(view)
+                    // Now dismiss the Snackbar
+                    // dispatchDismiss(BaseCallback.DISMISS_EVENT_ACTION)
+                }
             }
         }
         return this
@@ -113,9 +111,7 @@ class MozoSnackbar(
      */
     @SuppressLint("RestrictedApi")
     fun setTextColor(colors: ColorStateList): MozoSnackbar {
-        val contentLayout = view.getChildAt(0) as SnackbarContentLayout
-        val tv = contentLayout.messageView
-        tv.setTextColor(colors)
+        view.findViewById<TextView>(R.id.snackbar_text)?.setTextColor(colors)
         return this
     }
 
@@ -124,9 +120,7 @@ class MozoSnackbar(
      */
     @SuppressLint("RestrictedApi")
     fun setTextColor(@ColorInt color: Int): MozoSnackbar {
-        val contentLayout = view.getChildAt(0) as SnackbarContentLayout
-        val tv = contentLayout.messageView
-        tv.setTextColor(color)
+        view.findViewById<TextView>(R.id.snackbar_text)?.setTextColor(color)
         return this
     }
 
@@ -135,9 +129,7 @@ class MozoSnackbar(
      */
     @SuppressLint("RestrictedApi")
     fun setActionTextColor(colors: ColorStateList): MozoSnackbar {
-        val contentLayout = view.getChildAt(0) as SnackbarContentLayout
-        val tv = contentLayout.actionView
-        tv.setTextColor(colors)
+        view.findViewById<TextView>(R.id.snackbar_action)?.setTextColor(colors)
         return this
     }
 
@@ -146,9 +138,7 @@ class MozoSnackbar(
      */
     @SuppressLint("RestrictedApi")
     fun setActionTextColor(@ColorInt color: Int): MozoSnackbar {
-        val contentLayout = view.getChildAt(0) as SnackbarContentLayout
-        val tv = contentLayout.actionView
-        tv.setTextColor(color)
+        view.findViewById<TextView>(R.id.snackbar_action)?.setTextColor(color)
         return this
     }
 
@@ -169,6 +159,9 @@ class MozoSnackbar(
     }
 
     companion object {
+
+        private var instance: MozoSnackbar? = null
+
         private fun findSuitableParent(view: View?): ViewGroup? {
             var tmpView = view
             var fallback: ViewGroup? = null
@@ -223,10 +216,37 @@ class MozoSnackbar(
             val content = inflater.inflate(
                     R.layout.view_mozo_snack_bar,
                     parent,
-                    false) as SnackbarContentLayout
-            val snackbar = MozoSnackbar(parent, content, content)
+                    false)
+
+            val messageView = content.findViewById<View>(R.id.snackbar_text)
+            val actionView = content.findViewById<View>(R.id.snackbar_action)
+
+            val contentCallback = object : com.google.android.material.snackbar.ContentViewCallback {
+                override fun animateContentIn(delay: Int, duration: Int) {
+                    messageView.alpha = 0f
+                    messageView.animate().alpha(1f).setDuration(duration.toLong()).setStartDelay(delay.toLong()).start()
+
+                    if (actionView.visibility == View.VISIBLE) {
+                        actionView.alpha = 0f
+                        actionView.animate().alpha(1f).setDuration(duration.toLong()).setStartDelay(delay.toLong()).start()
+                    }
+                }
+
+                override fun animateContentOut(delay: Int, duration: Int) {
+                    messageView.alpha = 1f
+                    messageView.animate().alpha(0f).setDuration(duration.toLong()).setStartDelay(delay.toLong()).start()
+
+                    if (actionView.visibility == View.VISIBLE) {
+                        actionView.alpha = 1f
+                        actionView.animate().alpha(0f).setDuration(duration.toLong()).setStartDelay(delay.toLong()).start()
+                    }
+                }
+            }
+
+            val snackbar = MozoSnackbar(parent, content, contentCallback)
             snackbar.setText(text)
             snackbar.duration = duration
+            instance = snackbar
             return snackbar
         }
 
@@ -249,6 +269,11 @@ class MozoSnackbar(
          */
         fun make(view: View, @StringRes resId: Int, @Duration duration: Int): MozoSnackbar {
             return make(view, view.resources.getText(resId), duration)
+        }
+
+        fun dismiss() {
+            instance?.dismiss()
+            instance = null
         }
     }
 }

@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoNotification
-import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.ui.MozoWalletFragment
@@ -28,8 +27,6 @@ class MainActivity : AppCompatActivity() {
 
         tab_layout?.setupWithViewPager(pager ?: return)
         pager?.adapter = TabsPagerAdapter(supportFragmentManager)
-
-        MozoSDK.attachViewForRemindSystem(window.decorView)
 
         MozoAuth.getInstance().addAuthStateListener(object : AuthStateListener() {
 

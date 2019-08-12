@@ -23,7 +23,7 @@ import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.NetworkSchedulerService
 import io.mozocoin.sdk.ui.MaintenanceActivity
-import io.mozocoin.sdk.utils.customtabs.CustomTabsActivityLifecycleCallbacks
+import io.mozocoin.sdk.common.ActivityLifecycleCallbacks
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -109,7 +109,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
                 // Preload custom tabs service for improved performance
                 if (context is Application) {
-                    context.registerActivityLifecycleCallbacks(CustomTabsActivityLifecycleCallbacks())
+                    context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
                 }
 
                 /* register network changes */
@@ -152,11 +152,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         fun attachNotificationReceiverActivity(activity: Class<out Activity>) {
             getInstance().notifyActivityClass = activity
-        }
-
-        @JvmStatic
-        fun attachViewForRemindSystem(anchorView: View) {
-            getInstance().remindAnchorView = anchorView
         }
 
         @JvmStatic

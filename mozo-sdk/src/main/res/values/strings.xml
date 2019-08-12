@@ -176,6 +176,9 @@
     <string name="mozo_notify_content_received_group">Total: %s MozoX</string>
     <string name="mozo_notify_content_invited_group">Total Friends have joined: %d</string>
 
+    <string name="mozo_notify_warning_internet">You’re not connected to the internet 😔</string>
+    <string name="mozo_notify_warning_action">Go to Settings →</string>
+
     <string name="mozo_maintenance_title">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>
     <string name="mozo_maintenance_tips_title">Did you know?</string>
 

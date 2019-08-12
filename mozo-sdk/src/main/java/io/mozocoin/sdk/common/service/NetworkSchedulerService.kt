@@ -8,9 +8,11 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
+import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
+import io.mozocoin.sdk.R
 import io.mozocoin.sdk.ui.MozoSnackbar
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.logAsInfo
@@ -46,36 +48,52 @@ class NetworkSchedulerService : JobService() {
         return true
     }
 
-    private fun onNetworkConnectionChanged(isConnected: Boolean) {
-        if (MozoSDK.getInstance().remindAnchorView != null) {
-            MozoSnackbar.make(
-                    MozoSDK.getInstance().remindAnchorView!!,
-                    if (isConnected) "Good! Connected to Internet" else "Sorry! Not connected to internet",
-                    Snackbar.LENGTH_INDEFINITE
-            ).show()
-        }
-
-        if (isConnected) {
-            "Network available".logAsInfo()
-            ErrorDialog.retry()
-            if (!MozoAuth.getInstance().isInitialized) return
-
-            MozoAuth.getInstance().isSignUpCompleted(MozoSDK.getInstance().context) {
-                if (!it) return@isSignUpCompleted
-                MozoSocketClient.connect()
-                MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
-            }
-
-        } else {
-            "Network lost".logAsInfo()
-            MozoSocketClient.disconnect()
-        }
-    }
-
     companion object {
         internal fun isNetworkAvailable(): Boolean {
             val cm = MozoSDK.getInstance().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             return cm.activeNetworkInfo?.isConnected == true
+        }
+
+        private fun onNetworkConnectionChanged(isConnected: Boolean) {
+            if (MozoSDK.getInstance().remindAnchorView != null) {
+                if (isConnected) {
+                    MozoSnackbar.dismiss()
+
+                } else {
+                    MozoSnackbar.make(
+                            MozoSDK.getInstance().remindAnchorView!!,
+                            R.string.mozo_notify_warning_internet,
+                            Snackbar.LENGTH_INDEFINITE
+                    ).setAction(R.string.mozo_notify_warning_action, View.OnClickListener {
+                        it.context.startActivity(
+                                Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS).apply {
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                        )
+
+                    }).show()
+                }
+            }
+
+            if (isConnected) {
+                "Network available".logAsInfo()
+                ErrorDialog.retry()
+                if (!MozoAuth.getInstance().isInitialized) return
+
+                MozoAuth.getInstance().isSignUpCompleted(MozoSDK.getInstance().context) {
+                    if (!it) return@isSignUpCompleted
+                    MozoSocketClient.connect()
+                    MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
+                }
+
+            } else {
+                "Network lost".logAsInfo()
+                MozoSocketClient.disconnect()
+            }
+        }
+
+        fun checkNetwork() {
+            onNetworkConnectionChanged(isNetworkAvailable())
         }
     }
 }
