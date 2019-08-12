@@ -22,6 +22,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.doOnNextLayout
+import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -140,7 +142,18 @@ fun View.hideKeyboard(): Boolean {
  * Set an onclick listener
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener { block(it as T) }
+fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener {
+    isClickable = false
+    block(it as T)
+
+    doOnNextLayout {
+        isClickable = true
+    }
+
+    postDelayed(2000) {
+        isClickable = true
+    }
+}
 
 inline fun <reified T : View> View.find(@IdRes id: Int): T? = findViewById(id) as? T
 
