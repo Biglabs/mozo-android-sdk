@@ -3,6 +3,7 @@ package io.mozocoin.sdk.utils
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.net.Uri
@@ -58,6 +59,16 @@ fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? 
         if (backStackName != null) addToBackStack(backStackName)
     }.commit()
 }
+
+fun Context?.isLocationPermissionGranted() = this != null && ContextCompat.checkSelfPermission(
+        this,
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+) == PackageManager.PERMISSION_GRANTED
+
+fun Context?.isStoragePermissionGranted() = this != null && ContextCompat.checkSelfPermission(
+        this,
+        android.Manifest.permission.READ_EXTERNAL_STORAGE
+) == PackageManager.PERMISSION_GRANTED
 
 internal fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 

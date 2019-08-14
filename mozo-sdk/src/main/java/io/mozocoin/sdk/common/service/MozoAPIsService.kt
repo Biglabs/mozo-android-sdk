@@ -252,6 +252,32 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
+    /**
+     * To-do list APIs
+     */
+    fun getTodoList4Shopper(
+            context: Context,
+            isBluetoothOff: Boolean,
+            lat: Double,
+            lng: Double,
+            callback: ((data: BaseData<Todo>?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getTodoList4Shopper(isBluetoothOff, lat, lng), callback, retry)
+        }
+    }
+
+    fun getTodoSettings(
+            context: Context,
+            callback: ((data: TodoSettings?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getTodoSettings(), callback, retry)
+        }
+    }
+
     private fun <V, T : Base<V>> execute(
             context: Context,
             call: Call<T>,

@@ -16,14 +16,10 @@ import androidx.annotation.IntDef
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
-import io.mozocoin.sdk.common.Constant
-import io.mozocoin.sdk.common.MessageEvent
-import io.mozocoin.sdk.common.OnNotificationReceiveListener
-import io.mozocoin.sdk.common.ViewModels
+import io.mozocoin.sdk.common.*
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.NetworkSchedulerService
 import io.mozocoin.sdk.ui.MaintenanceActivity
-import io.mozocoin.sdk.common.ActivityLifecycleCallbacks
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -56,7 +52,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 .setMinimumLatency(1000)
                 .setOverrideDeadline(2000)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-//                .setPersisted(true)
+                //.setPersisted(true)
                 .build()
 
         val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler

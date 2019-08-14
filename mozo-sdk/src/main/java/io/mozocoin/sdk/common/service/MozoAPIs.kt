@@ -94,4 +94,17 @@ internal interface MozoAPIs {
 
     @GET("${MozoAPIsService.APIS_STORE}/onchain/getBalanceETHAndFeeTransferERC20/{address}")
     fun getEthBalanceInOffChain(@Path("address") address: String): Call<Base<BalanceEthData>>
+
+    /**
+     * To-do list APIs
+     */
+    @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListShopper")
+    fun getTodoList4Shopper(
+            @Query("blueToothOff") isBluetoothOff: Boolean,
+            @Query("lat") lat: Double,
+            @Query("lon") lon: Double
+    ): Call<Base<BaseData<Todo>>>
+
+    @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting")
+    fun getTodoSettings(): Call<Base<TodoSettings>>
 }

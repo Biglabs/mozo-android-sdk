@@ -54,7 +54,7 @@ class NetworkSchedulerService : JobService() {
             return cm.activeNetworkInfo?.isConnected == true
         }
 
-        private fun onNetworkConnectionChanged(isConnected: Boolean) {
+        private fun onNetworkConnectionChanged(isConnected: Boolean, resumeState: Boolean = true) {
             if (MozoSDK.getInstance().remindAnchorView != null) {
                 if (isConnected) {
                     MozoSnackbar.dismiss()
@@ -77,13 +77,15 @@ class NetworkSchedulerService : JobService() {
 
             if (isConnected) {
                 "Network available".logAsInfo()
-                ErrorDialog.retry()
                 if (!MozoAuth.getInstance().isInitialized) return
+                ErrorDialog.retry()
 
-                MozoAuth.getInstance().isSignUpCompleted(MozoSDK.getInstance().context) {
-                    if (!it) return@isSignUpCompleted
-                    MozoSocketClient.connect()
-                    MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
+                if (resumeState) {
+                    MozoAuth.getInstance().isSignUpCompleted(MozoSDK.getInstance().context) {
+                        if (!it) return@isSignUpCompleted
+                        MozoSocketClient.connect()
+                        MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
+                    }
                 }
 
             } else {
@@ -93,7 +95,7 @@ class NetworkSchedulerService : JobService() {
         }
 
         fun checkNetwork() {
-            onNetworkConnectionChanged(isNetworkAvailable())
+            onNetworkConnectionChanged(isNetworkAvailable(), false)
         }
     }
 }
