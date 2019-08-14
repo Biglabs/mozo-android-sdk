@@ -92,12 +92,22 @@ fun Context.dimen(@DimenRes id: Int): Int = resources.getDimensionPixelSize(id)
 fun Context.bitmap(@DrawableRes icon: Int) = AppCompatResources.getDrawable(this, icon)?.toBitmap()
 
 fun Context.openTab(url: String) {
+    var finalUrl = url
+    if (finalUrl.contains(Support.domainHomePage(), ignoreCase = true)) {
+        val langParam = "language"
+
+        val uri = Uri.parse(finalUrl)
+        if (uri.getQueryParameter(langParam).isNullOrEmpty()) {
+            finalUrl = uri.buildUpon().appendQueryParameter(langParam, Locale.getDefault().language).build().toString()
+        }
+    }
+
     val customTabsIntent = CustomTabsIntent.Builder()
             .setShowTitle(true)
             .setToolbarColor(color(R.color.mozo_color_primary))
             .build()
     CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
-    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(url), null)
+    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), null)
 }
 
 fun visible(views: Array<View?>) {
