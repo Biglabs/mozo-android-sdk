@@ -170,6 +170,38 @@
     <string name="mozo_notify_content_received_group">Tổng: %s MozoX</string>
     <string name="mozo_notify_content_invited_group">Đã có %d người tham gia MozoX</string>
 
+    <string name="mozo_notify_warning_internet">Kết nối internet có vấn đề 😔</string>
+    <string name="mozo_notify_warning_action">Thiết lập →</string>
+
+    <string name="mozo_notify_to_do_airdrop_nearby">Nhận MozoX từ những airdrop gần đây 🎁</string>
+    <string name="mozo_notify_to_do_airdrop_nearby_action">Xem những cửa hàng gần nhất để nhận MozoX → </string>
+    <string name="mozo_notify_to_do_airdrop_expire">Sự kiện airdrop sắp kết thúc ⏳</string>
+    <string name="mozo_notify_to_do_airdrop_expire_action">Xem và tạo sự kiện mới → </string>
+    <string name="mozo_notify_to_do_airdrop_empty">Chưa có sự kiện airdrop nào 😐</string>
+    <string name="mozo_notify_to_do_airdrop_empty_action">Tạo để tăng lượt khách đến cửa hàng → </string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo">Sự kiện airdrop sắp hết MozoX 😞</string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo_action">Xem và chuyển thêm MozoX → </string>
+    <string name="mozo_notify_to_do_location">Định vị bị tắt 🗺</string>
+    <string name="mozo_notify_to_do_location_action">Bật định vị để trải nghiệm tốt hơn → </string>
+    <string name="mozo_notify_to_do_bluetooth">Bluetooth bị tắt 😔…</string>
+    <string name="mozo_notify_to_do_bluetooth_action">Bật bluetooth để nhận MozoX → </string>
+    <string name="mozo_notify_to_do_promo_nearby">Khuyến mãi hấp dẫn ở gần đây 🤩</string>
+    <string name="mozo_notify_to_do_promo_nearby_action">Khám phá khuyến mãi yêu thích của bạn → </string>
+    <string name="mozo_notify_to_do_promo_expire">Khuyến mãi sắp kết thúc 👌</string>
+    <string name="mozo_notify_to_do_promo_expire_action">Tạo khuyến mãi mới → </string>
+    <string name="mozo_notify_to_do_promo_empty">Chưa có khuyến mãi nào 😐</string>
+    <string name="mozo_notify_to_do_promo_empty_action">Tạo khuyến mãi → </string>
+    <string name="mozo_notify_to_do_voucher_nearby">Khuyến mãi bạn đã mua ở gần đây 🤣</string>
+    <string name="mozo_notify_to_do_voucher_nearby_action">Sử dụng khuyến mãi đã mua → </string>
+    <string name="mozo_notify_to_do_voucher_expired">Khuyến mãi bạn đã mua sắp hết hạn 😣</string>
+    <string name="mozo_notify_to_do_voucher_expired_action">Sử dụng khuyến mãi đã mua → </string>
+    <string name="mozo_notify_to_do_low_mozo_shopper">Ví của bạn sắp hết MozoX 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_shopper_action">Xem những cửa hàng gần nhất để nhận MozoX → </string>
+    <string name="mozo_notify_to_do_low_mozo_retailer">Ví của bạn sắp hết MozoX 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_retailer_action">Mua thêm MozoX → </string>
+    <string name="mozo_notify_to_do_unsecured">Ví không an toàn 😱</string>
+    <string name="mozo_notify_to_do_unsecured_action">Thiết lập PIN của riêng bạn → </string>
+
     <string name="mozo_maintenance_title">Rất tiếc, hệ thống đang bảo trì. Chúng tôi sẽ sớm quay lại.</string>
     <string name="mozo_maintenance_tips_title">Bạn có biết?</string>
 
@@ -220,12 +252,17 @@
     <string name="mozo_transaction_history_empty">Lịch sử giao dịch trống hoặc mạng quá chậm</string>
     <string name="mozo_transaction_history_empty_msg">Chuyển MozoX cho bạn bè hoặc yêu cầu họ gửi MozoX cho bạn.</string>
 
+    <string name="mozo_todo_title">Những việc cần làm</string>
+    <string name="mozo_todo_unsolved">Chưa được xử lý %s</string>
+    <string name="mozo_todo_unsolved_explain">Xin vui lòng giải quyết những vấn đề sau để ứng dụng MozoX phục vụ bạn tốt hơn:</string>
+
     <string name="mozo_text_gender_none">Không</string>
     <string name="mozo_text_gender_male">Nam</string>
     <string name="mozo_text_gender_female">Nữ</string>
 
     <string name="mozo_view_balance_title">Tổng MozoX Offchain</string>
     <string name="mozo_view_address_title">Địa chỉ ví MozoX Offchain của bạn</string>
+    <string name="mozo_view_text_mozo_off_chain">MozoX</string>
     <string name="mozo_view_text_address">Địa chỉ:</string>
     <string name="mozo_view_text_hint">Đang tải…</string>
     <string name="mozo_view_text_to">Đến</string>
@@ -243,4 +280,5 @@
     <string name="mozo_view_text_view_all">Xem toàn bộ</string>
     <string name="mozo_view_text_just_now">Vừa xong</string>
     <string name="mozo_view_text_token_list">Danh sách Token:</string>
+    <string name="mozo_view_text_no_data">Không tìm thấy thông tin hoặc kết nối internet của bạn quá yếu.</string>
 </resources>

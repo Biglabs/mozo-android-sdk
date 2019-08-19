@@ -10,7 +10,6 @@
         android:id="@+id/item_todo_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
@@ -18,7 +17,10 @@
         android:paddingTop="7dp"
         android:paddingEnd="20dp"
         android:paddingBottom="12dp"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:todo_borderWidth="1dp"
+        app:todo_cornerRadius="@dimen/mozo_todo_item_radius"
+        app:todo_startEdgeWidth="4dp">
 
         <TextView
             android:id="@+id/item_todo_title"
@@ -39,4 +41,16 @@
             android:textSize="13sp"
             tools:text="Set up your own PIN → " />
     </io.mozocoin.sdk.ui.view.MozoTodoItemView>
+
+    <View
+        android:id="@+id/item_todo_container_mask"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/mozo_dr_todo_item_ripple"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@id/item_todo_container"
+        app:layout_constraintEnd_toEndOf="@id/item_todo_container"
+        app:layout_constraintStart_toStartOf="@id/item_todo_container"
+        app:layout_constraintTop_toTopOf="@id/item_todo_container" />
 </androidx.constraintlayout.widget.ConstraintLayout>

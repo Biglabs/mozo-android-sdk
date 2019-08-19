@@ -41,7 +41,7 @@ enum class TodoType(@StringRes val title: Int, @StringRes val action: Int) {
     PROMOTION_EXPIRED(R.string.mozo_notify_to_do_promo_expire, R.string.mozo_notify_to_do_promo_expire_action),
     PROMOTION_EMPTY(R.string.mozo_notify_to_do_promo_empty, R.string.mozo_notify_to_do_promo_empty_action),
     VOUCHER_NEARBY(R.string.mozo_notify_to_do_voucher_nearby, R.string.mozo_notify_to_do_voucher_nearby_action),
-    VOUCHER_EXPIRED(R.string.mozo_notify_to_do_voucher_nearby, R.string.mozo_notify_to_do_voucher_nearby_action),
+    VOUCHER_EXPIRED(R.string.mozo_notify_to_do_voucher_expired, R.string.mozo_notify_to_do_voucher_expired_action),
     LOW_MOZOX_RETAILER(R.string.mozo_notify_to_do_low_mozo_retailer, R.string.mozo_notify_to_do_low_mozo_retailer_action),
     LOW_MOZOX_SHOPPER(R.string.mozo_notify_to_do_low_mozo_shopper, R.string.mozo_notify_to_do_low_mozo_shopper_action),
     UNSECURE_WALLET(R.string.mozo_notify_to_do_unsecured, R.string.mozo_notify_to_do_unsecured_action);

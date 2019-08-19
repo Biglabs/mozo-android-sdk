@@ -176,7 +176,7 @@
     <string name="mozo_notify_content_received_group">Total: %s MozoX</string>
     <string name="mozo_notify_content_invited_group">Total Friends have joined: %d</string>
 
-    <string name="mozo_notify_warning_internet">You’re not connected to the internet 😔</string>
+    <string name="mozo_notify_warning_internet">Your internet connection has a problem 😔</string>
     <string name="mozo_notify_warning_action">Go to Settings →</string>
 
     <string name="mozo_notify_to_do_airdrop_nearby">Get MozoX from nearby airdrop events 🎁</string>
@@ -269,7 +269,7 @@
 
     <string name="mozo_view_balance_title">MozoX Offchain Balance</string>
     <string name="mozo_view_address_title">Your MozoX Offchain Wallet Address</string>
-    <string name="mozo_view_text_mozo_off_chain" translatable="false">MozoX Offchain</string>
+    <string name="mozo_view_text_mozo_off_chain">MozoX Offchain</string>
     <string name="mozo_view_text_address">Address:</string>
     <string name="mozo_view_text_hint">Loading…</string>
     <string name="mozo_view_text_to">To</string>
@@ -287,4 +287,5 @@
     <string name="mozo_view_text_view_all">View All</string>
     <string name="mozo_view_text_just_now">Just now</string>
     <string name="mozo_view_text_token_list">Token List:</string>
+    <string name="mozo_view_text_no_data">No data to display or your connection is too slow</string>
 </resources>

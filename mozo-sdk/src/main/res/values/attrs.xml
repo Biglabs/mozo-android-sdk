@@ -52,6 +52,12 @@
         <attr name="holder_secondButtonVisible" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="MozoTodoItemView">
+        <attr name="todo_borderWidth" format="dimension" />
+        <attr name="todo_cornerRadius" format="dimension" />
+        <attr name="todo_startEdgeWidth" format="dimension" />
+    </declare-styleable>
+
     <declare-styleable name="MozoWalletView">
         <attr name="viewMode" format="enum">
             <enum name="all" value="0" />

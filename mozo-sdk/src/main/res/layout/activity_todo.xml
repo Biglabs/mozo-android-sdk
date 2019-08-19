@@ -46,4 +46,22 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_todo" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <io.mozocoin.sdk.ui.view.MozoIconTextView
+        android:id="@+id/todo_recycler_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:drawableTop="@drawable/im_empty_todo"
+        android:drawablePadding="28dp"
+        android:gravity="center"
+        android:minHeight="340dp"
+        android:text="@string/mozo_view_text_no_data"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:drawableSize="265dp"
+        app:layout_anchor="@id/todo_recycler_refresh"
+        app:layout_anchorGravity="center" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

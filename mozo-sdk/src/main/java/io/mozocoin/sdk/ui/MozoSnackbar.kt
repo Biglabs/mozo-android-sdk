@@ -88,6 +88,18 @@ class MozoSnackbar(
                 }
             }
         }
+
+        view.findViewById<View>(R.id.snackbar_container)?.run {
+            if (TextUtils.isEmpty(text) || listener == null) {
+                setOnClickListener(null)
+            } else {
+                setOnClickListener { view ->
+                    listener.onClick(view)
+                    // Now dismiss the Snackbar
+                    // dispatchDismiss(BaseCallback.DISMISS_EVENT_ACTION)
+                }
+            }
+        }
         return this
     }
 

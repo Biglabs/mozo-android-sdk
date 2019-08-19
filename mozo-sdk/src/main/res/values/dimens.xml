@@ -24,5 +24,7 @@
 
     <dimen name="mozo_refresh_progress_offset">10dp</dimen>
 
+    <dimen name="mozo_todo_item_radius">8dp</dimen>
+
     <item name="mozo_background_dim_amount" format="float" type="dimen">0.4</item>
 </resources>

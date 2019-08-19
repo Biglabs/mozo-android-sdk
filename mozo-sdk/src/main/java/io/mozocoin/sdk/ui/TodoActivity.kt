@@ -1,17 +1,16 @@
 package io.mozocoin.sdk.ui
 
-import android.Manifest
 import android.bluetooth.BluetoothAdapter
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.IntentFilter
 import android.graphics.Color
-import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoTodoList
@@ -19,11 +18,11 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.TodoType
 import io.mozocoin.sdk.common.model.Todo
 import io.mozocoin.sdk.common.model.TodoSettings
-import io.mozocoin.sdk.common.service.LocationService
-import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
-import io.mozocoin.sdk.utils.isLocationPermissionGranted
 import io.mozocoin.sdk.utils.mozoSetup
+import io.mozocoin.sdk.utils.openTab
+import io.mozocoin.sdk.wallet.backup.BackupWalletActivity
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_todo.*
 import kotlinx.android.synthetic.main.item_todo.*
@@ -31,14 +30,8 @@ import kotlinx.android.synthetic.main.item_todo_header.*
 
 internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
-    private val bluetoothAdapter: BluetoothAdapter? by lazy { BluetoothAdapter.getDefaultAdapter() }
-    private val locationService: LocationService by lazy { LocationService.newInstance(this) }
-
-    private var todoSettings: TodoSettings? = null
     private val todoData = arrayListOf<Todo>()
-    private val todoAdapter = TodoAdapter(todoData)
-
-    private var currentLocation: Location? = null
+    private val todoAdapter = TodoAdapter(this, todoData)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,107 +51,49 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
             setHasFixedSize(true)
             adapter = todoAdapter
         }
-
-        locationService.setListener {
-            currentLocation = it
-            fetchData()
-
-            if (currentLocation != null) {
-                locationService.clearListener()
-            }
-        }
-
-        getLocationPermission()
     }
 
     override fun onResume() {
         super.onResume()
-        fetchData()
+        todo_recycler_refresh?.isRefreshing = true
+        MozoTodoList.getInstance().fetchData(this, todoDataCallback)
+        registerReceiver(onBluetoothStateChangedListener, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
+    }
+
+    override fun onPause() {
+        unregisterReceiver(onBluetoothStateChangedListener)
+        super.onPause()
     }
 
     override fun onRefresh() {
-        fetchData()
+        MozoTodoList.getInstance().fetchData(this, todoDataCallback)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            PERMISSIONS_REQUEST_LOCATION -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    locationService.fetchLocation()
+        MozoTodoList.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 
-                } else {
-                    getLocationPermission()
-                }
+    private val todoDataCallback: (TodoSettings, List<Todo>) -> Unit = { settings, data ->
+        todoAdapter.updateSettings(settings)
+        todoData.clear()
+        todoData.addAll(data)
+
+        todo_recycler?.adapter?.notifyDataSetChanged()
+        todo_recycler_refresh?.isRefreshing = false
+
+        todo_recycler_empty?.isVisible = todoData.isEmpty()
+    }
+
+    private val onBluetoothStateChangedListener = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent?.action, ignoreCase = true)) {
+                onRefresh()
             }
         }
     }
 
-    private fun getLocationPermission() {
-        if (!isLocationPermissionGranted()) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                            this,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    )
-            ) {
-                /*
-                AlertDialog.Builder(context ?: return)
-                    .setTitle(R.string.text_location_permission_title)
-                    .setMessage(R.string.text_location_permission_msg)
-                    .setNegativeButton(R.string.text_location_permission_not_now, null)
-                    .setPositiveButton(R.string.text_location_permission_settings) { _, _ ->
-                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = Uri.parse("package:${context!!.packageName}")
-                            startActivity(this)
-                        }
-                    }
-                    .show()
-                */
-            } else {
-                ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        PERMISSIONS_REQUEST_LOCATION
-                )
-            }
-        }
-    }
-
-    private fun fetchData() {
-        fun fetchSettings() {
-            MozoAPIsService.getInstance().getTodoSettings(
-                    this,
-                    { data, _ ->
-                        todoSettings = data
-                        todoAdapter.updateSettings(todoSettings)
-
-                    }, ::fetchSettings
-            )
-        }
-
-        fun fetchTodo() {
-            val isBluetoothOff = bluetoothAdapter?.state == BluetoothAdapter.STATE_OFF
-                    || bluetoothAdapter?.state == BluetoothAdapter.STATE_TURNING_OFF
-            MozoAPIsService.getInstance().getTodoList4Shopper(
-                    this,
-                    isBluetoothOff,
-                    currentLocation?.latitude ?: 0.0,
-                    currentLocation?.longitude ?: 0.0,
-                    { data, _ ->
-                        todoData.clear()
-                        todoData.addAll(data?.items ?: emptyList())
-
-                        todo_recycler?.adapter?.notifyDataSetChanged()
-                        todo_recycler_refresh?.isRefreshing = false
-
-                    }, ::fetchData)
-        }
-
-        if (todoSettings == null) fetchSettings()
-        fetchTodo()
-    }
-
-    class TodoAdapter(val data: List<Todo>) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
+    class TodoAdapter(val todoActivity: TodoActivity, val data: List<Todo>) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
         private var todoSettings: TodoSettings? = null
 
         fun updateSettings(settings: TodoSettings?) {
@@ -199,17 +134,40 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
 
                 val color = todoSettings?.colors?.get(d.severity ?: "") ?: "#969696"
                 item_todo_container?.setBorderColor(Color.parseColor(color))
-                item_todo_container?.click {
-                    MozoTodoList.getInstance().listeners.map { l ->
-                        l.onTodoItemClicked(d.id ?: return@map)
-                    }
+                item_todo_container_mask?.click {
+                    handleItemClick(d.id ?: return@click)
                 }
 
                 TodoType.find(d.id)?.let {
                     item_todo_title?.setText(it.title)
                     item_todo_action?.setText(it.action)
                 }
+            }
 
+            private fun handleItemClick(type: String) {
+                when (type) {
+                    TodoType.BLUETOOTH_OFF.name -> {
+                        BluetoothAdapter.getDefaultAdapter()?.run {
+                            if (!isEnabled) enable()
+                        }
+                    }
+                    TodoType.LOCATION_SERVICE_OFF.name -> {
+                        todoActivity.startActivity(
+                                Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS).apply {
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                        )
+                    }
+                    TodoType.LOW_MOZOX_RETAILER.name -> {
+                        todoActivity.openTab("${Support.homePage()}/retailer-portal/buy-mozo-by-crypto")
+                    }
+                    TodoType.UNSECURE_WALLET.name -> {
+                        todoActivity.startActivity(Intent(todoActivity, BackupWalletActivity::class.java))
+                    }
+                    else -> MozoTodoList.getInstance().listeners.map { l ->
+                        l.onTodoItemClicked(todoActivity, type)
+                    }
+                }
             }
         }
 
@@ -224,8 +182,6 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
     }
 
     companion object {
-        private const val PERMISSIONS_REQUEST_LOCATION = 999
-
         fun start(context: Context) {
             Intent(context, TodoActivity::class.java).apply {
                 context.startActivity(this)
