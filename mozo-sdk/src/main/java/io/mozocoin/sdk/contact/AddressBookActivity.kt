@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import androidx.recyclerview.widget.DefaultItemAnimator
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.mozocoin.sdk.MozoSDK
@@ -30,7 +30,10 @@ internal class AddressBookActivity : BaseActivity() {
             //TODO open details
         }
     }
-    private var mAdapter = ContactRecyclerAdapter(contacts, onItemClick)
+
+    private var mAdapter = ContactRecyclerAdapter(contacts, onItemClick, {
+        launchActivity<ImportContactsActivity> {}
+    })
 
     private var isStartForResult = false
     private var searchJob: Job? = null
@@ -44,6 +47,7 @@ internal class AddressBookActivity : BaseActivity() {
         input_search?.apply {
             onTextChanged {
                 button_clear.visibility = if (it?.length ?: 0 == 0) View.GONE else View.VISIBLE
+                mAdapter.isShowSyncContactsUI = (it?.length ?: 0) == 0
                 searchByName(it.toString())
             }
         }
@@ -162,6 +166,7 @@ internal class AddressBookActivity : BaseActivity() {
 
     companion object {
         private const val FLAG_START_FOR_RESULT = "FLAG_START_FOR_RESULT"
+
         const val KEY_SELECTED_ADDRESS = "KEY_SELECTED_ADDRESS"
 
         fun start(context: Context) {

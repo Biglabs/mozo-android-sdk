@@ -15,6 +15,10 @@
     <string name="mozo_address_add_input_name_hint">Enter Contact Name</string>
     <string name="mozo_address_add_msg_saved">Address Saved</string>
     <string name="mozo_address_add_msg_error">This address already exists in your Address Book</string>
+    <string name="mozo_address_update_msg">Quickly add friends to MozoX Address Book from the phone book</string>
+    <string name="mozo_address_import_title">Import Contacts</string>
+    <string name="mozo_address_import_msg">Friends in your contact list will automatically be added to MozoX address book.</string>
+    <string name="mozo_address_import_last_updated">Last updated:</string>
 
     <string name="mozo_dialog_qr_code">Your MozoX Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
@@ -72,6 +76,8 @@
     <string name="mozo_button_contact_zalo" translatable="false">Zalo</string>
 
     <string name="mozo_button_go_to_wallet">Go to Wallet</string>
+    <string name="mozo_button_update_contact">Update Contacts</string>
+    <string name="mozo_button_update">Update</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">This is your Recovery Phrase</string>
