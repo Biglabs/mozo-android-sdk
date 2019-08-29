@@ -1,6 +1,7 @@
 <resources>
     <string name="mozo_format_date">MMM d, yyyy</string>
     <string name="mozo_format_date_time">HH:mm MMM d, yyyy</string>
+    <string name="mozo_contact_format_date_time" translatable="false">MMM dd, yyyy - HH:mm</string>
 
     <string name="mozo_address_book_title">Address Book</string>
     <string name="mozo_address_book_pick_title">Select Address</string>
@@ -19,6 +20,10 @@
     <string name="mozo_address_import_title">Import Contacts</string>
     <string name="mozo_address_import_msg">Friends in your contact list will automatically be added to MozoX address book.</string>
     <string name="mozo_address_import_last_updated">Last updated:</string>
+    <string name="mozo_address_require_permission">To synchronize your address book with MozoX system. Any existing contact will be overwritten with your phone book information.</string>
+    <string name="mozo_address_require_permission_title">MozoX would like to access your contact book</string>
+    <string name="mozo_address_require_permission_force">You must give the app permission to access the contact first</string>
+    <string name="mozo_address_require_permission_force_title">Cannot access your contact book</string>
 
     <string name="mozo_dialog_qr_code">Your MozoX Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
@@ -78,6 +83,7 @@
     <string name="mozo_button_go_to_wallet">Go to Wallet</string>
     <string name="mozo_button_update_contact">Update Contacts</string>
     <string name="mozo_button_update">Update</string>
+    <string name="mozo_button_updating">Updating…</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">This is your Recovery Phrase</string>

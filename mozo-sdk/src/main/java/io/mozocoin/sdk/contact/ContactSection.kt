@@ -54,6 +54,7 @@ internal class ContactSection(
             item_physical_address.text = contact.physicalAddress
             item_physical_address.isVisible = contact.isStore
             item_content.text = contact.soloAddress
+            item_phone.text = contact.phoneNo
         }
     }
 }

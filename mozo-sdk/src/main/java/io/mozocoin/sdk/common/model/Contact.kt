@@ -10,11 +10,13 @@ data class Contact(
         @SerializedName(value = "name", alternate = ["storeName"]) val name: String?,
         @SerializedName("storePhysicalAddress") val physicalAddress: String?,
         @SerializedName(value = "soloAddress", alternate = ["storeOffchainAddress"]) val soloAddress: String?,
+        val phoneNo: String?,
         @Transient
         var isStore: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readLong(),
+            parcel.readString(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
@@ -25,6 +27,7 @@ data class Contact(
         parcel.writeString(name)
         parcel.writeString(physicalAddress)
         parcel.writeString(soloAddress)
+        parcel.writeString(phoneNo)
         parcel.writeByte(if (isStore) 1 else 0)
     }
 

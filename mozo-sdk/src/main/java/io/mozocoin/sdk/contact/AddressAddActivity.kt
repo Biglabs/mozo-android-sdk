@@ -41,7 +41,7 @@ internal class AddressAddActivity : BaseActivity() {
     private fun executeSaveContact() {
         showLoading()
 
-        val contact = Contact(0, input_contact_name.text.toString().trim(), null, text_contact_address.text.toString())
+        val contact = Contact(0, input_contact_name.text.toString().trim(), null, null, text_contact_address.text.toString())
         mozoService.saveContact(this, contact) { data, errorCode ->
             hideLoading()
 

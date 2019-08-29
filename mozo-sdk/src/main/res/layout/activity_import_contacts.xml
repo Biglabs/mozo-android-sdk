@@ -84,5 +84,34 @@
             android:layout_marginBottom="30dp"
             android:text="@string/mozo_button_update"
             app:layout_constraintTop_toBottomOf="@id/import_contacts_last_time" />
+
+        <LinearLayout
+            android:id="@+id/lo_updating"
+            android:background="@drawable/mozo_dr_btn"
+            android:orientation="horizontal"
+            android:elevation="3dp"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/button_update"
+            app:layout_constraintEnd_toEndOf="@+id/button_update"
+            app:layout_constraintBottom_toBottomOf="@id/button_update"
+            app:layout_constraintTop_toTopOf="@id/button_update"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ProgressBar
+                android:indeterminateDrawable="@drawable/dr_progress_bar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+            <TextView
+                android:text="@string/mozo_button_updating"
+                android:layout_marginStart="5dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
