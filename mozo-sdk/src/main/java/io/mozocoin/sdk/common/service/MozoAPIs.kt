@@ -11,11 +11,18 @@ internal interface MozoAPIs {
     @GET("system-status")
     fun checkSystemStatus(): Call<Base<Status>>
 
-    @GET("${MozoAPIsService.APIS_SOLOMON}/contacts/v2")
+    @GET("${MozoAPIsService.APIS_SOLOMON}/v2/contacts")
     fun getContacts(): Call<Base<BaseData<Contact>>>
 
     @POST("${MozoAPIsService.APIS_SOLOMON}/contacts")
     fun saveContact(@Body contact: Contact): Call<Base<Contact>>
+
+    @POST("${MozoAPIsService.APIS_SOLOMON}/v2/contacts/import-contact")
+    fun importContacts(@Body dto: ImportContactRequestDTO): Call<Base<ImportedContactDTO>>
+
+    //checking status of process import contact
+    @GET("${MozoAPIsService.APIS_SOLOMON}/v2/contacts/import-process-checking")
+    fun checkingProcess(): Call<Base<ImportContactStatus>>
 
     @GET("${MozoAPIsService.APIS_STORE}/store-books")
     fun getStoreBook(): Call<Base<BaseData<Contact>>>
@@ -108,10 +115,4 @@ internal interface MozoAPIs {
     @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting")
     fun getTodoSettings(): Call<Base<TodoSettings>>
 
-    @POST("${MozoAPIsService.APIS_SOLOMON}/contacts/import-contact")
-    fun importContacts(@Body dto: ImportContactRequestDTO): Call<Base<ImportedContactDTO>>
-
-    //checking status of process import contact
-    @GET("${MozoAPIsService.APIS_SOLOMON}/contacts/import-process-checking")
-    fun checkingProcess(): Call<Base<ImportContactStatus>>
 }

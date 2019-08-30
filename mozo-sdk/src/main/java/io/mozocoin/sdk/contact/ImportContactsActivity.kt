@@ -1,6 +1,7 @@
 package io.mozocoin.sdk.contact
 
 import android.Manifest.permission.READ_CONTACTS
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -12,6 +13,8 @@ import android.provider.ContactsContract.Data.CONTACT_ID
 import android.provider.ContactsContract.Data.DATA1
 import android.provider.Settings
 import android.util.Patterns
+import android.view.Gravity
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -25,8 +28,6 @@ import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import kotlinx.android.synthetic.main.activity_import_contacts.*
 import kotlinx.coroutines.*
-import kotlin.math.max
-import kotlin.math.min
 
 internal class ImportContactsActivity : BaseActivity() {
 
@@ -65,13 +66,23 @@ internal class ImportContactsActivity : BaseActivity() {
 
             val timeBeforeRequest = System.currentTimeMillis()
             apiService.importContacts(this, dto, ::fetchContacts) { _, _ ->
+                setResult(Activity.RESULT_OK)
                 //prevent response too fast
                 val waitingTime = System.currentTimeMillis() - timeBeforeRequest
 
                 GlobalScope.launch {
-                    delay(if(waitingTime < 2000L) 2000L else 0)
+                    delay(if (waitingTime < 2000) 2000 else 0)
                     withContext(Dispatchers.Main) {
                         updateUIState(System.currentTimeMillis() / 1000)
+
+                        Toast.makeText(
+                            this@ImportContactsActivity,
+                            "Import contact successful",
+                            Toast.LENGTH_SHORT
+                        ).apply {
+                            setGravity(Gravity.TOP, xOffset, yOffset)
+                            show()
+                        }
                     }
                 }
             }
