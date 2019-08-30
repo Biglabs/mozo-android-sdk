@@ -15,4 +15,7 @@
     <item
         android:id="@+id/action_todo"
         android:title="Todo List" />
+    <item
+        android:id="@+id/action_address_book"
+        android:title="Address Book" />
 </menu>
