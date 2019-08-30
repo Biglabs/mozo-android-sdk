@@ -26,6 +26,7 @@ import io.mozocoin.sdk.utils.click
 import kotlinx.android.synthetic.main.activity_import_contacts.*
 import kotlinx.coroutines.*
 import kotlin.math.max
+import kotlin.math.min
 
 internal class ImportContactsActivity : BaseActivity() {
 
@@ -68,7 +69,7 @@ internal class ImportContactsActivity : BaseActivity() {
                 val waitingTime = System.currentTimeMillis() - timeBeforeRequest
 
                 GlobalScope.launch {
-                    delay(max(waitingTime, 2000L))
+                    delay(if(waitingTime < 2000L) 2000L else 0)
                     withContext(Dispatchers.Main) {
                         updateUIState(System.currentTimeMillis() / 1000)
                     }
