@@ -1,7 +1,6 @@
 package io.mozocoin.sdk.contact
 
 import android.Manifest.permission.READ_CONTACTS
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -25,9 +24,8 @@ import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import kotlinx.android.synthetic.main.activity_import_contacts.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlin.math.max
 
 internal class ImportContactsActivity : BaseActivity() {
 
@@ -53,7 +51,8 @@ internal class ImportContactsActivity : BaseActivity() {
     }
 
     private fun fetchContacts() {
-        if (ContextCompat.checkSelfPermission(this, READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this,
+                READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             return requestReadContact()
         }
 
@@ -63,11 +62,16 @@ internal class ImportContactsActivity : BaseActivity() {
             val dto = ImportContactRequestDTO()
             dto.contactInfos = it
 
+            val timeBeforeRequest = System.currentTimeMillis()
             apiService.importContacts(this, dto, ::fetchContacts) { _, _ ->
-                setResult(Activity.RESULT_OK)
+                //prevent response too fast
+                val waitingTime = System.currentTimeMillis() - timeBeforeRequest
 
-                GlobalScope.launch(Dispatchers.Main) {
-                    updateUIState(System.currentTimeMillis() / 1000)
+                GlobalScope.launch {
+                    delay(max(waitingTime, 2000L))
+                    withContext(Dispatchers.Main) {
+                        updateUIState(System.currentTimeMillis() / 1000)
+                    }
                 }
             }
         }
