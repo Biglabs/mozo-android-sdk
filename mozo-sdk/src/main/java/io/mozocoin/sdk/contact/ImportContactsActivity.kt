@@ -1,13 +1,18 @@
 package io.mozocoin.sdk.contact
 
-import android.Manifest
+import android.Manifest.permission.READ_CONTACTS
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.ContactsContract.Contacts.DISPLAY_NAME
+import android.provider.ContactsContract.Contacts._ID
+import android.provider.ContactsContract.Data.CONTACT_ID
+import android.provider.ContactsContract.Data.DATA1
 import android.provider.Settings
+import android.util.Patterns
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -20,7 +25,9 @@ import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import kotlinx.android.synthetic.main.activity_import_contacts.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 internal class ImportContactsActivity : BaseActivity() {
 
@@ -46,26 +53,21 @@ internal class ImportContactsActivity : BaseActivity() {
     }
 
     private fun fetchContacts() {
-        if (!permissionGranted()) {
-            return
+        if (ContextCompat.checkSelfPermission(this, READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            return requestReadContact()
         }
 
         updateUIState(status = "PROCESSING")
 
-        val dto = ImportContactRequestDTO()
-        dto.contactInfos = getPhones()
+        getPhones {
+            val dto = ImportContactRequestDTO()
+            dto.contactInfos = it
 
-        val timeBeforeRequest = System.currentTimeMillis()
-        apiService.importContacts(this, dto, ::fetchContacts) { _, _ ->
-            setResult(Activity.RESULT_OK)
-            //prevent response too fast
-            val waitingTime =
-                if (System.currentTimeMillis() - timeBeforeRequest < 3000) 3000L else 0L
+            apiService.importContacts(this, dto, ::fetchContacts) { _, _ ->
+                setResult(Activity.RESULT_OK)
 
-            GlobalScope.launch {
-                delay(waitingTime)
-                withContext(Dispatchers.Main) {
-                    updateUIState(System.currentTimeMillis()/1000)
+                GlobalScope.launch(Dispatchers.Main) {
+                    updateUIState(System.currentTimeMillis() / 1000)
                 }
             }
         }
@@ -77,7 +79,7 @@ internal class ImportContactsActivity : BaseActivity() {
 
         if (!isProcessing) {
             import_contacts_last_time?.text = if (time == null)
-                "not yet imported"
+                "Not yet imported" //TODO change copyright
             else Support.getDisplayDate(
                 this,
                 time * 1000,
@@ -86,13 +88,10 @@ internal class ImportContactsActivity : BaseActivity() {
         }
     }
 
-    private fun getPhones(): MutableList<ContactInfoDTO>? {
+    private fun getPhones(completion: (MutableList<ContactInfoDTO>) -> Unit) = GlobalScope.launch {
         val phonesCursor = contentResolver.query(
-            ContactsContract.Data.CONTENT_URI,
-            arrayOf(
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.NUMBER
-            ),
+            ContactsContract.Contacts.CONTENT_URI,
+            arrayOf(_ID, DISPLAY_NAME),
             null,
             null,
             null
@@ -100,31 +99,45 @@ internal class ImportContactsActivity : BaseActivity() {
 
         val lstContacts = mutableListOf<ContactInfoDTO>()
         while (phonesCursor?.moveToNext() == true) {
-            val contactName = phonesCursor.getString(0)
-            val phone = phonesCursor.getString(1)
+            val contactID = phonesCursor.getString(0)
 
-            lstContacts.add(ContactInfoDTO().apply {
-                name = contactName
-                phoneNums = listOf(phone)
-            })
+            val pCursor = contentResolver.query(
+                ContactsContract.Data.CONTENT_URI,
+                arrayOf(DATA1),
+                "$CONTACT_ID = ?",
+                arrayOf(contactID),
+                null
+            )
+
+            val lstPhones = mutableListOf<String>()
+            while (pCursor?.moveToNext() == true) {
+                pCursor.getString(0)?.let {
+                    if (Patterns.PHONE.matcher(it).matches())
+                        lstPhones.add(it)
+                }
+            }
+
+            if (lstPhones.isNotEmpty()) {
+                val contactName = phonesCursor.getString(1)
+                lstContacts.add(ContactInfoDTO().apply {
+                    name = contactName
+                    phoneNums = lstPhones
+                })
+            }
+
+            pCursor?.close()
         }
 
         phonesCursor?.close()
-        return lstContacts
+        completion.invoke(lstContacts)
     }
 
-    private fun permissionGranted(): Boolean {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true
-        }
-
+    private fun requestReadContact() {
         ActivityCompat.requestPermissions(
             this,
-            arrayOf(Manifest.permission.READ_CONTACTS),
+            arrayOf(READ_CONTACTS),
             FLAG_PERMISSIONS_REQUEST_READ_CONTACTS
         )
-        return false
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -139,8 +152,7 @@ internal class ImportContactsActivity : BaseActivity() {
     }
 
     private fun requirePermissionAgain() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.READ_CONTACTS))
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_CONTACTS))
             showRequestPermissionRationale()
         else showAppPermissionSettings()
     }
@@ -151,11 +163,7 @@ internal class ImportContactsActivity : BaseActivity() {
             .setMessage(R.string.mozo_address_require_permission)
             .setNegativeButton(R.string.mozo_button_cancel, null)
             .setPositiveButton(R.string.mozo_button_ok) { _, _ ->
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.READ_CONTACTS),
-                    FLAG_PERMISSIONS_REQUEST_READ_CONTACTS
-                )
+                requestReadContact()
             }
             .show()
     }
