@@ -30,10 +30,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     override fun onMessage(s: String?) {
         "message $s".logAsInfo(TAG)
-        if (instance == null) {
-            "Received a message while instance NULL".logAsInfo(TAG)
-            return
-        }
+
+
         s?.run {
             if (equals("1|X", ignoreCase = true)) {
                 sendPing()
@@ -80,6 +78,15 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         }
                     }
                 }
+            }
+        }
+
+        if (instance == null) {
+            try {
+                closeBlocking()
+                closeConnection(-1, "proactive disconnect")
+            } finally {
+                doRetryConnect()
             }
         }
     }
