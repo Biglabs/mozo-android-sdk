@@ -17,11 +17,11 @@ internal interface MozoAPIs {
     @POST("${MozoAPIsService.APIS_SOLOMON}/contacts")
     fun saveContact(@Body contact: Contact): Call<Base<Contact>>
 
-    @POST("${MozoAPIsService.APIS_SOLOMON}/v2/contacts/import-contact")
+    @POST("${MozoAPIsService.APIS_SOLOMON}/contacts/import-contact")
     fun importContacts(@Body dto: ImportContactRequestDTO): Call<Base<ImportedContactDTO>>
 
     //checking status of process import contact
-    @GET("${MozoAPIsService.APIS_SOLOMON}/v2/contacts/import-process-checking")
+    @GET("${MozoAPIsService.APIS_SOLOMON}/contacts/import-process-checking")
     fun checkingProcess(): Call<Base<ImportContactStatus>>
 
     @GET("${MozoAPIsService.APIS_STORE}/store-books")

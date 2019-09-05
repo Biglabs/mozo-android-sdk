@@ -7,6 +7,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -108,6 +109,18 @@ internal class AddressBookActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this, Observer {
+            loadData()
+        })
+    }
+
+    override fun onPause() {
+        MozoSDK.getInstance().contactViewModel.usersLiveData.removeObservers(this)
+        super.onPause()
+    }
+
     private fun refresh() {
         if (input_search.length() == 0) {
             when (address_book_tabs?.checkedRadioButtonId ?: R.id.address_book_tab_user) {
@@ -169,7 +182,7 @@ internal class AddressBookActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode != Activity.RESULT_OK)
+        if (resultCode != Activity.RESULT_OK)
             return
 
         if (requestCode == KEY_REQUEST_IMPORT_CONTACT) {

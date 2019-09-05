@@ -18,6 +18,7 @@ class Constant {
         const val NOTIFY_EVENT_AIRDROP_TOP_RETAILER = "airdrop_top_retailer"
         const val NOTIFY_EVENT_BALANCE_CHANGED = "balance_changed"
         const val NOTIFY_EVENT_CUSTOMER_CAME = "customer_came"
+        const val NOTIFY_EVENT_ADDRESS_BOOK_CHANGED = "address_book_changed"
         const val NOTIFY_EVENT_STORE_BOOK_ADDED = "store_book_added"
         const val NOTIFY_EVENT_CONVERT = "convert_onchain_to_offchain"
         const val NOTIFY_EVENT_PROFILE_CHANGED = "profile_changed"

@@ -52,11 +52,14 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         /* Save notification to local storage */
                         // MozoNotification.save(broadcast)
 
-                        when (broadcast.event.toLowerCase()) {
+                        when (broadcast.event.toLowerCase(Locale.getDefault())) {
                             /* Reload balance */
                             Constant.NOTIFY_EVENT_AIRDROP_INVITE,
                             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+                            }
+                            Constant.NOTIFY_EVENT_ADDRESS_BOOK_CHANGED -> {
+                                MozoSDK.getInstance().contactViewModel.fetchUser(MozoSDK.getInstance().context)
                             }
                             Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
                                 MozoSDK.getInstance().contactViewModel.fetchStore(MozoSDK.getInstance().context)
