@@ -24,6 +24,9 @@
     <string name="mozo_address_require_permission_title">MozoX would like to access your contact book</string>
     <string name="mozo_address_require_permission_force">You must give the app permission to access the contact first</string>
     <string name="mozo_address_require_permission_force_title">Cannot access your contact book</string>
+    <string name="mozo_address_msg_not_import">Not yet imported</string>
+    <string name="mozo_address_msg_import_success">Import contact successful</string>
+    <string name="mozo_address_msg_no_contact">Your contact book is empty, please try again later.</string>
 
     <string name="mozo_dialog_qr_code">Your MozoX Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>

@@ -13,7 +13,6 @@ import android.provider.ContactsContract.Data.CONTACT_ID
 import android.provider.ContactsContract.Data.DATA1
 import android.provider.Settings
 import android.util.Patterns
-import android.view.Gravity
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,8 +23,10 @@ import io.mozocoin.sdk.common.model.ContactInfoDTO
 import io.mozocoin.sdk.common.model.ImportContactRequestDTO
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.ui.BaseActivity
+import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
+import io.mozocoin.sdk.utils.gone
 import kotlinx.android.synthetic.main.activity_import_contacts.*
 import kotlinx.coroutines.*
 
@@ -54,13 +55,19 @@ internal class ImportContactsActivity : BaseActivity() {
 
     private fun fetchContacts() {
         if (ContextCompat.checkSelfPermission(this,
-                READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                        READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             return requestReadContact()
         }
 
-        updateUIState(status = "PROCESSING")
+        updateUIState(status = KEY_IMPORT_PROCESSING)
 
         getPhones {
+            if (it.isNullOrEmpty()) {
+                lo_updating?.gone()
+                MessageDialog.show(this, R.string.mozo_address_msg_no_contact)
+                return@getPhones
+            }
+
             val dto = ImportContactRequestDTO()
             dto.contactInfos = it
 
@@ -72,17 +79,15 @@ internal class ImportContactsActivity : BaseActivity() {
 
                 GlobalScope.launch {
                     delay(if (waitingTime < 2000) 2000 else 0)
-                    withContext(Dispatchers.Main) {
-                        updateUIState(System.currentTimeMillis() / 1000)
 
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(
-                            this@ImportContactsActivity,
-                            "Import contact successful",
-                            Toast.LENGTH_SHORT
-                        ).apply {
-                            setGravity(Gravity.TOP, xOffset, yOffset)
-                            show()
-                        }
+                                this@ImportContactsActivity,
+                                R.string.mozo_address_msg_import_success,
+                                Toast.LENGTH_SHORT
+                        ).show()
+
+                        checkingProcess()
                     }
                 }
             }
@@ -90,27 +95,27 @@ internal class ImportContactsActivity : BaseActivity() {
     }
 
     private fun updateUIState(time: Long? = 0L, status: String? = null) {
-        val isProcessing = status == "PROCESSING"
+        val isProcessing = status == KEY_IMPORT_PROCESSING
         lo_updating?.isVisible = isProcessing
 
         if (!isProcessing) {
             import_contacts_last_time?.text = if (time == null)
-                "Not yet imported" //TODO change copyright
+                getString(R.string.mozo_address_msg_not_import)
             else Support.getDisplayDate(
-                this,
-                time * 1000,
-                getString(R.string.mozo_contact_format_date_time)
+                    this,
+                    time * 1000,
+                    getString(R.string.mozo_contact_format_date_time)
             )
         }
     }
 
     private fun getPhones(completion: (MutableList<ContactInfoDTO>) -> Unit) = GlobalScope.launch {
         val phonesCursor = contentResolver.query(
-            ContactsContract.Contacts.CONTENT_URI,
-            arrayOf(_ID, DISPLAY_NAME),
-            null,
-            null,
-            null
+                ContactsContract.Contacts.CONTENT_URI,
+                arrayOf(_ID, DISPLAY_NAME),
+                null,
+                null,
+                null
         )
 
         val lstContacts = mutableListOf<ContactInfoDTO>()
@@ -118,11 +123,11 @@ internal class ImportContactsActivity : BaseActivity() {
             val contactID = phonesCursor.getString(0)
 
             val pCursor = contentResolver.query(
-                ContactsContract.Data.CONTENT_URI,
-                arrayOf(DATA1),
-                "$CONTACT_ID = ?",
-                arrayOf(contactID),
-                null
+                    ContactsContract.Data.CONTENT_URI,
+                    arrayOf(DATA1),
+                    "$CONTACT_ID = ?",
+                    arrayOf(contactID),
+                    null
             )
 
             val lstPhones = mutableListOf<String>()
@@ -145,14 +150,17 @@ internal class ImportContactsActivity : BaseActivity() {
         }
 
         phonesCursor?.close()
-        completion.invoke(lstContacts)
+
+        withContext(Dispatchers.Main) {
+            completion.invoke(lstContacts)
+        }
     }
 
     private fun requestReadContact() {
         ActivityCompat.requestPermissions(
-            this,
-            arrayOf(READ_CONTACTS),
-            FLAG_PERMISSIONS_REQUEST_READ_CONTACTS
+                this,
+                arrayOf(READ_CONTACTS),
+                FLAG_PERMISSIONS_REQUEST_READ_CONTACTS
         )
     }
 
@@ -160,8 +168,8 @@ internal class ImportContactsActivity : BaseActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if ((requestCode == FLAG_PERMISSIONS_REQUEST_READ_CONTACTS
-                    && grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                        && grantResults.isNotEmpty()
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
             fetchContacts()
         } else
             requirePermissionAgain()
@@ -175,33 +183,33 @@ internal class ImportContactsActivity : BaseActivity() {
 
     private fun showRequestPermissionRationale() {
         MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.mozo_address_require_permission_title)
-            .setMessage(R.string.mozo_address_require_permission)
-            .setNegativeButton(R.string.mozo_button_cancel, null)
-            .setPositiveButton(R.string.mozo_button_ok) { _, _ ->
-                requestReadContact()
-            }
-            .show()
+                .setTitle(R.string.mozo_address_require_permission_title)
+                .setMessage(R.string.mozo_address_require_permission)
+                .setNegativeButton(R.string.mozo_button_cancel, null)
+                .setPositiveButton(R.string.mozo_button_ok) { _, _ ->
+                    requestReadContact()
+                }
+                .show()
     }
 
     private fun showAppPermissionSettings() {
         MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.mozo_address_require_permission_force_title)
-            .setMessage(R.string.mozo_address_require_permission_force)
-            .setNegativeButton(R.string.mozo_button_ok, null)
-            .setPositiveButton(R.string.mozo_settings_title) { _, _ ->
-                Intent().run {
-                    action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                    addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                    data = Uri.parse("package:$packageName")
-                    startActivityForResult(this, FLAG_PERMISSIONS_REQUEST_READ_CONTACTS)
+                .setTitle(R.string.mozo_address_require_permission_force_title)
+                .setMessage(R.string.mozo_address_require_permission_force)
+                .setNegativeButton(R.string.mozo_button_ok, null)
+                .setPositiveButton(R.string.mozo_settings_title) { _, _ ->
+                    Intent().run {
+                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                        addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                        data = Uri.parse("package:$packageName")
+                        startActivityForResult(this, FLAG_PERMISSIONS_REQUEST_READ_CONTACTS)
+                    }
                 }
-            }
-            .show()
+                .show()
     }
 
     companion object {
         private const val FLAG_PERMISSIONS_REQUEST_READ_CONTACTS = 1901
-
+        private const val KEY_IMPORT_PROCESSING = "PROCESSING"
     }
 }
