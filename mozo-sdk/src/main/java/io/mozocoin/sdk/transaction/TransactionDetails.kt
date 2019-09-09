@@ -117,7 +117,7 @@ internal class TransactionDetails : BaseActivity() {
             }
         }
         if (sendType) {
-            text_detail_receiver?.setText(R.string.mozo_view_text_receiver)
+            text_detail_receiver?.setText(R.string.mozo_transfer_receiver_address)
             image_tx_type?.setBackgroundResource(R.drawable.mozo_bg_icon_send)
 
         } else {
@@ -155,14 +155,10 @@ internal class TransactionDetails : BaseActivity() {
                 text_detail_receiver_phone?.isVisible =
                     isContact && !isStore && !contact?.phoneNo.isNullOrEmpty()
                 text_detail_store_address?.isVisible = isContact && isStore
-                text_detail_receiver?.setText(
-                    if (isContact) R.string.mozo_view_text_receiver
-                    else R.string.mozo_transfer_receiver_address
-                )
 
                 if (contact != null) {
                     image_detail_receiver?.setImageResource(
-                        if (isStore) R.drawable.ic_content_store/*TODO update icon for store*/
+                        if (isStore) R.drawable.ic_store
                         else R.drawable.ic_receiver
                     )
                     text_detail_receiver_name?.text = contact.name
