@@ -59,7 +59,7 @@ class NetworkSchedulerService : JobService() {
                 if (isConnected) {
                     MozoSnackbar.dismiss()
 
-                } else {
+                } else if (ErrorDialog.isShowingForNetwork()) {
                     MozoSnackbar.make(
                             MozoSDK.getInstance().remindAnchorView!!,
                             R.string.mozo_notify_warning_internet,
