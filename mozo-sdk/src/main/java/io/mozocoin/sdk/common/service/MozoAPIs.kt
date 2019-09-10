@@ -11,6 +11,9 @@ internal interface MozoAPIs {
     @GET("system-status")
     fun checkSystemStatus(): Call<Base<Status>>
 
+    /**
+     * Contact APIs
+     */
     @GET("${MozoAPIsService.APIS_SOLOMON}/v2/contacts")
     fun getContacts(): Call<Base<BaseData<Contact>>>
 
@@ -27,6 +30,12 @@ internal interface MozoAPIs {
     @GET("${MozoAPIsService.APIS_STORE}/store-books")
     fun getStoreBook(): Call<Base<BaseData<Contact>>>
 
+    @GET("${MozoAPIsService.APIS_SOLOMON}/contacts/findContact/{phone}")
+    fun findContact(@Path("phone") phone: String): Call<Base<Contact>>
+
+    /**
+     * Profile APIs
+     */
     @GET("${MozoAPIsService.APIS_SOLOMON}/user-profile")
     fun getProfile(): Call<Base<Profile>>
 

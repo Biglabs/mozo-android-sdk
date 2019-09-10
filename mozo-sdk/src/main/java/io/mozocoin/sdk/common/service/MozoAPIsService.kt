@@ -32,8 +32,8 @@ internal class MozoAPIsService private constructor() {
     private val mozoAPIs: MozoAPIs by lazy { createService() }
 
     fun checkSystemStatus(
-        context: Context,
-        callback: ((data: Status?, errorCode: String?) -> Unit)?
+            context: Context,
+            callback: ((data: Status?, errorCode: String?) -> Unit)?
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.checkSystemStatus(), callback, null, false)
@@ -41,9 +41,9 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun checkNetworkStatus(
-        context: Context,
-        callback: ((data: Status?, errorCode: String?) -> Unit)?,
-        retry: (() -> Unit)? = null
+            context: Context,
+            callback: ((data: Status?, errorCode: String?) -> Unit)?,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.checkSystemStatus(), callback, retry)
@@ -51,9 +51,9 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getProfile(
-        context: Context,
-        callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getProfile(), callback, retry)
@@ -61,10 +61,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun updateProfile(
-        context: Context,
-        profile: Profile,
-        callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            profile: Profile,
+            callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.updateProfile(profile), callback, retry)
@@ -75,10 +75,10 @@ internal class MozoAPIsService private constructor() {
      * Off-Chain Wallet Information APIs
      */
     fun saveWallet(
-        context: Context,
-        walletInfo: WalletInfo,
-        callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            walletInfo: WalletInfo,
+            callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.saveWallet(walletInfo), callback, retry)
@@ -86,9 +86,9 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun resetWallet(
-        context: Context,
-        walletInfo: WalletInfo,
-        callback: ((data: Profile?, errorCode: String?) -> Unit)? = null
+            context: Context,
+            walletInfo: WalletInfo,
+            callback: ((data: Profile?, errorCode: String?) -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.resetWallet(walletInfo), callback, null, false)
@@ -96,10 +96,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getBalance(
-        context: Context,
-        address: String,
-        callback: ((data: BalanceInfo?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            address: String,
+            callback: ((data: BalanceInfo?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getBalance(address), callback, retry)
@@ -107,10 +107,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getExchangeRate(
-        context: Context,
-        locale: String,
-        callback: ((data: ExchangeRateData?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            locale: String,
+            callback: ((data: ExchangeRateData?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getExchangeRate(locale), callback, retry)
@@ -121,10 +121,10 @@ internal class MozoAPIsService private constructor() {
      * Off-Chain Wallet with On-Chain inside Information APIs
      */
     fun getOnChainBalanceInOffChain(
-        context: Context,
-        address: String,
-        callback: ((data: BalanceTokensData?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            address: String,
+            callback: ((data: BalanceTokensData?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getOnChainBalanceInOffChain(address), callback, retry)
@@ -132,10 +132,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getEthBalanceInOffChain(
-        context: Context,
-        address: String,
-        callback: ((data: BalanceEthData?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            address: String,
+            callback: ((data: BalanceEthData?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getEthBalanceInOffChain(address), callback, retry)
@@ -146,10 +146,10 @@ internal class MozoAPIsService private constructor() {
      * On-Chain Wallet Information APIs
      */
     fun saveOnChainWallet(
-        context: Context,
-        walletInfo: WalletInfo,
-        callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            walletInfo: WalletInfo,
+            callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.saveOnChainWallet(walletInfo), callback, retry)
@@ -157,10 +157,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getOnChainBalance(
-        context: Context,
-        address: String,
-        callback: ((data: BalanceData?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            address: String,
+            callback: ((data: BalanceData?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getOnChainBalance(address), callback, retry)
@@ -168,9 +168,9 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getGasInfo(
-        context: Context,
-        callback: ((data: GasInfo?, errorCode: String?) -> Unit)?,
-        retry: (() -> Unit)? = null
+            context: Context,
+            callback: ((data: GasInfo?, errorCode: String?) -> Unit)?,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getGasInfo(), callback, retry)
@@ -178,10 +178,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun prepareConvertRequest(
-        context: Context,
-        request: ConvertRequest,
-        callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?,
-        retry: (() -> Unit)? = null
+            context: Context,
+            request: ConvertRequest,
+            callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.prepareConvertRequest(request), callback, retry)
@@ -189,10 +189,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun signConvertRequest(
-        context: Context,
-        data: TransactionResponse,
-        callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?,
-        retry: (() -> Unit)? = null
+            context: Context,
+            data: TransactionResponse,
+            callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.signConvertRequest(data), callback, retry)
@@ -200,10 +200,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getConvertStatus(
-        context: Context,
-        txHash: String,
-        callback: ((data: TransactionStatus?, errorCode: String?) -> Unit)?,
-        retry: (() -> Unit)? = null
+            context: Context,
+            txHash: String,
+            callback: ((data: TransactionStatus?, errorCode: String?) -> Unit)?,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getConvertStatus(txHash), callback, retry)
@@ -214,10 +214,10 @@ internal class MozoAPIsService private constructor() {
      * Transaction APIs
      */
     fun createTx(
-        context: Context,
-        request: TransactionRequest,
-        callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            request: TransactionRequest,
+            callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.createTx(request), callback, retry)
@@ -225,10 +225,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun sendTransaction(
-        context: Context,
-        request: TransactionResponse,
-        callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            request: TransactionResponse,
+            callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.sendTx(request), callback, retry)
@@ -236,12 +236,12 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getTransactionHistory(
-        context: Context,
-        address: String,
-        page: Int = Constant.PAGING_START_INDEX,
-        size: Int = Constant.PAGING_SIZE,
-        callback: ((data: BaseData<TransactionHistory>?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            address: String,
+            page: Int = Constant.PAGING_START_INDEX,
+            size: Int = Constant.PAGING_SIZE,
+            callback: ((data: BaseData<TransactionHistory>?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getTransactionHistory(address, page, size), callback, retry)
@@ -249,9 +249,9 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getTxStatus(
-        context: Context,
-        txHash: String,
-        callback: ((data: TransactionStatus?, errorCode: String?) -> Unit)? = null
+            context: Context,
+            txHash: String,
+            callback: ((data: TransactionStatus?, errorCode: String?) -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getTxStatus(txHash), callback)
@@ -262,9 +262,9 @@ internal class MozoAPIsService private constructor() {
      * Address Book APIs
      */
     fun getContactUsers(
-        context: Context,
-        callback: ((data: BaseData<Contact>?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            callback: ((data: BaseData<Contact>?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getContacts(), callback, retry)
@@ -272,8 +272,8 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun saveContact(
-        context: Context, contact:
-        Contact, callback: ((data: Contact?, errorCode: String?) -> Unit)? = null
+            context: Context, contact:
+            Contact, callback: ((data: Contact?, errorCode: String?) -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.saveContact(contact), callback, handleError = false)
@@ -281,12 +281,23 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun getContactStores(
-        context: Context,
-        callback: ((data: BaseData<Contact>?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            callback: ((data: BaseData<Contact>?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getStoreBook(), callback, retry)
+        }
+    }
+
+    fun findContact(
+            context: Context,
+            phone: String,
+            callback: ((data: Contact?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.findContact(phone), callback, retry)
         }
     }
 
@@ -294,11 +305,11 @@ internal class MozoAPIsService private constructor() {
      * Payment Request APIs
      */
     fun getPaymentRequests(
-        context: Context,
-        page: Int = Constant.PAGING_START_INDEX,
-        size: Int = Constant.PAGING_SIZE,
-        callback: ((data: BaseData<PaymentRequest>?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            page: Int = Constant.PAGING_START_INDEX,
+            size: Int = Constant.PAGING_SIZE,
+            callback: ((data: BaseData<PaymentRequest>?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getPaymentRequests(page, size), callback, retry)
@@ -306,25 +317,25 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun sendPaymentRequest(
-        context: Context,
-        toAddress: String,
-        request: PaymentRequest,
-        callback: ((data: PaymentRequest?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            toAddress: String,
+            request: PaymentRequest,
+            callback: ((data: PaymentRequest?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context,
-                mozoAPIs.sendPaymentRequest(toAddress, request),
-                callback,
-                retry,
-                handleError = false)
+                    mozoAPIs.sendPaymentRequest(toAddress, request),
+                    callback,
+                    retry,
+                    handleError = false)
         }
     }
 
     fun deletePaymentRequest(
-        context: Context,
-        id: Long,
-        callback: ((data: Any?, errorCode: String?) -> Unit)? = null
+            context: Context,
+            id: Long,
+            callback: ((data: Any?, errorCode: String?) -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.deletePaymentRequest(id), callback)
@@ -335,25 +346,25 @@ internal class MozoAPIsService private constructor() {
      * To-do list APIs
      */
     fun getTodoList4Shopper(
-        context: Context,
-        isBluetoothOff: Boolean,
-        lat: Double,
-        lng: Double,
-        callback: ((data: BaseData<Todo>?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            isBluetoothOff: Boolean,
+            lat: Double,
+            lng: Double,
+            callback: ((data: BaseData<Todo>?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context,
-                mozoAPIs.getTodoList4Shopper(isBluetoothOff, lat, lng),
-                callback,
-                retry)
+                    mozoAPIs.getTodoList4Shopper(isBluetoothOff, lat, lng),
+                    callback,
+                    retry)
         }
     }
 
     fun getTodoSettings(
-        context: Context,
-        callback: ((data: TodoSettings?, errorCode: String?) -> Unit)? = null,
-        retry: (() -> Unit)? = null
+            context: Context,
+            callback: ((data: TodoSettings?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.getTodoSettings(), callback, retry)
@@ -361,10 +372,10 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun importContacts(
-        context: Context,
-        dto: ImportContactRequestDTO,
-        retry: (() -> Unit)? = null,
-        callback: ((data: ImportedContactDTO?, errorCode: String?) -> Unit)? = null
+            context: Context,
+            dto: ImportContactRequestDTO,
+            retry: (() -> Unit)? = null,
+            callback: ((data: ImportedContactDTO?, errorCode: String?) -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.importContacts(dto), callback, retry)
@@ -372,9 +383,9 @@ internal class MozoAPIsService private constructor() {
     }
 
     fun checkingProcess(
-        context: Context,
-        retry: (() -> Unit)? = null,
-        callback: ((data: ImportContactStatus?, errorCode: String?) -> Unit)? = null
+            context: Context,
+            retry: (() -> Unit)? = null,
+            callback: ((data: ImportContactStatus?, errorCode: String?) -> Unit)? = null
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             execute(context, mozoAPIs.checkingProcess(), callback, retry)
@@ -382,11 +393,11 @@ internal class MozoAPIsService private constructor() {
     }
 
     private fun <V, T : Base<V>> execute(
-        context: Context,
-        call: Call<T>,
-        callback: ((data: V?, errorCode: String?) -> Unit)?,
-        retry: (() -> Unit)? = null,
-        handleError: Boolean = true
+            context: Context,
+            call: Call<T>,
+            callback: ((data: V?, errorCode: String?) -> Unit)?,
+            retry: (() -> Unit)? = null,
+            handleError: Boolean = true
     ) {
         call.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
@@ -396,9 +407,9 @@ internal class MozoAPIsService private constructor() {
 
                         if (context is Activity && !context.isFinishing && !context.isDestroyed) {
                             if (ErrorCode.ERROR_MAINTAINING.key.equals(body.errorCode,
-                                    ignoreCase = true)) {
+                                            ignoreCase = true)) {
                                 if (shouldHandleMaintenance(call)) MozoSDK.startMaintenanceMode(
-                                    context)
+                                        context)
 
                             } else ErrorCode.findByKey(body.errorCode)?.let {
                                 if (it.shouldShowContactMessage()) {
@@ -406,8 +417,8 @@ internal class MozoAPIsService private constructor() {
 
                                 } else
                                     MessageDialog(context, context.getString(it.message))
-                                        .setAction(R.string.mozo_button_retry, retry)
-                                        .show()
+                                            .setAction(R.string.mozo_button_retry, retry)
+                                            .show()
                             }
                         }
 
@@ -433,7 +444,7 @@ internal class MozoAPIsService private constructor() {
 
                 if (!handleError) return
                 if (context is BaseActivity || context is MozoAuthActivity || shouldHandleException(
-                        call)) {
+                                call)) {
                     if (context is Activity && (context.isFinishing || context.isDestroyed)) {
                         return
                     }
@@ -456,36 +467,36 @@ internal class MozoAPIsService private constructor() {
         val path = call.request().url().encodedPath()
         return when {
             path.endsWith("system-status", true) -> false
-            else                                 -> true
+            else -> true
         }
     }
 
     private fun createService(): MozoAPIs {
         val client = OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .addInterceptor {
-                val accessToken = MozoAuth.getInstance().getAccessToken()
-                val original = it.request()
-                val request = original.newBuilder()
-                    .header("Authorization", "Bearer $accessToken")
-                    .header("Content-Type", "application/json")
-                    .method(original.method(), original.body())
-                    .build()
-                it.proceed(request)
-            }
-            .addInterceptor(HttpLoggingInterceptor().setLevel(
-                if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-                else HttpLoggingInterceptor.Level.NONE
-            ))
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor {
+                    val accessToken = MozoAuth.getInstance().getAccessToken()
+                    val original = it.request()
+                    val request = original.newBuilder()
+                            .header("Authorization", "Bearer $accessToken")
+                            .header("Content-Type", "application/json")
+                            .method(original.method(), original.body())
+                            .build()
+                    it.proceed(request)
+                }
+                .addInterceptor(HttpLoggingInterceptor().setLevel(
+                        if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+                        else HttpLoggingInterceptor.Level.NONE
+                ))
 
         return Retrofit.Builder()
-            .baseUrl("https://${Support.domainAPI()}/")
-            .client(client.build())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(MozoAPIs::class.java)
+                .baseUrl("https://${Support.domainAPI()}/")
+                .client(client.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(MozoAPIs::class.java)
     }
 
     companion object {

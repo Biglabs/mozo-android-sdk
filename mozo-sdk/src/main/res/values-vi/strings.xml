@@ -230,10 +230,9 @@
     <string name="mozo_transfer_confirmation">Xác nhận</string>
     <string name="mozo_transfer_from">Từ ví MozoX Offchain</string>
     <string name="mozo_transfer_receiver_address">Địa chỉ người nhận</string>
-    <string name="mozo_transfer_receiver_address_hint">Điền địa chỉ ví người nhận</string>
     <string name="mozo_transfer_receiver_address_error">Lỗi: Địa chỉ người nhận không hợp lệ</string>
     <string name="mozo_transfer_amount">Số lượng</string>
-    <string name="mozo_transfer_amount_hint">Điền giá trị bằng số thập phân</string>
+    <string name="mozo_transfer_amount_hint">Nhập số MozoX cần gửi</string>
     <string name="mozo_transfer_amount_error_not_enough">Lỗi: Số dư khả dụng không đủ</string>
     <string name="mozo_transfer_amount_on_chain_not_enough">Không đủ MozoX Onchain</string>
     <string name="mozo_transfer_amount_eth_not_enough">Không đủ ETH</string>

@@ -198,7 +198,19 @@ internal object ViewModels {
             it.soloAddress.equals(address, ignoreCase = true)
         }
 
+        fun find(keyword: String) = usersLiveData.value?.filter {
+            it.name?.contains(keyword, ignoreCase = true) == true
+                    || it.phoneNo?.contains(keyword, ignoreCase = true) == true
+                    || it.soloAddress?.contains(keyword, ignoreCase = true) == true
+
+        } ?: storesLiveData.value?.filter {
+            it.name?.contains(keyword, ignoreCase = true) == true
+                    || it.phoneNo?.contains(keyword, ignoreCase = true) == true
+                    || it.soloAddress?.contains(keyword, ignoreCase = true) == true
+        }
+
         fun users(): List<Contact> = usersLiveData.value ?: emptyList()
         fun stores(): List<Contact> = storesLiveData.value ?: emptyList()
+        fun contacts(): List<Contact> = users() + stores()
     }
 }

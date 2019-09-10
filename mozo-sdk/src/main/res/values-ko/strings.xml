@@ -230,10 +230,9 @@
     <string name="mozo_transfer_confirmation">확인</string>
     <string name="mozo_transfer_from">MozoX Offchain 월렛에서</string>
     <string name="mozo_transfer_receiver_address">수신자 주소</string>
-    <string name="mozo_transfer_receiver_address_hint">수신자의 월렛 주소를 입력하십시오</string>
     <string name="mozo_transfer_receiver_address_error">오류 : 수신자 주소가 유효하지 않습니다.</string>
     <string name="mozo_transfer_amount">금액</string>
-    <string name="mozo_transfer_amount_hint">십진수로 값을 입력하십시오</string>
+    <string name="mozo_transfer_amount_hint">보낼 MozoX 금액을 입력하십시오.</string>
     <string name="mozo_transfer_amount_error_not_enough">오류 : 잔액만으로는 충분하지 않습니다.</string>
     <string name="mozo_transfer_amount_on_chain_not_enough">Onchain 밸런스가 충분하지 않습니다.</string>
     <string name="mozo_transfer_amount_eth_not_enough">ETH 밸런스가 충분하지 않습니다.</string>

@@ -252,11 +252,13 @@
     <string name="mozo_transfer_confirmation">Confirmation</string>
     <string name="mozo_transfer_from">From MozoX Offchain Wallet</string>
     <string name="mozo_transfer_receiver_address">Receiver Address</string>
-    <string name="mozo_transfer_receiver_address_hint">Enter receiver wallet address</string>
+    <string name="mozo_transfer_receiver_address_hint">Enter MozoX address or phone number</string>
     <string name="mozo_transfer_receiver_address_error">Error: The Receiver Address is not valid.</string>
     <string name="mozo_transfer_amount">Amount</string>
-    <string name="mozo_transfer_amount_hint">Input value in decimal format</string>
+    <string name="mozo_transfer_amount_hint">Enter amount to send</string>
     <string name="mozo_transfer_amount_error_not_enough">Error: Your spendable is not enough for this.</string>
+    <string name="mozo_transfer_amount_error_no_country_code">Error: Please enter country code</string>
+    <string name="mozo_transfer_amount_error_invalid_country_code">Error: Invalid country code</string>
     <string name="mozo_transfer_amount_on_chain_not_enough">Onchain balance is not enough.</string>
     <string name="mozo_transfer_amount_eth_not_enough">ETH balance is not enough.</string>
     <string name="mozo_transfer_amount_error_too_low">Error: Amount is too low, please input valid amount.</string>
@@ -265,6 +267,10 @@
     <string name="mozo_transfer_action_complete">Action Complete</string>
     <string name="mozo_transfer_send_complete">Send Completed</string>
     <string name="mozo_transfer_send_complete_msg">You have just sent:</string>
+    <string name="mozo_transfer_contact_not_found">Can\'t find this contact in your MozoX address book</string>
+    <string name="mozo_transfer_contact_find_in_system">Find in MozoX system →</string>
+    <string name="mozo_transfer_contact_find_err">We only support to search with phone number.</string>
+    <string name="mozo_transfer_contact_find_no_address">This phone number is not belong to any MozoX Wallet Address</string>
 
     <string name="mozo_transaction_detail_title">Transaction Detail</string>
     <string name="mozo_transaction_detail_wallet_address">Wallet Address</string>
