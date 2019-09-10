@@ -117,7 +117,7 @@ internal class TransactionDetails : BaseActivity() {
             }
         }
         if (sendType) {
-            text_detail_receiver?.setText(R.string.mozo_transfer_receiver_address)
+            text_detail_receiver?.setText(R.string.mozo_view_text_to)
             image_tx_type?.setBackgroundResource(R.drawable.mozo_bg_icon_send)
 
         } else {
