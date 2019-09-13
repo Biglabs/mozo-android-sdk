@@ -101,7 +101,8 @@ internal class TransactionFormActivity : BaseActivity() {
 
                     showInputUI()
                     if (selectedContact == null) {
-                        output_receiver_address.setText(it)
+                        output_receiver_address?.clearFocus()
+                        output_receiver_address?.setText(it)
                         validateInput(true)
                     } else
                         showContactInfoUI()
