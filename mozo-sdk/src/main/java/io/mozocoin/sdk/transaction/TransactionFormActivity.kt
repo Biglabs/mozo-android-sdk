@@ -39,7 +39,8 @@ internal class TransactionFormActivity : BaseActivity() {
     private var currentBalance = BigDecimal.ZERO
     private var currentRate = BigDecimal.ZERO
     private var selectedContact: Contact? = null
-    private val history = TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
+    private val history =
+        TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
     private var updateTxStatusJob: Job? = null
 
     private var isViewOnlyMode = false
@@ -78,7 +79,8 @@ internal class TransactionFormActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         MozoSDK.getInstance().contactViewModel.usersLiveData.removeObserver(userContactsObserver)
-        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.removeObserver(balanceAndRateObserver)
+        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.removeObserver(
+            balanceAndRateObserver)
         selectedContact = null
         updateTxStatusJob?.cancel()
     }
@@ -93,16 +95,16 @@ internal class TransactionFormActivity : BaseActivity() {
                     showContactInfoUI()
                 }
             }
-            data != null -> {
+            data != null                    -> {
                 IntentIntegrator
-                        .parseActivityResult(requestCode, resultCode, data)
-                        .contents?.let {
+                    .parseActivityResult(requestCode, resultCode, data)
+                    .contents?.let {
                     selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
 
                     showInputUI()
                     if (selectedContact == null) {
-                        output_receiver_address?.clearFocus()
                         output_receiver_address?.setText(it)
+                        output_receiver_address?.dismissDropDown()
                         validateInput(true)
                     } else
                         showContactInfoUI()
@@ -115,18 +117,19 @@ internal class TransactionFormActivity : BaseActivity() {
         val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
 
         showLoading()
-        MozoTx.getInstance().createTransaction(this, address, mInputAmount.toString()) { response, doRetry ->
-            if (doRetry) {
-                showLoading()
-                sendTx()
-            } else {
-                hideLoading()
-                history.addressTo = address
-                history.amount = MozoTx.getInstance().amountWithDecimal(mInputAmount)
-                history.time = Calendar.getInstance().timeInMillis / 1000L
-                showResultUI(response)
+        MozoTx.getInstance()
+            .createTransaction(this, address, mInputAmount.toString()) { response, doRetry ->
+                if (doRetry) {
+                    showLoading()
+                    sendTx()
+                } else {
+                    hideLoading()
+                    history.addressTo = address
+                    history.amount = MozoTx.getInstance().amountWithDecimal(mInputAmount)
+                    history.time = Calendar.getInstance().timeInMillis / 1000L
+                    showResultUI(response)
+                }
             }
-        }
     }
 
     override fun onBackPressed() {
@@ -135,7 +138,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 showInputUI()
                 showContactInfoUI()
             }
-            else -> super.onBackPressed()
+            else                               -> super.onBackPressed()
         }
     }
 
@@ -152,8 +155,9 @@ internal class TransactionFormActivity : BaseActivity() {
             onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 output_receiver_address_label?.isSelected = hasFocus
                 output_receiver_address_underline?.isSelected = hasFocus
-                if (hasFocus && output_receiver_address?.length() ?: 0 > 0)
+                if (hasFocus && output_receiver_address?.length() ?: 0 > 0) {
                     output_receiver_address?.showDropDown()
+                }
             }
             setOnClickListener {
                 if (output_receiver_address?.length() ?: 0 > 0)
@@ -173,26 +177,28 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
             setAdapter(ContactSuggestionAdapter(
-                    context,
-                    MozoSDK.getInstance().contactViewModel.contacts(),
-                    onFindInSystemClick
+                context,
+                MozoSDK.getInstance().contactViewModel.contacts(),
+                onFindInSystemClick
             ))
         }
 
         output_amount?.onAmountInputChanged(
-                textChanged = {
-                    hideErrorAmountUI()
-                    updateSubmitButton()
-                    if (it.isNullOrEmpty()) {
-                        output_amount_rate?.text = ""
-                        text_preview_rate?.text = ""
-                    }
-                },
-                amountChanged = { amount ->
-                    mInputAmount = amount
-                    output_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
-                    text_preview_rate?.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(currentRate), true)
+            textChanged = {
+                hideErrorAmountUI()
+                updateSubmitButton()
+                if (it.isNullOrEmpty()) {
+                    output_amount_rate?.text = ""
+                    text_preview_rate?.text = ""
                 }
+            },
+            amountChanged = { amount ->
+                mInputAmount = amount
+                output_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
+                text_preview_rate?.text =
+                    MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(
+                        currentRate), true)
+            }
         )
 
         output_amount?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
@@ -209,8 +215,8 @@ internal class TransactionFormActivity : BaseActivity() {
             if (output_receiver_address.isEnabled) {
                 if (validateInput()) {
                     MozoTx.getInstance().verifyAddress(
-                            it.context,
-                            selectedContact?.soloAddress ?: output_receiver_address.text.toString()
+                        it.context,
+                        selectedContact?.soloAddress ?: output_receiver_address.text.toString()
                     ) { isValid ->
                         if (isValid) showConfirmationUI()
                     }
@@ -233,10 +239,11 @@ internal class TransactionFormActivity : BaseActivity() {
             Support.formatSpendableText(text_spendable, currentBalance.displayString())
 
             if (isViewOnlyMode) {
-                text_preview_rate?.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(
+                text_preview_rate?.text =
+                    MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(
                         mInputAmount.multiply(currentRate),
                         true
-                )
+                    )
             }
         }
     }
@@ -245,19 +252,19 @@ internal class TransactionFormActivity : BaseActivity() {
         output_receiver_address?.isEnabled = true
         output_amount?.isEnabled = true
         visible(arrayOf(
-                output_receiver_address,
-                output_receiver_address_underline,
-                button_address_book,
-                button_scan_qr,
-                output_amount,
-                output_amount_rate,
-                output_amount_underline
+            output_receiver_address,
+            output_receiver_address_underline,
+            button_address_book,
+            button_scan_qr,
+            output_amount,
+            output_amount_rate,
+            output_amount_underline
         ))
         gone(arrayOf(
-                output_receiver_address_user,
-                send_state_container,
-                confirmation_state_separator,
-                output_amount_preview_container
+            output_receiver_address_user,
+            send_state_container,
+            confirmation_state_separator,
+            output_amount_preview_container
         ))
 
         transfer_toolbar?.showBackButton(false)
@@ -303,41 +310,63 @@ internal class TransactionFormActivity : BaseActivity() {
 
         output_amount?.isEnabled = false
         gone(arrayOf(
-                output_receiver_address_underline,
-                button_address_book,
-                button_scan_qr,
-                output_amount,
-                output_amount_rate,
-                output_amount_underline,
-                text_spendable,
-                button_clear
+            output_receiver_address_underline,
+            button_address_book,
+            button_scan_qr,
+            output_amount,
+            output_amount_rate,
+            output_amount_underline,
+            text_spendable,
+            button_clear
         ))
         text_preview_amount?.text = mInputAmount.displayString()
         visible(arrayOf(
-                send_state_container,
-                confirmation_state_separator,
-                output_amount_preview_container
+            send_state_container,
+            confirmation_state_separator,
+            output_amount_preview_container
         ))
 
         transfer_toolbar?.showBackButton(true)
         button_submit?.setText(R.string.mozo_button_send)
     }
 
+    private fun updateContactUI() {
+        button_save_address?.isVisible = selectedContact == null
+        val contact = selectedContact
+
+        if (contact == null) {
+            text_preview_address_sent?.text = history.addressTo
+            output_receiver_address_user_sent?.gone()
+            return
+        }
+
+        output_receiver_address_user_sent?.visible()
+        output_receiver_icon_sent?.setImageResource(if (contact.isStore) R.drawable.ic_store else R.drawable.ic_receiver)
+        text_receiver_phone_sent?.text = if (contact.isStore) contact.physicalAddress else contact.phoneNo
+        text_receiver_phone_sent?.isVisible = text_receiver_phone_sent?.length() ?: 0 > 0
+
+        text_receiver_user_name_sent?.text = contact.name
+        text_receiver_user_name_sent?.isVisible = !contact.name.isNullOrEmpty()
+        text_receiver_user_address_sent?.text = contact.soloAddress
+    }
+
     private val userContactsObserver = Observer<List<Contact>?> {
         selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(history.addressTo)
-        button_save_address?.isVisible = selectedContact == null
-        text_preview_address_sent?.text = selectedContact?.name ?: history.addressTo
+        updateContactUI()
     }
 
     private fun showResultUI(txResponse: TransactionResponse?) = GlobalScope.launch(Dispatchers.Main) {
         if (txResponse != null) {
-            MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this@TransactionFormActivity, userContactsObserver)
+            MozoSDK.getInstance()
+                .contactViewModel.usersLiveData.observe(this@TransactionFormActivity,
+                userContactsObserver)
             setContentView(R.layout.view_transaction_sent)
 
             transfer_completed_title.setText(R.string.mozo_transfer_action_complete)
             text_preview_amount_sent.text = history.amountDisplay()
-            text_preview_address_sent.text = selectedContact?.name ?: history.addressTo
-            text_preview_rate_sent.text = MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(history.amountInDecimal().multiply(currentRate), true)
+            text_preview_rate_sent.text = MozoSDK.getInstance()
+                .profileViewModel.formatCurrencyDisplay(history.amountInDecimal().multiply(
+                currentRate), true)
 
             button_save_address?.apply {
                 isVisible = selectedContact == null
@@ -355,6 +384,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
 
+            updateContactUI()
             updateTxStatus()
         }
     }
@@ -368,7 +398,7 @@ internal class TransactionFormActivity : BaseActivity() {
                     transfer_status_container.gone()
                     button_transaction_detail.visible()
                 }
-                it.isFailed() -> {
+                it.isFailed()  -> {
                     text_tx_status_icon.setImageResource(R.drawable.ic_error)
                     text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
                 }
@@ -389,7 +419,8 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun updateSubmitButton() {
-        button_submit?.isEnabled = (selectedContact != null || output_receiver_address.length() > 0) && output_amount.length() > 0
+        button_submit?.isEnabled =
+            (selectedContact != null || output_receiver_address.length() > 0) && output_amount.length() > 0
     }
 
     private fun showLoading() = GlobalScope.launch(Dispatchers.Main) {
@@ -406,12 +437,13 @@ internal class TransactionFormActivity : BaseActivity() {
         output_receiver_address_underline?.setBackgroundColor(errorColor)
         output_receiver_address_error_msg?.visible()
         output_receiver_address_error_msg?.setText(
-                if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
+            if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
         )
     }
 
     private fun hideErrorAddressUI() {
-        output_receiver_address_label?.setTextColor(ContextCompat.getColorStateList(this, R.color.mozo_color_input_focus))
+        output_receiver_address_label?.setTextColor(ContextCompat.getColorStateList(this,
+            R.color.mozo_color_input_focus))
         output_receiver_address_underline?.setBackgroundResource(R.drawable.mozo_color_line_focus)
         output_receiver_address_error_msg?.gone()
     }
@@ -426,7 +458,8 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun hideErrorAmountUI() {
-        output_amount_label?.setTextColor(ContextCompat.getColorStateList(this, R.color.mozo_color_input_focus))
+        output_amount_label?.setTextColor(ContextCompat.getColorStateList(this,
+            R.color.mozo_color_input_focus))
         output_amount_underline?.setBackgroundResource(R.drawable.mozo_color_line_focus)
         output_amount_error_msg?.gone()
         text_spendable?.visible()
@@ -446,18 +479,19 @@ internal class TransactionFormActivity : BaseActivity() {
 
         if (!isValidAddress) {
             when {
-                address.isDigitsOnly() && address.length < 20 -> {
+                address.isDigitsOnly() && address.length < 20          -> {
                     showErrorAddressUI(false, R.string.mozo_transfer_amount_error_no_country_code)
                 }
                 address.startsWith("+") && !address.isValidPhone(this) -> {
-                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
+                    showErrorAddressUI(false,
+                        R.string.mozo_transfer_amount_error_invalid_country_code)
                 }
             }
         }
 
         var isValidAmount = true
         when {
-            mInputAmount > currentBalance -> {
+            mInputAmount > currentBalance   -> {
                 showErrorAmountUI(R.string.mozo_transfer_amount_error_not_enough)
                 isValidAmount = false
             }
