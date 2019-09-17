@@ -244,6 +244,7 @@
     <string name="mozo_payment_request_item_amount" translatable="false">%s MozoX</string>
 
     <string name="mozo_settings_title">Setting</string>
+    <string name="mozo_change_settings_title">Change Settings</string>
     <string name="mozo_settings_under_construction">Under Construction</string>
     <string name="mozo_settings_menu_currencies">Currencies</string>
     <string name="mozo_settings_menu_change_password">Change password</string>

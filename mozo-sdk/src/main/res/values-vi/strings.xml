@@ -280,4 +280,16 @@
     <string name="mozo_view_text_just_now">Vừa xong</string>
     <string name="mozo_view_text_token_list">Danh sách Token:</string>
     <string name="mozo_view_text_no_data">Không tìm thấy thông tin hoặc kết nối internet của bạn quá yếu.</string>
+    <string name="mozo_address_import_last_updated">Cập nhật gần nhất:</string>
+    <string name="mozo_address_import_msg">Bạn bè trong danh bạ điện thoại sẽ tự động được thêm vào danh bạ MozoX.</string>
+    <string name="mozo_address_import_title">Nhập từ danh bạ</string>
+    <string name="mozo_address_msg_import_success">Nhập từ danh bạ thành công</string>
+    <string name="mozo_address_update_msg">Thêm bạn bè vào danh bạ MozoX từ danh bạ điện thoại nhanh chóng</string>
+    <string name="mozo_button_update_contact">Cập nhật danh bạ</string>
+    <string name="mozo_button_updating">Đang cập nhật...</string>
+    <string name="mozo_transfer_contact_find_err">Hệ thống hiện chỉ hỗ trợ tìm với số điện thoại.</string>
+    <string name="mozo_transfer_contact_find_in_system">Tìm trong hệ thống MozoX</string>
+    <string name="mozo_transfer_contact_find_no_address">Số điện thoại này chưa có ví MozoX.</string>
+    <string name="mozo_transfer_contact_not_found">Không tìm thấy trong hệ thống MozoX</string>
+    <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví MozoX hoặc số điện thoại</string>
 </resources>

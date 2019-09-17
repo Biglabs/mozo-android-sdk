@@ -280,4 +280,16 @@
     <string name="mozo_view_text_just_now">지금</string>
     <string name="mozo_view_text_token_list">Token 리스트:</string>
     <string name="mozo_view_text_no_data">데이터 없거나 연결 속도 너무 느립니다</string>
+    <string name="mozo_address_import_last_updated">최근 업데이트:</string>
+    <string name="mozo_address_import_msg">핸드폰에 있는 연락처를 자동적으로 모조X 연락처로 가져옵니다</string>
+    <string name="mozo_address_import_title">연락처에서 가져오기</string>
+    <string name="mozo_address_msg_import_success">연락처 가져오기 성공</string>
+    <string name="mozo_address_update_msg">연락처집에서 모조X로 빠르게 가져오기</string>
+    <string name="mozo_button_update_contact">연락처 업테이트</string>
+    <string name="mozo_button_updating">업데이트 중...</string>
+    <string name="mozo_transfer_contact_find_err">폰 번호만 검색 가능</string>
+    <string name="mozo_transfer_contact_find_in_system">모조X 시스템에 검색하기</string>
+    <string name="mozo_transfer_contact_find_no_address">이 폰 번호와 연동된 모조X 지갑 없습니다.</string>
+    <string name="mozo_transfer_contact_not_found">모조X 시스템에 검색 결과 없습니다</string>
+    <string name="mozo_transfer_receiver_address_hint">모조X 주소 또는 연락처 입력</string>
 </resources>

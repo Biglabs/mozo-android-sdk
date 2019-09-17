@@ -14,6 +14,7 @@ import android.provider.ContactsContract.Data.DATA1
 import android.provider.Settings
 import android.util.Patterns
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -182,7 +183,7 @@ internal class ImportContactsActivity : BaseActivity() {
     }
 
     private fun showRequestPermissionRationale() {
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(this, R.style.PermissionTheme)
                 .setTitle(R.string.mozo_address_require_permission_title)
                 .setMessage(R.string.mozo_address_require_permission)
                 .setNegativeButton(R.string.mozo_button_cancel, null)
@@ -193,11 +194,11 @@ internal class ImportContactsActivity : BaseActivity() {
     }
 
     private fun showAppPermissionSettings() {
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(this, R.style.PermissionTheme)
                 .setTitle(R.string.mozo_address_require_permission_force_title)
                 .setMessage(R.string.mozo_address_require_permission_force)
                 .setNegativeButton(R.string.mozo_button_ok, null)
-                .setPositiveButton(R.string.mozo_settings_title) { _, _ ->
+                .setPositiveButton(R.string.mozo_change_settings_title) { _, _ ->
                     Intent().run {
                         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                         addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
