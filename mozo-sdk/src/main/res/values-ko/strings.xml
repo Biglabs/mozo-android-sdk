@@ -286,10 +286,11 @@
     <string name="mozo_address_msg_import_success">연락처 가져오기 성공</string>
     <string name="mozo_address_update_msg">연락처집에서 모조X로 빠르게 가져오기</string>
     <string name="mozo_button_update_contact">연락처 업테이트</string>
-    <string name="mozo_button_updating">업데이트 중...</string>
+    <string name="mozo_button_updating">업데이트 중…</string>
     <string name="mozo_transfer_contact_find_err">폰 번호만 검색 가능</string>
     <string name="mozo_transfer_contact_find_in_system">모조X 시스템에 검색하기</string>
     <string name="mozo_transfer_contact_find_no_address">이 폰 번호와 연동된 모조X 지갑 없습니다.</string>
     <string name="mozo_transfer_contact_not_found">모조X 시스템에 검색 결과 없습니다</string>
     <string name="mozo_transfer_receiver_address_hint">모조X 주소 또는 연락처 입력</string>
+    <string name="mozo_transfer_amount_error_invalid_country_code">오류 :국가 코드가 잘못되었습니다.</string>
 </resources>

@@ -15,7 +15,6 @@
         android:layout_height="56dp"
         android:layout_marginTop="11dp"
         android:layout_marginBottom="11dp"
-        android:contentDescription="@string/mozo_view_text_receiver"
         android:src="@drawable/ic_receiver"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

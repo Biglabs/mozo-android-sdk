@@ -266,7 +266,7 @@ class PaymentRequestSendFragment : Fragment() {
         if (!isValidAddress) {
             when {
                 address.isDigitsOnly() && address.length < 20               -> {
-                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_no_country_code)
+                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
                 }
                 address.startsWith("+") && !address.isValidPhone(context!!) -> {
                     showErrorAddressUI(false,

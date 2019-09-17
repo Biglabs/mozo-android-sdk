@@ -17,16 +17,16 @@
     <string name="mozo_address_add_msg_saved">Address Saved</string>
     <string name="mozo_address_add_msg_error">This address already exists in your Address Book</string>
     <string name="mozo_address_update_msg">Quickly add friends to MozoX Address Book from the phone book</string>
-    <string name="mozo_address_import_title">Import Contacts</string>
-    <string name="mozo_address_import_msg">Friends in your contact list will automatically be added to MozoX address book.</string>
+    <string name="mozo_address_import_title">Synchronize Contacts</string>
+    <string name="mozo_address_import_msg">Friends in your contact list will automatically be added to MozoX Address Book.</string>
     <string name="mozo_address_import_last_updated">Last updated:</string>
-    <string name="mozo_address_require_permission">To synchronize your address book with MozoX system. Any existing contact will be overwritten with your phone book information.</string>
-    <string name="mozo_address_require_permission_title">MozoX would like to access your contact book</string>
-    <string name="mozo_address_require_permission_force">You must give the app permission to access the contact first</string>
-    <string name="mozo_address_require_permission_force_title">Cannot access your contact book</string>
-    <string name="mozo_address_msg_not_import">Not yet imported</string>
-    <string name="mozo_address_msg_import_success">Import contact successful</string>
-    <string name="mozo_address_msg_no_contact">Your contact book is empty, please try again later.</string>
+    <string name="mozo_address_require_permission">To synchronize your contacts with MozoX Address Book, any existing contact will be overwritten by MozoX Address Book.</string>
+    <string name="mozo_address_require_permission_title">MozoX would like to access your Contact Book</string>
+    <string name="mozo_address_require_permission_force">You must give MozoX permission to access the Contact Book first</string>
+    <string name="mozo_address_require_permission_force_title">Cannot access your Contact Book</string>
+    <string name="mozo_address_msg_not_import">Not yet synchronized</string>
+    <string name="mozo_address_msg_import_success">Synchronize Contacts successful!</string>
+    <string name="mozo_address_msg_no_contact">Cannot synchronize, your Contact Book is empty.</string>
 
     <string name="mozo_dialog_qr_code">Your MozoX Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
@@ -258,7 +258,6 @@
     <string name="mozo_transfer_amount">Amount</string>
     <string name="mozo_transfer_amount_hint">Enter amount to send</string>
     <string name="mozo_transfer_amount_error_not_enough">Error: Your spendable is not enough for this.</string>
-    <string name="mozo_transfer_amount_error_no_country_code">Error: Please enter country code</string>
     <string name="mozo_transfer_amount_error_invalid_country_code">Error: Invalid country code</string>
     <string name="mozo_transfer_amount_on_chain_not_enough">Onchain balance is not enough.</string>
     <string name="mozo_transfer_amount_eth_not_enough">ETH balance is not enough.</string>
@@ -268,10 +267,10 @@
     <string name="mozo_transfer_action_complete">Action Complete</string>
     <string name="mozo_transfer_send_complete">Send Completed</string>
     <string name="mozo_transfer_send_complete_msg">You have just sent:</string>
-    <string name="mozo_transfer_contact_not_found">Can\'t find this contact in your MozoX address book</string>
-    <string name="mozo_transfer_contact_find_in_system">Find in MozoX system →</string>
-    <string name="mozo_transfer_contact_find_err">We only support to search with phone number.</string>
-    <string name="mozo_transfer_contact_find_no_address">This phone number is not belong to any MozoX Wallet Address</string>
+    <string name="mozo_transfer_contact_not_found">Can\'t find this contact in your MozoX Address Book</string>
+    <string name="mozo_transfer_contact_find_in_system">Find in MozoX System →</string>
+    <string name="mozo_transfer_contact_find_err">We only support search by phone number.</string>
+    <string name="mozo_transfer_contact_find_no_address">This phone number does not belong to any MozoX Wallet Address</string>
 
     <string name="mozo_transaction_detail_title">Transaction Detail</string>
     <string name="mozo_transaction_detail_wallet_address">Wallet Address</string>
@@ -310,5 +309,4 @@
     <string name="mozo_view_text_just_now">Just now</string>
     <string name="mozo_view_text_token_list">Token List:</string>
     <string name="mozo_view_text_no_data">No data to display or your connection is too slow</string>
-    <string name="mozo_view_text_receiver">Receiver</string>
 </resources>

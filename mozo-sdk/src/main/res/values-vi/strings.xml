@@ -286,10 +286,19 @@
     <string name="mozo_address_msg_import_success">Nhập từ danh bạ thành công</string>
     <string name="mozo_address_update_msg">Thêm bạn bè vào danh bạ MozoX từ danh bạ điện thoại nhanh chóng</string>
     <string name="mozo_button_update_contact">Cập nhật danh bạ</string>
-    <string name="mozo_button_updating">Đang cập nhật...</string>
+    <string name="mozo_button_updating">Đang cập nhật…</string>
     <string name="mozo_transfer_contact_find_err">Hệ thống hiện chỉ hỗ trợ tìm với số điện thoại.</string>
     <string name="mozo_transfer_contact_find_in_system">Tìm trong hệ thống MozoX</string>
     <string name="mozo_transfer_contact_find_no_address">Số điện thoại này chưa có ví MozoX.</string>
     <string name="mozo_transfer_contact_not_found">Không tìm thấy trong hệ thống MozoX</string>
     <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví MozoX hoặc số điện thoại</string>
+    <string name="mozo_address_msg_not_import">Chưa từng đồng bộ</string>
+    <string name="mozo_address_msg_no_contact">Danh bạ trống, không thể tiến hành đồng bộ.</string>
+    <string name="mozo_address_require_permission">Để đồng bộ danh bạ điện thoại với danh bạ MozoX. Những danh bạ đã tồn tại sẽ bị ghi đè bởi thông tin trong danh bạ MozoX.</string>
+    <string name="mozo_address_require_permission_force">Trước hết bạn cần cấp quyền truy cập danh bạ</string>
+    <string name="mozo_address_require_permission_force_title">Không thể truy cập danh bạ</string>
+    <string name="mozo_address_require_permission_title">MozoX cần quyền truy cập danh bạ của bạn</string>
+    <string name="mozo_change_settings_title">Thay đổi thiết lập</string>
+    <string name="mozo_transfer_amount_error_invalid_country_code">Lỗi: Mã vùng không hợp lệ.</string>
+    <string name="mozo_button_update">Cập nhật</string>
 </resources>
