@@ -6,6 +6,10 @@ import android.os.Bundle
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.common.service.NetworkSchedulerService
 import io.mozocoin.sdk.utils.customtabs.CustomTabsHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
     private var customTabsHelper: CustomTabsHelper? = null
@@ -20,8 +24,15 @@ class ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityResumed(activity: Activity) {
         customTabsHelper?.bindCustomTabsService(activity)
-        MozoSDK.getInstance().remindAnchorView = activity.window.decorView
-        NetworkSchedulerService.checkNetwork()
+
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(1000)
+
+            if (!activity.isFinishing && !activity.isDestroyed) {
+                MozoSDK.getInstance().remindAnchorView = activity.window.decorView
+                NetworkSchedulerService.checkNetwork()
+            }
+        }
     }
 
     override fun onActivityStarted(activity: Activity?) {
