@@ -293,4 +293,12 @@
     <string name="mozo_transfer_contact_not_found">모조X 시스템에 검색 결과 없습니다</string>
     <string name="mozo_transfer_receiver_address_hint">모조X 주소 또는 연락처 입력</string>
     <string name="mozo_transfer_amount_error_invalid_country_code">오류 :국가 코드가 잘못되었습니다.</string>
+    <string name="mozo_address_msg_no_contact">연락처 집 정보 없음. 동기화 불가</string>
+    <string name="mozo_address_msg_not_import">동기화하지 않음</string>
+    <string name="mozo_address_require_permission">"모조X 연락처와 동기화를 위하여 모조X에 있는 연락처 정보로 존재하고 있는 연락처를 겹쳐쓴다. "</string>
+    <string name="mozo_address_require_permission_force">연락처 집 접근 권한 허용하세요</string>
+    <string name="mozo_address_require_permission_force_title">연락처 집 접근 불가</string>
+    <string name="mozo_address_require_permission_title">모조X는 연락처 집에 접근 권한 필요한다</string>
+    <string name="mozo_button_update">업데이트</string>
+    <string name="mozo_change_settings_title">설정 수정</string>
 </resources>
