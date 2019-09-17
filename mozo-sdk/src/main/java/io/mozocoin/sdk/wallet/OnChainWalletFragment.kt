@@ -47,7 +47,7 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         wallet_fragment_on_how_button?.apply {
             isSelected = false
             click {
-                context?.openTab("${Support.homePage()}/retailer/support#home-faq-how-to-buy-mozox-onchain-on-exchange")
+                context?.openTab("${Support.homePage()}/" + getString(R.string.tips_buy_on_chain))
             }
         }
 
