@@ -259,7 +259,7 @@
     <string name="mozo_transfer_action_complete">액션 완료</string>
     <string name="mozo_transfer_send_complete">보내기 완료</string>
     <string name="mozo_transfer_send_complete_msg">방금 보낸 내용:</string>
-    <string name="mozo_transfer_contact_not_found">모조X 시스템에 검색 결과 없습니다</string>
+    <string name="mozo_transfer_contact_not_found">모조X 연락처 집에서 검색한 결과 없습니다</string>
     <string name="mozo_transfer_contact_find_err">폰 번호만 검색 가능</string>
     <string name="mozo_transfer_contact_find_in_system">모조X 시스템에 검색하기</string>
     <string name="mozo_transfer_contact_find_no_address">이 폰 번호와 연동된 모조X 지갑 없습니다.</string>

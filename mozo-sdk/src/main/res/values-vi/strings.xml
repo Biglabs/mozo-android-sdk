@@ -260,7 +260,7 @@
     <string name="mozo_transfer_contact_find_err">Hệ thống hiện chỉ hỗ trợ tìm với số điện thoại.</string>
     <string name="mozo_transfer_contact_find_in_system">Tìm trong hệ thống MozoX</string>
     <string name="mozo_transfer_contact_find_no_address">Số điện thoại này chưa có ví MozoX.</string>
-    <string name="mozo_transfer_contact_not_found">Không tìm thấy trong hệ thống MozoX</string>
+    <string name="mozo_transfer_contact_not_found">Không tìm thấy trong danh bạ MozoX của bạn</string>
     <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví MozoX hoặc số điện thoại</string>
     <string name="mozo_transfer_amount_error_invalid_country_code">Lỗi: Mã vùng không hợp lệ.</string>
 
