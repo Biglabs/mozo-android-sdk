@@ -173,7 +173,7 @@ internal class AddressBookActivity : BaseActivity() {
                 (it.name ?: "").contains(name, ignoreCase = true)
             })
             withContext(Dispatchers.Main) {
-                if (contacts.isEmpty()) view_empty_state.visible() else view_empty_state.gone()
+                if (contacts.isEmpty() && name.isNotEmpty()) view_empty_state.visible() else view_empty_state.gone()
                 mAdapter.notifyData(true, showEmptyView = false)
             }
         }

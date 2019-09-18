@@ -16,6 +16,17 @@
     <string name="mozo_address_add_input_name_hint">담당자 이름 입력</string>
     <string name="mozo_address_add_msg_saved">저장된 주소</string>
     <string name="mozo_address_add_msg_error">이 주소는 이미 주소록에 있습니다</string>
+    <string name="mozo_address_import_last_updated">최근 업데이트:</string>
+    <string name="mozo_address_import_msg">핸드폰에 있는 연락처를 자동적으로 모조X 연락처로 가져옵니다</string>
+    <string name="mozo_address_import_title">연락처 동기화</string>
+    <string name="mozo_address_msg_import_success">연락처 동기화 성공</string>
+    <string name="mozo_address_update_msg">연락처집에서 모조X로 빠르게 가져오기</string>
+    <string name="mozo_address_msg_no_contact">연락처 집 정보 없음. 동기화 불가</string>
+    <string name="mozo_address_msg_not_import">동기화하지 않음</string>
+    <string name="mozo_address_require_permission">모조X 연락처와 동기화를 위하여 모조X에 있는 연락처 정보로 존재하고 있는 연락처를 겹쳐쓴다.</string>
+    <string name="mozo_address_require_permission_force">연락처 집 접근 권한 허용하세요</string>
+    <string name="mozo_address_require_permission_force_title">연락처 집 접근 불가</string>
+    <string name="mozo_address_require_permission_title">모조X는 연락처 집에 접근 권한 필요한다</string>
 
     <string name="mozo_dialog_qr_code">MozoX 월렛 주소</string>
     <string name="mozo_dialog_loading_msg">인터페이스 만들기</string>
@@ -70,6 +81,9 @@
     <string name="mozo_button_try_again">다시 시도하십시오</string>
 
     <string name="mozo_button_go_to_wallet">지갑으로 이동하기</string>
+    <string name="mozo_button_update_contact">연락처 업테이트</string>
+    <string name="mozo_button_updating">업데이트 중…</string>
+    <string name="mozo_button_update">업데이트</string>
 
     <string name="mozo_backup_title">지갑 백업하기</string>
     <string name="mozo_backup_sub_title">당신의 복구 문구입니다.</string>
@@ -222,6 +236,7 @@
     <string name="mozo_payment_request_item_label_amount">요청하기:</string>
 
     <string name="mozo_settings_title">설치</string>
+    <string name="mozo_change_settings_title">설정 수정</string>
     <string name="mozo_settings_under_construction">개발중</string>
     <string name="mozo_settings_menu_currencies">통화 단위</string>
     <string name="mozo_settings_menu_change_password">비밀번호 변경</string>
@@ -231,6 +246,8 @@
     <string name="mozo_transfer_from">MozoX Offchain 월렛에서</string>
     <string name="mozo_transfer_receiver_address">수신자 주소</string>
     <string name="mozo_transfer_receiver_address_error">오류 : 수신자 주소가 유효하지 않습니다.</string>
+    <string name="mozo_transfer_receiver_address_hint">모조X 주소 또는 연락처 입력</string>
+    <string name="mozo_transfer_amount_error_invalid_country_code">오류 :국가 코드가 잘못되었습니다.</string>
     <string name="mozo_transfer_amount">금액</string>
     <string name="mozo_transfer_amount_hint">보낼 MozoX 금액을 입력하십시오.</string>
     <string name="mozo_transfer_amount_error_not_enough">오류 : 잔액만으로는 충분하지 않습니다.</string>
@@ -242,6 +259,10 @@
     <string name="mozo_transfer_action_complete">액션 완료</string>
     <string name="mozo_transfer_send_complete">보내기 완료</string>
     <string name="mozo_transfer_send_complete_msg">방금 보낸 내용:</string>
+    <string name="mozo_transfer_contact_not_found">모조X 시스템에 검색 결과 없습니다</string>
+    <string name="mozo_transfer_contact_find_err">폰 번호만 검색 가능</string>
+    <string name="mozo_transfer_contact_find_in_system">모조X 시스템에 검색하기</string>
+    <string name="mozo_transfer_contact_find_no_address">이 폰 번호와 연동된 모조X 지갑 없습니다.</string>
 
     <string name="mozo_transaction_detail_title">거래 세부 정보</string>
     <string name="mozo_transaction_detail_wallet_address">월렛 주소</string>
@@ -280,25 +301,4 @@
     <string name="mozo_view_text_just_now">지금</string>
     <string name="mozo_view_text_token_list">Token 리스트:</string>
     <string name="mozo_view_text_no_data">데이터 없거나 연결 속도 너무 느립니다</string>
-    <string name="mozo_address_import_last_updated">최근 업데이트:</string>
-    <string name="mozo_address_import_msg">핸드폰에 있는 연락처를 자동적으로 모조X 연락처로 가져옵니다</string>
-    <string name="mozo_address_import_title">연락처에서 가져오기</string>
-    <string name="mozo_address_msg_import_success">연락처 가져오기 성공</string>
-    <string name="mozo_address_update_msg">연락처집에서 모조X로 빠르게 가져오기</string>
-    <string name="mozo_button_update_contact">연락처 업테이트</string>
-    <string name="mozo_button_updating">업데이트 중…</string>
-    <string name="mozo_transfer_contact_find_err">폰 번호만 검색 가능</string>
-    <string name="mozo_transfer_contact_find_in_system">모조X 시스템에 검색하기</string>
-    <string name="mozo_transfer_contact_find_no_address">이 폰 번호와 연동된 모조X 지갑 없습니다.</string>
-    <string name="mozo_transfer_contact_not_found">모조X 시스템에 검색 결과 없습니다</string>
-    <string name="mozo_transfer_receiver_address_hint">모조X 주소 또는 연락처 입력</string>
-    <string name="mozo_transfer_amount_error_invalid_country_code">오류 :국가 코드가 잘못되었습니다.</string>
-    <string name="mozo_address_msg_no_contact">연락처 집 정보 없음. 동기화 불가</string>
-    <string name="mozo_address_msg_not_import">동기화하지 않음</string>
-    <string name="mozo_address_require_permission">"모조X 연락처와 동기화를 위하여 모조X에 있는 연락처 정보로 존재하고 있는 연락처를 겹쳐쓴다. "</string>
-    <string name="mozo_address_require_permission_force">연락처 집 접근 권한 허용하세요</string>
-    <string name="mozo_address_require_permission_force_title">연락처 집 접근 불가</string>
-    <string name="mozo_address_require_permission_title">모조X는 연락처 집에 접근 권한 필요한다</string>
-    <string name="mozo_button_update">업데이트</string>
-    <string name="mozo_change_settings_title">설정 수정</string>
 </resources>
