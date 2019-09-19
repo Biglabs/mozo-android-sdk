@@ -84,9 +84,8 @@
     <string name="mozo_button_contact_zalo" translatable="false">Zalo</string>
 
     <string name="mozo_button_go_to_wallet">Go to Wallet</string>
-    <string name="mozo_button_update_contact">Update Contacts</string>
-    <string name="mozo_button_update">Update</string>
-    <string name="mozo_button_updating">Updating…</string>
+    <string name="mozo_button_synchronize">Synchronize</string>
+    <string name="mozo_button_synchronizing">Synchronizing…</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">This is your Recovery Phrase</string>
@@ -258,6 +257,7 @@
     <string name="mozo_transfer_amount">Amount</string>
     <string name="mozo_transfer_amount_hint">Enter amount to send</string>
     <string name="mozo_transfer_amount_error_not_enough">Error: Your spendable is not enough for this.</string>
+    <string name="mozo_transfer_amount_error_invalid_phone">Error: Invalid phone number</string>
     <string name="mozo_transfer_amount_error_invalid_country_code">Error: Invalid country code</string>
     <string name="mozo_transfer_amount_on_chain_not_enough">Onchain balance is not enough.</string>
     <string name="mozo_transfer_amount_eth_not_enough">ETH balance is not enough.</string>

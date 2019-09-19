@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.text.isDigitsOnly
@@ -40,7 +41,7 @@ internal class TransactionFormActivity : BaseActivity() {
     private var currentRate = BigDecimal.ZERO
     private var selectedContact: Contact? = null
     private val history =
-        TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
+            TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
     private var updateTxStatusJob: Job? = null
 
     private var isViewOnlyMode = false
@@ -80,7 +81,7 @@ internal class TransactionFormActivity : BaseActivity() {
         super.onDestroy()
         MozoSDK.getInstance().contactViewModel.usersLiveData.removeObserver(userContactsObserver)
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.removeObserver(
-            balanceAndRateObserver)
+                balanceAndRateObserver)
         selectedContact = null
         updateTxStatusJob?.cancel()
     }
@@ -95,10 +96,10 @@ internal class TransactionFormActivity : BaseActivity() {
                     showContactInfoUI()
                 }
             }
-            data != null                    -> {
+            data != null -> {
                 IntentIntegrator
-                    .parseActivityResult(requestCode, resultCode, data)
-                    .contents?.let {
+                        .parseActivityResult(requestCode, resultCode, data)
+                        .contents?.let {
                     selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
 
                     showInputUI()
@@ -118,18 +119,18 @@ internal class TransactionFormActivity : BaseActivity() {
 
         showLoading()
         MozoTx.getInstance()
-            .createTransaction(this, address, mInputAmount.toString()) { response, doRetry ->
-                if (doRetry) {
-                    showLoading()
-                    sendTx()
-                } else {
-                    hideLoading()
-                    history.addressTo = address
-                    history.amount = MozoTx.getInstance().amountWithDecimal(mInputAmount)
-                    history.time = Calendar.getInstance().timeInMillis / 1000L
-                    showResultUI(response)
+                .createTransaction(this, address, mInputAmount.toString()) { response, doRetry ->
+                    if (doRetry) {
+                        showLoading()
+                        sendTx()
+                    } else {
+                        hideLoading()
+                        history.addressTo = address
+                        history.amount = MozoTx.getInstance().amountWithDecimal(mInputAmount)
+                        history.time = Calendar.getInstance().timeInMillis / 1000L
+                        showResultUI(response)
+                    }
                 }
-            }
     }
 
     override fun onBackPressed() {
@@ -138,7 +139,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 showInputUI()
                 showContactInfoUI()
             }
-            else                               -> super.onBackPressed()
+            else -> super.onBackPressed()
         }
     }
 
@@ -177,28 +178,36 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
             setAdapter(ContactSuggestionAdapter(
-                context,
-                MozoSDK.getInstance().contactViewModel.contacts(),
-                onFindInSystemClick
+                    context,
+                    MozoSDK.getInstance().contactViewModel.contacts(),
+                    onFindInSystemClick
             ))
+
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    onFindInSystemClick.invoke()
+                    return@setOnEditorActionListener true
+                }
+                false
+            }
         }
 
         output_amount?.onAmountInputChanged(
-            textChanged = {
-                hideErrorAmountUI()
-                updateSubmitButton()
-                if (it.isNullOrEmpty()) {
-                    output_amount_rate?.text = ""
-                    text_preview_rate?.text = ""
+                textChanged = {
+                    hideErrorAmountUI()
+                    updateSubmitButton()
+                    if (it.isNullOrEmpty()) {
+                        output_amount_rate?.text = ""
+                        text_preview_rate?.text = ""
+                    }
+                },
+                amountChanged = { amount ->
+                    mInputAmount = amount
+                    output_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
+                    text_preview_rate?.text =
+                            MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(
+                                    currentRate), true)
                 }
-            },
-            amountChanged = { amount ->
-                mInputAmount = amount
-                output_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
-                text_preview_rate?.text =
-                    MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(
-                        currentRate), true)
-            }
         )
 
         output_amount?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
@@ -215,8 +224,8 @@ internal class TransactionFormActivity : BaseActivity() {
             if (output_receiver_address.isEnabled) {
                 if (validateInput()) {
                     MozoTx.getInstance().verifyAddress(
-                        it.context,
-                        selectedContact?.soloAddress ?: output_receiver_address.text.toString()
+                            it.context,
+                            selectedContact?.soloAddress ?: output_receiver_address.text.toString()
                     ) { isValid ->
                         if (isValid) showConfirmationUI()
                     }
@@ -240,10 +249,10 @@ internal class TransactionFormActivity : BaseActivity() {
 
             if (isViewOnlyMode) {
                 text_preview_rate?.text =
-                    MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(
-                        mInputAmount.multiply(currentRate),
-                        true
-                    )
+                        MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(
+                                mInputAmount.multiply(currentRate),
+                                true
+                        )
             }
         }
     }
@@ -252,19 +261,19 @@ internal class TransactionFormActivity : BaseActivity() {
         output_receiver_address?.isEnabled = true
         output_amount?.isEnabled = true
         visible(arrayOf(
-            output_receiver_address,
-            output_receiver_address_underline,
-            button_address_book,
-            button_scan_qr,
-            output_amount,
-            output_amount_rate,
-            output_amount_underline
+                output_receiver_address,
+                output_receiver_address_underline,
+                button_address_book,
+                button_scan_qr,
+                output_amount,
+                output_amount_rate,
+                output_amount_underline
         ))
         gone(arrayOf(
-            output_receiver_address_user,
-            send_state_container,
-            confirmation_state_separator,
-            output_amount_preview_container
+                output_receiver_address_user,
+                send_state_container,
+                confirmation_state_separator,
+                output_amount_preview_container
         ))
 
         transfer_toolbar?.showBackButton(false)
@@ -310,20 +319,20 @@ internal class TransactionFormActivity : BaseActivity() {
 
         output_amount?.isEnabled = false
         gone(arrayOf(
-            output_receiver_address_underline,
-            button_address_book,
-            button_scan_qr,
-            output_amount,
-            output_amount_rate,
-            output_amount_underline,
-            text_spendable,
-            button_clear
+                output_receiver_address_underline,
+                button_address_book,
+                button_scan_qr,
+                output_amount,
+                output_amount_rate,
+                output_amount_underline,
+                text_spendable,
+                button_clear
         ))
         text_preview_amount?.text = mInputAmount.displayString()
         visible(arrayOf(
-            send_state_container,
-            confirmation_state_separator,
-            output_amount_preview_container
+                send_state_container,
+                confirmation_state_separator,
+                output_amount_preview_container
         ))
 
         transfer_toolbar?.showBackButton(true)
@@ -358,15 +367,15 @@ internal class TransactionFormActivity : BaseActivity() {
     private fun showResultUI(txResponse: TransactionResponse?) = GlobalScope.launch(Dispatchers.Main) {
         if (txResponse != null) {
             MozoSDK.getInstance()
-                .contactViewModel.usersLiveData.observe(this@TransactionFormActivity,
-                userContactsObserver)
+                    .contactViewModel.usersLiveData.observe(this@TransactionFormActivity,
+                    userContactsObserver)
             setContentView(R.layout.view_transaction_sent)
 
             transfer_completed_title.setText(R.string.mozo_transfer_action_complete)
             text_preview_amount_sent.text = history.amountDisplay()
             text_preview_rate_sent.text = MozoSDK.getInstance()
-                .profileViewModel.formatCurrencyDisplay(history.amountInDecimal().multiply(
-                currentRate), true)
+                    .profileViewModel.formatCurrencyDisplay(history.amountInDecimal().multiply(
+                    currentRate), true)
 
             button_save_address?.apply {
                 isVisible = selectedContact == null
@@ -398,7 +407,7 @@ internal class TransactionFormActivity : BaseActivity() {
                     transfer_status_container.gone()
                     button_transaction_detail.visible()
                 }
-                it.isFailed()  -> {
+                it.isFailed() -> {
                     text_tx_status_icon.setImageResource(R.drawable.ic_error)
                     text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
                 }
@@ -420,7 +429,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
     private fun updateSubmitButton() {
         button_submit?.isEnabled =
-            (selectedContact != null || output_receiver_address.length() > 0) && output_amount.length() > 0
+                (selectedContact != null || output_receiver_address.length() > 0) && output_amount.length() > 0
     }
 
     private fun showLoading() = GlobalScope.launch(Dispatchers.Main) {
@@ -437,13 +446,13 @@ internal class TransactionFormActivity : BaseActivity() {
         output_receiver_address_underline?.setBackgroundColor(errorColor)
         output_receiver_address_error_msg?.visible()
         output_receiver_address_error_msg?.setText(
-            if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
+                if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
         )
     }
 
     private fun hideErrorAddressUI() {
         output_receiver_address_label?.setTextColor(ContextCompat.getColorStateList(this,
-            R.color.mozo_color_input_focus))
+                R.color.mozo_color_input_focus))
         output_receiver_address_underline?.setBackgroundResource(R.drawable.mozo_color_line_focus)
         output_receiver_address_error_msg?.gone()
     }
@@ -459,7 +468,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
     private fun hideErrorAmountUI() {
         output_amount_label?.setTextColor(ContextCompat.getColorStateList(this,
-            R.color.mozo_color_input_focus))
+                R.color.mozo_color_input_focus))
         output_amount_underline?.setBackgroundResource(R.drawable.mozo_color_line_focus)
         output_amount_error_msg?.gone()
         text_spendable?.visible()
@@ -479,19 +488,19 @@ internal class TransactionFormActivity : BaseActivity() {
 
         if (!isValidAddress) {
             when {
-                address.isDigitsOnly() && address.length < 20          -> {
-                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
+                address.isDigitsOnly() && address.length < 20 -> {
+                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_phone)
                 }
                 address.startsWith("+") && !address.isValidPhone(this) -> {
                     showErrorAddressUI(false,
-                        R.string.mozo_transfer_amount_error_invalid_country_code)
+                            R.string.mozo_transfer_amount_error_invalid_country_code)
                 }
             }
         }
 
         var isValidAmount = true
         when {
-            mInputAmount > currentBalance   -> {
+            mInputAmount > currentBalance -> {
                 showErrorAmountUI(R.string.mozo_transfer_amount_error_not_enough)
                 isValidAmount = false
             }
@@ -506,9 +515,17 @@ internal class TransactionFormActivity : BaseActivity() {
 
     private val onFindInSystemClick: () -> Unit = {
         val value = output_receiver_address?.text?.toString()?.trim()
-        if (!value.isNullOrEmpty() && value.isValidPhone(this)) {
-            findContact(value)
-
+        if (!value.isNullOrEmpty()) {
+            when {
+                value.isDigitsOnly() && value.length < 20 -> {
+                    MessageDialog.show(this, getString(R.string.mozo_transfer_amount_error_invalid_phone).split(": ")[1])
+                }
+                value.startsWith("+") && !value.isValidPhone(this) -> {
+                    MessageDialog.show(this, getString(R.string.mozo_transfer_amount_error_invalid_country_code).split(": ")[1])
+                }
+                value.isValidPhone(this) -> findContact(value)
+                else -> MessageDialog.show(this, R.string.mozo_transfer_contact_find_err)
+            }
         } else {
             MessageDialog.show(this, R.string.mozo_transfer_contact_find_err)
         }

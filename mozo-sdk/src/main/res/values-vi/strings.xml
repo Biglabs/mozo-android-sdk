@@ -16,17 +16,17 @@
     <string name="mozo_address_add_input_name_hint">Nhập tên người nhận</string>
     <string name="mozo_address_add_msg_saved">Đã lưu địa chỉ</string>
     <string name="mozo_address_add_msg_error">Địa chỉ đã tồn tại</string>
-    <string name="mozo_address_import_last_updated">Cập nhật gần nhất:</string>
-    <string name="mozo_address_import_msg">Bạn bè trong danh bạ điện thoại sẽ tự động được thêm vào danh bạ MozoX.</string>
-    <string name="mozo_address_import_title">Nhập từ danh bạ</string>
-    <string name="mozo_address_msg_import_success">Nhập từ danh bạ thành công</string>
     <string name="mozo_address_update_msg">Thêm bạn bè vào danh bạ MozoX từ danh bạ điện thoại nhanh chóng</string>
-    <string name="mozo_address_msg_not_import">Chưa được đồng bộ</string>
-    <string name="mozo_address_msg_no_contact">Danh bạ trống, không thể tiến hành đồng bộ.</string>
+    <string name="mozo_address_import_title">Nhập từ danh bạ</string>
+    <string name="mozo_address_import_msg">Bạn bè trong danh bạ điện thoại sẽ tự động được thêm vào danh bạ MozoX.</string>
+    <string name="mozo_address_import_last_updated">Cập nhật gần nhất:</string>
     <string name="mozo_address_require_permission">Để đồng bộ danh bạ điện thoại với danh bạ MozoX. Những danh bạ đã tồn tại sẽ bị ghi đè bởi thông tin trong danh bạ MozoX.</string>
+    <string name="mozo_address_require_permission_title">MozoX cần quyền truy cập danh bạ của bạn</string>
     <string name="mozo_address_require_permission_force">Trước hết bạn cần cấp quyền truy cập danh bạ</string>
     <string name="mozo_address_require_permission_force_title">Không thể truy cập danh bạ</string>
-    <string name="mozo_address_require_permission_title">MozoX cần quyền truy cập danh bạ của bạn</string>
+    <string name="mozo_address_msg_not_import">Chưa được đồng bộ</string>
+    <string name="mozo_address_msg_import_success">Nhập từ danh bạ thành công</string>
+    <string name="mozo_address_msg_no_contact">Danh bạ trống, không thể tiến hành đồng bộ.</string>
 
     <string name="mozo_dialog_qr_code">Địa chỉ ví MozoX của bạn</string>
     <string name="mozo_dialog_loading_msg">Đang khởi tạo giao diện</string>
@@ -81,9 +81,8 @@
     <string name="mozo_button_try_again">Thử lại</string>
 
     <string name="mozo_button_go_to_wallet">Chuyển đến Ví</string>
-    <string name="mozo_button_update_contact">Cập nhật danh bạ</string>
-    <string name="mozo_button_updating">Đang cập nhật…</string>
-    <string name="mozo_button_update">Cập nhật</string>
+    <string name="mozo_button_synchronize">Đồng bộ</string>
+    <string name="mozo_button_synchronizing">Đang đồng bộ…</string>
 
     <string name="mozo_backup_title">Sao lưu ví</string>
     <string name="mozo_backup_sub_title">Cụm từ khôi phục</string>
@@ -262,6 +261,7 @@
     <string name="mozo_transfer_contact_find_no_address">Số điện thoại này chưa có ví MozoX.</string>
     <string name="mozo_transfer_contact_not_found">Không tìm thấy trong danh bạ MozoX của bạn</string>
     <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví MozoX hoặc số điện thoại</string>
+    <string name="mozo_transfer_amount_error_invalid_phone">Lỗi: Số điện thoại không hợp lệ</string>
     <string name="mozo_transfer_amount_error_invalid_country_code">Lỗi: Mã vùng không hợp lệ.</string>
 
     <string name="mozo_transaction_detail_title">Chi tiết giao dịch</string>
