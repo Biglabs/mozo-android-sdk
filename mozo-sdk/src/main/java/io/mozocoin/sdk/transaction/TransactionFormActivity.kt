@@ -488,11 +488,15 @@ internal class TransactionFormActivity : BaseActivity() {
 
         if (!isValidAddress) {
             when {
-                (address.isDigitsOnly() && address.length < 20) || !MozoSDK.getInstance().contactViewModel.containCountryCode(address) -> {
-                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
-                }
-                !address.isValidPhone(this) -> {
+                address.isDigitsOnly() -> {
                     showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_phone)
+                }
+                address.startsWith("+") -> {
+                    if (MozoSDK.getInstance().contactViewModel.containCountryCode(address)) {
+                        if (!address.isValidPhone(this))
+                            showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_phone)
+
+                    } else showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
                 }
             }
         }
@@ -516,13 +520,23 @@ internal class TransactionFormActivity : BaseActivity() {
         val value = output_receiver_address?.text?.toString()?.trim()
         if (!value.isNullOrEmpty()) {
             when {
-                (value.isDigitsOnly() && value.length < 20) || !MozoSDK.getInstance().contactViewModel.containCountryCode(value) -> {
-                    MessageDialog.show(this, getString(R.string.mozo_transfer_amount_error_invalid_country_code).split(": ")[1])
-                }
-                !value.isValidPhone(this) -> {
+                value.isDigitsOnly() -> {
                     MessageDialog.show(this, getString(R.string.mozo_transfer_amount_error_invalid_phone).split(": ")[1])
                 }
-                value.isValidPhone(this) -> findContact(value)
+                value.startsWith("+") -> {
+                    if (MozoSDK.getInstance().contactViewModel.containCountryCode(value)) {
+                        if (value.isValidPhone(this)) findContact(value)
+                        else MessageDialog.show(
+                                this,
+                                getString(R.string.mozo_transfer_amount_error_invalid_phone)
+                                        .split(": ")[1]
+                        )
+                    } else MessageDialog.show(
+                            this,
+                            getString(R.string.mozo_transfer_amount_error_invalid_country_code)
+                                    .split(": ")[1]
+                    )
+                }
                 else -> MessageDialog.show(this, R.string.mozo_transfer_contact_find_err)
             }
         } else {
