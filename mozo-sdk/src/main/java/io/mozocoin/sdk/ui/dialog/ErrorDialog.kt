@@ -9,6 +9,8 @@ import androidx.annotation.IntDef
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.common.service.NetworkSchedulerService
+import io.mozocoin.sdk.ui.MozoSnackbar
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.visible
@@ -51,6 +53,7 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         super.cancel()
         cancelCallback?.onCancel(this)
         EventBus.getDefault().post(MessageEvent.UserCancelErrorDialog())
+        NetworkSchedulerService.checkNetwork()
     }
 
     override fun dismiss() {
@@ -119,6 +122,10 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
 
         errorMessage?.let {
             text_msg_error?.text = it
+        }
+
+        if (errorType == TYPE_NETWORK) {
+            MozoSnackbar.dismiss()
         }
     }
 
@@ -214,6 +221,8 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         }
 
         fun isShowing() = instance?.isShowing == true
+
+        fun isShowingForNetwork() = instance?.isShowing == true && instance?.errorType == TYPE_NETWORK
 
         fun setCancelable(cancel: Boolean) {
             instance?.setCancelable(cancel)

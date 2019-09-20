@@ -1,6 +1,7 @@
 <resources>
     <string name="mozo_format_date">MMM d, yyyy</string>
     <string name="mozo_format_date_time">HH:mm MMM d, yyyy</string>
+    <string name="mozo_contact_format_date_time" translatable="false">MMM dd, yyyy - HH:mm</string>
 
     <string name="mozo_address_book_title">Address Book</string>
     <string name="mozo_address_book_pick_title">Select Address</string>
@@ -15,6 +16,17 @@
     <string name="mozo_address_add_input_name_hint">Enter Contact Name</string>
     <string name="mozo_address_add_msg_saved">Address Saved</string>
     <string name="mozo_address_add_msg_error">This address already exists in your Address Book</string>
+    <string name="mozo_address_update_msg">Quickly add friends to MozoX Address Book from the phone book</string>
+    <string name="mozo_address_import_title">Synchronize Contacts</string>
+    <string name="mozo_address_import_msg">Friends in your contact list will automatically be added to MozoX Address Book.</string>
+    <string name="mozo_address_import_last_updated">Last updated:</string>
+    <string name="mozo_address_require_permission">To synchronize your contacts with MozoX Address Book, any existing contact will be overwritten by MozoX Address Book.</string>
+    <string name="mozo_address_require_permission_title">MozoX would like to access your Contact Book</string>
+    <string name="mozo_address_require_permission_force">You must give MozoX permission to access the Contact Book first</string>
+    <string name="mozo_address_require_permission_force_title">Cannot access your Contact Book</string>
+    <string name="mozo_address_msg_not_import">Not yet synchronized</string>
+    <string name="mozo_address_msg_import_success">Synchronize Contacts successful!</string>
+    <string name="mozo_address_msg_no_contact">Cannot synchronize, your Contact Book is empty.</string>
 
     <string name="mozo_dialog_qr_code">Your MozoX Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
@@ -72,6 +84,8 @@
     <string name="mozo_button_contact_zalo" translatable="false">Zalo</string>
 
     <string name="mozo_button_go_to_wallet">Go to Wallet</string>
+    <string name="mozo_button_synchronize">Synchronize</string>
+    <string name="mozo_button_synchronizing">Synchronizing…</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">This is your Recovery Phrase</string>
@@ -229,6 +243,7 @@
     <string name="mozo_payment_request_item_amount" translatable="false">%s MozoX</string>
 
     <string name="mozo_settings_title">Setting</string>
+    <string name="mozo_change_settings_title">Change Settings</string>
     <string name="mozo_settings_under_construction">Under Construction</string>
     <string name="mozo_settings_menu_currencies">Currencies</string>
     <string name="mozo_settings_menu_change_password">Change password</string>
@@ -237,11 +252,13 @@
     <string name="mozo_transfer_confirmation">Confirmation</string>
     <string name="mozo_transfer_from">From MozoX Offchain Wallet</string>
     <string name="mozo_transfer_receiver_address">Receiver Address</string>
-    <string name="mozo_transfer_receiver_address_hint">Enter receiver wallet address</string>
+    <string name="mozo_transfer_receiver_address_hint">Enter MozoX address or phone number</string>
     <string name="mozo_transfer_receiver_address_error">Error: The Receiver Address is not valid.</string>
     <string name="mozo_transfer_amount">Amount</string>
-    <string name="mozo_transfer_amount_hint">Input value in decimal format</string>
+    <string name="mozo_transfer_amount_hint">Enter amount to send</string>
     <string name="mozo_transfer_amount_error_not_enough">Error: Your spendable is not enough for this.</string>
+    <string name="mozo_transfer_amount_error_invalid_phone">Error: Invalid phone number</string>
+    <string name="mozo_transfer_amount_error_invalid_country_code">Error: Invalid country code</string>
     <string name="mozo_transfer_amount_on_chain_not_enough">Onchain balance is not enough.</string>
     <string name="mozo_transfer_amount_eth_not_enough">ETH balance is not enough.</string>
     <string name="mozo_transfer_amount_error_too_low">Error: Amount is too low, please input valid amount.</string>
@@ -250,6 +267,10 @@
     <string name="mozo_transfer_action_complete">Action Complete</string>
     <string name="mozo_transfer_send_complete">Send Completed</string>
     <string name="mozo_transfer_send_complete_msg">You have just sent:</string>
+    <string name="mozo_transfer_contact_not_found">Can\'t find this contact in your MozoX Address Book</string>
+    <string name="mozo_transfer_contact_find_in_system">Find in MozoX System →</string>
+    <string name="mozo_transfer_contact_find_err">We only support search by phone number.</string>
+    <string name="mozo_transfer_contact_find_no_address">This phone number does not belong to any MozoX Wallet Address</string>
 
     <string name="mozo_transaction_detail_title">Transaction Detail</string>
     <string name="mozo_transaction_detail_wallet_address">Wallet Address</string>

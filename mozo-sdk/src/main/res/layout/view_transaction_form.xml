@@ -96,25 +96,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/send_state_container" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/output_receiver_address"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginStart="@dimen/mozo_screen_margin"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="@dimen/mozo_screen_margin"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
             android:autofillHints="@string/mozo_transfer_receiver_address_hint"
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:hint="@string/mozo_transfer_receiver_address_hint"
+            android:imeOptions="actionDone"
             android:inputType="textNoSuggestions"
             android:lines="1"
+            android:nextFocusRight="@id/output_amount"
+            android:nextFocusDown="@id/output_amount"
+            android:paddingStart="0dp"
+            android:paddingEnd="70dp"
             android:textColor="@color/mozo_color_text_main"
             android:textColorHint="@color/mozo_color_un_active"
             android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@id/button_scan_qr"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/output_receiver_address_label"
             app:layout_goneMarginEnd="@dimen/mozo_screen_margin"
@@ -166,76 +171,74 @@
             android:id="@+id/output_receiver_address_user"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingTop="9dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/output_receiver_address_label"
             app:layout_constraintStart_toStartOf="@id/output_receiver_address_label"
             app:layout_constraintTop_toBottomOf="@id/output_receiver_address_label">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/output_receiver_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:padding="2dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:contentDescription="@string/mozo_transfer_receiver_address"
+                android:src="@drawable/ic_receiver"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_content_user" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_receiver_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginStart="30dp"
-                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
                 android:includeFontPadding="false"
+                android:lines="1"
                 android:textColor="@color/mozo_color_text_main"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/text_receiver_phone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/output_receiver_icon"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="An Tran" />
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Vũ Minh Hoàng" />
 
             <TextView
-                android:id="@+id/text_receiver_user_physical_address"
+                android:id="@+id/text_receiver_phone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginBottom="4dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
                 android:includeFontPadding="false"
-                android:textColor="@color/mozo_color_section_text"
-                android:textSize="12sp"
-                android:visibility="gone"
+                android:lines="1"
+                android:textColor="@color/mozo_color_title"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toTopOf="@id/text_receiver_user_address"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/output_receiver_icon"
-                tools:text="04564 253, Jangchungdan-ro, Jung-gu, Seoul, Korea." />
-
-            <TextView
-                android:id="@+id/text_receiver_user_address_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:text="@string/mozo_transaction_detail_wallet_address"
-                android:textColor="@color/mozo_color_primary"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_receiver_user_physical_address" />
+                app:layout_constraintStart_toEndOf="@id/output_receiver_icon"
+                app:layout_constraintTop_toBottomOf="@id/text_receiver_user_name"
+                tools:text="+84908937690" />
 
             <TextView
                 android:id="@+id/text_receiver_user_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
                 android:layout_marginEnd="5dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/mozo_color_text_main"
-                android:textSize="12sp"
+                android:ellipsize="middle"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textColor="@color/mozo_color_section_text"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/button_clear"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_receiver_user_address_label"
-                app:layout_goneMarginTop="7dp"
+                app:layout_constraintStart_toEndOf="@id/output_receiver_icon"
+                app:layout_constraintTop_toBottomOf="@id/text_receiver_phone"
                 tools:text="0x97309d360C015695cf50892f035E516ccA1898F0" />
 
             <TextView
@@ -253,8 +256,8 @@
                 android:text="@string/mozo_button_clear"
                 android:textColor="@color/mozo_color_primary"
                 android:textSize="12sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/text_receiver_user_address"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_receiver_user_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.Barrier
@@ -262,14 +265,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="output_receiver_address_underline,output_receiver_address_user" />
+            app:constraint_referenced_ids="output_receiver_address_underline,output_receiver_address_user,output_receiver_address_error_msg" />
 
         <TextView
             android:id="@+id/button_address_book"
             style="@style/MozoWalletInfoButtonText"
             android:layout_height="46dp"
             android:layout_marginStart="13dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:drawableStart="@drawable/ic_address_book"

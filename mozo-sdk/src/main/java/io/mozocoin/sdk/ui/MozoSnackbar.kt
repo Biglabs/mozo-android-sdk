@@ -172,6 +172,7 @@ class MozoSnackbar(
 
     companion object {
 
+        @SuppressLint("StaticFieldLeak")
         private var instance: MozoSnackbar? = null
 
         private fun findSuitableParent(view: View?): ViewGroup? {

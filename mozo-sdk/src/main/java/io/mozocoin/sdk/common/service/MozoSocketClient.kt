@@ -56,6 +56,9 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
                             }
+                            Constant.NOTIFY_EVENT_ADDRESS_BOOK_CHANGED -> {
+                                MozoSDK.getInstance().contactViewModel.fetchUser(MozoSDK.getInstance().context)
+                            }
                             Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
                                 MozoSDK.getInstance().contactViewModel.fetchStore(MozoSDK.getInstance().context)
                             }

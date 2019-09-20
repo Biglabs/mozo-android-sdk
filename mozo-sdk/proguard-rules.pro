@@ -52,3 +52,6 @@
 
 #Mozo
 -keep class io.mozocoin.sdk.common.model.** { *; }
+
+#Other
+-keepresourcefiles assets/io/michaelrocks/libphonenumber/android/**

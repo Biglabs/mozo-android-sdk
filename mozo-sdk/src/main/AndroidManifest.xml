@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Read Contacts from phone -->
+    <uses-permission android:name="android.permission.read_contacts" />
+
     <application
         android:hardwareAccelerated="true"
         android:supportsRtl="true">
@@ -31,6 +35,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name=".contact.ImportContactsActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
+
         <activity
             android:name=".authentication.MozoAuthActivity"
             android:excludeFromRecents="true"

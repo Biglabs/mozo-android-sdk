@@ -9,12 +9,13 @@ import java.util.*
 
 internal class ContactRecyclerAdapter(
         private val contacts: List<Contact>,
-
-        private val itemClick: ((contact: Contact) -> Unit)? = null
+        private val itemClick: ((contact: Contact) -> Unit)? = null,
+        private val onUpdateContact: (() -> Unit)? = null
 ) : SectionedRecyclerViewAdapter() {
 
     var mEmptyView: View? = null
     var isShowEmptyView = true
+    var isShowSyncContactsUI = true
 
     override fun getItemCount(): Int {
         val count = super.getItemCount()
@@ -26,6 +27,9 @@ internal class ContactRecyclerAdapter(
         isShowEmptyView = showEmptyView
         removeAllSections()
 
+        /**
+         * Add contacts to Alphabet section
+         */
         Constant.getAlphabets().map {
             val sec = arrayListOf<Contact>()
             contacts.map { c ->
@@ -43,6 +47,9 @@ internal class ContactRecyclerAdapter(
             }
         }
 
+        /**
+         * Add contacts to Other(#) section
+         */
         val otherContact = arrayListOf<Contact>()
         contacts.map { c ->
             if (c.name.isNullOrEmpty() || c.name[0].toUpperCase() < 'A' || c.name[0].toUpperCase() > 'Z') {
@@ -55,6 +62,13 @@ internal class ContactRecyclerAdapter(
         if (!hideEmptySection || otherContact.isNotEmpty()) {
             addSection("#", ContactSection("#", otherContact, itemClick))
         }
+
+        /**
+         * Add contacts to Alphabet section
+         */
+        if (isShowSyncContactsUI)
+            addSection("update-contacts", ContactCTASection(onUpdateContact))
+
         notifyDataSetChanged()
     }
 }
