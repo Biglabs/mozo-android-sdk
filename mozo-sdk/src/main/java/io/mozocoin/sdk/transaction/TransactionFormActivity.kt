@@ -488,12 +488,11 @@ internal class TransactionFormActivity : BaseActivity() {
 
         if (!isValidAddress) {
             when {
-                address.isDigitsOnly() && address.length < 20 -> {
-                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_phone)
+                (address.isDigitsOnly() && address.length < 20) || !MozoSDK.getInstance().contactViewModel.containCountryCode(address) -> {
+                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
                 }
-                address.startsWith("+") && !address.isValidPhone(this) -> {
-                    showErrorAddressUI(false,
-                            R.string.mozo_transfer_amount_error_invalid_country_code)
+                !address.isValidPhone(this) -> {
+                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_phone)
                 }
             }
         }
@@ -517,11 +516,11 @@ internal class TransactionFormActivity : BaseActivity() {
         val value = output_receiver_address?.text?.toString()?.trim()
         if (!value.isNullOrEmpty()) {
             when {
-                value.isDigitsOnly() && value.length < 20 -> {
-                    MessageDialog.show(this, getString(R.string.mozo_transfer_amount_error_invalid_phone).split(": ")[1])
-                }
-                value.startsWith("+") && !value.isValidPhone(this) -> {
+                (value.isDigitsOnly() && value.length < 20) || !MozoSDK.getInstance().contactViewModel.containCountryCode(value) -> {
                     MessageDialog.show(this, getString(R.string.mozo_transfer_amount_error_invalid_country_code).split(": ")[1])
+                }
+                !value.isValidPhone(this) -> {
+                    MessageDialog.show(this, getString(R.string.mozo_transfer_amount_error_invalid_phone).split(": ")[1])
                 }
                 value.isValidPhone(this) -> findContact(value)
                 else -> MessageDialog.show(this, R.string.mozo_transfer_contact_find_err)

@@ -162,8 +162,21 @@ internal object ViewModels {
     }
 
     class ContactViewModel : ViewModel() {
+        private val countriesLiveData = MutableLiveData<List<CountryCode>>()
         val usersLiveData = MutableLiveData<List<Contact>>()
         private val storesLiveData = MutableLiveData<List<Contact>>()
+
+        fun fetchCountries(context: Context, callback: (() -> Unit)? = null) {
+            MozoAPIsService.getInstance().getCountries(context, { data, _ ->
+                if (data?.items != null) {
+                    countriesLiveData.value = data.items
+                }
+                callback?.invoke()
+
+            }, {
+                fetchCountries(context, callback)
+            })
+        }
 
         fun fetchUser(context: Context, callback: (() -> Unit)? = null) {
             MozoAPIsService.getInstance().getContactUsers(context, { data, _ ->
@@ -188,6 +201,7 @@ internal object ViewModels {
         }
 
         fun fetchData(context: Context) {
+            fetchCountries(context)
             fetchUser(context)
             fetchStore(context)
         }
@@ -208,6 +222,10 @@ internal object ViewModels {
                     || it.phoneNo?.contains(keyword, ignoreCase = true) == true
                     || it.soloAddress?.contains(keyword, ignoreCase = true) == true
         }
+
+        fun containCountryCode(code: String): Boolean = countriesLiveData.value?.find {
+            code.startsWith(it.countryCode ?: "")
+        } != null
 
         fun users(): List<Contact> = usersLiveData.value ?: emptyList()
         fun stores(): List<Contact> = storesLiveData.value ?: emptyList()

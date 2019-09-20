@@ -124,4 +124,8 @@ internal interface MozoAPIs {
     @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting")
     fun getTodoSettings(): Call<Base<TodoSettings>>
 
+    /**
+     */
+    @GET("${MozoAPIsService.APIS_STORE}/common/countries")
+    fun getCountries(): Call<Base<BaseData<CountryCode>>>
 }

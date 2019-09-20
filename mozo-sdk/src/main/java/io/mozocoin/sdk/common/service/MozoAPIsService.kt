@@ -392,6 +392,18 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
+    /**
+     */
+    fun getCountries(
+            context: Context,
+            callback: ((BaseData<CountryCode>?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            execute(context, mozoAPIs.getCountries(), callback, retry)
+        }
+    }
+
     private fun <V, T : Base<V>> execute(
             context: Context,
             call: Call<T>,
