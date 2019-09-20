@@ -12,6 +12,7 @@ import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.utils.click
+import org.web3j.crypto.WalletUtils
 
 class ContactSuggestionAdapter(
         context: Context,
@@ -65,6 +66,9 @@ class ContactSuggestionAdapter(
             } else {
                 val found = MozoSDK.getInstance().contactViewModel.find(constraint.toString().trim())
                 if (found.isNullOrEmpty()) {
+                    if (WalletUtils.isValidAddress(constraint.toString())) {
+                        return results
+                    }
                     results.values = arrayListOf(Contact(ITEM_NOT_FOUND_HOLDER))
                     results.count = 1
 

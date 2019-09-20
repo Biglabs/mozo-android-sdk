@@ -22,6 +22,7 @@ import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.mozoSetup
 import io.mozocoin.sdk.utils.openTab
+import io.mozocoin.sdk.wallet.ChangePinActivity
 import io.mozocoin.sdk.wallet.backup.BackupWalletActivity
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_todo.*
@@ -162,7 +163,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
                         todoActivity.openTab("${Support.homePage()}/retailer-portal/buy-mozo-by-crypto")
                     }
                     TodoType.UNSECURE_WALLET.name -> {
-                        todoActivity.startActivity(Intent(todoActivity, BackupWalletActivity::class.java))
+                        todoActivity.startActivity(Intent(todoActivity, ChangePinActivity::class.java))
                     }
                     else -> MozoTodoList.getInstance().listeners.map { l ->
                         l.onTodoItemClicked(todoActivity, type)

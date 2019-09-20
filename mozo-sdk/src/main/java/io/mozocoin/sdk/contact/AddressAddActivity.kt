@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 internal class AddressAddActivity : BaseActivity() {
 
@@ -88,7 +89,7 @@ internal class AddressAddActivity : BaseActivity() {
 
         fun start(context: Context, address: String?) {
             Intent(context, AddressAddActivity::class.java).apply {
-                putExtra(FLAG_ADDRESS, address?.toLowerCase())
+                putExtra(FLAG_ADDRESS, address?.toLowerCase(Locale.getDefault()))
                 context.startActivity(this)
             }
         }

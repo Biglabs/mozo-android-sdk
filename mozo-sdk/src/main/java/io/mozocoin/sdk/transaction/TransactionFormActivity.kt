@@ -185,8 +185,11 @@ internal class TransactionFormActivity : BaseActivity() {
 
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    onFindInSystemClick.invoke()
-                    return@setOnEditorActionListener true
+                    val value = output_receiver_address?.text?.toString()?.trim()
+                    if (!value.isNullOrEmpty() && !WalletUtils.isValidAddress(value)) {
+                        onFindInSystemClick.invoke()
+                        return@setOnEditorActionListener true
+                    }
                 }
                 false
             }
@@ -351,12 +354,13 @@ internal class TransactionFormActivity : BaseActivity() {
 
         output_receiver_address_user_sent?.visible()
         output_receiver_icon_sent?.setImageResource(if (contact.isStore) R.drawable.ic_store else R.drawable.ic_receiver)
-        text_receiver_phone_sent?.text = if (contact.isStore) contact.physicalAddress else contact.phoneNo
-        text_receiver_phone_sent?.isVisible = text_receiver_phone_sent?.length() ?: 0 > 0
 
+        text_preview_address_sent?.gone()
         text_receiver_user_name_sent?.text = contact.name
         text_receiver_user_name_sent?.isVisible = !contact.name.isNullOrEmpty()
         text_receiver_user_address_sent?.text = contact.soloAddress
+        text_receiver_phone_sent?.text = if (contact.isStore) contact.physicalAddress else contact.phoneNo
+        text_receiver_phone_sent?.isVisible = text_receiver_phone_sent?.length() ?: 0 > 0
     }
 
     private val userContactsObserver = Observer<List<Contact>?> {
