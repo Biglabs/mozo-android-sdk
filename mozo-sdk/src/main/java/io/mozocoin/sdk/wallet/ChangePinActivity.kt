@@ -37,7 +37,10 @@ internal class ChangePinActivity : BaseActivity() {
             return
         }
 
-        loadWallet()
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(500)
+            loadWallet()
+        }
     }
 
     override fun onBackPressed() {
@@ -53,19 +56,20 @@ internal class ChangePinActivity : BaseActivity() {
                 return@syncProfile
             }
 
-            val wallet = MozoWallet.getInstance().getWallet()
-            if (wallet == null) {
-                "wallet null".logAsError()
-                // TODO OMG current wallet is null ?
-                finish()
-                return@syncProfile
-            }
+            MozoWallet.getInstance().getWallet { wallet ->
+                if (wallet == null) {
+                    "wallet null".logAsError()
+                    // TODO OMG current wallet is null ?
+                    finish()
+                    return@getWallet
+                }
 
-            setContentView(R.layout.activity_change_pin)
-            initUI()
-            if (wallet.isUnlocked()) {
-                showPinInputNewUI()
-            } else showPinInputUI()
+                setContentView(R.layout.activity_change_pin)
+                initUI()
+                if (wallet.isUnlocked()) {
+                    showPinInputNewUI()
+                } else showPinInputUI()
+            }
         }
     }
 
