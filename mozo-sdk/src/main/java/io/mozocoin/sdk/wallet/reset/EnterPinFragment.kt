@@ -14,6 +14,7 @@ import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.common.service.NetworkSchedulerService
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
 import kotlinx.android.synthetic.main.view_message_progress_status.*
@@ -137,7 +138,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
             data?.encrypt(mPinEntering)
             mInteractionListener?.getResetPinModel()?.setData(data)
 
-            if (!MozoSDK.isNetworkAvailable()) {
+            if (!NetworkSchedulerService.isNetworkAvailable()) {
                 showMessage(MESSAGE_ERROR_NETWORK)
                 return@withContext
             }

@@ -11,15 +11,31 @@ internal interface MozoAPIs {
     @GET("system-status")
     fun checkSystemStatus(): Call<Base<Status>>
 
-    @GET("${MozoAPIsService.APIS_SOLOMON}/contacts")
+    /**
+     * Contact APIs
+     */
+    @GET("${MozoAPIsService.APIS_SOLOMON}/v2/contacts")
     fun getContacts(): Call<Base<BaseData<Contact>>>
 
     @POST("${MozoAPIsService.APIS_SOLOMON}/contacts")
     fun saveContact(@Body contact: Contact): Call<Base<Contact>>
 
+    @POST("${MozoAPIsService.APIS_SOLOMON}/contacts/import-contact")
+    fun importContacts(@Body dto: ImportContactRequestDTO): Call<Base<ImportedContactDTO>>
+
+    //checking status of process import contact
+    @GET("${MozoAPIsService.APIS_SOLOMON}/contacts/import-process-checking")
+    fun checkingProcess(): Call<Base<ImportContactStatus>>
+
     @GET("${MozoAPIsService.APIS_STORE}/store-books")
     fun getStoreBook(): Call<Base<BaseData<Contact>>>
 
+    @GET("${MozoAPIsService.APIS_SOLOMON}/contacts/findContact/{phone}")
+    fun findContact(@Path("phone") phone: String): Call<Base<Contact>>
+
+    /**
+     * Profile APIs
+     */
     @GET("${MozoAPIsService.APIS_SOLOMON}/user-profile")
     fun getProfile(): Call<Base<Profile>>
 
@@ -94,4 +110,22 @@ internal interface MozoAPIs {
 
     @GET("${MozoAPIsService.APIS_STORE}/onchain/getBalanceETHAndFeeTransferERC20/{address}")
     fun getEthBalanceInOffChain(@Path("address") address: String): Call<Base<BalanceEthData>>
+
+    /**
+     * To-do list APIs
+     */
+    @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListShopper")
+    fun getTodoList4Shopper(
+        @Query("blueToothOff") isBluetoothOff: Boolean,
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double
+    ): Call<Base<BaseData<Todo>>>
+
+    @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting")
+    fun getTodoSettings(): Call<Base<TodoSettings>>
+
+    /**
+     */
+    @GET("${MozoAPIsService.APIS_STORE}/common/countries")
+    fun getCountries(): Call<Base<BaseData<CountryCode>>>
 }

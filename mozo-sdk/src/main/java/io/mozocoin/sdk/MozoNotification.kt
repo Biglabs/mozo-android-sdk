@@ -21,6 +21,7 @@ import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.transaction.TransactionDetails
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
+import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
 @Suppress("unused")
@@ -168,7 +169,7 @@ class MozoNotification private constructor() {
                     Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED,
                     Constant.NOTIFY_EVENT_PROMO_USED
-            )).contains(event?.toLowerCase()) && MozoSDK.shouldShowNotification
+            )).contains(event?.toLowerCase(Locale.ROOT)) && MozoSDK.shouldShowNotification
 
         @Synchronized
         internal fun prepareDataIntent(message: Notification): Intent = Intent(

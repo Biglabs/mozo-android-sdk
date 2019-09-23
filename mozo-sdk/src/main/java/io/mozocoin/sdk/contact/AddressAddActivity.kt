@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 internal class AddressAddActivity : BaseActivity() {
 
@@ -40,8 +41,13 @@ internal class AddressAddActivity : BaseActivity() {
 
     private fun executeSaveContact() {
         showLoading()
+        val contact = Contact(
+            id = 0,
+            name = input_contact_name.text.toString().trim(),
+            physicalAddress = null,
+            soloAddress = text_contact_address.text.toString()
+        )
 
-        val contact = Contact(0, input_contact_name.text.toString().trim(), null, text_contact_address.text.toString())
         mozoService.saveContact(this, contact) { data, errorCode ->
             hideLoading()
 
@@ -83,7 +89,7 @@ internal class AddressAddActivity : BaseActivity() {
 
         fun start(context: Context, address: String?) {
             Intent(context, AddressAddActivity::class.java).apply {
-                putExtra(FLAG_ADDRESS, address?.toLowerCase())
+                putExtra(FLAG_ADDRESS, address?.toLowerCase(Locale.getDefault()))
                 context.startActivity(this)
             }
         }

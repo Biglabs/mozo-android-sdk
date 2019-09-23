@@ -16,6 +16,17 @@
     <string name="mozo_address_add_input_name_hint">담당자 이름 입력</string>
     <string name="mozo_address_add_msg_saved">저장된 주소</string>
     <string name="mozo_address_add_msg_error">이 주소는 이미 주소록에 있습니다</string>
+    <string name="mozo_address_update_msg">연락처집에서 모조X로 빠르게 가져오기</string>
+    <string name="mozo_address_import_title">연락처 동기화</string>
+    <string name="mozo_address_import_msg">핸드폰에 있는 연락처를 자동적으로 모조X 연락처로 가져옵니다</string>
+    <string name="mozo_address_import_last_updated">최근 업데이트:</string>
+    <string name="mozo_address_require_permission">모조X 연락처와 동기화를 위하여 모조X에 있는 연락처 정보로 존재하고 있는 연락처를 겹쳐쓴다.</string>
+    <string name="mozo_address_require_permission_force">연락처 집 접근 권한 허용하세요</string>
+    <string name="mozo_address_require_permission_force_title">연락처 집 접근 불가</string>
+    <string name="mozo_address_require_permission_title">모조X는 연락처 집에 접근 권한 필요한다</string>
+    <string name="mozo_address_msg_not_import">동기화하지 않음</string>
+    <string name="mozo_address_msg_import_success">연락처 동기화 성공</string>
+    <string name="mozo_address_msg_no_contact">연락처 집 정보 없음. 동기화 불가</string>
 
     <string name="mozo_dialog_qr_code">MozoX 월렛 주소</string>
     <string name="mozo_dialog_loading_msg">인터페이스 만들기</string>
@@ -70,6 +81,8 @@
     <string name="mozo_button_try_again">다시 시도하십시오</string>
 
     <string name="mozo_button_go_to_wallet">지갑으로 이동하기</string>
+    <string name="mozo_button_synchronize">동기화</string>
+    <string name="mozo_button_synchronizing">동기화 중…</string>
 
     <string name="mozo_backup_title">지갑 백업하기</string>
     <string name="mozo_backup_sub_title">당신의 복구 문구입니다.</string>
@@ -170,6 +183,38 @@
     <string name="mozo_notify_content_received_group">총: %s 모조X</string>
     <string name="mozo_notify_content_invited_group">총 가입한 친구 수 : %d</string>
 
+    <string name="mozo_notify_warning_internet">인터넷 연결 문제 있다 😔</string>
+    <string name="mozo_notify_warning_action">설정 바로가기 →</string>
+
+    <string name="mozo_notify_to_do_airdrop_nearby">근처에 있는 에어드롭에서 모조X를 받으세요 🎁</string>
+    <string name="mozo_notify_to_do_airdrop_nearby_action">모조X 제공하는 스토어 살펴보기 → </string>
+    <string name="mozo_notify_to_do_airdrop_expire">에어드롭 이베트 곧 종료됩니다 ⏳</string>
+    <string name="mozo_notify_to_do_airdrop_expire_action">새로운 이벤트 리뷰하고 만들기 → </string>
+    <string name="mozo_notify_to_do_airdrop_empty">진행 계획 있는 에어드롭 이번트 없습니다 😐</string>
+    <string name="mozo_notify_to_do_airdrop_empty_action">방문 손님 향상 시키기 위해 만들기 → </string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo">에어드롭 이벤트에 모조X 거의다 배분했습니다 😞</string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo_action">모조X 보기 와 추가하기 → </string>
+    <string name="mozo_notify_to_do_location">위치 기능 꺼져 있다  🗺</string>
+    <string name="mozo_notify_to_do_location_action">더 좋은 체험을 위해 위치 기능 켜십시요 → </string>
+    <string name="mozo_notify_to_do_bluetooth">블루투스 꺼져 있다 😔…</string>
+    <string name="mozo_notify_to_do_bluetooth_action">모조X 받기 위해 블루투스 기능 켜십시요 → </string>
+    <string name="mozo_notify_to_do_promo_nearby">매력적인 프로모션 근처 있다 🤩</string>
+    <string name="mozo_notify_to_do_promo_nearby_action">좋아하는 프로모션 보기 → </string>
+    <string name="mozo_notify_to_do_promo_expire">곧 종료된 프로모션 👌</string>
+    <string name="mozo_notify_to_do_promo_expire_action">새로운 프로모션 만들기 → </string>
+    <string name="mozo_notify_to_do_promo_empty">진행 계획 있는 프로모션 없습니다 😐</string>
+    <string name="mozo_notify_to_do_promo_empty_action">프로모션 만들기 → </string>
+    <string name="mozo_notify_to_do_voucher_nearby">구매한 프로모션은 근처 있다 🤣</string>
+    <string name="mozo_notify_to_do_voucher_nearby_action">구매한 프로모션 사용하기 → </string>
+    <string name="mozo_notify_to_do_voucher_expired">구매한 프로모션은 곧 만료 된다 😣</string>
+    <string name="mozo_notify_to_do_voucher_expired_action">구매한 프로모션 사용하기 → </string>
+    <string name="mozo_notify_to_do_low_mozo_shopper">당신 지갑에 모조X 거의 다 떨어진다 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_shopper_action">모조X 제공하는 스토어 살펴보기 → </string>
+    <string name="mozo_notify_to_do_low_mozo_retailer">당신 지갑에 모조X 거의 다 떨어진다 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_retailer_action">모조X 더 구매하기 → </string>
+    <string name="mozo_notify_to_do_unsecured">안전하지 않은 지갑 😱</string>
+    <string name="mozo_notify_to_do_unsecured_action">당신의 PIN을 만들기 → </string>
+
     <string name="mozo_maintenance_title">죄송합니다. 유지 보수를 위해 대기 중입니다. 우리는 곧 돌아오겠습니다.</string>
     <string name="mozo_maintenance_tips_title">당신이 알고 계십니까?</string>
 
@@ -190,6 +235,7 @@
     <string name="mozo_payment_request_item_label_amount">요청하기:</string>
 
     <string name="mozo_settings_title">설치</string>
+    <string name="mozo_change_settings_title">설정 수정</string>
     <string name="mozo_settings_under_construction">개발중</string>
     <string name="mozo_settings_menu_currencies">통화 단위</string>
     <string name="mozo_settings_menu_change_password">비밀번호 변경</string>
@@ -198,19 +244,25 @@
     <string name="mozo_transfer_confirmation">확인</string>
     <string name="mozo_transfer_from">MozoX Offchain 월렛에서</string>
     <string name="mozo_transfer_receiver_address">수신자 주소</string>
-    <string name="mozo_transfer_receiver_address_hint">수신자의 월렛 주소를 입력하십시오</string>
     <string name="mozo_transfer_receiver_address_error">오류 : 수신자 주소가 유효하지 않습니다.</string>
+    <string name="mozo_transfer_receiver_address_hint">모조X 주소 또는 연락처 입력</string>
+    <string name="mozo_transfer_amount_error_invalid_phone">오류 : 폰 번호 틀렸습니다</string>
+    <string name="mozo_transfer_amount_error_invalid_country_code">오류 : 국가 코드가 잘못되었습니다.</string>
     <string name="mozo_transfer_amount">금액</string>
-    <string name="mozo_transfer_amount_hint">십진수로 값을 입력하십시오</string>
+    <string name="mozo_transfer_amount_hint">보낼 MozoX 금액을 입력하십시오.</string>
     <string name="mozo_transfer_amount_error_not_enough">오류 : 잔액만으로는 충분하지 않습니다.</string>
     <string name="mozo_transfer_amount_on_chain_not_enough">Onchain 밸런스가 충분하지 않습니다.</string>
     <string name="mozo_transfer_amount_eth_not_enough">ETH 밸런스가 충분하지 않습니다.</string>
     <string name="mozo_transfer_amount_error_too_low">오류 : 금액이 너무 적습니다. 유효한 금액을 입력하십시오.</string>
-    <string name="mozo_transfer_amount_error">오류 :십진수로 값을 입력하십시오.</string>
+    <string name="mozo_transfer_amount_error">오류 : 십진수로 값을 입력하십시오.</string>
     <string name="mozo_transfer_spendable">가용 잔액: %s MozoX</string>
     <string name="mozo_transfer_action_complete">액션 완료</string>
     <string name="mozo_transfer_send_complete">보내기 완료</string>
     <string name="mozo_transfer_send_complete_msg">방금 보낸 내용:</string>
+    <string name="mozo_transfer_contact_not_found">모조X 연락처 집에서 검색한 결과 없습니다</string>
+    <string name="mozo_transfer_contact_find_err">폰 번호만 검색 가능</string>
+    <string name="mozo_transfer_contact_find_in_system">모조X 시스템에 검색하기</string>
+    <string name="mozo_transfer_contact_find_no_address">이 폰 번호와 연동된 모조X 지갑 없습니다.</string>
 
     <string name="mozo_transaction_detail_title">거래 세부 정보</string>
     <string name="mozo_transaction_detail_wallet_address">월렛 주소</string>
@@ -220,12 +272,17 @@
     <string name="mozo_transaction_history_empty">거래 내역이 비어 있거나 연결 속도가 너무 느립니다.</string>
     <string name="mozo_transaction_history_empty_msg">MozoX를 친구들에게 전송하거나 MozoX를 보내달라고 요청하십시오.</string>
 
+    <string name="mozo_todo_title">해야 할 일</string>
+    <string name="mozo_todo_unsolved">%s 처리되지 않았습니다</string>
+    <string name="mozo_todo_unsolved_explain">모조X 앱을 문제 없이 사용하기 위해 아래에 나열된 것을 완료하세요.</string>
+
     <string name="mozo_text_gender_none">아니요</string>
     <string name="mozo_text_gender_male">남성</string>
     <string name="mozo_text_gender_female">여성</string>
 
     <string name="mozo_view_balance_title">MozoX Offchain 밸런스</string>
     <string name="mozo_view_address_title">귀하의 MozoX Offchain 월렛 주소</string>
+    <string name="mozo_view_text_mozo_off_chain">MozoX Offchain</string>
     <string name="mozo_view_text_address">주소:</string>
     <string name="mozo_view_text_hint">로드 중 …</string>
     <string name="mozo_view_text_to">까지</string>
@@ -243,4 +300,5 @@
     <string name="mozo_view_text_view_all">전체보기</string>
     <string name="mozo_view_text_just_now">지금</string>
     <string name="mozo_view_text_token_list">Token 리스트:</string>
+    <string name="mozo_view_text_no_data">데이터 없거나 연결 속도 너무 느립니다</string>
 </resources>

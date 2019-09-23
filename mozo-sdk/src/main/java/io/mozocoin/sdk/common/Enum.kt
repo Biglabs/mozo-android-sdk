@@ -29,3 +29,24 @@ enum class TransferSpeed(@StringRes val display: Int) {
         }
     }
 }
+
+enum class TodoType(@StringRes val title: Int, @StringRes val action: Int) {
+    AIRDROP_NEARBY(R.string.mozo_notify_to_do_airdrop_nearby, R.string.mozo_notify_to_do_airdrop_nearby_action),
+    AIRDROP_EXPIRED(R.string.mozo_notify_to_do_airdrop_expire, R.string.mozo_notify_to_do_airdrop_expire_action),
+    AIRDROP_EMPTY(R.string.mozo_notify_to_do_airdrop_empty, R.string.mozo_notify_to_do_airdrop_empty_action),
+    AIRDROP_OUT_OF_MOZOX(R.string.mozo_notify_to_do_airdrop_out_of_mozo, R.string.mozo_notify_to_do_airdrop_out_of_mozo_action),
+    LOCATION_SERVICE_OFF(R.string.mozo_notify_to_do_location, R.string.mozo_notify_to_do_location_action),
+    BLUETOOTH_OFF(R.string.mozo_notify_to_do_bluetooth, R.string.mozo_notify_to_do_bluetooth_action),
+    PROMOTION_NEARBY(R.string.mozo_notify_to_do_promo_nearby, R.string.mozo_notify_to_do_promo_nearby_action),
+    PROMOTION_EXPIRED(R.string.mozo_notify_to_do_promo_expire, R.string.mozo_notify_to_do_promo_expire_action),
+    PROMOTION_EMPTY(R.string.mozo_notify_to_do_promo_empty, R.string.mozo_notify_to_do_promo_empty_action),
+    VOUCHER_NEARBY(R.string.mozo_notify_to_do_voucher_nearby, R.string.mozo_notify_to_do_voucher_nearby_action),
+    VOUCHER_EXPIRED(R.string.mozo_notify_to_do_voucher_expired, R.string.mozo_notify_to_do_voucher_expired_action),
+    LOW_MOZOX_RETAILER(R.string.mozo_notify_to_do_low_mozo_retailer, R.string.mozo_notify_to_do_low_mozo_retailer_action),
+    LOW_MOZOX_SHOPPER(R.string.mozo_notify_to_do_low_mozo_shopper, R.string.mozo_notify_to_do_low_mozo_shopper_action),
+    UNSECURE_WALLET(R.string.mozo_notify_to_do_unsecured, R.string.mozo_notify_to_do_unsecured_action);
+
+    companion object {
+        fun find(key: String?) = values().find { it.name.equals(key, ignoreCase = true) }
+    }
+}

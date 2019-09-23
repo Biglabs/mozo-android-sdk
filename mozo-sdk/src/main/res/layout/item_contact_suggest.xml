@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:paddingStart="@dimen/mozo_screen_margin"
+    android:paddingEnd="@dimen/mozo_screen_margin"
+    android:tag="item_contact_content">
+
+    <ImageView
+        android:id="@+id/item_contact_avatar"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginBottom="11dp"
+        android:src="@drawable/ic_receiver"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_contact_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:textColor="@color/mozo_color_text_main"
+        app:layout_constraintBottom_toTopOf="@id/item_contact_phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_contact_avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Vũ Minh Hoàng" />
+
+    <TextView
+        android:id="@+id/item_contact_phone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginBottom="4dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:textColor="@color/mozo_color_title"
+        app:layout_constraintBottom_toTopOf="@id/item_contact_wallet_address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_contact_avatar"
+        app:layout_constraintTop_toBottomOf="@id/item_contact_name"
+        tools:text="+84908937690" />
+
+    <TextView
+        android:id="@+id/item_contact_wallet_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:ellipsize="middle"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:textColor="@color/mozo_color_section_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_contact_avatar"
+        app:layout_constraintTop_toBottomOf="@id/item_contact_phone"
+        tools:text="0x97309d36…A1898F0C41" />
+
+    <View
+        android:id="@+id/item_contact_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mozo_color_line"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

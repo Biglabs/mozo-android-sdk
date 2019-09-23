@@ -6,10 +6,21 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Read Contacts from phone -->
+    <uses-permission android:name="android.permission.read_contacts" />
 
     <application
         android:hardwareAccelerated="true"
         android:supportsRtl="true">
+        <service
+            android:name=".common.service.NetworkSchedulerService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <activity
             android:name=".contact.AddressAddActivity"
             android:excludeFromRecents="true"
@@ -24,6 +35,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name=".contact.ImportContactsActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
+
         <activity
             android:name=".authentication.MozoAuthActivity"
             android:excludeFromRecents="true"
@@ -145,6 +165,13 @@
         </activity>
         <activity
             android:name=".ui.MaintenanceActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MozoTheme"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
+            android:name=".ui.TodoActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

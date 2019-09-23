@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<view xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Design.Snackbar"
+    class="com.google.android.material.snackbar.Snackbar$SnackbarLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="68dp"
+    android:background="@drawable/dr_mozo_snack_bar"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark" />

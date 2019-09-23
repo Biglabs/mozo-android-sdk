@@ -1,10 +1,13 @@
 package io.mozocoin.sdk.utils
 
+import android.content.Context
 import android.util.Log
 import android.util.Patterns
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoSDK
 import java.security.MessageDigest
+import java.util.*
 
 internal fun String?.logAsError(prefix: String? = null) {
     if (BuildConfig.DEBUG || MozoSDK.isEnableDebugLogging) {
@@ -36,6 +39,19 @@ fun String.isIdcard(): Boolean {
 
 fun String.isPhone(): Boolean = !isNullOrEmpty() && Patterns.PHONE.matcher(this).matches()
 
+fun String.isValidPhone(context: Context): Boolean {
+    if (!isPhone()) return false
+
+    return try {
+        val phoneUtil = PhoneNumberUtil.createInstance(context)
+        val phoneNumber = phoneUtil.parse(this, Locale.getDefault().language)
+
+        phoneNumber != null && phoneUtil.isValidNumber(phoneNumber)
+    } catch (e: Exception) {
+        false
+    }
+}
+
 fun String.isEmail(): Boolean = !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
 
 fun String.isNumeric(): Boolean {
@@ -43,7 +59,7 @@ fun String.isNumeric(): Boolean {
     return matches(p)
 }
 
-fun String.equalsIgnoreCase(other: String) = this.toLowerCase().contentEquals(other.toLowerCase())
+fun String.equalsIgnoreCase(other: String) = this.toLowerCase(Locale.getDefault()).contentEquals(other.toLowerCase(Locale.getDefault()))
 
 private fun encrypt(string: String?, type: String): String {
     val bytes = MessageDigest.getInstance(type).digest(string!!.toByteArray())

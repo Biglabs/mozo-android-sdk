@@ -3,6 +3,7 @@ package io.mozocoin.sdk.transaction
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import io.mozocoin.sdk.MozoSDK
@@ -46,7 +47,7 @@ internal class TransactionDetails : BaseActivity() {
 
         var amount = BigDecimal.ZERO
         when {
-            mHistory != null -> {
+            mHistory != null        -> {
                 amount = mHistory!!.amountInDecimal()
                 setTitle(R.string.mozo_transaction_detail_title)
             }
@@ -80,7 +81,7 @@ internal class TransactionDetails : BaseActivity() {
             currentBalance = it.balanceNonDecimal
             it?.rate?.run {
                 text_detail_amount_rate_side.text = MozoSDK.getInstance().profileViewModel
-                        .formatCurrencyDisplay(amount.multiply(this), true)
+                    .formatCurrencyDisplay(amount.multiply(this), true)
             }
         })
     }
@@ -96,7 +97,7 @@ internal class TransactionDetails : BaseActivity() {
         var detailTime = 0L
         var amountDisplay = ""
         when {
-            mHistory != null -> {
+            mHistory != null        -> {
                 sendType = mHistory!!.type(myAddress)
                 text_detail_status.setText(if (sendType) R.string.mozo_view_text_tx_sent else R.string.mozo_view_text_tx_received)
                 targetAddress = if (sendType) mHistory!!.addressTo else mHistory!!.addressFrom
@@ -110,28 +111,26 @@ internal class TransactionDetails : BaseActivity() {
                 targetAddress = data.firstOrNull()
 
                 text_detail_status.setText(R.string.mozo_button_send_mozo)
-                //detailTime = mPaymentRequest!!.timeInSec * 1000
                 data.lastOrNull()?.let {
                     amountDisplay = it.toBigDecimal().displayString()
                 }
             }
         }
         if (sendType) {
-            text_detail_to_label.setText(R.string.mozo_view_text_to)
-            image_tx_type.setBackgroundResource(R.drawable.mozo_bg_icon_send)
-            text_detail_receiver_label.setText(R.string.mozo_transfer_receiver_address)
+            text_detail_receiver?.setText(R.string.mozo_view_text_to)
+            image_tx_type?.setBackgroundResource(R.drawable.mozo_bg_icon_send)
 
         } else {
-            text_detail_to_label.setText(R.string.mozo_view_text_from)
-            image_tx_type.setBackgroundResource(R.drawable.mozo_bg_icon_received)
-            image_tx_type.rotation = 180f
-            text_detail_receiver_label.setText(R.string.mozo_transaction_detail_wallet_address)
+            text_detail_receiver?.setText(R.string.mozo_view_text_from)
+            image_tx_type?.setBackgroundResource(R.drawable.mozo_bg_icon_received)
+            image_tx_type?.rotation = 180f
         }
 
-        text_detail_receiver_address.text = targetAddress
+        text_detail_receiver_wallet_address?.text = targetAddress
 
         if (detailTime > 0) {
-            text_detail_time.text = Support.getDisplayDate(this, detailTime, string(R.string.mozo_format_date_time))
+            text_detail_time.text =
+                Support.getDisplayDate(this, detailTime, string(R.string.mozo_format_date_time))
             text_detail_time.isVisible = true
         } else text_detail_time.isVisible = false
 
@@ -145,31 +144,29 @@ internal class TransactionDetails : BaseActivity() {
         findContactJob = GlobalScope.launch {
             val contact = MozoSDK.getInstance().contactViewModel.findByAddress(targetAddress)
             launch(Dispatchers.Main) {
+                val isContact = contact != null
+                val isStore = contact?.isStore == true
+
+                button_save_address?.isGone = isContact && !contact?.name.isNullOrEmpty()
+                button_save_address_top_line?.isGone = isContact
+                image_detail_receiver?.isVisible = isContact
+
+                text_detail_receiver_name?.isVisible = isContact
+                text_detail_receiver_phone?.isVisible =
+                    isContact && !isStore && !contact?.phoneNo.isNullOrEmpty()
+                text_detail_store_address?.isVisible = isContact && isStore
+
                 if (contact != null) {
-                    text_detail_receiver_icon.setImageResource(if (contact.isStore) R.drawable.ic_content_store else R.drawable.ic_content_user)
-                    text_detail_receiver_user_name.text = contact.name
-                    text_detail_receiver_user_address.isVisible = contact.isStore
-                    text_detail_receiver_user_address.text = contact.physicalAddress
-                    visible(arrayOf(
-                            text_detail_to_label,
-                            text_detail_receiver_icon,
-                            text_detail_receiver_user_name
-                    ))
-                    gone(arrayOf(
-                            button_save_address,
-                            button_save_address_top_line
-                    ))
-                } else {
-                    visible(arrayOf(
-                            button_save_address,
-                            button_save_address_top_line
-                    ))
-                    gone(arrayOf(
-                            text_detail_to_label,
-                            text_detail_receiver_icon,
-                            text_detail_receiver_user_name
-                    ))
-                    button_save_address.click { AddressAddActivity.start(this@TransactionDetails, targetAddress) }
+                    image_detail_receiver?.setImageResource(
+                        if (isStore) R.drawable.ic_store
+                        else R.drawable.ic_receiver
+                    )
+                    text_detail_receiver_name?.text = contact.name
+                    text_detail_store_address?.text = contact.physicalAddress
+                    text_detail_receiver_phone?.text = contact.phoneNo
+
+                } else button_save_address?.click {
+                    AddressAddActivity.start(this@TransactionDetails, targetAddress)
                 }
             }
             findContactJob = null

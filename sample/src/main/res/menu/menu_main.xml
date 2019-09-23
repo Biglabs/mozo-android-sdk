@@ -12,4 +12,10 @@
     <item
         android:id="@+id/action_view_setting"
         android:title="Setting" />
+    <item
+        android:id="@+id/action_todo"
+        android:title="Todo List" />
+    <item
+        android:id="@+id/action_address_book"
+        android:title="Address Book" />
 </menu>

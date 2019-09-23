@@ -270,6 +270,22 @@ class MozoWallet private constructor() {
         return mWallet
     }
 
+    internal fun getWallet(callback: (WalletHelper?) -> Unit) {
+        GlobalScope.launch {
+            var timeOut = 0
+            while (mWallet == null) {
+                if (timeOut >= 15) break
+
+                timeOut++
+                delay(500)
+            }
+
+            withContext(Dispatchers.Main) {
+                callback.invoke(mWallet)
+            }
+        }
+    }
+
     internal fun clear() {
         mWallet = null
         mProfile = null

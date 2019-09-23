@@ -2,6 +2,7 @@ package io.mozocoin.sdk.contact
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.model.Contact
@@ -54,6 +55,8 @@ internal class ContactSection(
             item_physical_address.text = contact.physicalAddress
             item_physical_address.isVisible = contact.isStore
             item_content.text = contact.soloAddress
+            item_phone.text = contact.phoneNo
+            item_phone.isGone = contact.phoneNo.isNullOrEmpty()
         }
     }
 }

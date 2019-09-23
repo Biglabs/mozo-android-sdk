@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.TodoActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp"
+        app:layout_insetEdge="none">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:contentInsetEnd="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp">
+
+            <io.mozocoin.sdk.ui.widget.MozoToolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                app:buttonBack="true"
+                app:title="@string/mozo_todo_title" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/todo_recycler_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/todo_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_todo" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <io.mozocoin.sdk.ui.view.MozoIconTextView
+        android:id="@+id/todo_recycler_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:drawableTop="@drawable/im_empty_todo"
+        android:drawablePadding="28dp"
+        android:gravity="center"
+        android:minHeight="340dp"
+        android:text="@string/mozo_view_text_no_data"
+        android:textColor="@color/mozo_color_title"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:drawableSize="265dp"
+        app:layout_anchor="@id/todo_recycler_refresh"
+        app:layout_anchorGravity="center" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

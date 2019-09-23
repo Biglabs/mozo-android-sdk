@@ -41,7 +41,6 @@ class PaymentTabCreateFragment : Fragment() {
     private fun initUI() {
         output_amount?.onAmountInputChanged(
                 textChanged = {
-                    updateSubmitButton()
                     if (it.isNullOrEmpty()) {
                         output_amount_rate?.text = ""
                         return@onAmountInputChanged
@@ -51,6 +50,8 @@ class PaymentTabCreateFragment : Fragment() {
                 amountChanged = {
                     mInputAmount = it
                     output_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(mInputAmount)
+
+                    updateSubmitButton()
                 }
         )
     }

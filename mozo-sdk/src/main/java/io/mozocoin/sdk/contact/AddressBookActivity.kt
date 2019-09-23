@@ -5,9 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import androidx.recyclerview.widget.DefaultItemAnimator
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.mozocoin.sdk.MozoSDK
@@ -30,7 +31,10 @@ internal class AddressBookActivity : BaseActivity() {
             //TODO open details
         }
     }
-    private var mAdapter = ContactRecyclerAdapter(contacts, onItemClick)
+
+    private var mAdapter = ContactRecyclerAdapter(contacts, onItemClick, {
+        launchActivity<ImportContactsActivity>(KEY_REQUEST_IMPORT_CONTACT)
+    })
 
     private var isStartForResult = false
     private var searchJob: Job? = null
@@ -44,6 +48,7 @@ internal class AddressBookActivity : BaseActivity() {
         input_search?.apply {
             onTextChanged {
                 button_clear.visibility = if (it?.length ?: 0 == 0) View.GONE else View.VISIBLE
+                mAdapter.isShowSyncContactsUI = (it?.length ?: 0) == 0
                 searchByName(it.toString())
             }
         }
@@ -87,25 +92,7 @@ internal class AddressBookActivity : BaseActivity() {
         list_contacts_refresh?.apply {
             mozoSetup()
             isRefreshing = true
-            setOnRefreshListener {
-                if (input_search.length() == 0) {
-                    when (address_book_tabs?.checkedRadioButtonId ?: R.id.address_book_tab_user) {
-                        R.id.address_book_tab_user -> {
-                            MozoSDK.getInstance().contactViewModel.fetchUser(context) {
-                                isRefreshing = false
-                                loadData()
-                            }
-                        }
-                        R.id.address_book_tab_store -> {
-                            MozoSDK.getInstance().contactViewModel.fetchStore(context) {
-                                isRefreshing = false
-                                loadData()
-                            }
-                        }
-                    }
-                } else
-                    isRefreshing = false
-            }
+            setOnRefreshListener(::refresh)
         }
 
         loadData()
@@ -120,6 +107,38 @@ internal class AddressBookActivity : BaseActivity() {
             setTitle(if (isStartForResult) R.string.mozo_address_book_pick_title else R.string.mozo_address_book_title)
             showBackButton(isStartForResult)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this, Observer {
+            loadData()
+        })
+    }
+
+    override fun onPause() {
+        MozoSDK.getInstance().contactViewModel.usersLiveData.removeObservers(this)
+        super.onPause()
+    }
+
+    private fun refresh() {
+        if (input_search.length() == 0) {
+            when (address_book_tabs?.checkedRadioButtonId ?: R.id.address_book_tab_user) {
+                R.id.address_book_tab_user -> {
+                    MozoSDK.getInstance().contactViewModel.fetchUser(this) {
+                        list_contacts_refresh?.isRefreshing = false
+                        loadData()
+                    }
+                }
+                R.id.address_book_tab_store -> {
+                    MozoSDK.getInstance().contactViewModel.fetchStore(this) {
+                        list_contacts_refresh?.isRefreshing = false
+                        loadData()
+                    }
+                }
+            }
+        } else
+            list_contacts_refresh?.isRefreshing = false
     }
 
     private fun loadData() {
@@ -154,15 +173,29 @@ internal class AddressBookActivity : BaseActivity() {
                 (it.name ?: "").contains(name, ignoreCase = true)
             })
             withContext(Dispatchers.Main) {
-                if (contacts.isEmpty()) view_empty_state.visible() else view_empty_state.gone()
+                if (contacts.isEmpty() && name.isNotEmpty()) view_empty_state.visible() else view_empty_state.gone()
                 mAdapter.notifyData(true, showEmptyView = false)
             }
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK)
+            return
+
+        if (requestCode == KEY_REQUEST_IMPORT_CONTACT) {
+            refresh()
+        }
+    }
+
     companion object {
         private const val FLAG_START_FOR_RESULT = "FLAG_START_FOR_RESULT"
+
         const val KEY_SELECTED_ADDRESS = "KEY_SELECTED_ADDRESS"
+
+        const val KEY_REQUEST_IMPORT_CONTACT = 0x0069
 
         fun start(context: Context) {
             Intent(context, AddressBookActivity::class.java).apply {

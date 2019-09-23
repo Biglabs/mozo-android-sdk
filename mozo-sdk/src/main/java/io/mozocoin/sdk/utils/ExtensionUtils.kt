@@ -3,6 +3,7 @@ package io.mozocoin.sdk.utils
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.net.Uri
@@ -22,6 +23,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.doOnNextLayout
+import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -57,6 +60,16 @@ fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? 
     }.commit()
 }
 
+fun Context?.isLocationPermissionGranted() = this != null && ContextCompat.checkSelfPermission(
+        this,
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+) == PackageManager.PERMISSION_GRANTED
+
+fun Context?.isStoragePermissionGranted() = this != null && ContextCompat.checkSelfPermission(
+        this,
+        android.Manifest.permission.READ_EXTERNAL_STORAGE
+) == PackageManager.PERMISSION_GRANTED
+
 internal fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
 internal fun Context.copyText(text: String?) {
@@ -90,12 +103,22 @@ fun Context.dimen(@DimenRes id: Int): Int = resources.getDimensionPixelSize(id)
 fun Context.bitmap(@DrawableRes icon: Int) = AppCompatResources.getDrawable(this, icon)?.toBitmap()
 
 fun Context.openTab(url: String) {
+    var finalUrl = url
+    if (finalUrl.contains(Support.domainHomePage(), ignoreCase = true)) {
+        val langParam = "language"
+
+        val uri = Uri.parse(finalUrl)
+        if (uri.getQueryParameter(langParam).isNullOrEmpty()) {
+            finalUrl = uri.buildUpon().appendQueryParameter(langParam, Locale.getDefault().language).build().toString()
+        }
+    }
+
     val customTabsIntent = CustomTabsIntent.Builder()
             .setShowTitle(true)
             .setToolbarColor(color(R.color.mozo_color_primary))
             .build()
     CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
-    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(url), null)
+    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), null)
 }
 
 fun visible(views: Array<View?>) {
@@ -140,7 +163,18 @@ fun View.hideKeyboard(): Boolean {
  * Set an onclick listener
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener { block(it as T) }
+fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener {
+    isClickable = false
+    block(it as T)
+
+    doOnNextLayout {
+        isClickable = true
+    }
+
+    postDelayed(2000) {
+        isClickable = true
+    }
+}
 
 inline fun <reified T : View> View.find(@IdRes id: Int): T? = findViewById(id) as? T
 

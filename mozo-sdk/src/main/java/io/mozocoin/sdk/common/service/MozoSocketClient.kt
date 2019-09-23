@@ -19,6 +19,7 @@ import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import java.util.*
+import kotlin.math.pow
 
 internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
 
@@ -29,10 +30,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     override fun onMessage(s: String?) {
         "message $s".logAsInfo(TAG)
-        if (instance == null) {
-            "Received a message while instance NULL".logAsInfo(TAG)
-            return
-        }
+
+
         s?.run {
             if (equals("1|X", ignoreCase = true)) {
                 sendPing()
@@ -51,11 +50,14 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         /* Save notification to local storage */
                         // MozoNotification.save(broadcast)
 
-                        when (broadcast.event.toLowerCase()) {
+                        when (broadcast.event.toLowerCase(Locale.getDefault())) {
                             /* Reload balance */
                             Constant.NOTIFY_EVENT_AIRDROP_INVITE,
                             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+                            }
+                            Constant.NOTIFY_EVENT_ADDRESS_BOOK_CHANGED -> {
+                                MozoSDK.getInstance().contactViewModel.fetchUser(MozoSDK.getInstance().context)
                             }
                             Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
                                 MozoSDK.getInstance().contactViewModel.fetchStore(MozoSDK.getInstance().context)
@@ -76,6 +78,15 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         }
                     }
                 }
+            }
+        }
+
+        if (instance == null) {
+            try {
+                closeBlocking()
+                closeConnection(-1, "proactive disconnect")
+            } finally {
+                doRetryConnect()
             }
         }
     }
@@ -174,11 +185,11 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 delay(retryConnectTime)
                 "retry connect time: $retryConnectTime".logAsInfo(TAG)
                 retryConnectTime *= 2
-                if (retryConnectTime > Constant.SOCKET_RETRY_START_TIME * Math.pow(2.0, 8.0)) {
+                if (retryConnectTime > Constant.SOCKET_RETRY_START_TIME * 2.0.pow(8.0)) {
                     retryConnectTime = Constant.SOCKET_RETRY_START_TIME
                 }
 
-                if (MozoSDK.isNetworkAvailable()) connect()
+                if (NetworkSchedulerService.isNetworkAvailable()) connect()
                 else doRetryConnect()
             }
         }
