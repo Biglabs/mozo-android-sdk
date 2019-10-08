@@ -215,7 +215,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="pin_forgot_title, pin_forgot_msg"
+            app:constraint_referenced_ids="pin_forgot_title,pin_forgot_msg"
             tools:visibility="visible" />
 
         <ProgressBar

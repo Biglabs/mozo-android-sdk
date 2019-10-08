@@ -82,7 +82,7 @@
                         android:textColor="@color/mozo_color_title"
                         android:textSize="25sp"
                         android:textStyle="bold"
-                        app:autoSizeMaxTextSize="25dp"
+                        app:autoSizeMaxTextSize="25sp"
                         app:autoSizeMinTextSize="14sp"
                         app:autoSizeTextType="uniform"
                         app:drawableSize="30dp"
@@ -239,16 +239,22 @@
                 tools:layoutAnimation="@anim/slide_fade_up"
                 tools:listitem="@layout/item_history" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@android:id/text1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mozo_screen_margin"
                 android:layout_marginTop="18dp"
+                android:includeFontPadding="false"
+                android:lines="1"
                 android:text="@string/mozo_transaction_history_title"
                 android:textColor="@color/mozo_color_title"
                 android:textSize="@dimen/mozo_text_size"
                 android:textStyle="bold"
+                app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+                app:autoSizeMinTextSize="8sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toStartOf="@id/wallet_fragment_btn_view_all"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/wallet_info_container" />
 
@@ -259,6 +265,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
+                android:includeFontPadding="false"
                 android:padding="@dimen/mozo_screen_margin"
                 android:text="@string/mozo_view_text_view_all"
                 android:textColor="@color/mozo_color_primary"

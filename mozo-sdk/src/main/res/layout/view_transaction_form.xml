@@ -420,7 +420,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="output_amount_underline, output_amount_preview_container" />
+            app:constraint_referenced_ids="output_amount_underline,output_amount_preview_container" />
 
         <TextView
             android:id="@+id/text_spendable"
