@@ -139,9 +139,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         @Synchronized
         fun getInstance(): MozoSDK {
-            if (instance == null) {
-                throw IllegalStateException("MozoSDK is not initialized. Make sure to call MozoSDK.initialize(Context) first.")
-            }
+            checkNotNull(instance) { "MozoSDK is not initialized. Make sure to call MozoSDK.initialize(Context) first." }
             return instance as MozoSDK
         }
 

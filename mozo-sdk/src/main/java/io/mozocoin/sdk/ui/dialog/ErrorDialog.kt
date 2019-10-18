@@ -1,5 +1,6 @@
 package io.mozocoin.sdk.ui.dialog
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Context
@@ -149,6 +150,7 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         const val ERROR_TYPE = "ERROR_TYPE"
         const val ERROR_MESSAGE = "ERROR_MESSAGE"
 
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var instance: ErrorDialog? = null
 

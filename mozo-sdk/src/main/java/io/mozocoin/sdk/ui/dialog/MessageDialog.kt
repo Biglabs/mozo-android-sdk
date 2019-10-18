@@ -1,5 +1,7 @@
 package io.mozocoin.sdk.ui.dialog
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import androidx.annotation.StringRes
@@ -28,6 +30,20 @@ class MessageDialog(context: Context, val message: String) : BaseDialog(context)
         }
     }
 
+    override fun show() {
+        instance?.dismiss()
+        super.show()
+
+        val ctx = context
+        if (ctx is Activity && (ctx.isFinishing || ctx.isDestroyed)) return
+        instance = this
+    }
+
+    override fun onStop() {
+        super.onStop()
+        instance = null
+    }
+
     fun setAction(@StringRes button: Int, buttonClicked: (() -> Unit)? = null) =
             setAction(context.string(button), buttonClicked)
 
@@ -43,12 +59,21 @@ class MessageDialog(context: Context, val message: String) : BaseDialog(context)
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
+        @Volatile
+        private var instance: MessageDialog? = null
+
         fun show(context: Context, @StringRes message: Int) {
             show(context, context.getString(message))
         }
 
         fun show(context: Context, message: String) = synchronized(this) {
             MessageDialog(context, message).show()
+        }
+
+        fun dismiss() {
+            instance?.dismiss()
+            instance = null
         }
     }
 }

@@ -16,6 +16,7 @@ import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.common.service.MozoTokenService
+import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.UserCancelException
 import kotlinx.coroutines.*
 import net.openid.appauth.AuthorizationException
@@ -108,6 +109,7 @@ class MozoAuth private constructor() {
     }
 
     fun signOut() {
+        MessageDialog.dismiss()
         authStateManager.clearSession()
 
         walletService.clear()
@@ -221,7 +223,7 @@ class MozoAuth private constructor() {
     }
 
     internal fun syncProfile(context: Context, callback: ((success: Boolean) -> Unit)? = null) {
-        if (!MozoAuth.getInstance().isSignedIn()) {
+        if (!isSignedIn()) {
             callback?.invoke(false)
             return
         }
@@ -233,7 +235,7 @@ class MozoAuth private constructor() {
             }
 
             /* Invoke Sign In event for subscriber */
-            MozoAuth.getInstance().onSignedInBeforeWallet()
+            onSignedInBeforeWallet()
 
             GlobalScope.launch {
                 if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {

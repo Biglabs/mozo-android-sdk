@@ -10,7 +10,7 @@ import android.view.Window
 import android.view.WindowManager
 import io.mozocoin.sdk.R
 
-open class BaseDialog(val ctx: Context) : Dialog(ctx) {
+open class BaseDialog(private val ctx: Context) : Dialog(ctx) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
