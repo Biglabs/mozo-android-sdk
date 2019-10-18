@@ -14,7 +14,11 @@ open class BaseDialog(private val ctx: Context) : Dialog(ctx) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        try {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+        } catch (ignore: Exception) {
+            ignore.printStackTrace()
+        }
 
         val value = TypedValue()
         context.resources.getValue(R.dimen.mozo_background_dim_amount, value, true)

@@ -19,7 +19,11 @@ class ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityPaused(activity: Activity) {
-        customTabsHelper?.unbindCustomTabsService(activity)
+        try {
+            customTabsHelper?.unbindCustomTabsService(activity)
+        } catch (ignore: Exception) {
+            ignore.printStackTrace()
+        }
     }
 
     override fun onActivityResumed(activity: Activity) {
