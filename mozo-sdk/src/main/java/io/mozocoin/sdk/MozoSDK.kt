@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import io.mozocoin.sdk.common.*
 import io.mozocoin.sdk.common.service.MozoDatabase
-import io.mozocoin.sdk.common.service.NetworkSchedulerService
+import io.mozocoin.sdk.common.service.ConnectionService
 import io.mozocoin.sdk.ui.MaintenanceActivity
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -47,7 +47,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
     override fun getViewModelStore(): ViewModelStore = mViewModelStore
 
     private fun registerNetworkCallback() {
-        val myJob = JobInfo.Builder(0, ComponentName(context, NetworkSchedulerService::class.java))
+        val myJob = JobInfo.Builder(0, ComponentName(context, ConnectionService::class.java))
                 .setRequiresCharging(true)
                 .setMinimumLatency(1000)
                 .setOverrideDeadline(2000)

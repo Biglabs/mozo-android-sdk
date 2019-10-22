@@ -17,7 +17,7 @@
         android:hardwareAccelerated="true"
         android:supportsRtl="true">
         <service
-            android:name=".common.service.NetworkSchedulerService"
+            android:name=".common.service.ConnectionService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 

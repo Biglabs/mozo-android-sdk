@@ -189,7 +189,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                     retryConnectTime = Constant.SOCKET_RETRY_START_TIME
                 }
 
-                if (NetworkSchedulerService.isNetworkAvailable()) connect()
+                if (ConnectionService.isNetworkAvailable()) connect()
                 else doRetryConnect()
             }
         }
