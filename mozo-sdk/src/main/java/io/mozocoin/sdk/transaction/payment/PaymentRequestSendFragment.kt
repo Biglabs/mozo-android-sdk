@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.fragment_payment_send.*
 import kotlinx.coroutines.*
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
+import java.util.*
 
 class PaymentRequestSendFragment : Fragment() {
 
@@ -46,7 +47,7 @@ class PaymentRequestSendFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.fragment_payment_send, container, false)
+            inflater.inflate(R.layout.fragment_payment_send, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -102,9 +103,9 @@ class PaymentRequestSendFragment : Fragment() {
                 }
             }
             setAdapter(ContactSuggestionAdapter(
-                context,
-                MozoSDK.getInstance().contactViewModel.contacts(),
-                onFindInSystemClick
+                    context,
+                    MozoSDK.getInstance().contactViewModel.contacts(),
+                    onFindInSystemClick
             ))
         }
 
@@ -123,23 +124,23 @@ class PaymentRequestSendFragment : Fragment() {
             }
 
             mListener?.onSendRequestClicked(
-                amount,
-                (selectedContact?.soloAddress
-                    ?: output_receiver_address.text.toString()).toLowerCase(),
-                PaymentRequest(content = content)
+                    amount,
+                    (selectedContact?.soloAddress
+                            ?: output_receiver_address.text.toString()).toLowerCase(Locale.getDefault()),
+                    PaymentRequest(content = content)
             )
         }
 
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(
-            this,
-            Observer<ViewModels.BalanceAndRate?> {
-                it ?: return@Observer
-                payment_request_rate.text = MozoSDK.getInstance().profileViewModel
-                    .formatCurrencyDisplay(
-                        amountBigDecimal.multiply(it.rate),
-                        true
-                    )
-            }
+                this,
+                Observer<ViewModels.BalanceAndRate?> {
+                    it ?: return@Observer
+                    payment_request_rate.text = MozoSDK.getInstance().profileViewModel
+                            .formatCurrencyDisplay(
+                                    amountBigDecimal.multiply(it.rate),
+                                    true
+                            )
+                }
         )
     }
 
@@ -151,8 +152,8 @@ class PaymentRequestSendFragment : Fragment() {
 
             } else {
                 MessageDialog.show(
-                    it,
-                    R.string.mozo_transfer_contact_find_err
+                        it,
+                        R.string.mozo_transfer_contact_find_err
                 )
             }
         }
@@ -183,7 +184,7 @@ class PaymentRequestSendFragment : Fragment() {
                     updateSubmitButton()
                 }
             }
-            data != null                    -> {
+            data != null -> {
                 IntentIntegrator.parseActivityResult(requestCode, resultCode, data).contents?.let {
                     if (WalletUtils.isValidAddress(it)) {
                         selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
@@ -265,12 +266,12 @@ class PaymentRequestSendFragment : Fragment() {
 
         if (!isValidAddress) {
             when {
-                address.isDigitsOnly() && address.length < 20               -> {
+                address.isDigitsOnly() && address.length < 20 -> {
                     showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
                 }
                 address.startsWith("+") && !address.isValidPhone(context!!) -> {
                     showErrorAddressUI(false,
-                        R.string.mozo_transfer_amount_error_invalid_country_code)
+                            R.string.mozo_transfer_amount_error_invalid_country_code)
                 }
             }
         }
@@ -284,14 +285,14 @@ class PaymentRequestSendFragment : Fragment() {
         output_receiver_address_underline?.setBackgroundColor(errorColor)
         output_receiver_address_error_msg?.visible()
         output_receiver_address_error_msg?.setText(
-            if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
+                if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
         )
     }
 
     private fun hideErrorAddressUI() {
         output_receiver_address_label?.setTextColor(
-            ContextCompat.getColorStateList(context ?: return,
-                R.color.mozo_color_input_focus)
+                ContextCompat.getColorStateList(context ?: return,
+                        R.color.mozo_color_input_focus)
         )
         output_receiver_address_underline?.setBackgroundResource(R.drawable.mozo_color_line_focus)
         output_receiver_address_error_msg?.gone()

@@ -15,12 +15,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/mozo_payment_request_title" />
 
-    <FrameLayout
-        android:id="@+id/payment_request_content_frame"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/payment_request_toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/payment_request_toolbar">
+
+        <FrameLayout
+            android:id="@+id/payment_request_content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

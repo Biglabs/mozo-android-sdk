@@ -63,7 +63,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MozoTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".transaction.TransactionFormActivity"
             android:excludeFromRecents="true"

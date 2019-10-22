@@ -4,16 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:gravity="center"
+        android:lines="1"
         android:paddingStart="@dimen/mozo_screen_margin"
         android:paddingEnd="@dimen/mozo_screen_margin"
         android:text="@string/mozo_transfer_contact_not_found"
         android:textColor="@color/mozo_color_title"
+        app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+        app:autoSizeMinTextSize="5dp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
