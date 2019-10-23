@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <ripple android:color="@color/mozo_color_ripple_primary">
+            <item android:id="@android:id/mask">
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/mozo_btn_corner_radius" />
+                    <solid android:color="@android:color/black" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/mozo_btn_corner_radius" />
+                    <stroke android:width="2.5dp" android:color="@color/mozo_color_primary" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+    <item android:drawable="@drawable/mozo_dr_btn_border" android:state_selected="false" />
+</selector>
