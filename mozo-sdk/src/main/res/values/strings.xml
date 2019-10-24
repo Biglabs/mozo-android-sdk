@@ -38,6 +38,8 @@
     <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
     <string name="mozo_dialog_error_msg">There is an error occurred.</string>
     <string name="mozo_dialog_error_not_enough_msg">Your balance is not insufficient for this transfer amount.</string>
+    <string name="mozo_dialog_error_system_time_msg">The time on your device is incorrect.</string>
+    <string name="mozo_dialog_error_system_time_msg_sub">Please update the date and time, then try again.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
     <string name="mozo_button_login">Sign In to MozoX</string>
@@ -246,7 +248,7 @@
     <string name="mozo_payment_request_item_label_amount">Request:</string>
     <string name="mozo_payment_request_item_amount" translatable="false">%s MozoX</string>
 
-    <string name="mozo_settings_title">Setting</string>
+    <string name="mozo_settings_title">Settings</string>
     <string name="mozo_change_settings_title">Change Settings</string>
     <string name="mozo_settings_under_construction">Under Construction</string>
     <string name="mozo_settings_menu_currencies">Currencies</string>

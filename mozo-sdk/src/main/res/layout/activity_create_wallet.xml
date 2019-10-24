@@ -90,9 +90,9 @@
                     android:lines="1"
                     android:text="@string/mozo_create_wallet_auto_section"
                     android:textColor="@color/mozo_color_title"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/mozo_text_size"
                     android:textStyle="bold"
-                    app:autoSizeMaxTextSize="20sp"
+                    app:autoSizeMaxTextSize="@dimen/mozo_text_size"
                     app:autoSizeTextType="uniform"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -103,12 +103,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="20dp"
                     android:text="@string/mozo_create_wallet_auto_explain"
                     android:textColor="@color/mozo_color_title"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@android:id/text1"
-                    app:layout_constraintTop_toBottomOf="@android:id/text1" />
+                    app:layout_constraintTop_toBottomOf="@android:id/text1"
+                    app:layout_constraintVertical_bias="0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,9 +147,9 @@
                     android:lines="1"
                     android:text="@string/mozo_create_wallet_manual_section"
                     android:textColor="@color/mozo_color_title"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/mozo_text_size"
                     android:textStyle="bold"
-                    app:autoSizeMaxTextSize="20sp"
+                    app:autoSizeMaxTextSize="@dimen/mozo_text_size"
                     app:autoSizeTextType="uniform"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -157,12 +160,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="20dp"
                     android:text="@string/mozo_create_wallet_manual_explain"
                     android:textColor="@color/mozo_color_title"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@android:id/text1"
-                    app:layout_constraintTop_toBottomOf="@android:id/text1" />
+                    app:layout_constraintTop_toBottomOf="@android:id/text1"
+                    app:layout_constraintVertical_bias="0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView

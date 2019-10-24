@@ -38,6 +38,8 @@
     <string name="mozo_dialog_error_scan_invalid_msg">Thông tin quét được không hợp lệ.</string>
     <string name="mozo_dialog_error_msg">Có lỗi xảy ra.</string>
     <string name="mozo_dialog_error_not_enough_msg">Số dư không đủ để gửi</string>
+    <string name="mozo_dialog_error_system_time_msg">Đồng hồ của bạn không chính xác.</string>
+    <string name="mozo_dialog_error_system_time_msg_sub">Xin vui lòng cập nhật ngày giờ và thử lại sau.</string>
 
     <string name="mozo_button_deposit">Gửi vào</string>
     <string name="mozo_button_login">Đăng nhập MozoX</string>

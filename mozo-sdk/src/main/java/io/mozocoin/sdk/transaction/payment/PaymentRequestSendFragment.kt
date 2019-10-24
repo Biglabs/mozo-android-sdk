@@ -162,12 +162,14 @@ class PaymentRequestSendFragment : Fragment() {
     private fun findContact(phone: String) {
         val context = context ?: return
         MozoAPIsService.getInstance().findContact(context, phone, { data, _ ->
-            if (data?.soloAddress.isNullOrEmpty()) {
-                MessageDialog.show(context, R.string.mozo_transfer_contact_find_no_address)
+            if (data != null) {
+                if (data.soloAddress.isNullOrEmpty()) {
+                    MessageDialog.show(context, R.string.mozo_transfer_contact_find_no_address)
 
-            } else {
-                selectedContact = data
-                showContactInfoUI()
+                } else {
+                    selectedContact = data
+                    showContactInfoUI()
+                }
             }
         }, {
             findContact(phone)

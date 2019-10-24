@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
+import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import androidx.core.os.ConfigurationCompat
@@ -320,9 +322,28 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     private fun finishAuth(exception: Exception? = null) = GlobalScope.launch(Dispatchers.Main) {
-        EventBus.getDefault().post(MessageEvent.Auth(exception))
-        finish()
-        authenticationInProgress = false
+        if (
+                exception is AuthorizationException
+                && exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code
+                && exception.cause?.message?.contains("Issued at time", ignoreCase = true) == true
+        ) {
+            AlertDialog.Builder(this@MozoAuthActivity, R.style.PermissionTheme)
+                    .setTitle(R.string.mozo_dialog_error_system_time_msg)
+                    .setMessage(R.string.mozo_dialog_error_system_time_msg_sub)
+                    .setPositiveButton(R.string.mozo_settings_title) { dialog, _ ->
+                        dialog.dismiss()
+                        this@MozoAuthActivity.startActivity(Intent(Settings.ACTION_DATE_SETTINGS))
+                    }
+                    .setOnDismissListener {
+                        cancelAuth()
+                    }
+                    .create()
+                    .show()
+        } else {
+            EventBus.getDefault().post(MessageEvent.Auth(exception))
+            finish()
+            authenticationInProgress = false
+        }
     }
 
     private fun cancelAuth() {

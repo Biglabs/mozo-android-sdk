@@ -38,6 +38,8 @@
     <string name="mozo_dialog_error_scan_invalid_msg">스캔 한 값이 유효하지 않습니다.</string>
     <string name="mozo_dialog_error_msg">오류가 발생했습니다.</string>
     <string name="mozo_dialog_error_not_enough_msg">금액을 이송하도록 밸런스가 부족되어있습니다.</string>
+    <string name="mozo_dialog_error_system_time_msg">시간이 정확하지 않습니다.</string>
+    <string name="mozo_dialog_error_system_time_msg_sub">시간 업데이트 하시고 다시 시도해보세요.</string>
 
     <string name="mozo_button_deposit">예금</string>
     <string name="mozo_button_login">MozoX에 로그인</string>
