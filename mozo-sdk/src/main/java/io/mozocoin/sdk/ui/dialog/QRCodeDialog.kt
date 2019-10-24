@@ -30,7 +30,7 @@ internal class QRCodeDialog(context: Context, val value: String) : BaseDialog(co
             }
         }
 
-        button_close.click { dismiss() }
+        button_close?.click { dismiss() }
     }
 
     override fun onStop() {

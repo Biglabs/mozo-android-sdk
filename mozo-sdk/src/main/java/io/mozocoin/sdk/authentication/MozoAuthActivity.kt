@@ -325,7 +325,8 @@ internal class MozoAuthActivity : FragmentActivity() {
         if (
                 exception is AuthorizationException
                 && exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code
-                && exception.cause?.message?.contains("Issued at time", ignoreCase = true) == true
+                && (exception.cause?.message?.contains("Issued at time", ignoreCase = true) == true
+                        || exception.cause?.message?.contains("ID Token expired", ignoreCase = true) == true)
         ) {
             AlertDialog.Builder(this@MozoAuthActivity, R.style.PermissionTheme)
                     .setTitle(R.string.mozo_dialog_error_system_time_msg)
