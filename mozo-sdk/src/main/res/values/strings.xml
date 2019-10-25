@@ -140,7 +140,7 @@
     <string name="mozo_pin_title_restore">Restore Wallet</string>
     <string name="mozo_pin_title_verify">Security PIN Confirmation</string>
     <string name="mozo_pin_title_change">Change Security PIN</string>
-    <string name="mozo_pin_sub_title">Enter your Security PIN</string>
+    <string name="mozo_pin_sub_title">Enter Security PIN</string>
     <string name="mozo_pin_sub_title_restore">Enter your Security PIN\nto restore wallet</string>
     <string name="mozo_pin_sub_title_send">Enter your Security PIN\nto send MozoX</string>
     <string name="mozo_pin_content">Security PIN must be 6 digit numbers</string>
