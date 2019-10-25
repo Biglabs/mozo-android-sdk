@@ -93,10 +93,11 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
         "close [code: $code, reason: $reason]".logAsInfo(TAG)
-        if (code != -1) {
+        if (!isDoDisconnect) {
             disconnect()
             doRetryConnect()
         }
+        isDoDisconnect = false
     }
 
     override fun onError(e: Exception?) {
@@ -121,6 +122,8 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
         @Volatile
         private var retryConnectTime = Constant.SOCKET_RETRY_START_TIME
+
+        private var isDoDisconnect = false
 
         @Synchronized
         fun connect() {
@@ -171,6 +174,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         @JvmStatic
         fun disconnect() = GlobalScope.launch {
             try {
+                isDoDisconnect = true
                 instance?.closeBlocking()
                 instance?.closeConnection(-1, "proactive disconnect")
             } finally {
@@ -189,7 +193,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                     retryConnectTime = Constant.SOCKET_RETRY_START_TIME
                 }
 
-                if (NetworkSchedulerService.isNetworkAvailable()) connect()
+                if (ConnectionService.isNetworkAvailable()) connect()
                 else doRetryConnect()
             }
         }

@@ -17,7 +17,7 @@ import org.web3j.crypto.WalletUtils
 class ContactSuggestionAdapter(
         context: Context,
         val contacts: List<Contact>,
-        val onFindClicked: (() -> Unit)? = null
+        private val onFindClicked: (() -> Unit)? = null
 ) : ArrayAdapter<Contact>(context, R.layout.item_contact_suggest, contacts) {
 
     private val inflater = LayoutInflater.from(context)

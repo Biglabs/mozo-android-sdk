@@ -23,7 +23,6 @@ import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.mozoSetup
 import io.mozocoin.sdk.utils.openTab
 import io.mozocoin.sdk.wallet.ChangePinActivity
-import io.mozocoin.sdk.wallet.backup.BackupWalletActivity
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_todo.*
 import kotlinx.android.synthetic.main.item_todo.*

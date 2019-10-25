@@ -17,7 +17,7 @@ import io.mozocoin.sdk.ui.MozoSnackbar
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.logAsInfo
 
-class NetworkSchedulerService : JobService() {
+class ConnectionService : JobService() {
 
     private val connectivityManager: ConnectivityManager by lazy {
         applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -48,11 +48,12 @@ class NetworkSchedulerService : JobService() {
         return true
     }
 
+    interface ConnectionChangedListener {
+        fun onConnectionChanged(isConnected: Boolean)
+    }
+
     companion object {
-        internal fun isNetworkAvailable(): Boolean {
-            val cm = MozoSDK.getInstance().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            return cm.activeNetworkInfo?.isConnected == true
-        }
+        private var listeners: ArrayList<ConnectionChangedListener>? = null
 
         private fun onNetworkConnectionChanged(isConnected: Boolean, resumeState: Boolean = true) {
             if (MozoSDK.getInstance().remindAnchorView != null) {
@@ -92,10 +93,37 @@ class NetworkSchedulerService : JobService() {
                 "Network lost".logAsInfo()
                 MozoSocketClient.disconnect()
             }
+
+            listeners?.forEach {
+                it.onConnectionChanged(isConnected)
+            }
+        }
+
+        internal fun isNetworkAvailable(): Boolean {
+            val cm = MozoSDK.getInstance().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            return cm.activeNetworkInfo?.isConnected == true
         }
 
         fun checkNetwork() {
             onNetworkConnectionChanged(isNetworkAvailable(), false)
+        }
+
+        fun addConnectionChangedListener(listener: ConnectionChangedListener) {
+            if (listeners == null) {
+                listeners = arrayListOf()
+            }
+
+            if (listeners?.contains(listener) == false) {
+                listeners?.add(listener)
+            }
+        }
+
+        fun removeConnecttionChangeListener(listener: ConnectionChangedListener) {
+            listeners?.remove(listener)
+        }
+
+        fun clearConnectionChangedListener() {
+            listeners?.clear()
         }
     }
 }

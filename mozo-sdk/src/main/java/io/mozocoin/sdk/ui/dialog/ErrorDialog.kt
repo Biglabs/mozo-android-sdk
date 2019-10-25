@@ -1,5 +1,6 @@
 package io.mozocoin.sdk.ui.dialog
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Context
@@ -9,7 +10,7 @@ import androidx.annotation.IntDef
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
-import io.mozocoin.sdk.common.service.NetworkSchedulerService
+import io.mozocoin.sdk.common.service.ConnectionService
 import io.mozocoin.sdk.ui.MozoSnackbar
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.gone
@@ -53,7 +54,7 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         super.cancel()
         cancelCallback?.onCancel(this)
         EventBus.getDefault().post(MessageEvent.UserCancelErrorDialog())
-        NetworkSchedulerService.checkNetwork()
+        ConnectionService.checkNetwork()
     }
 
     override fun dismiss() {
@@ -149,6 +150,7 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         const val ERROR_TYPE = "ERROR_TYPE"
         const val ERROR_MESSAGE = "ERROR_MESSAGE"
 
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var instance: ErrorDialog? = null
 

@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/payment_tab_list"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -26,11 +26,16 @@
             android:background="@drawable/mozo_check_tab_left"
             android:button="@null"
             android:gravity="center"
+            android:lines="1"
+            android:padding="5dp"
             android:text="@string/mozo_payment_request_tab_list"
             android:textColor="@color/mozo_check_btn_text_color"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeTextType="uniform" />
 
-        <RadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/payment_tab_create"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -38,8 +43,12 @@
             android:background="@drawable/mozo_check_tab_right"
             android:button="@null"
             android:gravity="center"
+            android:padding="5dp"
             android:text="@string/mozo_payment_request_tab_create"
-            android:textColor="@color/mozo_check_btn_text_color" />
+            android:textColor="@color/mozo_check_btn_text_color"
+            app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeTextType="uniform" />
     </RadioGroup>
 
     <FrameLayout

@@ -55,7 +55,10 @@ class Support {
                 BarcodeFormat.QR_CODE,
                 size,
                 size,
-                hashMapOf(EncodeHintType.MARGIN to 0)
+                hashMapOf(
+                        EncodeHintType.CHARACTER_SET to "UTF-8",
+                        EncodeHintType.MARGIN to 0
+                )
         )
 
         @JvmStatic

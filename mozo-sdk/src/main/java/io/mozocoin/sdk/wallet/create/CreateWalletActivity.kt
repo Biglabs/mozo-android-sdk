@@ -3,6 +3,13 @@ package io.mozocoin.sdk.wallet.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.view.View
+import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
@@ -23,14 +30,45 @@ internal class CreateWalletActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_wallet)
 
+        button_create_auto?.isSelected = true
         button_create_auto?.click {
-            showCreatingUI()
-            doCreateWallet()
+            it.isSelected = true
+            button_create_manual?.isSelected = false
         }
 
         button_create_manual?.click {
-            SecurityActivity.start(this, SecurityActivity.KEY_CREATE_PIN, KEY_CREATE_WALLET_MANUAL)
+            it.isSelected = true
+            button_create_auto?.isSelected = false
         }
+
+        button_continue?.click {
+            when {
+                button_create_manual?.isSelected == true -> {
+                    SecurityActivity.start(this, SecurityActivity.KEY_CREATE_PIN, KEY_CREATE_WALLET_MANUAL)
+
+                }
+                else -> {
+                    showCreatingUI()
+                    doCreateWallet()
+                }
+            }
+        }
+
+        val actionText = getString(R.string.mozo_button_logout_short)
+        val spannable = SpannableString(getString(R.string.mozo_create_wallet_have_another_account, actionText))
+        spannable.setSpan(
+                object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        EventBus.getDefault().post(MessageEvent.CloseActivities())
+                        Handler().postDelayed({ MozoAuth.getInstance().signOut() }, 1000)
+                    }
+                },
+                spannable.length - actionText.length,
+                spannable.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        create_wallet_have_other_account_hint?.text = spannable
+        create_wallet_have_other_account_hint?.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun onDestroy() {

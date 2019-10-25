@@ -38,10 +38,13 @@
     <string name="mozo_dialog_error_scan_invalid_msg">스캔 한 값이 유효하지 않습니다.</string>
     <string name="mozo_dialog_error_msg">오류가 발생했습니다.</string>
     <string name="mozo_dialog_error_not_enough_msg">금액을 이송하도록 밸런스가 부족되어있습니다.</string>
+    <string name="mozo_dialog_error_system_time_msg">시간이 정확하지 않습니다.</string>
+    <string name="mozo_dialog_error_system_time_msg_sub">시간 업데이트 하시고 다시 시도해보세요.</string>
 
     <string name="mozo_button_deposit">예금</string>
     <string name="mozo_button_login">MozoX에 로그인</string>
     <string name="mozo_button_logout">MozoX 로그 아웃</string>
+    <string name="mozo_button_logout_short">로그아웃</string>
     <string name="mozo_button_send_mozo">MozoX 코인 보내기</string>
     <string name="mozo_button_transfer">전송하기</string>
     <string name="mozo_button_transaction_history">거래 내역</string>
@@ -118,11 +121,14 @@
     <string name="mozo_convert_on_in_off_eth_balance">ETH 잔액은 &lt;b>%s&lt;/b>입니다.</string>
 
     <string name="mozo_create_wallet_title">모조X 지갑 만들기</string>
+    <string name="mozo_create_wallet_select_method">당신이 원하는 것은:</string>
+    <string name="mozo_create_wallet_have_another_account">다른 모조X 계정을 가지고 계신거에요? %s</string>
     <string name="mozo_create_wallet_auto_section">지갑 자동 만들기</string>
     <string name="mozo_create_wallet_auto_explain">당신의 복구 문구* 및 보안 PIN을 자동적으로 생성되어 시스템에 저장됩니다.</string>
     <string name="mozo_create_wallet_manual_section">지갑 직접 만들기</string>
     <string name="mozo_create_wallet_manual_explain">당신이 만든 복구 문구 및 보안 PIN을 백업해야 합니다.</string>
-    <string name="mozo_create_wallet_hint_explain"><b>*복구 문구는 무엇입니까?</b>\n\n복구 문구는 전자 지갑 보안을 위한 임의 글자 세트입니다. 전자 지갑 분실이나 PIN을 잊어버릴 경우, 자기 전자 지갑을 복구하거나 PIN을 재설정하기 위해 이 글자들을 꼭 써 놓아야 합니다.</string>
+    <string name="mozo_create_wallet_hint_explain_title">*복구 문구는 무엇입니까?</string>
+    <string name="mozo_create_wallet_hint_explain">복구 문구는 전자 지갑 보안을 위한 임의 글자 세트입니다. 전자 지갑 분실이나 PIN을 잊어버릴 경우, 자기 전자 지갑을 복구하거나 PIN을 재설정하기 위해 이 글자들을 꼭 써 놓아야 합니다.</string>
     <string name="mozo_create_wallet_creating">당신의 모조X 지갑 만드는 중…</string>
 
     <string name="mozo_pin_title">보안 PIN 생성</string>

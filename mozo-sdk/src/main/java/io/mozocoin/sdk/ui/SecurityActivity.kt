@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.transaction.TransactionFormActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
 import io.mozocoin.sdk.wallet.backup.SeedWordAdapter
@@ -307,8 +308,8 @@ internal class SecurityActivity : BaseActivity() {
             pin_toolbar.screen_title.setText(R.string.mozo_transfer_title)
             sub_title_pin.setText(R.string.mozo_pin_sub_title_send)
         } else {
-            pin_toolbar.screen_title.setText(R.string.mozo_pin_title_verify)
-            sub_title_pin.setText(R.string.mozo_pin_sub_title)
+            pin_toolbar.screen_title.setText(R.string.mozo_pin_sub_title)
+            sub_title_pin.setText(R.string.mozo_pin_sub_title_send)
         }
     }
 
@@ -461,7 +462,11 @@ internal class SecurityActivity : BaseActivity() {
         }
 
         fun startVerify(context: Context) {
-            start(context, KEY_VERIFY_PIN)
+            start(
+                    context,
+                    if (context is TransactionFormActivity) KEY_VERIFY_PIN_FOR_SEND
+                    else KEY_VERIFY_PIN
+            )
         }
     }
 }

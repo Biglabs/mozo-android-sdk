@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/history_toolbar">
 
-        <RadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/history_filter_all"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,11 +38,15 @@
             android:button="@android:color/transparent"
             android:gravity="center"
             android:includeFontPadding="false"
+            android:lines="1"
             android:padding="6dp"
             android:text="@string/mozo_view_text_tx_all"
-            android:textColor="@color/mozo_check_btn_text_color" />
+            android:textColor="@color/mozo_check_btn_text_color"
+            app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeTextType="uniform" />
 
-        <RadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/history_filter_received"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -53,11 +57,15 @@
             android:button="@android:color/transparent"
             android:gravity="center"
             android:includeFontPadding="false"
+            android:lines="1"
             android:padding="6dp"
             android:text="@string/mozo_view_text_tx_received"
-            android:textColor="@color/mozo_check_btn_text_color" />
+            android:textColor="@color/mozo_check_btn_text_color"
+            app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeTextType="uniform" />
 
-        <RadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/history_filter_sent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -66,9 +74,13 @@
             android:button="@android:color/transparent"
             android:gravity="center"
             android:includeFontPadding="false"
+            android:lines="1"
             android:padding="6dp"
             android:text="@string/mozo_view_text_tx_sent"
-            android:textColor="@color/mozo_check_btn_text_color" />
+            android:textColor="@color/mozo_check_btn_text_color"
+            app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeTextType="uniform" />
     </RadioGroup>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

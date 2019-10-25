@@ -38,10 +38,13 @@
     <string name="mozo_dialog_error_scan_invalid_msg">Scanned value is invalid.</string>
     <string name="mozo_dialog_error_msg">There is an error occurred.</string>
     <string name="mozo_dialog_error_not_enough_msg">Your balance is not insufficient for this transfer amount.</string>
+    <string name="mozo_dialog_error_system_time_msg">The time on your device is incorrect.</string>
+    <string name="mozo_dialog_error_system_time_msg_sub">Please update the date and time, then try again.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
     <string name="mozo_button_login">Sign In to MozoX</string>
     <string name="mozo_button_logout">Log Out MozoX</string>
+    <string name="mozo_button_logout_short">Log Out</string>
     <string name="mozo_button_send_mozo">Send MozoX</string>
     <string name="mozo_button_transfer">Transfer</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
@@ -123,18 +126,21 @@
     <string name="mozo_convert_on_in_off_eth_balance">Your ETH balance is: &lt;b>%s&lt;/b></string>
 
     <string name="mozo_create_wallet_title">Create MozoX Wallet</string>
+    <string name="mozo_create_wallet_select_method">You want:</string>
+    <string name="mozo_create_wallet_have_another_account">Already have another MozoX account? %s</string>
     <string name="mozo_create_wallet_auto_section">Create Wallet Automatically</string>
     <string name="mozo_create_wallet_auto_explain">Your Recovery Phrase* and security PIN will be auto generated and remembered by our system.</string>
     <string name="mozo_create_wallet_manual_section">Create Wallet Manually</string>
     <string name="mozo_create_wallet_manual_explain">You will need to back up your Recovery Phrase and security PIN created by you.</string>
-    <string name="mozo_create_wallet_hint_explain"><b>*What are Recovery Phrase?</b>\n\nRecovery Phrase are random set of words used to secure your digital wallet. You should write down these words in order so that in the event you lose your digital wallet of forget your PIN, you can recover your wallet and/or reset your PIN.</string>
+    <string name="mozo_create_wallet_hint_explain_title">*What are Recovery Phrase?</string>
+    <string name="mozo_create_wallet_hint_explain">Recovery Phrase are random set of words used to secure your digital wallet. You should write down these words in order so that in the event you lose your digital wallet of forget your PIN, you can recover your wallet and/or reset your PIN.</string>
     <string name="mozo_create_wallet_creating">Creating your MozoX wallet…</string>
 
     <string name="mozo_pin_title">Create Security PIN</string>
     <string name="mozo_pin_title_restore">Restore Wallet</string>
     <string name="mozo_pin_title_verify">Security PIN Confirmation</string>
     <string name="mozo_pin_title_change">Change Security PIN</string>
-    <string name="mozo_pin_sub_title">Enter your Security PIN</string>
+    <string name="mozo_pin_sub_title">Enter Security PIN</string>
     <string name="mozo_pin_sub_title_restore">Enter your Security PIN\nto restore wallet</string>
     <string name="mozo_pin_sub_title_send">Enter your Security PIN\nto send MozoX</string>
     <string name="mozo_pin_content">Security PIN must be 6 digit numbers</string>
@@ -242,7 +248,7 @@
     <string name="mozo_payment_request_item_label_amount">Request:</string>
     <string name="mozo_payment_request_item_amount" translatable="false">%s MozoX</string>
 
-    <string name="mozo_settings_title">Setting</string>
+    <string name="mozo_settings_title">Settings</string>
     <string name="mozo_change_settings_title">Change Settings</string>
     <string name="mozo_settings_under_construction">Under Construction</string>
     <string name="mozo_settings_menu_currencies">Currencies</string>

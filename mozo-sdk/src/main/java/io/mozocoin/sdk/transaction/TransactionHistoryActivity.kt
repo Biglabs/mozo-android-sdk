@@ -3,6 +3,7 @@ package io.mozocoin.sdk.transaction
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
@@ -92,7 +93,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
                 page = currentPage,
                 callback = { data, _ ->
                     list_history_refresh?.isRefreshing = false
-                    historyAdapter.mEmptyView = list_history_empty_view
+                    list_history_empty_view?.isVisible = data?.items.isNullOrEmpty()
 
                     if (data?.items == null) {
                         historyAdapter.setCanLoadMore(false)

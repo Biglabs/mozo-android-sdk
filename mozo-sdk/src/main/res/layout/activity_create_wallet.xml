@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".wallet.create.CreateWalletActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -28,7 +29,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
-                app:buttonClose="true"
                 app:title="@string/mozo_create_wallet_title" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -37,122 +37,192 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:layout_marginTop="?android:actionBarSize">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="135dp">
 
-            <androidx.cardview.widget.CardView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginTop="20dp"
+                android:text="@string/mozo_create_wallet_select_method"
+                android:textColor="@color/mozo_color_title"
+                android:textStyle="bold" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/button_create_auto"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mozo_screen_margin"
                 android:layout_marginTop="@dimen/mozo_list_padding"
                 android:layout_marginEnd="@dimen/mozo_screen_margin"
+                android:background="@drawable/mozo_dr_btn_check_border"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?android:selectableItemBackground"
                 android:minHeight="124dp"
-                app:cardBackgroundColor="@color/mozo_color_primary"
-                app:cardCornerRadius="@dimen/mozo_dialog_corner_radius"
-                app:cardElevation="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    android:layout_marginTop="12dp"
-                    app:srcCompat="@drawable/im_rocket" />
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@string/mozo_create_wallet_manual_section"
+                    android:duplicateParentState="true"
+                    android:src="@drawable/mozo_dr_btn_check"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@android:id/text1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="17dp"
-                    android:layout_marginEnd="100dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="18dp"
                     android:lines="1"
                     android:text="@string/mozo_create_wallet_auto_section"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textColor="@color/mozo_color_title"
+                    android:textSize="@dimen/mozo_text_size"
                     android:textStyle="bold"
-                    app:autoSizeMaxTextSize="20sp"
-                    app:autoSizeTextType="uniform" />
+                    app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+                    app:autoSizeTextType="uniform"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginEnd="100dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginEnd="30dp"
                     android:layout_marginBottom="20dp"
                     android:text="@string/mozo_create_wallet_auto_explain"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp" />
-            </androidx.cardview.widget.CardView>
+                    android:textColor="@color/mozo_color_title"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@android:id/text1"
+                    app:layout_constraintTop_toBottomOf="@android:id/text1"
+                    app:layout_constraintVertical_bias="0" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/button_create_manual"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mozo_screen_margin"
                 android:layout_marginTop="@dimen/mozo_list_padding"
                 android:layout_marginEnd="@dimen/mozo_screen_margin"
-                android:background="@drawable/mozo_dr_btn_border"
+                android:background="@drawable/mozo_dr_btn_check_border"
                 android:clickable="true"
                 android:focusable="true"
                 android:minHeight="124dp"
-                android:orientation="vertical"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/button_create_auto">
+                android:paddingEnd="20dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@string/mozo_create_wallet_manual_section"
+                    android:duplicateParentState="true"
+                    android:src="@drawable/mozo_dr_btn_check"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@android:id/text1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="17dp"
-                    android:layout_marginEnd="100dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="18dp"
                     android:lines="1"
                     android:text="@string/mozo_create_wallet_manual_section"
                     android:textColor="@color/mozo_color_title"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/mozo_text_size"
                     android:textStyle="bold"
-                    app:autoSizeMaxTextSize="20sp"
-                    app:autoSizeTextType="uniform" />
+                    app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+                    app:autoSizeTextType="uniform"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="20dp"
                     android:text="@string/mozo_create_wallet_manual_explain"
                     android:textColor="@color/mozo_color_title"
-                    android:textSize="15sp" />
-            </LinearLayout>
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@android:id/text1"
+                    app:layout_constraintTop_toBottomOf="@android:id/text1"
+                    app:layout_constraintVertical_bias="0" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/create_wallet_option_hint"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="35dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="@dimen/mozo_screen_margin"
+                android:text="@string/mozo_create_wallet_hint_explain_title"
+                android:textColor="@color/mozo_color_section_text"
+                android:textSize="@dimen/mozo_text_size" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="@dimen/mozo_screen_margin"
                 android:text="@string/mozo_create_wallet_hint_explain"
                 android:textColor="@color/mozo_color_section_text"
-                android:textSize="@dimen/mozo_text_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/button_create_manual"
-                app:layout_constraintVertical_bias="1" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textSize="13sp" />
+        </LinearLayout>
     </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/mozo_bg_floating_footer" />
+
+    <Button
+        android:id="@+id/button_continue"
+        style="@style/MozoButtonStyle.Floating"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="70dp"
+        android:includeFontPadding="false"
+        android:text="@string/mozo_button_continue" />
+
+    <TextView
+        android:id="@+id/create_wallet_have_other_account_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/mozo_screen_margin"
+        android:layout_marginEnd="@dimen/mozo_screen_margin"
+        android:layout_marginBottom="14dp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/mozo_color_title"
+        android:textColorLink="@color/mozo_color_primary"
+        android:textSize="13sp"
+        tools:text="@string/mozo_create_wallet_have_another_account" />
 
     <LinearLayout
         android:id="@+id/create_wallet_loading"
