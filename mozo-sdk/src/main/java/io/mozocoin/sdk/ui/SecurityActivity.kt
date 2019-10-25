@@ -53,7 +53,8 @@ internal class SecurityActivity : BaseActivity() {
             KEY_CREATE_PIN -> showRecoveryPhraseUI()
             KEY_ENTER_PIN -> showPinInputRestoreUI()
             KEY_VERIFY_PIN,
-            KEY_VERIFY_PIN_FOR_SEND -> {
+            KEY_VERIFY_PIN_FOR_SEND,
+            KEY_VERIFY_PIN_FOR_BACKUP -> {
                 if (MozoWallet.getInstance().getWallet()?.isUnlocked() == true) {
                     if (SharedPrefsUtils.getShowAutoPinNotice()) showMsg4AutoPin()
                     else executeAutoPin()
@@ -304,12 +305,19 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun initVerifyUI(clearPin: Boolean = false) = GlobalScope.launch(Dispatchers.Main) {
         initRestoreUI(clearPin).join()
-        if (mRequestCode == KEY_VERIFY_PIN_FOR_SEND) {
-            pin_toolbar.screen_title.setText(R.string.mozo_transfer_title)
-            sub_title_pin.setText(R.string.mozo_pin_sub_title_send)
-        } else {
-            pin_toolbar.screen_title.setText(R.string.mozo_pin_sub_title)
-            sub_title_pin.setText(R.string.mozo_pin_sub_title_send)
+        when (mRequestCode) {
+            KEY_VERIFY_PIN_FOR_SEND -> {
+                pin_toolbar.screen_title.setText(R.string.mozo_transfer_title)
+                sub_title_pin.setText(R.string.mozo_pin_sub_title_send)
+            }
+            KEY_VERIFY_PIN_FOR_BACKUP -> {
+                pin_toolbar.screen_title.setText(R.string.mozo_pin_sub_title)
+                sub_title_pin.setText(R.string.mozo_pin_change_sub_enter_current)
+            }
+            else -> {
+                pin_toolbar.screen_title.setText(R.string.mozo_pin_sub_title)
+                sub_title_pin.setText(R.string.mozo_pin_sub_title_send)
+            }
         }
     }
 
@@ -410,7 +418,9 @@ internal class SecurityActivity : BaseActivity() {
                         }
                     }
                 }
-                KEY_VERIFY_PIN, KEY_VERIFY_PIN_FOR_SEND -> {
+                KEY_VERIFY_PIN,
+                KEY_VERIFY_PIN_FOR_SEND,
+                KEY_VERIFY_PIN_FOR_BACKUP -> {
                     initVerifyUI(!isCorrect).join()
                     if (isCorrect) {
                         mFinishJob = finishResult {
@@ -443,6 +453,7 @@ internal class SecurityActivity : BaseActivity() {
         const val KEY_ENTER_PIN = 0x002
         const val KEY_VERIFY_PIN = 0x003
         const val KEY_VERIFY_PIN_FOR_SEND = 0x004
+        const val KEY_VERIFY_PIN_FOR_BACKUP = 0x005
 
         const val KEY_DATA = "KEY_DATA"
 

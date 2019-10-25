@@ -94,7 +94,7 @@ internal class BackupWalletActivity : BaseActivity() {
                 displaySeedWords()
 
             } else {
-                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN, REQUEST_SECURITY_PIN)
+                SecurityActivity.start(this, SecurityActivity.KEY_VERIFY_PIN_FOR_BACKUP, REQUEST_SECURITY_PIN)
             }
         }
     }
