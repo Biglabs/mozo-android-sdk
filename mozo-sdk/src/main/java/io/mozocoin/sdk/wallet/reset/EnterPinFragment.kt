@@ -137,7 +137,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
             data?.encrypt(mPinEntering)
             mInteractionListener?.getResetPinModel()?.setData(data)
 
-            if (!ConnectionService.isNetworkAvailable()) {
+            if (!ConnectionService.isNetworkAvailable) {
                 showMessage(MESSAGE_ERROR_NETWORK)
                 return@withContext
             }

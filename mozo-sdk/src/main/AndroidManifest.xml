@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.mozocoin.sdk">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -13,12 +14,14 @@
     <!-- Read Contacts from phone -->
     <uses-permission android:name="android.permission.read_contacts" />
 
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+
     <application
         android:hardwareAccelerated="true"
         android:supportsRtl="true">
         <service
             android:name=".common.service.ConnectionService"
-            android:exported="true"
+            android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity

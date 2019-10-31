@@ -19,7 +19,7 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.model.TransactionHistory
-import io.mozocoin.sdk.common.model.TransactionHistory.CREATOR.MY_ADDRESS
+import io.mozocoin.sdk.common.model.TransactionHistory.Companion.MY_ADDRESS
 import io.mozocoin.sdk.common.model.TransactionResponse
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.contact.AddressAddActivity

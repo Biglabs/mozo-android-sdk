@@ -53,9 +53,11 @@ class ConnectionService : JobService() {
     }
 
     companion object {
+        var isNetworkAvailable: Boolean = false
         private var listeners: ArrayList<ConnectionChangedListener>? = null
 
         private fun onNetworkConnectionChanged(isConnected: Boolean, resumeState: Boolean = true) {
+            isNetworkAvailable = isConnected
             if (MozoSDK.getInstance().remindAnchorView != null) {
                 if (isConnected) {
                     MozoSnackbar.dismiss()
@@ -99,13 +101,8 @@ class ConnectionService : JobService() {
             }
         }
 
-        internal fun isNetworkAvailable(): Boolean {
-            val cm = MozoSDK.getInstance().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            return cm.activeNetworkInfo?.isConnected == true
-        }
-
         fun checkNetwork() {
-            onNetworkConnectionChanged(isNetworkAvailable(), false)
+            onNetworkConnectionChanged(isNetworkAvailable, false)
         }
 
         fun addConnectionChangedListener(listener: ConnectionChangedListener) {
