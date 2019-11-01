@@ -24,6 +24,7 @@ class Constant {
         const val NOTIFY_EVENT_PROFILE_CHANGED = "profile_changed"
         const val NOTIFY_EVENT_PROMO_USED = "promotion_used"
         const val NOTIFY_EVENT_PROMO_PURCHASED = "promotion_purchased"
+        const val NOTIFY_EVENT_GROUP_BROADCAST = "group_broadcast"
 
         internal const val DEFAULT_DECIMAL = 2
         internal const val DEFAULT_CURRENCY = "USD"

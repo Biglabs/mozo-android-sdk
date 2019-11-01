@@ -25,7 +25,8 @@ enum class NotificationGroup(val id: Int) {
     AIRDROP_FOUNDER(106),
     AIRDROP_TOP_1K(107),
     INVITE(108),
-    PROMO(109);
+    PROMO(109),
+    GROUP_BROADCAST(110);
 
     companion object {
         private fun getCurrentlyGroupExtras(notificationManager: NotificationManager, groupKey: String): List<Bundle>? = synchronized(this) {
@@ -112,6 +113,7 @@ enum class NotificationGroup(val id: Int) {
             Constant.NOTIFY_EVENT_PROMO_PURCHASED -> R.drawable.im_notification_customer_came_group
             Constant.NOTIFY_EVENT_PROMO_USED -> R.drawable.im_notification_promo_used
             Constant.NOTIFY_EVENT_AIRDROP_INVITE -> R.drawable.im_notification_airdrop_invite_group
+            Constant.NOTIFY_EVENT_GROUP_BROADCAST -> R.drawable.ic_mozo_offchain
             else -> R.drawable.im_notification_airdrop_group
         }
 
@@ -132,6 +134,8 @@ enum class NotificationGroup(val id: Int) {
 
             Constant.NOTIFY_EVENT_PROMO_PURCHASED -> PROMO
             Constant.NOTIFY_EVENT_PROMO_USED -> PROMO
+
+            Constant.NOTIFY_EVENT_GROUP_BROADCAST -> GROUP_BROADCAST
 
             else -> AIRDROP
         }
