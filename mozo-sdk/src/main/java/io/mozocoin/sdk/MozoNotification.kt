@@ -206,7 +206,7 @@ class MozoNotification private constructor() {
                 title = message.title ?: ""
 
             } else if (message.amount != null) {
-                context.getString(
+                title = context.getString(
                         when (message.event ?: "") {
                             Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
                             Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
