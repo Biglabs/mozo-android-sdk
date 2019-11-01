@@ -16,6 +16,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 import java.util.*
 
 internal object ViewModels {
@@ -144,10 +146,21 @@ internal object ViewModels {
         fun getBalanceInCurrencyDisplay() = balanceAndRateLiveData.value?.balanceNonDecimalInCurrencyDisplay
 
         fun formatCurrencyDisplay(amount: BigDecimal, withBracket: Boolean = false) = StringBuilder().apply {
+            val symbol = exchangeRateLiveData.value?.token?.currencySymbol
+                    ?: Constant.DEFAULT_CURRENCY_SYMBOL
+            val finalAmount = if (symbol == Constant.CURRENCY_SYMBOL_VND) {
+                val nestedAmount = amount.setScale(0, BigDecimal.ROUND_DOWN)
+                nestedAmount.round(
+                        MathContext(
+                                (nestedAmount.precision() - 3).coerceAtLeast(0),
+                                RoundingMode.FLOOR
+                        )
+                )
+            } else amount
+
             if (withBracket) append("(")
-            append(exchangeRateLiveData.value?.token?.currencySymbol
-                    ?: Constant.DEFAULT_CURRENCY_SYMBOL)
-            append(amount.displayString())
+            append(symbol)
+            append(finalAmount.displayString(3))
             if (withBracket) append(")")
         }.toString()
 
