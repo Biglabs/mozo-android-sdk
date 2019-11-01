@@ -3,7 +3,8 @@ package io.mozocoin.sdk.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.PorterDuff
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.os.Build
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -164,7 +165,7 @@ class MozoSnackbar(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 DrawableCompat.setTint(background, color)
             } else {
-                background.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+                background.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
             }
         }
         return this

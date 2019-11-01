@@ -11,19 +11,20 @@ import kotlin.math.pow
 
 @Parcelize
 data class TransactionHistory(
-        var txHash: String?,
-        var blockHeight: Long,
-        var action: String?,
-        var fees: Double,
+        var action: String? = null,
         var amount: BigDecimal,
-        var addressFrom: String?,
-        var addressTo: String?,
-        var contractAddress: String?,
-        var symbol: String?,
-        var contractAction: String?,
-        var decimal: Int,
+        var addressFrom: String? = null,
+        var addressTo: String? = null,
+        var blockHeight: Long,
+        var contractAddress: String? = null,
+        var contractAction: String? = null,
+        var decimal: Int = Constant.DEFAULT_DECIMAL,
+        var symbol: String? = null,
+        var fees: Double,
         var time: Long,
-        var txStatus: String?
+        var topUpReason: String? = null,
+        var txHash: String? = null,
+        var txStatus: String? = null
 ) : Parcelable {
 
     @Ignore

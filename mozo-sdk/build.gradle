@@ -41,6 +41,7 @@ dependencies {
     api 'androidx.core:core-ktx:1.1.0'
     api "androidx.room:room-runtime:2.2.1"
     kapt "androidx.room:room-compiler:2.2.1"
+    api "androidx.preference:preference-ktx:1.1.0"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
@@ -60,9 +61,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     // Other
-    implementation("org.bitcoinj:bitcoinj-core:0.15.5") {
-        exclude group: 'org.bouncycastle'
-    }
+    implementation 'org.bitcoinj:bitcoinj-core:0.15.3'
     implementation 'org.cryptonode.jncryptor:jncryptor:1.2.0'
     implementation 'org.web3j:core:4.2.0-android'
     implementation 'org.greenrobot:eventbus:3.1.1'

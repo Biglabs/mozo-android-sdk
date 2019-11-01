@@ -40,8 +40,21 @@ internal class TransactionFormActivity : BaseActivity() {
     private var currentBalance = BigDecimal.ZERO
     private var currentRate = BigDecimal.ZERO
     private var selectedContact: Contact? = null
-    private val history =
-            TransactionHistory("", 0L, "", 0.0, BigDecimal.ZERO, MY_ADDRESS, "", "", "", "", 2, 0L, "")
+    private val history = TransactionHistory(
+            txHash = "",
+            blockHeight = 0L,
+            action = "",
+            fees = 0.0,
+            amount = BigDecimal.ZERO,
+            addressFrom = MY_ADDRESS,
+            addressTo = "",
+            contractAddress = "",
+            symbol = "",
+            contractAction = "",
+            decimal = 2,
+            time = 0L,
+            txStatus = ""
+    )
     private var updateTxStatusJob: Job? = null
 
     private var isViewOnlyMode = false

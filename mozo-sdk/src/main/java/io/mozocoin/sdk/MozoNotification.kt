@@ -310,19 +310,15 @@ class MozoNotification private constructor() {
                     Constant.NOTIFY_EVENT_AIRDROPPED,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                         val txHistory = TransactionHistory(
-                                null,
-                                0L,
-                                null,
-                                0.0,
-                                it.amount.safe(),
-                                it.from,
-                                it.to,
-                                null,
-                                it.symbol,
-                                null,
-                                it.decimal,
-                                it.time / 1000L,
-                                Constant.STATUS_SUCCESS
+                                blockHeight = 0L,
+                                fees = 0.0,
+                                amount = it.amount.safe(),
+                                addressFrom = it.from,
+                                addressTo = it.to,
+                                symbol = it.symbol,
+                                decimal = it.decimal,
+                                time = it.time / 1000L,
+                                txStatus = Constant.STATUS_SUCCESS
                         )
                         TransactionDetails.start(context, txHistory)
                     }

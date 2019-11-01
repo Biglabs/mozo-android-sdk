@@ -1,6 +1,6 @@
 package io.mozocoin.sdk.utils
 
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.common.Constant
 import java.math.BigDecimal
