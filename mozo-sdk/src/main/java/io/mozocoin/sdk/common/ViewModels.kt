@@ -149,11 +149,11 @@ internal object ViewModels {
             val symbol = exchangeRateLiveData.value?.token?.currencySymbol
                     ?: Constant.DEFAULT_CURRENCY_SYMBOL
             val finalAmount = if (symbol == Constant.CURRENCY_SYMBOL_VND) {
-                val nestedAmount = amount.setScale(0, BigDecimal.ROUND_DOWN)
+                val nestedAmount = amount.setScale(0, BigDecimal.ROUND_UP)
                 nestedAmount.round(
                         MathContext(
                                 (nestedAmount.precision() - 3).coerceAtLeast(0),
-                                RoundingMode.FLOOR
+                                RoundingMode.UP
                         )
                 )
             } else amount
