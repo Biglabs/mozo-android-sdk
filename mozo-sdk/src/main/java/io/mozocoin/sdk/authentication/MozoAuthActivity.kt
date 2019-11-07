@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 internal class MozoAuthActivity : FragmentActivity() {
 
-    private lateinit var mAuthService: AuthorizationService
+    private var mAuthService: AuthorizationService? = null
     private val mAuthStateManager: AuthStateManager by lazy {
         AuthStateManager.getInstance(applicationContext)
     }
@@ -51,24 +51,6 @@ internal class MozoAuthActivity : FragmentActivity() {
     private var isAuthInProgress = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val appAuthConfig = AppAuthConfiguration.Builder()
-                .setBrowserMatcher(BrowserBlacklist(
-                        VersionedBrowserMatcher(
-                                Browsers.SBrowser.PACKAGE_NAME,
-                                Browsers.SBrowser.SIGNATURE_SET,
-                                true, // when this browser is used via a custom tab
-                                VersionRange.atMost("5.3")
-                        ),
-                        VersionedBrowserMatcher(
-                                Browsers.Chrome.PACKAGE_NAME,
-                                Browsers.Chrome.SIGNATURE_SET,
-                                true, // when this browser is used via a custom tab
-                                VersionRange.atMost("53.0.2785.124")
-                        )
-                ))
-                .build()
-        mAuthService = AuthorizationService(this, appAuthConfig)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_loading)
         setMatchParent()
@@ -84,7 +66,8 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     override fun onDestroy() {
-        mAuthService.dispose()
+        mAuthService?.dispose()
+        mAuthService = null
         authenticationInProgress = false
         super.onDestroy()
 
@@ -193,9 +176,32 @@ internal class MozoAuthActivity : FragmentActivity() {
         doAuth()
     }
 
+    private fun getAuthService(): AuthorizationService {
+        return if (mAuthService == null || mAuthService?.isDisposed == true) {
+            val appAuthConfig = AppAuthConfiguration.Builder()
+                    .setBrowserMatcher(BrowserBlacklist(
+                            VersionedBrowserMatcher(
+                                    Browsers.SBrowser.PACKAGE_NAME,
+                                    Browsers.SBrowser.SIGNATURE_SET,
+                                    true, // when this browser is used via a custom tab
+                                    VersionRange.atMost("5.3")
+                            ),
+                            VersionedBrowserMatcher(
+                                    Browsers.Chrome.PACKAGE_NAME,
+                                    Browsers.Chrome.SIGNATURE_SET,
+                                    true, // when this browser is used via a custom tab
+                                    VersionRange.atMost("53.0.2785.124")
+                            )
+                    ))
+                    .build()
+            AuthorizationService(MozoSDK.getInstance().context, appAuthConfig)
+
+        } else mAuthService!!
+    }
+
     private fun warmUpBrowser() {
         mAuthIntentLatch = CountDownLatch(1)
-        val customTabs = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri())
+        val customTabs = getAuthService().createCustomTabsIntentBuilder(mAuthRequest.get().toUri())
                 .setShowTitle(true)
                 .setInstantAppsEnabled(false)
                 .build()
@@ -222,14 +228,15 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
 
         isAuthInProgress = true
-        startActivityForResult(
-                mAuthService.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get()).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-                },
-                KEY_DO_AUTHENTICATION
+        val intent = getAuthService().getAuthorizationRequestIntent(
+                mAuthRequest.get(),
+                mAuthIntent.get()
         )
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+
+        startActivityForResult(intent, KEY_DO_AUTHENTICATION)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -287,13 +294,6 @@ internal class MozoAuthActivity : FragmentActivity() {
     }
 
     private fun exchangeAuthorizationCode(response: AuthorizationResponse) {
-        performTokenRequest(response.createTokenExchangeRequest(), AuthorizationService.TokenResponseCallback { tokenResponse, authException ->
-            mAuthStateManager.updateAfterTokenResponse(tokenResponse, authException)
-            handleResult(exception = authException)
-        })
-    }
-
-    private fun performTokenRequest(request: TokenRequest, callback: AuthorizationService.TokenResponseCallback) {
         val clientAuthentication: ClientAuthentication
         try {
             clientAuthentication = mAuthStateManager.current.clientAuthentication
@@ -302,7 +302,13 @@ internal class MozoAuthActivity : FragmentActivity() {
             return
         }
 
-        mAuthService.performTokenRequest(request, clientAuthentication, callback)
+        getAuthService().performTokenRequest(
+                response.createTokenExchangeRequest(),
+                clientAuthentication
+        ) { tokenResponse, authException ->
+            mAuthStateManager.updateAfterTokenResponse(tokenResponse, authException)
+            handleResult(exception = authException)
+        }
     }
 
     private fun handleResult(exception: Exception? = null) {

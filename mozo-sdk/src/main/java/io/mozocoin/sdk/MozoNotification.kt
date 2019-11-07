@@ -190,7 +190,7 @@ class MozoNotification private constructor() {
             Constant.NOTIFY_EVENT_CUSTOMER_CAME,
             Constant.NOTIFY_EVENT_PROMO_PURCHASED -> R.drawable.im_notification_customer_came
             Constant.NOTIFY_EVENT_PROMO_USED -> R.drawable.im_notification_promo_used
-            Constant.NOTIFY_EVENT_GROUP_BROADCAST -> R.drawable.ic_mozo_offchain
+            Constant.NOTIFY_EVENT_GROUP_BROADCAST -> R.drawable.im_notification_group_broadcast
             else -> R.drawable.im_notification_balance_changed
         }
 

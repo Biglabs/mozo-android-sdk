@@ -25,6 +25,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.browser.customtabs.CustomTabsIntent;
+
 import net.openid.appauth.AuthorizationException.GeneralErrors;
 import net.openid.appauth.AuthorizationException.RegistrationRequestErrors;
 import net.openid.appauth.AuthorizationException.TokenRequestErrors;
@@ -45,11 +50,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.browser.customtabs.CustomTabsIntent;
 
 import static net.openid.appauth.Preconditions.checkNotNull;
 
@@ -358,6 +358,10 @@ public class AuthorizationService {
         }
         mCustomTabManager.dispose();
         mDisposed = true;
+    }
+
+    public Boolean isDisposed() {
+        return mDisposed;
     }
 
     private void checkNotDisposed() {
