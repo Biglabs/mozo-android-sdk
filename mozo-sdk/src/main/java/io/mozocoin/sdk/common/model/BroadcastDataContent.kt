@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 
 data class BroadcastDataContent(
+        val title: String?,
+        val body: String?,
         val event: String?,
         val from: String,
         val to: String,
@@ -15,7 +17,4 @@ data class BroadcastDataContent(
         val isComeIn: Boolean,
         val storeName: String,
         val promoName: String? = null
-) {
-    override fun toString(): String =
-            "{event=$event, from=$from, to=$to, amount=$amount, decimal=$decimal, symbol=$symbol, time=$time, phoneNo=$phoneNo, comeIn=$isComeIn, storeName=$storeName}"
-}
+)

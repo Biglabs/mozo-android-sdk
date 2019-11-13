@@ -14,6 +14,7 @@ import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.CryptoUtils
 import io.mozocoin.sdk.utils.logAsInfo
+import io.mozocoin.sdk.utils.safe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -56,11 +57,17 @@ class MozoTx private constructor() {
     }
 
     internal fun verifyAddress(context: Context, output: String, callback: (isValid: Boolean) -> Unit) {
-        MozoAPIsService.getInstance().createTx(context, prepareRequest("", output, "0"), { _, errorCode ->
-            callback.invoke(ErrorCode.ERROR_TX_INVALID_ADDRESS.key != errorCode)
-        }, {
-            verifyAddress(context, output, callback)
-        })
+        MozoAPIsService.getInstance().createTx(
+                context,
+                prepareRequest(MozoWallet.getInstance().getAddress().safe(), output, "0"),
+                { _, errorCode ->
+                    callback.invoke(ErrorCode.ERROR_TX_INVALID_ADDRESS.key != errorCode)
+                }
+                ,
+                {
+                    verifyAddress(context, output, callback)
+                }
+        )
     }
 
     internal fun createTransaction(context: Context, output: String, amount: String, callback: (response: TransactionResponse?, doRetry: Boolean) -> Unit) {

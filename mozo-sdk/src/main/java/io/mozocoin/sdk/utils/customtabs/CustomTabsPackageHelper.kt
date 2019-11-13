@@ -7,7 +7,6 @@ import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
 import androidx.browser.customtabs.CustomTabsService
-import java.util.*
 
 
 internal class CustomTabsPackageHelper {
@@ -23,7 +22,7 @@ internal class CustomTabsPackageHelper {
          * @return All possible chrome package names that provide custom tabs feature.
          */
         val packages: List<String>
-            get() = Arrays.asList("", STABLE_PACKAGE, BETA_PACKAGE, DEV_PACKAGE, LOCAL_PACKAGE)
+            get() = listOf("", STABLE_PACKAGE, BETA_PACKAGE, DEV_PACKAGE, LOCAL_PACKAGE)
 
         /**
          * Goes through all apps that handle VIEW intents and have a warmup service. Picks
@@ -96,7 +95,7 @@ internal class CustomTabsPackageHelper {
                 val handlers = pm.queryIntentActivities(
                         intent,
                         PackageManager.GET_RESOLVED_FILTER)
-                if (handlers == null || handlers.size == 0) {
+                if (handlers.isNullOrEmpty()) {
                     return false
                 }
                 for (resolveInfo in handlers) {

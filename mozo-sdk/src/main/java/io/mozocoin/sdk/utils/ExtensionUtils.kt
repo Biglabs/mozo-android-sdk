@@ -74,13 +74,13 @@ internal fun Context.clipboard(): ClipboardManager = this.getSystemService(Conte
 
 internal fun Context.copyText(text: String?) {
     if (!text.isNullOrEmpty()) {
-        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", text)
+        clipboard().setPrimaryClip(ClipData.newPlainText("mozo_wallet_text", text))
     }
 }
 
 internal fun Context.copyWithToast(text: String?) {
     if (!text.isNullOrEmpty()) {
-        clipboard().primaryClip = ClipData.newPlainText("mozo_wallet_text", text)
+        clipboard().setPrimaryClip(ClipData.newPlainText("mozo_wallet_text", text))
         Toast.makeText(this, R.string.mozo_dialog_copied_msg, Toast.LENGTH_SHORT).show()
     }
 }

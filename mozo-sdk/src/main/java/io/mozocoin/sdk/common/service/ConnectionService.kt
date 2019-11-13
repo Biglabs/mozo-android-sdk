@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
+import android.os.Build
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import io.mozocoin.sdk.MozoAuth
@@ -19,17 +20,25 @@ import io.mozocoin.sdk.utils.logAsInfo
 
 class ConnectionService : JobService() {
 
+    private var networkIndex = -1
+
     private val connectivityManager: ConnectivityManager by lazy {
         applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network?) {
-            onNetworkConnectionChanged(true)
+        override fun onAvailable(network: Network) {
+            if (network.hashCode() >= networkIndex) {
+                networkIndex = network.hashCode()
+                onNetworkConnectionChanged(true)
+            }
         }
 
-        override fun onLost(network: Network?) {
-            onNetworkConnectionChanged(false)
+        override fun onLost(network: Network) {
+            if (network.hashCode() >= networkIndex) {
+                networkIndex = network.hashCode()
+                onNetworkConnectionChanged(false)
+            }
         }
     }
 
@@ -53,9 +62,11 @@ class ConnectionService : JobService() {
     }
 
     companion object {
+        var isNetworkAvailable: Boolean = false
         private var listeners: ArrayList<ConnectionChangedListener>? = null
 
         private fun onNetworkConnectionChanged(isConnected: Boolean, resumeState: Boolean = true) {
+            isNetworkAvailable = isConnected
             if (MozoSDK.getInstance().remindAnchorView != null) {
                 if (isConnected) {
                     MozoSnackbar.dismiss()
@@ -99,13 +110,14 @@ class ConnectionService : JobService() {
             }
         }
 
-        internal fun isNetworkAvailable(): Boolean {
-            val cm = MozoSDK.getInstance().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            return cm.activeNetworkInfo?.isConnected == true
-        }
-
+        @Suppress("DEPRECATION")
         fun checkNetwork() {
-            onNetworkConnectionChanged(isNetworkAvailable(), false)
+            val cm = MozoSDK.getInstance().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val isHasNetwork = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                cm.activeNetwork != null
+            } else cm.activeNetworkInfo != null
+
+            onNetworkConnectionChanged(isHasNetwork, false)
         }
 
         fun addConnectionChangedListener(listener: ConnectionChangedListener) {

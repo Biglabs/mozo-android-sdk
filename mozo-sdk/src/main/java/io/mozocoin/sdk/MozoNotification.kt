@@ -125,7 +125,7 @@ class MozoNotification private constructor() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createChannel(channel: String) = GlobalScope.launch(Dispatchers.Main) {
         var channelName = channel.split("_")[0]
-        channelName = channelName.substring(0, 1).toUpperCase() + channelName.substring(1)
+        channelName = channelName.substring(0, 1).toUpperCase(Locale.getDefault()) + channelName.substring(1)
 
         val notificationChannel = NotificationChannel(channel, channelName, NotificationManager.IMPORTANCE_HIGH)
         notificationChannel.setShowBadge(true)
@@ -161,14 +161,16 @@ class MozoNotification private constructor() {
                     Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED,
                     Constant.NOTIFY_EVENT_CUSTOMER_CAME,
-                    Constant.NOTIFY_EVENT_PROMO_PURCHASED
+                    Constant.NOTIFY_EVENT_PROMO_PURCHASED,
+                    Constant.NOTIFY_EVENT_GROUP_BROADCAST
             ) else
             arrayOf(
                     Constant.NOTIFY_EVENT_AIRDROPPED,
                     Constant.NOTIFY_EVENT_AIRDROP_INVITE,
                     Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED,
-                    Constant.NOTIFY_EVENT_PROMO_USED
+                    Constant.NOTIFY_EVENT_PROMO_USED,
+                    Constant.NOTIFY_EVENT_GROUP_BROADCAST
             )).contains(event?.toLowerCase(Locale.ROOT)) && MozoSDK.shouldShowNotification
 
         @Synchronized
@@ -188,6 +190,7 @@ class MozoNotification private constructor() {
             Constant.NOTIFY_EVENT_CUSTOMER_CAME,
             Constant.NOTIFY_EVENT_PROMO_PURCHASED -> R.drawable.im_notification_customer_came
             Constant.NOTIFY_EVENT_PROMO_USED -> R.drawable.im_notification_promo_used
+            Constant.NOTIFY_EVENT_GROUP_BROADCAST -> R.drawable.im_notification_group_broadcast
             else -> R.drawable.im_notification_balance_changed
         }
 
@@ -198,15 +201,22 @@ class MozoNotification private constructor() {
                     ignoreCase = true
             )
 
-            var title = if (message.amount != null) context.getString(
-                    when (message.event ?: "") {
-                        Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
-                        Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
-                        Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER -> R.string.mozo_notify_title_airdrop_bonus
-                        else -> if (isSendType) R.string.mozo_notify_title_sent else R.string.mozo_notify_title_received
-                    },
-                    Support.toAmountNonDecimal(message.amount, message.decimal).displayString()
-            ) else ""
+            var title = ""
+            if (message.event == Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
+                title = message.title ?: ""
+
+            } else if (message.amount != null) {
+                title = context.getString(
+                        when (message.event ?: "") {
+                            Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
+                            Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
+                            Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER -> R.string.mozo_notify_title_airdrop_bonus
+                            else -> if (isSendType) R.string.mozo_notify_title_sent else R.string.mozo_notify_title_received
+                        },
+                        Support.toAmountNonDecimal(message.amount, message.decimal).displayString()
+                )
+            }
+
             var content = ""
 
             when (message.event ?: "") {
@@ -243,6 +253,10 @@ class MozoNotification private constructor() {
                 Constant.NOTIFY_EVENT_PROMO_PURCHASED -> {
                     title = context.getString(R.string.mozo_notify_title_promo_purchased)
                     content = message.promoName ?: ""
+                }
+                Constant.NOTIFY_EVENT_GROUP_BROADCAST -> {
+                    title = message.title ?: ""
+                    content = message.body ?: ""
                 }
                 else -> {
                     val address = if (isSendType) message.to else message.from
@@ -296,19 +310,15 @@ class MozoNotification private constructor() {
                     Constant.NOTIFY_EVENT_AIRDROPPED,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                         val txHistory = TransactionHistory(
-                                null,
-                                0L,
-                                null,
-                                0.0,
-                                it.amount.safe(),
-                                it.from,
-                                it.to,
-                                null,
-                                it.symbol,
-                                null,
-                                it.decimal,
-                                it.time / 1000L,
-                                Constant.STATUS_SUCCESS
+                                blockHeight = 0L,
+                                fees = 0.0,
+                                amount = it.amount.safe(),
+                                addressFrom = it.from,
+                                addressTo = it.to,
+                                symbol = it.symbol,
+                                decimal = it.decimal,
+                                time = it.time / 1000L,
+                                txStatus = Constant.STATUS_SUCCESS
                         )
                         TransactionDetails.start(context, txHistory)
                     }

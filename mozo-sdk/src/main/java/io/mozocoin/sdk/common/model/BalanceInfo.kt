@@ -9,6 +9,7 @@ import java.math.BigDecimal
 
 @Parcelize
 data class BalanceInfo(
+        val address: String?,
         val balance: BigDecimal?,
         val symbol: String?,
         val decimals: Int?,

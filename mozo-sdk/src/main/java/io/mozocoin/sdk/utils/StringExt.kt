@@ -61,6 +61,8 @@ fun String.isNumeric(): Boolean {
 
 fun String.equalsIgnoreCase(other: String) = this.toLowerCase(Locale.getDefault()).contentEquals(other.toLowerCase(Locale.getDefault()))
 
+fun String?.safe() = this ?: ""
+
 private fun encrypt(string: String?, type: String): String {
     val bytes = MessageDigest.getInstance(type).digest(string!!.toByteArray())
     return bytes2Hex(bytes)

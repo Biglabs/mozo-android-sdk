@@ -162,7 +162,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                             )
                     )
                     try {
-                        if (instance?.isConnecting == false)
+                        if (instance?.isOpen == false)
                             instance?.connectBlocking()
                     } catch (ignore: Exception) {
                         doRetryConnect()
@@ -193,7 +193,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                     retryConnectTime = Constant.SOCKET_RETRY_START_TIME
                 }
 
-                if (ConnectionService.isNetworkAvailable()) connect()
+                if (ConnectionService.isNetworkAvailable) connect()
                 else doRetryConnect()
             }
         }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoSDK
+import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.OnLoadMoreListener
@@ -106,9 +107,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
                         if (currentPage <= Constant.PAGING_START_INDEX) histories.clear()
                         histories.addAll(data.items!!.map {
                             it.apply {
-                                contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
-                                        if (it.type(currentAddress)) it.addressTo else it.addressFrom
-                                )?.name
+                                contactName = MozoWallet.getInstance().findContact(it, currentAddress)?.name
                             }
                         })
                         withContext(Dispatchers.Main) {

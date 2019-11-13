@@ -6,6 +6,7 @@ import io.mozocoin.sdk.common.ErrorCode
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.common.model.Profile
+import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.common.service.MozoDatabase
@@ -80,6 +81,12 @@ class MozoWallet private constructor() {
     fun openAddressBook() {
         AddressBookActivity.start(MozoSDK.getInstance().context)
     }
+
+    fun findContact(address: String?) = MozoSDK.getInstance().contactViewModel.findByAddress(address)
+
+    fun findContact(history: TransactionHistory, address: String?) = findContact(
+            if (history.type(address)) history.addressTo else history.addressFrom
+    )
 
     internal fun initWallet(context: Context, profile: Profile /* server */, walletHelper: WalletHelper? = null, callback: ((success: Boolean) -> Unit)? = null) {
         if (profile.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {

@@ -40,7 +40,7 @@ internal class MozoRecyclerView : RecyclerView {
                 addItemDecoration(sectionDecoration)
             }
         } catch (e: Exception) {
-            typedArray?.recycle()
+            typedArray.recycle()
         }
     }
 
