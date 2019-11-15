@@ -136,6 +136,7 @@
     <string name="mozo_pin_title_verify">Xác nhận mã PIN</string>
     <string name="mozo_pin_title_change">Thay đổi mã PIN</string>
     <string name="mozo_pin_sub_title">Nhập mã PIN</string>
+    <string name="mozo_pin_sub_title_commom">Nhập mã PIN</string>
     <string name="mozo_pin_sub_title_restore">Nhập mã PIN\nđể khôi phục lại ví</string>
     <string name="mozo_pin_sub_title_send">Nhập mã PIN\nđể gửi MozoX</string>
     <string name="mozo_pin_content">Mã PIN phải đủ 6 số</string>
