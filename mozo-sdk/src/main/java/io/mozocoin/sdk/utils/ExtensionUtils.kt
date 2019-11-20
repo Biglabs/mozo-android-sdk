@@ -121,16 +121,17 @@ fun Context.openTab(url: String) {
     CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), null)
 }
 
-fun visible(views: Array<View?>) {
-    views.map {
-        it?.visible()
-    }
+fun visibility(visible: Boolean, vararg views: View?) {
+    if (visible) visible(*views)
+    else gone(*views)
 }
 
-fun gone(views: Array<View?>) {
-    views.map {
-        it?.gone()
-    }
+fun visible(vararg views: View?) {
+    views.forEach { it?.visibility = View.VISIBLE }
+}
+
+fun gone(vararg views: View?) {
+    views.forEach { it?.visibility = View.GONE }
 }
 
 fun Resources.dp2Px(value: Float): Float {
