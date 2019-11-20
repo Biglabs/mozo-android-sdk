@@ -3,9 +3,6 @@ package io.mozocoin.sdk.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
-import android.os.Build
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -162,11 +159,7 @@ class MozoSnackbar(
         if (background != null) {
             // Drawable doesn't implement setTint in API 21 and MozoSnackbar does not yet use
             // MaterialShapeDrawable as its background (i.e. TintAwareDrawable)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                DrawableCompat.setTint(background, color)
-            } else {
-                background.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
-            }
+            DrawableCompat.setTint(background, color)
         }
         return this
     }

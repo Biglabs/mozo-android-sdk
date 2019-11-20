@@ -1,5 +1,5 @@
 // publish to JCenter
-// ./gradlew clean build :mozo-sdk:bintrayUpload -PbintrayKey=xxxxx
+// ./gradlew clean :mozo-sdk:build :mozo-sdk:bintrayUpload -Puser=xxx -Pkey=yyy
 
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'

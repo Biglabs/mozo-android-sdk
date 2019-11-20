@@ -151,6 +151,20 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
 
             generateQRJob?.cancel()
             generateQRJob = generateQRImage()
+        } else {
+
+            /* Clear last information */
+            view?.find<TextView>(R.id.wallet_fragment_balance_value)?.text = null
+            view?.find<TextView>(R.id.wallet_fragment_currency_value)?.text = null
+
+            currentAddress = null
+            histories.clear()
+            historyAdapter.address = null
+            historyAdapter.notifyData()
+
+            wallet_fragment_address?.text = null
+            generateQRJob?.cancel()
+            wallet_fragment_qr_image?.setImageDrawable(null)
         }
     }
 
