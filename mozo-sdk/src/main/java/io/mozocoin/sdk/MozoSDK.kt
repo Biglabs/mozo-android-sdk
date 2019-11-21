@@ -42,8 +42,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     internal var remindAnchorView: View? = null
 
-    internal var onNotificationReceiveListener: OnNotificationReceiveListener? = null
-
     internal var retryCallbacks: ArrayList<(() -> Unit)>? = null
 
     override fun getViewModelStore(): ViewModelStore = mViewModelStore

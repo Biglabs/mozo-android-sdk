@@ -23,7 +23,8 @@ enum class ErrorCode(val key: String, @StringRes val message: Int) {
 
     ERROR_MAINTAINING("MAINTAINING", R.string.error_fatal);
 
-    fun shouldShowContactMessage() = message == R.string.error_fatal
+    fun shouldShowContactMessage() =
+            message == R.string.error_fatal || message == R.string.error_account_deactivated
 
     companion object {
         fun findByKey(key: String?) = values().find { it.key.equals(key, ignoreCase = true) }

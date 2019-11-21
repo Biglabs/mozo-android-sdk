@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoNotification
 import io.mozocoin.sdk.MozoSDK
+import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.BroadcastData
@@ -52,9 +53,12 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
                         when (broadcast.event.toLowerCase(Locale.getDefault())) {
                             /* Reload balance */
-                            Constant.NOTIFY_EVENT_AIRDROP_INVITE,
+                            Constant.NOTIFY_EVENT_AIRDROP_INVITE -> {
+                                MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+                            }
                             Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)
+                                MozoWallet.getInstance().invokeBalanceChanged()
                             }
                             Constant.NOTIFY_EVENT_ADDRESS_BOOK_CHANGED -> {
                                 MozoSDK.getInstance().contactViewModel.fetchUser(MozoSDK.getInstance().context)

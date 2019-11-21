@@ -1,8 +1,7 @@
 package io.mozocoin.sdk
 
 import android.content.Context
-import io.mozocoin.sdk.common.Constant
-import io.mozocoin.sdk.common.ErrorCode
+import io.mozocoin.sdk.common.*
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.common.model.Profile
@@ -33,6 +32,8 @@ class MozoWallet private constructor() {
     private var mInitWalletCallback: ((isSuccess: Boolean) -> Unit)? = null
     private var mReady4WalletCheckingJob: Job? = null
     private var mReady4WalletCheckingDelayed = 0L
+
+    private var mBalanceChangedListeners: ArrayList<OnBalanceChangedListener>? = null
 
     internal var isDuringResetPinProcess = false
 
@@ -306,6 +307,29 @@ class MozoWallet private constructor() {
         } catch (ignored: Exception) {
             EventBus.getDefault().unregister(this@MozoWallet)
             EventBus.getDefault().register(this@MozoWallet)
+        }
+    }
+
+    fun addBalanceChangedListener(listener: OnBalanceChangedListener) {
+        if (mBalanceChangedListeners == null) {
+            mBalanceChangedListeners = arrayListOf()
+        }
+
+        if (mBalanceChangedListeners?.contains(listener) == false) {
+            mBalanceChangedListeners?.add(listener)
+        }
+    }
+
+    fun removeBalanceChangedListener(listener: OnBalanceChangedListener) {
+        mBalanceChangedListeners?.remove(listener)
+    }
+
+    internal fun invokeBalanceChanged() = GlobalScope.launch(Dispatchers.Main) {
+        if (mBalanceChangedListeners.isNullOrEmpty()) return@launch
+
+        val balance = MozoSDK.getInstance().profileViewModel.getBalance()?.balanceNonDecimal()
+        mBalanceChangedListeners?.forEach {
+            it.onBalanceChanged(balance)
         }
     }
 
