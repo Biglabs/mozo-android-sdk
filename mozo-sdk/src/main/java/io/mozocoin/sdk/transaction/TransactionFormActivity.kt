@@ -353,6 +353,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
         transfer_toolbar?.showBackButton(true)
         button_submit?.setText(R.string.mozo_button_send)
+        button_submit?.isClickable = true
     }
 
     private fun updateContactUI() {

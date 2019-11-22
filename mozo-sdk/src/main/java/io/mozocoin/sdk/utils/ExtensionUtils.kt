@@ -172,7 +172,7 @@ fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener {
         isClickable = true
     }
 
-    postDelayed(2000) {
+    postDelayed(1200) {
         isClickable = true
     }
 }
