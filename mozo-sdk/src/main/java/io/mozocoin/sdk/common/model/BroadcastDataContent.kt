@@ -16,5 +16,6 @@ data class BroadcastDataContent(
         @SerializedName(value = "phoneNo", alternate = ["phoneNumSignUp"]) val phoneNo: String?,
         val isComeIn: Boolean,
         val storeName: String,
-        val promoName: String? = null
+        val promoName: String? = null,
+        var imageId: String? = null
 )

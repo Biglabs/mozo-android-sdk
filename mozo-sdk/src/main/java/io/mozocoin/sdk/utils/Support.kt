@@ -119,6 +119,12 @@ class Support {
             else -> Constant.DOMAIN_LANDING_PAGE_PRODUCTION
         }
 
+        internal fun domainImage() = when (MozoSDK.serviceEnvironment) {
+            MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_IMAGE_DEV
+            MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_IMAGE_STAGING
+            else -> Constant.DOMAIN_IMAGE_PRODUCTION
+        }
+
         internal fun getDefaultCurrency() = ExchangeRateData(
                 ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, SharedPrefsUtils.getDefaultCurrencyRate()),
                 ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, BigDecimal.ZERO)
