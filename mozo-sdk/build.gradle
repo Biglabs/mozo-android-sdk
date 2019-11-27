@@ -39,15 +39,15 @@ dependencies {
     api 'androidx.browser:browser:1.0.0'
     api 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
     api 'androidx.core:core-ktx:1.1.0'
-    api "androidx.room:room-runtime:2.2.1"
-    kapt "androidx.room:room-compiler:2.2.1"
+    api "androidx.room:room-runtime:2.2.2"
+    kapt "androidx.room:room-compiler:2.2.2"
     api "androidx.preference:preference-ktx:1.1.0"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
-    implementation 'com.google.android:flexbox:1.1.1'
+    implementation 'com.google.android:flexbox:2.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.material:material:1.1.0-beta01'
 
@@ -66,7 +66,7 @@ dependencies {
     implementation 'org.web3j:core:4.2.0-android'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'org.java-websocket:Java-WebSocket:1.4.0'
-    implementation 'io.michaelrocks:libphonenumber-android:8.10.16'
+    implementation 'io.michaelrocks:libphonenumber-android:8.10.22'
     api 'com.journeyapps:zxing-android-embedded:3.6.0'
 
     // test
