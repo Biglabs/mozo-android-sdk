@@ -501,8 +501,11 @@ internal class MozoAPIsService private constructor() {
                     it.proceed(request)
                 }
                 .addInterceptor(HttpLoggingInterceptor().setLevel(
-                        if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-                        else HttpLoggingInterceptor.Level.NONE
+                        when {
+                            MozoSDK.isEnableDebugLogging -> HttpLoggingInterceptor.Level.HEADERS
+                            BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BODY
+                            else -> HttpLoggingInterceptor.Level.NONE
+                        }
                 ))
 
         return Retrofit.Builder()
