@@ -316,7 +316,7 @@ internal class SecurityActivity : BaseActivity() {
             }
             else -> {
                 pin_toolbar.screen_title.setText(R.string.mozo_pin_sub_title)
-                sub_title_pin.setText(R.string.mozo_pin_sub_title_send)
+                sub_title_pin.setText(R.string.mozo_pin_sub_title_commom)
             }
         }
     }
@@ -360,20 +360,20 @@ internal class SecurityActivity : BaseActivity() {
 
     private fun showLoadingUI() = GlobalScope.launch(Dispatchers.Main) {
         isAllowBackPress = false
-        gone(arrayOf(text_correct_pin,
+        gone(text_correct_pin,
                 text_incorrect_pin,
                 input_pin,
                 input_pin_checker_status,
                 text_content_pin,
                 error_container,
-                pin_forgot_group))
+                pin_forgot_group)
 
-        visible(arrayOf(input_loading_indicator))
+        visible(input_loading_indicator)
     }
 
     private fun hideLoadingUI() {
         isAllowBackPress = true
-        gone(arrayOf(input_loading_indicator))
+        gone(input_loading_indicator)
     }
 
     private fun showErrorAndRetryUI() = GlobalScope.launch(Dispatchers.Main) {

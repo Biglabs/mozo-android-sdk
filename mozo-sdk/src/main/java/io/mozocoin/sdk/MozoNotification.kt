@@ -31,6 +31,8 @@ class MozoNotification private constructor() {
         MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
+    private var onNotificationReceiveListener: OnNotificationReceiveListener? = null
+
     private var mShowGroupNotifyJob: Job? = null
 
     internal fun showNotification(message: BroadcastDataContent) = GlobalScope.launch {
@@ -288,7 +290,7 @@ class MozoNotification private constructor() {
                         .get(itemId)
 
                 launch(Dispatchers.Main) {
-                    MozoSDK.getInstance().onNotificationReceiveListener?.onReceived(result)
+                    getInstance().onNotificationReceiveListener?.onReceived(result)
                 }
             }
         }
@@ -335,8 +337,8 @@ class MozoNotification private constructor() {
         }
 
         @JvmStatic
-        fun setNotificationReceiveListener(listener: OnNotificationReceiveListener) {
-            MozoSDK.getInstance().onNotificationReceiveListener = listener
+        fun setNotificationReceiveListener(listener: OnNotificationReceiveListener?) {
+            getInstance().onNotificationReceiveListener = listener
         }
 
         @Synchronized

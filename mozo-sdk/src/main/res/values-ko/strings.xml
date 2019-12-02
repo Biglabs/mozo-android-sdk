@@ -136,6 +136,7 @@
     <string name="mozo_pin_title_verify">PIN 코드 확인</string>
     <string name="mozo_pin_title_change">보안 PIN 변경</string>
     <string name="mozo_pin_sub_title">PIN 코드 입력</string>
+    <string name="mozo_pin_sub_title_commom">MozoX를 보내도록 보안 PIN을</string>
     <string name="mozo_pin_sub_title_restore">월렛을 복구할 PIN 코드를\n입력하십시오</string>
     <string name="mozo_pin_sub_title_send">MozoX를 보내도록 보안 PIN을\n입력하십시오</string>
     <string name="mozo_pin_content">PIN은 최소 6 자리 숫자 여야 합니다</string>

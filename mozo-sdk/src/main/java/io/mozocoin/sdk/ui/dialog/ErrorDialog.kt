@@ -79,15 +79,15 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         errorType = type ?: argument.getInt(ERROR_TYPE, errorType)
         errorMessage = argument.getString(ERROR_MESSAGE)
 
-        visible(arrayOf(
+        visible(
                 image_error_type,
                 text_title_error
-        ))
-        gone(arrayOf(
+        )
+        gone(
                 button_contact_telegram,
                 button_contact_zalo,
                 button_contact_kakao
-        ))
+        )
         button_try_again?.setText(R.string.mozo_button_try_again)
 
         when (errorType) {
@@ -106,16 +106,16 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
                 text_title_error?.setText(R.string.mozo_dialog_error_timeout_msg)
             }
             TYPE_WITH_CONTACT -> {
-                gone(arrayOf(
+                gone(
                         image_error_type,
                         text_title_error
-                ))
-                visible(arrayOf(
+                )
+                visible(
                         text_msg_error,
                         button_contact_telegram,
                         button_contact_zalo,
                         button_contact_kakao
-                ))
+                )
                 text_msg_error?.setText(R.string.error_fatal)
                 button_try_again?.setText(R.string.mozo_button_ok)
             }

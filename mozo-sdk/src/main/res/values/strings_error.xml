@@ -2,6 +2,8 @@
 <resources>
     <string name="error_common">Something is wrong with your account status. Please try again.</string>
 
+    <string name="error_account_deactivated">Your account has been deactivated temporarily. Please sign in with other account or contact us for more information</string>
+
     <string name="error_convert_status_pending">Can not send transaction to Ethereum network or sent but failed. Please check your data and try again</string>
 
     <string name="error_fatal">Can not connect to MozoX servers. Contact your agency for more information</string>
@@ -10,5 +12,6 @@
     <string name="error_tx_invalid_address">This wallet address does not exist. We only support registered MozoX wallet addresses.</string>
 
     <string name="error_wallet_different">Your wallet was updated but did not sync with your current device. Please restore your wallet first.</string>
+    <string name="error_wallet_busy">There is a pending transaction. Can not send another transaction. Please wait about 3 minutes and try again later</string>
     <string name="error_wallet_not_found">The destination wallet was not found. Please recheck the wallet address or try another wallet address</string>
 </resources>

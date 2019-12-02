@@ -11,6 +11,7 @@ import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.ErrorCode
 import io.mozocoin.sdk.common.model.*
 import io.mozocoin.sdk.ui.BaseActivity
+import io.mozocoin.sdk.ui.MozoSnackbar
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
@@ -413,6 +414,7 @@ internal class MozoAPIsService private constructor() {
     ) {
         call.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
+                MozoSnackbar.dismiss()
                 val body = response.body() as? Base<V>
                 if (response.isSuccessful /*200..<300*/ && body != null) {
                     if (!body.isSuccess && handleError) {

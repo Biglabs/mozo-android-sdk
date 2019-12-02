@@ -1,8 +1,10 @@
 package io.mozocoin.sdk.utils
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Typeface
@@ -117,20 +119,33 @@ fun Context.openTab(url: String) {
             .setShowTitle(true)
             .setToolbarColor(color(R.color.mozo_color_primary))
             .build()
+
+    //to be used if Custom Tabs is not available
+    val fallback = object : CustomTabsHelper.CustomTabFallback {
+        override fun openUri(context: Context, uri: Uri) {
+            if (context is Activity && (context.isFinishing || context.isDestroyed)) {
+                return
+            }
+
+            context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
+    }
+
     CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
-    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), null)
+    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), fallback)
 }
 
-fun visible(views: Array<View?>) {
-    views.map {
-        it?.visible()
-    }
+fun visibility(visible: Boolean, vararg views: View?) {
+    if (visible) visible(*views)
+    else gone(*views)
 }
 
-fun gone(views: Array<View?>) {
-    views.map {
-        it?.gone()
-    }
+fun visible(vararg views: View?) {
+    views.forEach { it?.visibility = View.VISIBLE }
+}
+
+fun gone(vararg views: View?) {
+    views.forEach { it?.visibility = View.GONE }
 }
 
 fun Resources.dp2Px(value: Float): Float {
@@ -171,7 +186,7 @@ fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener {
         isClickable = true
     }
 
-    postDelayed(2000) {
+    postDelayed(1200) {
         isClickable = true
     }
 }

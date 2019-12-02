@@ -276,7 +276,7 @@ internal class TransactionFormActivity : BaseActivity() {
     private fun showInputUI() {
         output_receiver_address?.isEnabled = true
         output_amount?.isEnabled = true
-        visible(arrayOf(
+        visible(
                 output_receiver_address,
                 output_receiver_address_underline,
                 button_address_book,
@@ -284,13 +284,13 @@ internal class TransactionFormActivity : BaseActivity() {
                 output_amount,
                 output_amount_rate,
                 output_amount_underline
-        ))
-        gone(arrayOf(
+        )
+        gone(
                 output_receiver_address_user,
                 send_state_container,
                 confirmation_state_separator,
                 output_amount_preview_container
-        ))
+        )
 
         transfer_toolbar?.showBackButton(false)
         button_submit?.setText(R.string.mozo_button_continue)
@@ -334,7 +334,7 @@ internal class TransactionFormActivity : BaseActivity() {
         output_receiver_address?.setSelection(0)
 
         output_amount?.isEnabled = false
-        gone(arrayOf(
+        gone(
                 output_receiver_address_underline,
                 button_address_book,
                 button_scan_qr,
@@ -343,16 +343,17 @@ internal class TransactionFormActivity : BaseActivity() {
                 output_amount_underline,
                 text_spendable,
                 button_clear
-        ))
+        )
         text_preview_amount?.text = mInputAmount.displayString()
-        visible(arrayOf(
+        visible(
                 send_state_container,
                 confirmation_state_separator,
                 output_amount_preview_container
-        ))
+        )
 
         transfer_toolbar?.showBackButton(true)
         button_submit?.setText(R.string.mozo_button_send)
+        button_submit?.isClickable = true
     }
 
     private fun updateContactUI() {

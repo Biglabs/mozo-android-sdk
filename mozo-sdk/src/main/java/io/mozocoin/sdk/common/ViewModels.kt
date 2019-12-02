@@ -153,7 +153,7 @@ internal object ViewModels {
                 nestedAmount.round(
                         MathContext(
                                 (nestedAmount.precision() - 3).coerceAtLeast(0),
-                                RoundingMode.UP
+                                RoundingMode.HALF_EVEN
                         )
                 )
             } else amount

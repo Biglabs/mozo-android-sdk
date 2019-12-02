@@ -38,9 +38,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     internal var notifyActivityClass: Class<out Activity>? = null
 
-    internal var remindAnchorView: View? = null
+    internal var ignoreInternetErrActivities: ArrayList<Class<out Activity>>? = null
 
-    internal var onNotificationReceiveListener: OnNotificationReceiveListener? = null
+    internal var remindAnchorView: View? = null
 
     internal var retryCallbacks: ArrayList<(() -> Unit)>? = null
 
@@ -189,6 +189,20 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         fun stopMaintenanceMode() {
             EventBus.getDefault().post(MessageEvent.StopMaintenanceMode())
+        }
+
+        @JvmStatic
+        fun disableInternetFloatingBar(activity: Class<out Activity>) {
+            if (getInstance().ignoreInternetErrActivities == null) {
+                getInstance().ignoreInternetErrActivities = arrayListOf()
+            }
+
+            getInstance().ignoreInternetErrActivities?.add(activity)
+        }
+
+        @JvmStatic
+        fun enableInternetFloatingBar(activity: Class<out Activity>) {
+            getInstance().ignoreInternetErrActivities?.remove(activity)
         }
     }
 }

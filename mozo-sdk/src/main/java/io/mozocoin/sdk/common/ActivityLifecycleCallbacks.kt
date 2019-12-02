@@ -33,7 +33,12 @@ class ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
             delay(1000)
 
             if (!activity.isFinishing && !activity.isDestroyed) {
-                MozoSDK.getInstance().remindAnchorView = activity.window.decorView
+
+                if (MozoSDK.getInstance().ignoreInternetErrActivities?.contains(activity::class.java) == true) {
+                    MozoSDK.getInstance().remindAnchorView = null
+                } else {
+                    MozoSDK.getInstance().remindAnchorView = activity.window.decorView
+                }
                 ConnectionService.checkNetwork()
             }
         }
