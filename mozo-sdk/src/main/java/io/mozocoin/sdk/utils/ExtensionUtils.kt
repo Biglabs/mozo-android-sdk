@@ -242,7 +242,7 @@ fun EditText.onAmountInputChanged(textChanged: ((String?) -> Unit)? = null, amou
             separatorIndex = it.length - separatorIndex
         }
 
-        var rawAmount = it.replace(Regex("([,.·' ])"), "")
+        var rawAmount = it.replace(Regex("\\D+"), "")
         if (separatorIndex > 0) {
             rawAmount = StringBuilder(rawAmount).insert(rawAmount.length - separatorIndex, ".").toString()
         }
