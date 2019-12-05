@@ -27,6 +27,7 @@ import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.gone
+import io.mozocoin.sdk.utils.safe
 import kotlinx.android.synthetic.main.activity_import_contacts.*
 import kotlinx.coroutines.*
 
@@ -120,7 +121,7 @@ internal class ImportContactsActivity : BaseActivity() {
 
         val lstContacts = mutableListOf<ContactInfoDTO>()
         while (phonesCursor?.moveToNext() == true) {
-            val contactID = phonesCursor.getString(0)
+            val contactID = phonesCursor.getString(/* _ID */0)
 
             val pCursor = contentResolver.query(
                     ContactsContract.Data.CONTENT_URI,
@@ -138,8 +139,8 @@ internal class ImportContactsActivity : BaseActivity() {
                 }
             }
 
-            if (lstPhones.isNotEmpty()) {
-                val contactName = phonesCursor.getString(1)
+            val contactName = phonesCursor.getString(/* DISPLAY_NAME */1).safe()
+            if (lstPhones.isNotEmpty() && !lstPhones.contains(contactName)) {
                 lstContacts.add(ContactInfoDTO().apply {
                     name = contactName
                     phoneNums = lstPhones
