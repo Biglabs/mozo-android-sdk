@@ -14,7 +14,6 @@ import android.provider.ContactsContract.Data.DATA1
 import android.provider.Settings
 import android.util.Patterns
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible

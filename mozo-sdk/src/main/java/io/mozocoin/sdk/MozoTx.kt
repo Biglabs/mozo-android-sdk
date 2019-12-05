@@ -204,7 +204,18 @@ class MozoTx private constructor() {
         }
     }
 
+    fun signMessage(context: Context, message: String, enterPinForSend: Boolean, callback: (message: String, signature: String, publicKey: String) -> Unit) {
+        signMessages(context, message, enterPinForSend = enterPinForSend, callback = {
+            val trip = it.firstOrNull()
+            callback.invoke(trip?.first ?: "", trip?.second ?: "", trip?.third ?: "")
+        })
+    }
+
     fun signMessages(context: Context, vararg messages: String, callback: (result: List<Triple<String, String, String>>) -> Unit) {
+        signMessages(context, *messages, enterPinForSend = false, callback = callback)
+    }
+
+    fun signMessages(context: Context, vararg messages: String, enterPinForSend: Boolean, callback: (result: List<Triple<String, String, String>>) -> Unit) {
         if (callbackToSign != null) return
 
         this.messagesToSign = messages
@@ -213,7 +224,7 @@ class MozoTx private constructor() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-        SecurityActivity.startVerify(context)
+        SecurityActivity.startVerify(context, enterPinForSend)
     }
 
     fun transfer() {
