@@ -142,8 +142,7 @@ class MozoTx private constructor() {
         if (
                 messagesToSign!!.isNotEmpty()
                 && callbackToSign != null
-                && (event.requestCode == SecurityActivity.KEY_VERIFY_PIN
-                        || event.requestCode == SecurityActivity.KEY_VERIFY_PIN_FOR_SEND)
+                && SecurityActivity.isNeedCallbackForSign(event.requestCode)
         ) {
             GlobalScope.launch {
                 val wallet = MozoWallet.getInstance().getWallet()?.decrypt(event.pin)

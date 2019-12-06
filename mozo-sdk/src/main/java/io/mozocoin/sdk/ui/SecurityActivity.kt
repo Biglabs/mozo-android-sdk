@@ -463,6 +463,11 @@ internal class SecurityActivity : BaseActivity() {
         const val KEY_VERIFY_PIN_FOR_BACKUP = 0x006
 
         const val KEY_DATA = "KEY_DATA"
+        
+        fun isNeedCallbackForSign(requestCode: Int) =
+                requestCode == KEY_ENTER_PIN_FOR_SEND
+                || requestCode == KEY_VERIFY_PIN
+                || requestCode == KEY_VERIFY_PIN_FOR_SEND
 
         fun start(activity: Activity, mode: Int, requestCode: Int) {
             Intent(activity, SecurityActivity::class.java).apply {
