@@ -1,8 +1,10 @@
 package io.mozocoin.sdk.utils
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Typeface
@@ -117,8 +119,20 @@ fun Context.openTab(url: String) {
             .setShowTitle(true)
             .setToolbarColor(color(R.color.mozo_color_primary))
             .build()
+
+    //to be used if Custom Tabs is not available
+    val fallback = object : CustomTabsHelper.CustomTabFallback {
+        override fun openUri(context: Context, uri: Uri) {
+            if (context is Activity && (context.isFinishing || context.isDestroyed)) {
+                return
+            }
+
+            context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
+    }
+
     CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
-    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), null)
+    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), fallback)
 }
 
 fun visibility(visible: Boolean, vararg views: View?) {
@@ -228,7 +242,7 @@ fun EditText.onAmountInputChanged(textChanged: ((String?) -> Unit)? = null, amou
             separatorIndex = it.length - separatorIndex
         }
 
-        var rawAmount = it.replace(Regex("([,.·' ])"), "")
+        var rawAmount = it.replace(Regex("\\D+"), "")
         if (separatorIndex > 0) {
             rawAmount = StringBuilder(rawAmount).insert(rawAmount.length - separatorIndex, ".").toString()
         }

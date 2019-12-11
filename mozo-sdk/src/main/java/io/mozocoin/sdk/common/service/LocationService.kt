@@ -8,6 +8,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import com.google.android.gms.location.*
 import io.mozocoin.sdk.utils.isLocationPermissionGranted
+import io.mozocoin.sdk.utils.logAsError
 
 class LocationService(val context: Context) : LocationCallback(), LocationListener {
 
@@ -34,24 +35,36 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
 
                 fusedLocationProvider.removeLocationUpdates(this)
                 fusedLocationProvider.requestLocationUpdates(
-                    LocationRequest()
-                        .setInterval(REQUEST_INTERVAL)
-                        .setFastestInterval(REQUEST_INTERVAL)
-                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY),
-                    this,
-                    null
+                        LocationRequest()
+                                .setInterval(REQUEST_INTERVAL)
+                                .setFastestInterval(REQUEST_INTERVAL)
+                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY),
+                        this,
+                        null
                 )
             } else {
                 locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)?.let { last ->
                     mListener?.invoke(last)
                 }
                 locationManager.removeUpdates(this)
-                locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    REQUEST_INTERVAL,
-                    0f,
-                    this
-                )
+
+                val providers = locationManager.allProviders
+                val provider = when {
+                    providers.contains(LocationManager.NETWORK_PROVIDER) -> LocationManager.NETWORK_PROVIDER
+                    else -> providers.firstOrNull()
+                }
+                if (provider.isNullOrEmpty()) return@addOnSuccessListener
+                try {
+                    locationManager.requestLocationUpdates(
+                            provider,
+                            REQUEST_INTERVAL,
+                            0f,
+                            this
+                    )
+                } catch (ignore: Exception) {
+                    ignore.printStackTrace()
+                    "Failed to fetch location".logAsError()
+                }
             }
         }
     }
