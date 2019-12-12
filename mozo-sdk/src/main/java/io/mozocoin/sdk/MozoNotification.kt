@@ -58,27 +58,40 @@ class MozoNotification private constructor() {
             prepareDataIntent(notification),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val singleNotify = NotificationCompat.Builder(context, message.event ?: return@launch)
-            .setSmallIcon(R.drawable.ic_mozo_notification)
-            .setLargeIcon(context.bitmap(notification.icon()))
-            .setColor(context.color(R.color.mozo_color_primary))
-            .setContentTitle(notification.titleDisplay())
-            .setContentText(notification.contentDisplay())
-            .setAutoCancel(true)
-            .setDefaults(android.app.Notification.DEFAULT_ALL)
-            .setContentIntent(pendingIntent)
-            .setGroup(notificationGroup.name)
+        val singleNotify =
+            NotificationCompat.Builder(context, message.event ?: return@launch).apply {
+                setSmallIcon(R.drawable.ic_mozo_notification)
+                setColor(context.color(R.color.mozo_color_primary))
+                setContentTitle(notification.titleDisplay())
+                setContentText(notification.contentDisplay())
+                setAutoCancel(true)
+                setDefaults(android.app.Notification.DEFAULT_ALL)
+                setContentIntent(pendingIntent)
 
-        singleNotify.extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
-        singleNotify.extras.putString(EXTRAS_ITEM_DATA, notification.raw)
+                if (notification.type != Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
+                    setLargeIcon(context.bitmap(notification.icon()))
+                    setGroup(notificationGroup.name)
+                    extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
+                    extras.putString(EXTRAS_ITEM_DATA, notification.raw)
+                }
+            }
 
         val id = atomicInteger.incrementAndGet()
         NotificationManagerCompat.from(context).notify(id, singleNotify.build())
 
-        doGroupNotificationDelayed(context, message, notification, notificationGroup, pendingIntent)
+        if (notification.type != Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
+            return@launch doGroupNotificationDelayed(
+                context,
+                message,
+                notification,
+                notificationGroup,
+                pendingIntent
+            )
+        }
 
         message.imageId?.let {
             getBitmap(context, it) { bm ->
+                singleNotify.setLargeIcon(bm)
                 singleNotify.setStyle(
                     NotificationCompat.BigPictureStyle()
                         .bigPicture(bm)
