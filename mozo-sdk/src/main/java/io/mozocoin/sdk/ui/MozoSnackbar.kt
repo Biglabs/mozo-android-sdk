@@ -73,17 +73,11 @@ class MozoSnackbar(
         view.findViewById<TextView>(R.id.snackbar_action)?.run {
             if (TextUtils.isEmpty(text) || listener == null) {
                 visibility = View.GONE
-                setOnClickListener(null)
                 hasAction = false
             } else {
-                hasAction = true
                 visibility = View.VISIBLE
+                hasAction = true
                 setText(text)
-                setOnClickListener { view ->
-                    listener.onClick(view)
-                    // Now dismiss the Snackbar
-                    // dispatchDismiss(BaseCallback.DISMISS_EVENT_ACTION)
-                }
             }
         }
 
