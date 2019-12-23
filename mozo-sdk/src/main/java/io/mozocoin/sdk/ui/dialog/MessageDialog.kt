@@ -31,7 +31,12 @@ class MessageDialog(context: Context, val message: String) : BaseDialog(context)
     }
 
     override fun show() {
-        instance?.dismiss()
+        try {
+            if (instance?.isShowing == true)
+                instance?.dismiss()
+        } catch (ignored: Exception) {
+            ignored.printStackTrace()
+        }
         super.show()
 
         val ctx = context
