@@ -54,6 +54,10 @@ class Constant {
         internal const val DOMAIN_LANDING_PAGE_STAGING = "staging.mozocoin.io"
         internal const val DOMAIN_LANDING_PAGE_PRODUCTION = "mozocoin.io"
 
+        internal const val DOMAIN_IMAGE_DEV = "dev.image.mozocoin.io"
+        internal const val DOMAIN_IMAGE_STAGING = "staging.image.mozocoin.io"
+        internal const val DOMAIN_IMAGE_PRODUCTION = "image.mozocoin.io"
+
         internal const val SOCKET_CHANNEL_SHOPPER = "shopper"
         internal const val SOCKET_CHANNEL_RETAILER = "retailer"
         internal const val SOCKET_RETRY_START_TIME = 5000L
