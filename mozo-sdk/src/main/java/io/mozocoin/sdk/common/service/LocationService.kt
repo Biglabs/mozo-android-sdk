@@ -29,6 +29,9 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
     fun fetchLocation() {
         if (!context.isLocationPermissionGranted()) return
 
+        locationManager.removeUpdates(this)
+        fusedLocationProvider.removeLocationUpdates(this)
+
         fusedLocationProvider.lastLocation.addOnSuccessListener {
             if (it != null) {
                 mListener?.invoke(it)
@@ -42,40 +45,52 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
                         this,
                         null
                 )
-            } else {
-                locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)?.let { last ->
-                    mListener?.invoke(last)
-                }
-                locationManager.removeUpdates(this)
+            } else fetchNetworkLocation()
+        }
+        fusedLocationProvider.lastLocation.addOnFailureListener {
+            fetchNetworkLocation()
+        }
+    }
 
-                val providers = locationManager.allProviders
-                val provider = when {
-                    providers.contains(LocationManager.NETWORK_PROVIDER) -> LocationManager.NETWORK_PROVIDER
-                    else -> providers.firstOrNull()
-                }
-                if (provider.isNullOrEmpty()) return@addOnSuccessListener
-                try {
-                    locationManager.requestLocationUpdates(
-                            provider,
-                            REQUEST_INTERVAL,
-                            0f,
-                            this
-                    )
-                } catch (ignore: Exception) {
-                    ignore.printStackTrace()
-                    "Failed to fetch location".logAsError()
-                }
-            }
+    @SuppressLint("MissingPermission")
+    private fun fetchNetworkLocation() {
+        locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)?.let { last ->
+            mListener?.invoke(last)
+        }
+        locationManager.removeUpdates(this)
+
+        val providers = locationManager.allProviders
+        val provider = when {
+            providers.contains(LocationManager.NETWORK_PROVIDER) -> LocationManager.NETWORK_PROVIDER
+            else -> providers.firstOrNull()
+        }
+        if (provider.isNullOrEmpty()) return
+        try {
+            locationManager.requestLocationUpdates(
+                    provider,
+                    REQUEST_INTERVAL,
+                    0f,
+                    this
+            )
+        } catch (ignore: Exception) {
+            ignore.printStackTrace()
+            "Failed to fetch location".logAsError()
         }
     }
 
     override fun onLocationResult(result: LocationResult?) {
+        /**
+         * from FusedLocationProviderClient
+         */
         result?.lastLocation?.run {
             mListener?.invoke(this)
         }
     }
 
     override fun onLocationChanged(location: Location?) {
+        /**
+         * from LocationManager
+         */
         location?.run {
             mListener?.invoke(this)
         }
