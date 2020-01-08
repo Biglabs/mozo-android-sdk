@@ -17,7 +17,6 @@ package net.openid.appauth;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -188,10 +187,9 @@ public class AuthorizationService {
      * of this request, the provided {@link PendingIntent completion PendingIntent} will be invoked.
      * If the user cancels the authorization request, the current activity will regain control.
      *
-     * @param customTabsIntent
-     *     The intent that will be used to start the custom tab. It is recommended that this intent
-     *     be created with the help of {@link #createCustomTabsIntentBuilder(Uri[])}, which will
-     *     ensure that a warmed-up version of the browser will be used, minimizing latency.
+     * @param customTabsIntent The intent that will be used to start the custom tab. It is recommended that this intent
+     *                         be created with the help of {@link #createCustomTabsIntentBuilder(Uri[])}, which will
+     *                         ensure that a warmed-up version of the browser will be used, minimizing latency.
      */
     public void performAuthorizationRequest(
             @NonNull AuthorizationRequest request,
@@ -213,13 +211,11 @@ public class AuthorizationService {
      * If the user cancels the authorization request, the provided
      * {@link PendingIntent cancel PendingIntent} will be invoked.
      *
-     * @param customTabsIntent
-     *     The intent that will be used to start the custom tab. It is recommended that this intent
-     *     be created with the help of {@link #createCustomTabsIntentBuilder(Uri[])}, which will
-     *     ensure that a warmed-up version of the browser will be used, minimizing latency.
-     *
+     * @param customTabsIntent The intent that will be used to start the custom tab. It is recommended that this intent
+     *                         be created with the help of {@link #createCustomTabsIntentBuilder(Uri[])}, which will
+     *                         ensure that a warmed-up version of the browser will be used, minimizing latency.
      * @throws android.content.ActivityNotFoundException if no suitable browser is available to
-     *     perform the authorization flow.
+     *                                                   perform the authorization flow.
      */
     public void performAuthorizationRequest(
             @NonNull AuthorizationRequest request,
@@ -253,13 +249,11 @@ public class AuthorizationService {
      * {@link Activity#RESULT_OK} indicates the authorization request completed,
      * not necessarily that it was a successful authorization.
      *
-     * @param customTabsIntent
-     *     The intent that will be used to start the custom tab. It is recommended that this intent
-     *     be created with the help of {@link #createCustomTabsIntentBuilder(Uri[])}, which will
-     *     ensure that a warmed-up version of the browser will be used, minimizing latency.
-     *
+     * @param customTabsIntent The intent that will be used to start the custom tab. It is recommended that this intent
+     *                         be created with the help of {@link #createCustomTabsIntentBuilder(Uri[])}, which will
+     *                         ensure that a warmed-up version of the browser will be used, minimizing latency.
      * @throws android.content.ActivityNotFoundException if no suitable browser is available to
-     *     perform the authorization flow.
+     *                                                   perform the authorization flow.
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public Intent getAuthorizationRequestIntent(
@@ -290,7 +284,7 @@ public class AuthorizationService {
      * not necessarily that it was a successful authorization.
      *
      * @throws android.content.ActivityNotFoundException if no suitable browser is available to
-     *     perform the authorization flow.
+     *                                                   perform the authorization flow.
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public Intent getAuthorizationRequestIntent(
@@ -352,6 +346,7 @@ public class AuthorizationService {
      * called when the authorization service is no longer required, including when any owning
      * activity is paused or destroyed (i.e. in {@link android.app.Activity#onStop()}).
      */
+    @SuppressWarnings("JavadocReference")
     public void dispose() {
         if (mDisposed) {
             return;
@@ -375,24 +370,18 @@ public class AuthorizationService {
             CustomTabsIntent customTabsIntent) {
         checkNotDisposed();
 
-        if (mBrowser == null) {
-            throw new ActivityNotFoundException();
-        }
-
         Uri requestUri = request.toUri();
         Intent intent;
-        if (mBrowser.useCustomTab) {
+        if (mBrowser != null && mBrowser.useCustomTab) {
             intent = customTabsIntent.intent;
         } else {
             intent = new Intent(Intent.ACTION_VIEW);
         }
         intent.putExtra(Intent.EXTRA_REFERRER, Uri.parse("android-app://" + mContext.getPackageName()));
-        intent.setPackage(mBrowser.packageName);
+        if (mBrowser != null) {
+            intent.setPackage(mBrowser.packageName);
+        }
         intent.setData(requestUri);
-
-        Logger.debug("Using %s as browser for auth, custom tab = %s",
-                intent.getPackage(),
-                mBrowser.useCustomTab.toString());
 
         Logger.debug("Initiating authorization request to %s",
                 request.configuration.authorizationEndpoint);
@@ -437,7 +426,7 @@ public class AuthorizationService {
                 Map<String, String> headers = mClientAuthentication
                         .getRequestHeaders(mRequest.clientId);
                 if (headers != null) {
-                    for (Map.Entry<String,String> header : headers.entrySet()) {
+                    for (Map.Entry<String, String> header : headers.entrySet()) {
                         conn.setRequestProperty(header.getKey(), header.getValue());
                     }
                 }
@@ -554,24 +543,24 @@ public class AuthorizationService {
 
     /**
      * Callback interface for token endpoint requests.
+     *
      * @see AuthorizationService#performTokenRequest
      */
     public interface TokenResponseCallback {
         /**
          * Invoked when the request completes successfully or fails.
-         *
+         * <p>
          * Exactly one of `response` or `ex` will be non-null. If `response` is `null`, a failure
          * occurred during the request. This can happen if a bad URI was provided, no connection
          * to the server could be established, or the response JSON was incomplete or incorrectly
          * formatted.
          *
          * @param response the retrieved token response, if successful; `null` otherwise.
-         * @param ex a description of the failure, if one occurred: `null` otherwise.
-         *
+         * @param ex       a description of the failure, if one occurred: `null` otherwise.
          * @see AuthorizationException.TokenRequestErrors
          */
         void onTokenRequestCompleted(@Nullable TokenResponse response,
-                @Nullable AuthorizationException ex);
+                                     @Nullable AuthorizationException ex);
     }
 
     private static class RegistrationRequestTask
@@ -583,8 +572,8 @@ public class AuthorizationService {
         private AuthorizationException mException;
 
         RegistrationRequestTask(RegistrationRequest request,
-                ConnectionBuilder connectionBuilder,
-                RegistrationResponseCallback callback) {
+                                ConnectionBuilder connectionBuilder,
+                                RegistrationResponseCallback callback) {
             mRequest = request;
             mConnectionBuilder = connectionBuilder;
             mCallback = callback;
@@ -679,14 +668,14 @@ public class AuthorizationService {
     public interface RegistrationResponseCallback {
         /**
          * Invoked when the request completes successfully or fails.
-         *
+         * <p>
          * Exactly one of `response` or `ex` will be non-null. If `response` is `null`, a failure
          * occurred during the request. This can happen if an invalid URI was provided, no
          * connection to the server could be established, or the response JSON was incomplete or
          * incorrectly formatted.
          *
          * @param response the retrieved registration response, if successful; `null` otherwise.
-         * @param ex a description of the failure, if one occurred: `null` otherwise.
+         * @param ex       a description of the failure, if one occurred: `null` otherwise.
          * @see AuthorizationException.RegistrationRequestErrors
          */
         void onRegistrationRequestCompleted(@Nullable RegistrationResponse response,
