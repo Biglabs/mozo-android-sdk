@@ -14,14 +14,12 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import io.mozocoin.sdk.MozoSDK
-import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.ExchangeRateData
 import io.mozocoin.sdk.common.model.ExchangeRateInfo
 import io.mozocoin.sdk.ui.ScannerQRActivity
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.pow
@@ -69,13 +67,11 @@ class Support {
 
         @JvmStatic
         fun parsePaymentRequest(content: String): Array<String> {
-            // mozox:0xbc049e92d22a6e544d1032b243310ac167ac2f9a?amount=1028
+            /**
+             * mozox:0xbc049e92d22a6e544d1032b243310ac167ac2f9a?amount=1028
+             * */
             if (content.startsWith("mozox:")) {
-                val r = content.trimStart(*"mozox:".toCharArray()).split("?amount=").toTypedArray()
-                r.lastOrNull()?.let {
-                    r[r.lastIndex] = BigDecimal(it).setScale(MozoWallet.getInstance().getDecimal(), RoundingMode.HALF_EVEN).toString()
-                }
-                return r
+                return content.trimStart(*"mozox:".toCharArray()).split("?amount=").toTypedArray()
             }
             return emptyArray()
         }

@@ -7,10 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.model.PaymentRequest
-import io.mozocoin.sdk.utils.Support
-import io.mozocoin.sdk.utils.click
-import io.mozocoin.sdk.utils.gone
-import io.mozocoin.sdk.utils.visible
+import io.mozocoin.sdk.utils.*
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_payment_request.*
 
@@ -49,7 +46,10 @@ class PaymentRequestRecyclerAdapter(
                             ?: receiver
                 }
                 item_payment_address.text = receiver
-                item_payment_amount.text = containerView.context.getString(R.string.mozo_payment_request_item_amount, param.lastOrNull())
+                item_payment_amount.text = containerView.context.getString(
+                        R.string.mozo_payment_request_item_amount,
+                        param.last().toBigDecimal().safe().displayString()
+                )
             }
 
             item_payment_time.text = Support.getDisplayDate(itemView.context, request.timeInSec * 1000, itemView.context.getString(R.string.mozo_format_date_time))
