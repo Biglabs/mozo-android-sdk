@@ -30,22 +30,25 @@ internal class AddressAddActivity : BaseActivity() {
 
         mShowMessageDuration = getInteger(R.integer.security_pin_show_msg_duration).toLong()
 
-        text_contact_address.text = intent.getStringExtra(FLAG_ADDRESS)
+        text_contact_address?.text = intent.getStringExtra(FLAG_ADDRESS)
 
-        input_contact_name.onTextChanged {
-            button_save.isEnabled = input_contact_name.length() > 0
+        input_contact_name?.onTextChanged {
+            button_save?.isEnabled = (input_contact_name?.length() ?: 0) > 0
         }
 
-        button_save.click { executeSaveContact() }
+        button_save?.click { executeSaveContact() }
+        container?.click {
+            input_contact_name?.hideKeyboard()
+        }
     }
 
     private fun executeSaveContact() {
         showLoading()
         val contact = Contact(
-            id = 0,
-            name = input_contact_name.text.toString().trim(),
-            physicalAddress = null,
-            soloAddress = text_contact_address.text.toString()
+                id = 0,
+                name = input_contact_name?.text.toString().trim(),
+                physicalAddress = null,
+                soloAddress = text_contact_address?.text.toString()
         )
 
         mozoService.saveContact(this, contact) { data, errorCode ->
