@@ -60,8 +60,8 @@ class MozoNotification private constructor() {
         )
         val singleNotify =
             NotificationCompat.Builder(context, message.event ?: return@launch).apply {
+                color = context.color(R.color.mozo_color_primary)
                 setSmallIcon(R.drawable.ic_mozo_notification)
-                setColor(context.color(R.color.mozo_color_primary))
                 setContentTitle(notification.titleDisplay())
                 setContentText(notification.contentDisplay())
                 setAutoCancel(true)
