@@ -55,7 +55,7 @@
         android:layout_width="0dp"
         android:includeFontPadding="false"
         android:text="@string/mozo_payment_request_btn_scan"
-        app:icon="@drawable/ic_action_scan_v"
+        app:icon="@drawable/ic_action_scan_white"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
         app:iconSize="18dp"

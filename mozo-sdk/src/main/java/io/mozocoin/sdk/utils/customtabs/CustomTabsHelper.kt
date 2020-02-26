@@ -85,7 +85,7 @@ internal class CustomTabsHelper {
                 }
             }
         }
-        CustomTabsClient.bindCustomTabsService(activity, packageName, connection)
+        CustomTabsClient.bindCustomTabsService(activity, packageName, connection!!)
     }
 
     fun mayLaunchUrl(uri: Uri, extras: Bundle, otherLikelyBundles: List<Bundle>): Boolean {

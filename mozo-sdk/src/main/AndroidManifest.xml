@@ -11,8 +11,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <!-- Read Contacts from phone -->
-    <uses-permission android:name="android.permission.read_contacts" />
 
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
