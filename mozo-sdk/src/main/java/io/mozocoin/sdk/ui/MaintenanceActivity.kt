@@ -81,7 +81,7 @@ internal class MaintenanceActivity : BaseActivity() {
     private fun intervalStatusCheck() {
         mSystemStatusCheckJob?.dispose()
         mSystemStatusCheckJob = Observable.interval(
-                INTERVAL_DELAY_IN_SECOND,
+                1,
                 INTERVAL_DELAY_IN_SECOND,
                 TimeUnit.SECONDS
         )

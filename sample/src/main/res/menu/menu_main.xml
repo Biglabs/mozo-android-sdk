@@ -6,8 +6,8 @@
         android:title="Sign Message" />
 
     <item
-        android:id="@+id/action_view_profile"
-        android:title="View Profile" />
+        android:id="@+id/action_maintenance"
+        android:title="Maintenance Mode" />
 
     <item
         android:id="@+id/action_view_setting"
