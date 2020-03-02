@@ -8,12 +8,12 @@ import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.openTab
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_maintenance.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
+import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 internal class MaintenanceActivity : BaseActivity() {
@@ -24,7 +24,7 @@ internal class MaintenanceActivity : BaseActivity() {
 
     private var referenceUrl: String? = null
 
-    private var mSystemStatusCheckJob: Job? = null
+    private var mSystemStatusCheckJob: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +44,7 @@ internal class MaintenanceActivity : BaseActivity() {
 
     override fun onPause() {
         super.onPause()
-        mSystemStatusCheckJob?.cancel()
+        mSystemStatusCheckJob?.dispose()
         mSystemStatusCheckJob = null
     }
 
@@ -79,19 +79,22 @@ internal class MaintenanceActivity : BaseActivity() {
     }
 
     private fun intervalStatusCheck() {
-        mSystemStatusCheckJob?.cancel()
-        mSystemStatusCheckJob = GlobalScope.launch {
-            delay(INTERVAL_DELAY)
-
-            MozoAPIsService.getInstance().checkSystemStatus(this@MaintenanceActivity) { data, _ ->
-                if (FLAG_STATUS_GOOD.equals(data?.status, ignoreCase = true)) {
-                    finish()
-                    return@checkSystemStatus
+        mSystemStatusCheckJob?.dispose()
+        mSystemStatusCheckJob = Observable.interval(
+                INTERVAL_DELAY_IN_SECOND,
+                INTERVAL_DELAY_IN_SECOND,
+                TimeUnit.SECONDS
+        )
+                .subscribeOn(Schedulers.single())
+                .doOnEach {
+                    MozoAPIsService.getInstance().checkSystemStatus(this@MaintenanceActivity) { data, _ ->
+                        if (FLAG_STATUS_GOOD.equals(data?.status, ignoreCase = true)) {
+                            finish()
+                            return@checkSystemStatus
+                        }
+                    }
                 }
-
-                intervalStatusCheck()
-            }
-        }
+                .subscribe()
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
@@ -101,8 +104,7 @@ internal class MaintenanceActivity : BaseActivity() {
     }
 
     companion object {
-        private const val INTERVAL_DELAY = 15000L
-
+        private const val INTERVAL_DELAY_IN_SECOND = 15L
         private const val FLAG_STATUS_GOOD = "HEALTHY"
     }
 }
