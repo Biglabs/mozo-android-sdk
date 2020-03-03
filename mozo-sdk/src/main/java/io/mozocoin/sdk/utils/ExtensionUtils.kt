@@ -127,7 +127,10 @@ fun Context.openTab(url: String) {
                 return
             }
 
-            context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            if (intent.resolveActivity(context.packageManager) != null)
+                context.startActivity(intent)
+            else "No activity found".logAsError()
         }
     }
 
@@ -224,7 +227,7 @@ fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
 
 fun EditText.onAmountInputChanged(textChanged: ((String?) -> Unit)? = null, amountChanged: (BigDecimal) -> Unit) {
     inputType = InputType.TYPE_CLASS_NUMBER
-    keyListener = DigitsKeyListener.getInstance("0123456789" + DecimalFormatSymbols.getInstance().decimalSeparator)
+    keyListener = DigitsKeyListener.getInstance("0123456789.,")
     filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, MozoTx.getInstance().mozoDecimal().toInt()))
 
     onTextChanged {
