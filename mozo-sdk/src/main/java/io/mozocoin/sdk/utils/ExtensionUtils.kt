@@ -115,6 +115,10 @@ fun Context.openTab(url: String) {
         }
     }
 
+    if (finalUrl.startsWith(Support.domainHomePage(), ignoreCase = true)) {
+        finalUrl = "https://".plus(finalUrl)
+    }
+
     val customTabsIntent = CustomTabsIntent.Builder()
             .setShowTitle(true)
             .setToolbarColor(color(R.color.mozo_color_primary))
@@ -134,8 +138,12 @@ fun Context.openTab(url: String) {
         }
     }
 
-    CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
-    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), fallback)
+    try {
+        CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
+        CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), fallback)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }
 
 fun visibility(visible: Boolean, vararg views: View?) {
