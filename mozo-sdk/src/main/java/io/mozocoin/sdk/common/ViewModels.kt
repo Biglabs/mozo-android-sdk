@@ -11,10 +11,7 @@ import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.safe
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -127,12 +124,12 @@ internal object ViewModels {
             )
         }
 
-        fun updateProfile(context: Context, p: Profile) = GlobalScope.launch(Dispatchers.Main) {
+        fun updateProfile(context: Context, p: Profile) = MainScope().launch {
             profileLiveData.value = p
             fetchBalance(context)
         }
 
-        fun updateUserInfo(u: UserInfo) = GlobalScope.launch(Dispatchers.Main) {
+        fun updateUserInfo(u: UserInfo) = MainScope().launch {
             userInfoLiveData.value = u
             MozoAuth.invokeProfileChangeListener(u)
         }

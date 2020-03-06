@@ -84,6 +84,17 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
+    fun saveWalletAutoToPin(
+            context: Context,
+            walletInfo: WalletInfo,
+            callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
+    ) {
+        MainScope().launch {
+            execute(context, mozoAPIs.updateWalletAutoToPin(walletInfo), callback, retry)
+        }
+    }
+
     fun resetWallet(
             context: Context,
             walletInfo: WalletInfo,

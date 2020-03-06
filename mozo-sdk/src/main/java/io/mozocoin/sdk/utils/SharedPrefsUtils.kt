@@ -7,7 +7,6 @@ import java.math.BigDecimal
 
 class SharedPrefsUtils private constructor() {
     companion object {
-        private const val KEY_NEED_SYNC_WALLET = "SYNC_WALLET_INFO"
         private const val KEY_CURRENCY_RATE = "KEY_CURRENCY_RATE"
         private const val KEY_SHOW_AUTO_PIN_NOTICE = "KEY_SHOW_AUTO_PIN_NOTICE"
 
@@ -16,14 +15,6 @@ class SharedPrefsUtils private constructor() {
 
         @JvmStatic
         private fun manager() = PreferenceManager.getDefaultSharedPreferences(MozoSDK.getInstance().context.applicationContext)
-
-        @JvmStatic
-        fun isNeedSyncWallet() = manager().getBoolean(KEY_NEED_SYNC_WALLET, false)
-
-        @JvmStatic
-        fun setNeedSyncWallet(value: Boolean) {
-            manager().edit().putBoolean(KEY_NEED_SYNC_WALLET, value).apply()
-        }
 
         @JvmStatic
         fun getDefaultCurrencyRate(): BigDecimal {
