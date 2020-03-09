@@ -98,6 +98,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 Companion.isRetailerApp = isRetailerApp
                 instance = MozoSDK(context.applicationContext)
 
+                // Preload custom tabs service for improved performance
+                if (context is Application) {
+                    context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
+                }
+
                 /**
                  * Initialize Authentication Service
                  * */
@@ -108,11 +113,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                          * Initialize Transaction Service
                          * */
                         MozoTx.getInstance()
-
-                        // Preload custom tabs service for improved performance
-                        if (context is Application) {
-                            context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
-                        }
 
                         /* register network changes */
                         instance?.registerNetworkCallback()
