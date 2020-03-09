@@ -47,6 +47,7 @@ class MozoAuth private constructor() {
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
         if (auth.exception is UserCancelException) {
+            MozoSDK.getInstance().profileViewModel.clear()
             mAuthListeners.forEach { it.onAuthCanceled() }
             return
         }
@@ -108,7 +109,9 @@ class MozoAuth private constructor() {
         MozoAuthActivity.signIn(MozoSDK.getInstance().context)
     }
 
-    fun signOut() {
+    fun signOut() = signOut(false)
+
+    internal fun signOut(silent: Boolean = false) {
         MessageDialog.dismiss()
         authStateManager.clearSession()
 
@@ -118,7 +121,9 @@ class MozoAuth private constructor() {
         MozoSocketClient.disconnect()
         onAuthorizeChanged(MessageEvent.Auth())
 
-        MozoAuthActivity.signOut(MozoSDK.getInstance().context)
+        if (!silent) {
+            MozoAuthActivity.signOut(MozoSDK.getInstance().context)
+        }
     }
 
     fun isSignedIn() = authStateManager.current.isAuthorized

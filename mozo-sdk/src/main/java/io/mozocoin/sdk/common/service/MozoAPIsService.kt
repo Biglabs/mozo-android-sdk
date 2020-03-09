@@ -15,7 +15,10 @@ import io.mozocoin.sdk.ui.MozoSnackbar
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -92,6 +95,17 @@ internal class MozoAPIsService private constructor() {
     ) {
         MainScope().launch {
             execute(context, mozoAPIs.updateWalletAutoToPin(walletInfo), callback, retry)
+        }
+    }
+
+    fun updateWalletAfterReset(
+            context: Context,
+            walletInfo: WalletInfo,
+            callback: ((data: Profile?, errorCode: String?) -> Unit)? = null,
+            retry: (() -> Unit)? = null
+    ) {
+        MainScope().launch {
+            execute(context, mozoAPIs.updateWalletAfterReset(walletInfo), callback, retry)
         }
     }
 

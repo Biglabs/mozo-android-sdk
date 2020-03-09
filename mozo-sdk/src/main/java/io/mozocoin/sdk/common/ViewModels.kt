@@ -47,11 +47,16 @@ internal object ViewModels {
                 callback?.invoke(null)
                 return
             }
-            GlobalScope.launch {
-                val profile = if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
-                else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
 
-                val userInfo = MozoDatabase.getInstance(context).userInfo().get()
+            GlobalScope.launch {
+                val profile = withContext(Dispatchers.IO) {
+                    if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
+                    else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
+                }
+                val userInfo = withContext(Dispatchers.IO) {
+                    MozoDatabase.getInstance(context).userInfo().get()
+                }
+
                 withContext(Dispatchers.Main) {
                     userInfoLiveData.value = userInfo
                     profileLiveData.value = profile
@@ -168,7 +173,7 @@ internal object ViewModels {
                 amount.multiply((if (useOffChain) balanceAndRateLiveData.value?.rate else exchangeRateLiveData.value?.eth?.rate).safe())
         )
 
-        fun clear() = GlobalScope.launch(Dispatchers.Main) {
+        fun clear() = MainScope().launch {
             profileLiveData.value = null
             balanceInfoLiveData.value = null
         }

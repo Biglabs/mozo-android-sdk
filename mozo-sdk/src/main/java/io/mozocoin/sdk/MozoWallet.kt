@@ -2,8 +2,6 @@ package io.mozocoin.sdk
 
 import android.content.Context
 import io.mozocoin.sdk.common.*
-import io.mozocoin.sdk.common.MessageEvent
-import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.model.WalletInfo

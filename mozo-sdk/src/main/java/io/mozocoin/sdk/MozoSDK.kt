@@ -16,8 +16,10 @@ import androidx.annotation.IntDef
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
-import io.mozocoin.sdk.common.*
-import io.mozocoin.sdk.common.service.MozoDatabase
+import io.mozocoin.sdk.common.ActivityLifecycleCallbacks
+import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.ConnectionService
 import io.mozocoin.sdk.ui.MaintenanceActivity
 import org.greenrobot.eventbus.EventBus
@@ -96,43 +98,49 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 Companion.isRetailerApp = isRetailerApp
                 instance = MozoSDK(context.applicationContext)
 
-                /* initialize Database Service */
-                MozoDatabase.getInstance(context)
-                /* initialize Wallet Service */
-                MozoWallet.getInstance()
-                /* initialize Transaction Service */
-                MozoTx.getInstance()
+                /**
+                 * Initialize Authentication Service
+                 * */
+                MozoAuth.getInstance().syncProfile(context) { success ->
+                    if (!success) MozoAuth.getInstance().signOut(true)
+                    else {
+                        /**
+                         * Initialize Transaction Service
+                         * */
+                        MozoTx.getInstance()
 
-                // Preload custom tabs service for improved performance
-                if (context is Application) {
-                    context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
-                }
-
-                /* register network changes */
-                instance?.registerNetworkCallback()
-
-                context.registerComponentCallbacks(object : ComponentCallbacks {
-                    override fun onLowMemory() {
-
-                    }
-
-                    override fun onConfigurationChanged(newConfig: Configuration?) {
-                        newConfig ?: return
-
-                        val symbol = getInstance().profileViewModel
-                                .exchangeRateLiveData.value?.token?.currencySymbol
-                                ?: Constant.DEFAULT_CURRENCY_SYMBOL
-                        if (
-                                when (Locale.getDefault().language) {
-                                    Locale.KOREA.language -> symbol != Constant.CURRENCY_SYMBOL_KRW
-                                    Locale("vi").language -> symbol != Constant.CURRENCY_SYMBOL_VND
-                                    else -> symbol != Constant.DEFAULT_CURRENCY_SYMBOL
-                                }
-                        ) {
-                            getInstance().profileViewModel.fetchExchangeRate(context)
+                        // Preload custom tabs service for improved performance
+                        if (context is Application) {
+                            context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
                         }
+
+                        /* register network changes */
+                        instance?.registerNetworkCallback()
+
+                        context.registerComponentCallbacks(object : ComponentCallbacks {
+                            override fun onLowMemory() {
+
+                            }
+
+                            override fun onConfigurationChanged(newConfig: Configuration?) {
+                                newConfig ?: return
+
+                                val symbol = getInstance().profileViewModel
+                                        .exchangeRateLiveData.value?.token?.currencySymbol
+                                        ?: Constant.DEFAULT_CURRENCY_SYMBOL
+                                if (
+                                        when (Locale.getDefault().language) {
+                                            Locale.KOREA.language -> symbol != Constant.CURRENCY_SYMBOL_KRW
+                                            Locale("vi").language -> symbol != Constant.CURRENCY_SYMBOL_VND
+                                            else -> symbol != Constant.DEFAULT_CURRENCY_SYMBOL
+                                        }
+                                ) {
+                                    getInstance().profileViewModel.fetchExchangeRate(context)
+                                }
+                            }
+                        })
                     }
-                })
+                }
             }
         }
 

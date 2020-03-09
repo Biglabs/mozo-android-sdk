@@ -54,6 +54,9 @@ internal interface MozoAPIs {
     @PUT("${MozoAPIsService.APIS_STORE}/user-profile/changeFromAutoToPinWallet")
     fun updateWalletAutoToPin(@Body walletInfo: WalletInfo): Call<Base<Profile>>
 
+    @PUT("${MozoAPIsService.APIS_STORE}/user-profile/saveWalletResetPin")
+    fun updateWalletAfterReset(@Body walletInfo: WalletInfo): Call<Base<Profile>>
+
     @PUT("${MozoAPIsService.APIS_STORE}/user-profile/wallet/reset-pin")
     fun resetWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>
 

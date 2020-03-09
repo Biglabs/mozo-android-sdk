@@ -197,7 +197,7 @@
             android:layout_marginStart="@dimen/mozo_screen_padding"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="@dimen/mozo_screen_padding"
-            android:background="?selectableItemBackground"
+            android:background="@drawable/mozo_dr_btn_ripple"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
