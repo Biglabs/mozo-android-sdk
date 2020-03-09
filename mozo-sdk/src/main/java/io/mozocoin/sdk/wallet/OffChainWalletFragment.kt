@@ -179,7 +179,6 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
 
     @Synchronized
     private fun fetchData() {
-        wallet_fragment_off_swipe?.isRefreshing = true
         fetchDataJob?.cancel()
         fetchDataJobHandler?.cancel()
         fetchDataJobHandler = GlobalScope.launch {
