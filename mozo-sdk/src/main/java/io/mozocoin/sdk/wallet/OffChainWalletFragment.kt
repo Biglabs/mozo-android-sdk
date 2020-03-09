@@ -3,13 +3,12 @@ package io.mozocoin.sdk.wallet
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.core.view.isVisible
+import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -31,7 +30,7 @@ import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_mozo_wallet_off.*
 import kotlinx.coroutines.*
 
-internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_off), SwipeRefreshLayout.OnRefreshListener {
     private val histories = arrayListOf<TransactionHistory>()
     private val onItemClick = { history: TransactionHistory ->
         if (context != null) {
@@ -49,9 +48,6 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     private var generateQRJob: Job? = null
 
     private var mOnChainBalanceInfo: BalanceInfo? = null
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_mozo_wallet_off, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,9 +109,11 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
         super.onResume()
         wallet_info_detected_on_chain?.gone()
         if (MozoAuth.getInstance().isSignedIn()) {
-            MozoSDK.getInstance().profileViewModel.run {
-                profileLiveData.observe(this@OffChainWalletFragment, profileObserver)
-                balanceAndRateLiveData.observeForever(balanceAndRateObserver)
+            view?.postDelayed(250) {
+                MozoSDK.getInstance().profileViewModel.run {
+                    profileLiveData.observe(this@OffChainWalletFragment, profileObserver)
+                    balanceAndRateLiveData.observeForever(balanceAndRateObserver)
+                }
             }
         }
     }
