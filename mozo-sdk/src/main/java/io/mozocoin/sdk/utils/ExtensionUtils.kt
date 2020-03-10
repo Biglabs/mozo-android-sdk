@@ -138,11 +138,16 @@ fun Context.openTab(url: String) {
         }
     }
 
+    val targetUri = Uri.parse(finalUrl)
     try {
         CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
-        CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), fallback)
+        CustomTabsHelper.openCustomTab(this, customTabsIntent, targetUri, fallback)
     } catch (e: Exception) {
         e.printStackTrace()
+        /**
+         * Try to open link by external browser
+         */
+        fallback.openUri(this, targetUri)
     }
 }
 
