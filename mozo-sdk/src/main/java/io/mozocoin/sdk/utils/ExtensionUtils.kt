@@ -1,10 +1,7 @@
 package io.mozocoin.sdk.utils
 
 import android.app.Activity
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Typeface
@@ -143,11 +140,13 @@ fun Context.openTab(url: String) {
         CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
         CustomTabsHelper.openCustomTab(this, customTabsIntent, targetUri, fallback)
     } catch (e: Exception) {
+        if (e !is ActivityNotFoundException) {
+            /**
+             * Try to open link by external browser
+             */
+            fallback.openUri(this, targetUri)
+        }
         e.printStackTrace()
-        /**
-         * Try to open link by external browser
-         */
-        fallback.openUri(this, targetUri)
     }
 }
 
