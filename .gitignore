@@ -6,3 +6,4 @@
 /build
 /captures
 .externalNativeBuild
+mozo-sdk/target/*
