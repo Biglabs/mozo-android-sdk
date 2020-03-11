@@ -89,7 +89,6 @@ internal object ViewModels {
         }
 
         fun fetchExchangeRate(context: Context) {
-            exchangeRateLiveData.value = exchangeRateLiveData.value ?: Support.getDefaultCurrency()
             updateBalanceAndRate()
 
             MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().language, { data, _ ->
@@ -108,10 +107,8 @@ internal object ViewModels {
             })
         }
 
-        private fun updateBalanceAndRate() {
-            if (exchangeRateLiveData.value == null) {
-                exchangeRateLiveData.value = Support.getDefaultCurrency()
-            }
+        private fun updateBalanceAndRate() = MainScope().launch {
+            exchangeRateLiveData.value = exchangeRateLiveData.value ?: Support.getDefaultCurrency()
             val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal().safe()
             val rate = exchangeRateLiveData.value?.token?.rate().safe()
             val balanceInCurrency = balanceNonDecimal.multiply(rate)
