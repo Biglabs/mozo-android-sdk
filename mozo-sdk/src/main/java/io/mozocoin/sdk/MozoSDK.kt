@@ -20,6 +20,8 @@ import io.mozocoin.sdk.common.*
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.ConnectionService
 import io.mozocoin.sdk.ui.MaintenanceActivity
+import io.mozocoin.sdk.ui.UpdateRequiredActivity
+import io.mozocoin.sdk.utils.launchActivity
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -189,6 +191,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         fun stopMaintenanceMode() {
             EventBus.getDefault().post(MessageEvent.StopMaintenanceMode())
+        }
+
+        @JvmStatic
+        fun startUpdateRequired(context: Context) {
+            context.launchActivity<UpdateRequiredActivity> { }
         }
 
         @JvmStatic

@@ -23,7 +23,8 @@ enum class ErrorCode(val key: String, @StringRes val message: Int) {
 
     ERROR_MAINTAINING("MAINTAINING", R.string.error_fatal),
 
-    ERROR_USER_DEACTIVATED("USER_DEACTIVATED", R.string.error_account_deactivated);
+    ERROR_USER_DEACTIVATED("USER_DEACTIVATED", R.string.error_account_deactivated),
+    ERROR_UPDATE_VERSION_REQUIREMENT("UPDATE_VERSION_REQUIREMENT", R.string.error_fatal);
 
     companion object {
         fun findByKey(key: String?) = values().find { it.key.equals(key, ignoreCase = true) }

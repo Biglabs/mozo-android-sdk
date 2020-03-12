@@ -291,6 +291,11 @@
     <string name="mozo_todo_unsolved">Unsolve %s</string>
     <string name="mozo_todo_unsolved_explain">Complete these actions to make sure there are no problems happen while using MozoX app:</string>
 
+    <string name="mozo_update_title">Update MozoX</string>
+    <string name="mozo_update_message_title">We have a new version</string>
+    <string name="mozo_update_message_content">Your version is about to expire. If you do not update you can.</string>
+    <string name="mozo_update_button">Update now</string>
+
     <string name="mozo_text_gender_none">None</string>
     <string name="mozo_text_gender_male">Male</string>
     <string name="mozo_text_gender_female">Female</string>

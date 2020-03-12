@@ -432,6 +432,9 @@ internal class MozoAPIsService private constructor() {
                                     if (shouldHandleMaintenance(call))
                                         MozoSDK.startMaintenanceMode(context)
                                 }
+                                ErrorCode.ERROR_UPDATE_VERSION_REQUIREMENT.key.equalsIgnoreCase(body.errorCode) -> {
+                                    MozoSDK.startUpdateRequired(context)
+                                }
                                 else -> ErrorCode.findByKey(body.errorCode)?.let {
                                     when (it.message) {
                                         R.string.error_fatal -> ErrorDialog.withContactError(context)
