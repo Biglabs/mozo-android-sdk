@@ -89,6 +89,7 @@
     <string name="mozo_button_go_to_wallet">Go to Wallet</string>
     <string name="mozo_button_synchronize">Synchronize</string>
     <string name="mozo_button_synchronizing">Synchronizing…</string>
+    <string name="mozo_button_update">Update</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">This is your Recovery Phrase</string>
@@ -293,7 +294,6 @@
 
     <string name="mozo_update_title">Please update MozoX</string>
     <string name="mozo_update_message_content">We’ve released a new version of the app\nPlease update the latest version.</string>
-    <string name="mozo_update_button">Update now</string>
 
     <string name="mozo_text_gender_none">None</string>
     <string name="mozo_text_gender_male">Male</string>
