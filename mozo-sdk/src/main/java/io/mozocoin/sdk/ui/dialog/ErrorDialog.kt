@@ -16,8 +16,7 @@ import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.visible
 import kotlinx.android.synthetic.main.dialog_error.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
@@ -119,6 +118,20 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
                 text_msg_error?.setText(R.string.error_fatal)
                 button_try_again?.setText(R.string.mozo_button_ok)
             }
+            TYPE_DEACTIVATED -> {
+                gone(
+                        image_error_type,
+                        text_title_error
+                )
+                visible(
+                        text_msg_error,
+                        button_contact_telegram,
+                        button_contact_zalo,
+                        button_contact_kakao
+                )
+                text_msg_error?.setText(R.string.error_account_deactivated)
+                button_try_again?.setText(R.string.mozo_button_ok)
+            }
         }
 
         errorMessage?.let {
@@ -139,13 +152,14 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
 
     companion object {
         @Retention(AnnotationRetention.SOURCE)
-        @IntDef(TYPE_GENERAL, TYPE_NETWORK, TYPE_TIMEOUT, TYPE_WITH_CONTACT)
+        @IntDef(TYPE_GENERAL, TYPE_NETWORK, TYPE_TIMEOUT, TYPE_WITH_CONTACT, TYPE_DEACTIVATED)
         annotation class ErrorType
 
         const val TYPE_GENERAL = 0
         const val TYPE_NETWORK = 1
         const val TYPE_TIMEOUT = 2
         const val TYPE_WITH_CONTACT = 3
+        const val TYPE_DEACTIVATED = 4
 
         const val ERROR_TYPE = "ERROR_TYPE"
         const val ERROR_MESSAGE = "ERROR_MESSAGE"
@@ -159,6 +173,11 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
 
         @Volatile
         private var cancelCallback: DialogInterface.OnCancelListener? = null
+
+        @JvmStatic
+        fun deactivatedError(context: Context?, onTryAgain: (() -> Unit)? = null) {
+            show(context, TYPE_DEACTIVATED, onTryAgain)
+        }
 
         @JvmStatic
         fun generalError(context: Context?, onTryAgain: (() -> Unit)? = null) {
@@ -230,7 +249,7 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
             instance?.setCancelable(cancel)
         }
 
-        internal fun retry() = GlobalScope.launch(Dispatchers.Main) {
+        internal fun retry() = MainScope().launch {
             instance?.retry()
         }
     }

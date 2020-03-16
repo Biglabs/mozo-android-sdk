@@ -150,6 +150,18 @@ fun Context.openTab(url: String) {
     }
 }
 
+fun Context.openAppInStore() {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        data = Uri.parse("market://details?id=$packageName")
+    }
+
+    if (intent.resolveActivity(packageManager) != null) {
+        startActivity(intent)
+    } else {
+        openTab("https://play.google.com/store/apps/details?id=$packageName")
+    }
+}
+
 fun visibility(visible: Boolean, vararg views: View?) {
     if (visible) visible(*views)
     else gone(*views)

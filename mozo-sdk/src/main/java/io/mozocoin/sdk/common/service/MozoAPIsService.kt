@@ -15,6 +15,7 @@ import io.mozocoin.sdk.ui.MozoSnackbar
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
+import io.mozocoin.sdk.utils.equalsIgnoreCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -443,19 +444,28 @@ internal class MozoAPIsService private constructor() {
                     if (!body.isSuccess && handleError) {
 
                         if (context is Activity && !context.isFinishing && !context.isDestroyed) {
-                            if (ErrorCode.ERROR_MAINTAINING.key.equals(body.errorCode,
-                                            ignoreCase = true)) {
-                                if (shouldHandleMaintenance(call)) MozoSDK.startMaintenanceMode(
-                                        context)
-
-                            } else ErrorCode.findByKey(body.errorCode)?.let {
-                                if (it.shouldShowContactMessage()) {
-                                    ErrorDialog.withContactError(context)
-
-                                } else
-                                    MessageDialog(context, context.getString(it.message))
-                                            .setAction(R.string.mozo_button_retry, retry)
-                                            .show()
+                            when {
+                                ErrorCode.ERROR_REQUIRED_LOGIN.key.equalsIgnoreCase(body.errorCode) -> {
+                                    callback?.invoke(null, body.errorCode)
+                                    MozoAuth.getInstance().signOut()
+                                    return
+                                }
+                                ErrorCode.ERROR_MAINTAINING.key.equalsIgnoreCase(body.errorCode) -> {
+                                    if (shouldHandleMaintenance(call))
+                                        MozoSDK.startMaintenanceMode(context)
+                                }
+                                ErrorCode.ERROR_UPDATE_VERSION_REQUIREMENT.key.equalsIgnoreCase(body.errorCode) -> {
+                                    MozoSDK.startUpdateRequired(context)
+                                }
+                                else -> ErrorCode.findByKey(body.errorCode)?.let {
+                                    when (it.message) {
+                                        R.string.error_fatal -> ErrorDialog.withContactError(context)
+                                        R.string.error_account_deactivated -> ErrorDialog.deactivatedError(context)
+                                        else -> MessageDialog(context, context.getString(it.message))
+                                                .setAction(R.string.mozo_button_retry, retry)
+                                                .show()
+                                    }
+                                }
                             }
                         }
 
