@@ -16,11 +16,4 @@ internal class UpdateRequiredActivity : BaseActivity() {
             openAppInStore()
         }
     }
-
-    override fun onBackPressed() {
-        /**
-         * Update is required, so prevent back press
-         * super.onBackPressed()
-         */
-    }
 }
