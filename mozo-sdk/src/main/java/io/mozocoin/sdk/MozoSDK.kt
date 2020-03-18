@@ -5,11 +5,9 @@ import android.app.Activity
 import android.app.Application
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
-import android.content.ComponentCallbacks
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.view.View
 import androidx.annotation.IntDef
@@ -17,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import io.mozocoin.sdk.common.ActivityLifecycleCallbacks
-import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.ConnectionService
@@ -118,29 +115,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
                         /* register network changes */
                         instance?.registerNetworkCallback()
-
-                        context.registerComponentCallbacks(object : ComponentCallbacks {
-                            override fun onLowMemory() {
-
-                            }
-
-                            override fun onConfigurationChanged(newConfig: Configuration?) {
-                                newConfig ?: return
-
-                                val symbol = getInstance().profileViewModel
-                                        .exchangeRateLiveData.value?.token?.currencySymbol
-                                        ?: Constant.DEFAULT_CURRENCY_SYMBOL
-                                if (
-                                        when (Locale.getDefault().language) {
-                                            Locale.KOREA.language -> symbol != Constant.CURRENCY_SYMBOL_KRW
-                                            Locale("vi").language -> symbol != Constant.CURRENCY_SYMBOL_VND
-                                            else -> symbol != Constant.DEFAULT_CURRENCY_SYMBOL
-                                        }
-                                ) {
-                                    getInstance().profileViewModel.fetchExchangeRate(context)
-                                }
-                            }
-                        })
                     }
                 }
             }
