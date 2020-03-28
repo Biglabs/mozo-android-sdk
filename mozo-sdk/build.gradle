@@ -48,8 +48,8 @@ dependencies {
     api 'androidx.browser:browser:1.2.0'
     api 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
     api 'androidx.core:core-ktx:1.2.0'
-    api "androidx.room:room-runtime:2.2.4"
-    kapt "androidx.room:room-compiler:2.2.4"
+    api "androidx.room:room-runtime:2.2.5"
+    kapt "androidx.room:room-compiler:2.2.5"
     api "androidx.preference:preference-ktx:1.1.0"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
