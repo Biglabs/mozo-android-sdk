@@ -49,8 +49,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     private fun registerNetworkCallback() {
         val myJob = JobInfo.Builder(0, ComponentName(context, ConnectionService::class.java))
-                .setRequiresCharging(true)
-                .setMinimumLatency(1000)
+                .setMinimumLatency(2000)
                 .setOverrideDeadline(2000)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 //.setPersisted(true)
