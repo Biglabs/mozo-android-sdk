@@ -86,6 +86,7 @@
     <string name="mozo_button_go_to_wallet">지갑으로 이동하기</string>
     <string name="mozo_button_synchronize">동기화</string>
     <string name="mozo_button_synchronizing">동기화 중…</string>
+    <string name="mozo_button_update">업데이트</string>
 
     <string name="mozo_backup_title">지갑 백업하기</string>
     <string name="mozo_backup_sub_title">당신의 복구 문구입니다.</string>

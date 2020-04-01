@@ -21,10 +21,10 @@ enum class ErrorCode(val key: String, @StringRes val message: Int) {
 
     ERROR_DUPLICATE_ADDRESS("SOLOMON_USER_ADDRESS_BOOK_DUPLICATE_OFFCHAIN_ADDRESS", R.string.error_common),
 
-    ERROR_MAINTAINING("MAINTAINING", R.string.error_fatal);
+    ERROR_MAINTAINING("MAINTAINING", R.string.error_fatal),
 
-    fun shouldShowContactMessage() =
-            message == R.string.error_fatal || message == R.string.error_account_deactivated
+    ERROR_USER_DEACTIVATED("USER_DEACTIVATED", R.string.error_account_deactivated),
+    ERROR_UPDATE_VERSION_REQUIREMENT("UPDATE_VERSION_REQUIREMENT", R.string.error_fatal);
 
     companion object {
         fun findByKey(key: String?) = values().find { it.key.equals(key, ignoreCase = true) }

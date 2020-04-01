@@ -1,12 +1,15 @@
 package io.mozocoin.sdk
 
+import android.content.ComponentCallbacks
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Handler
 import android.util.Base64
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.authentication.MozoAuthActivity
 import io.mozocoin.sdk.authentication.ProfileChangeListener
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.Gender
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.WalletHelper
@@ -37,6 +40,26 @@ class MozoAuth private constructor() {
     private var mProfileChangeListeners: MutableList<ProfileChangeListener>? = null
 
     internal var isInitialized = false
+    private val mComponentCallbacks: ComponentCallbacks by lazy {
+        object : ComponentCallbacks {
+            override fun onLowMemory() {}
+            override fun onConfigurationChanged(newConfig: Configuration?) {
+                newConfig ?: return
+                val symbol = MozoSDK.getInstance().profileViewModel
+                        .exchangeRateLiveData.value?.token?.currencySymbol
+                        ?: Constant.DEFAULT_CURRENCY_SYMBOL
+                if (
+                        when (Locale.getDefault().language) {
+                            Locale.KOREA.language -> symbol != Constant.CURRENCY_SYMBOL_KRW
+                            Locale("vi").language -> symbol != Constant.CURRENCY_SYMBOL_VND
+                            else -> symbol != Constant.DEFAULT_CURRENCY_SYMBOL
+                        }
+                ) {
+                    MozoSDK.getInstance().profileViewModel.fetchExchangeRate(MozoSDK.getInstance().context)
+                }
+            }
+        }
+    }
 
     init {
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -47,30 +70,40 @@ class MozoAuth private constructor() {
     @Subscribe
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
         if (auth.exception is UserCancelException) {
+            MozoSDK.getInstance().profileViewModel.clear()
             mAuthListeners.forEach { it.onAuthCanceled() }
             return
         }
 
-        if (isSignedIn()) {
-            MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
-            MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
-                if (it == null || it.walletInfo?.onchainAddress.isNullOrEmpty()) {
-                    syncProfile(MozoSDK.getInstance().context) { isSuccess ->
-                        mAuthListeners.forEach { l -> l.onAuthStateChanged(isSuccess) }
-                        if (isSuccess) MozoSocketClient.connect()
+        when {
+            isSignedIn() -> {
+                MozoSDK.getInstance().contactViewModel.fetchData(MozoSDK.getInstance().context)
+                MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
+                    if (it == null || it.walletInfo?.onchainAddress.isNullOrEmpty()) {
+                        syncProfile(MozoSDK.getInstance().context) { isSuccess ->
+                            mAuthListeners.forEach { l -> l.onAuthStateChanged(isSuccess) }
+                            if (isSuccess) {
+                                MozoSocketClient.connect()
+                                MozoSDK.getInstance().context.registerComponentCallbacks(mComponentCallbacks)
+                            }
+                        }
+                    } else {
+                        mAuthListeners.forEach { l -> l.onAuthStateChanged(true) }
+                        MozoSocketClient.connect()
+                        MozoSDK.getInstance().context.registerComponentCallbacks(mComponentCallbacks)
                     }
-                } else {
-                    mAuthListeners.forEach { l -> l.onAuthStateChanged(true) }
-                    MozoSocketClient.connect()
                 }
             }
-        } else if (auth.exception is AuthorizationException && auth.exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code) {
-            Handler().postDelayed({ signIn() }, 1000)
-
-        } else {
-            MozoSDK.getInstance().profileViewModel.clear()
-            /* notify for caller */
-            mAuthListeners.forEach { l -> l.onAuthStateChanged(false) }
+            auth.exception is AuthorizationException
+                    && auth.exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code -> {
+                Handler().postDelayed({ signIn() }, 1000)
+            }
+            else -> {
+                MozoSDK.getInstance().profileViewModel.clear()
+                /* notify for caller */
+                mAuthListeners.forEach { l -> l.onAuthStateChanged(false) }
+                MozoSDK.getInstance().context.unregisterComponentCallbacks(mComponentCallbacks)
+            }
         }
     }
 
@@ -108,7 +141,9 @@ class MozoAuth private constructor() {
         MozoAuthActivity.signIn(MozoSDK.getInstance().context)
     }
 
-    fun signOut() {
+    fun signOut() = signOut(false)
+
+    internal fun signOut(silent: Boolean = false) {
         MessageDialog.dismiss()
         authStateManager.clearSession()
 
@@ -118,7 +153,9 @@ class MozoAuth private constructor() {
         MozoSocketClient.disconnect()
         onAuthorizeChanged(MessageEvent.Auth())
 
-        MozoAuthActivity.signOut(MozoSDK.getInstance().context)
+        if (!silent) {
+            MozoAuthActivity.signOut(MozoSDK.getInstance().context)
+        }
     }
 
     fun isSignedIn() = authStateManager.current.isAuthorized

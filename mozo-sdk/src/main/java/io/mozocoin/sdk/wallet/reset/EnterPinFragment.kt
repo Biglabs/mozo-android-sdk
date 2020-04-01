@@ -12,8 +12,10 @@ import androidx.core.view.setPadding
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
-import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.common.WalletHelper
+import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.common.service.ConnectionService
+import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.utils.*
 import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
 import kotlinx.android.synthetic.main.view_message_progress_status.*
@@ -64,7 +66,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                 }
             }
 
-            GlobalScope.launch(Dispatchers.Main) {
+            MainScope().launch {
                 delay(500L)
                 showKeyboard()
             }
@@ -124,7 +126,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
         text_incorrect_pin?.gone()
     }
 
-    private fun submit() = GlobalScope.launch(Dispatchers.Main) {
+    private fun submit() = MainScope().launch {
         delay(700)
 
         reset_pin_enter_pin_input?.isEnabled = false
@@ -144,21 +146,41 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
             MozoAPIsService.getInstance().resetWallet(
                     context ?: return@withContext,
                     data?.buildWalletInfo() ?: return@withContext) { profile, error ->
-
                 if (profile == null) {
                     showMessage(if (error == null) MESSAGE_ERROR_NETWORK else MESSAGE_ERROR_COMMON)
                     return@resetWallet
                 }
 
-                MozoAuth.getInstance().saveUserInfo(context ?: return@resetWallet, profile, data) {
-                    showMessage(if (it) MESSAGE_SUCCESS else MESSAGE_ERROR_COMMON)
-                }
+                updateWallet(profile.walletInfo, data)
             }
         }
     }
 
+    private fun updateWallet(walletInfo: WalletInfo?, walletHelper: WalletHelper?) {
+        walletInfo ?: return
+        MozoAPIsService.getInstance().updateWalletAfterReset(
+                context ?: return,
+                walletInfo,
+                { profile, error ->
+
+                    if (profile == null) {
+                        showMessage(if (error == null) MESSAGE_ERROR_NETWORK else MESSAGE_ERROR_COMMON)
+                        return@updateWalletAfterReset
+                    }
+
+                    MozoAuth.getInstance().saveUserInfo(context
+                            ?: return@updateWalletAfterReset, profile, walletHelper) {
+                        showMessage(if (it) MESSAGE_SUCCESS else MESSAGE_ERROR_COMMON)
+                    }
+                },
+                {
+                    updateWallet(walletInfo, walletHelper)
+                }
+        )
+    }
+
     private fun showMessage(@IntRange(from = MESSAGE_SUCCESS, to = MESSAGE_ERROR_COMMON) type: Long) {
-        GlobalScope.launch(Dispatchers.Main) {
+        MainScope().launch {
             var icon = R.drawable.ic_error_general
             var title = R.string.mozo_dialog_error_msg
             var buttonText = R.string.mozo_button_try_again

@@ -129,10 +129,10 @@ internal class SecurityActivity : BaseActivity() {
         setContentView(R.layout.view_wallet_confirm_phrases)
 
         val randoms = randomItems()
-        txt_index_1.text = "${randoms[0] + 1}"
-        txt_index_2.text = "${randoms[1] + 1}"
-        txt_index_3.text = "${randoms[2] + 1}"
-        txt_index_4.text = "${randoms[3] + 1}"
+        txt_index_1.text = (randoms[0] + 1).toString()
+        txt_index_2.text = (randoms[1] + 1).toString()
+        txt_index_3.text = (randoms[2] + 1).toString()
+        txt_index_4.text = (randoms[3] + 1).toString()
 
         val edits = listOf(
                 edit_verify_seed_1,
@@ -268,28 +268,28 @@ internal class SecurityActivity : BaseActivity() {
                 }
             }
 
-            GlobalScope.launch(Dispatchers.Main) {
+            MainScope().launch {
                 delay(500L)
                 showKeyboard()
             }
         }
         input_pin_checker_status?.gone()
         pin_forgot_msg?.click {
-            startActivityForResult(Intent(this, ResetPinActivity::class.java), RC_REST_PIN)
+            launchActivity<ResetPinActivity>(RC_REST_PIN) { }
         }
     }
 
-    private fun showPinInputRestoreUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showPinInputRestoreUI() = MainScope().launch {
         showPinInputUI()
         initRestoreUI()
     }
 
-    private fun showPinVerifyUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showPinVerifyUI() = MainScope().launch {
         showPinInputUI()
         initVerifyUI(true).join()
     }
 
-    private fun initRestoreUI(clearPin: Boolean = false) = GlobalScope.launch(Dispatchers.Main) {
+    private fun initRestoreUI(clearPin: Boolean = false) = MainScope().launch {
         pin_toolbar.screen_title.setText(R.string.mozo_pin_title_restore)
         sub_title_pin.setText(R.string.mozo_pin_sub_title_restore)
 
@@ -304,7 +304,7 @@ internal class SecurityActivity : BaseActivity() {
         hideLoadingUI()
     }
 
-    private fun initVerifyUI(clearPin: Boolean = false) = GlobalScope.launch(Dispatchers.Main) {
+    private fun initVerifyUI(clearPin: Boolean = false) = MainScope().launch {
         initRestoreUI(clearPin).join()
         when (mRequestCode) {
             KEY_ENTER_PIN_FOR_SEND -> {
@@ -326,7 +326,7 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
-    private fun showPinInputConfirmUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showPinInputConfirmUI() = MainScope().launch {
         sub_title_pin.setText(R.string.mozo_pin_confirm_sub_title)
         text_content_pin.setText(R.string.mozo_pin_confirm_content)
 
@@ -336,7 +336,7 @@ internal class SecurityActivity : BaseActivity() {
         input_pin_checker_status.isSelected = false
     }
 
-    private fun showPinCreatedUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showPinCreatedUI() = MainScope().launch {
         text_correct_pin.setText(R.string.mozo_pin_msg_create_success)
         text_correct_pin.visible()
         input_pin_checker_status.isSelected = true
@@ -347,23 +347,23 @@ internal class SecurityActivity : BaseActivity() {
         hideLoadingUI()
     }
 
-    private fun showPinInputCorrectUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showPinInputCorrectUI() = MainScope().launch {
         showPinCreatedUI().join()
         text_correct_pin.setText(R.string.mozo_pin_msg_enter_correct)
         isAllowBackPress = false
     }
 
-    private fun showPinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showPinInputWrongUI() = MainScope().launch {
         text_incorrect_pin.visible()
         input_pin?.showKeyboard()
     }
 
-    private fun hidePinInputWrongUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun hidePinInputWrongUI() = MainScope().launch {
         input_pin_checker_status.isSelected = false
         if (text_incorrect_pin.visibility != View.GONE) text_incorrect_pin.gone()
     }
 
-    private fun showLoadingUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showLoadingUI() = MainScope().launch {
         isAllowBackPress = false
         gone(text_correct_pin,
                 text_incorrect_pin,
@@ -381,7 +381,7 @@ internal class SecurityActivity : BaseActivity() {
         gone(input_loading_indicator)
     }
 
-    private fun showErrorAndRetryUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showErrorAndRetryUI() = MainScope().launch {
         hideLoadingUI()
         error_container.visible()
         button_retry.click {
@@ -463,11 +463,11 @@ internal class SecurityActivity : BaseActivity() {
         const val KEY_VERIFY_PIN_FOR_BACKUP = 0x006
 
         const val KEY_DATA = "KEY_DATA"
-        
+
         fun isNeedCallbackForSign(requestCode: Int) =
                 requestCode == KEY_ENTER_PIN_FOR_SEND
-                || requestCode == KEY_VERIFY_PIN
-                || requestCode == KEY_VERIFY_PIN_FOR_SEND
+                        || requestCode == KEY_VERIFY_PIN
+                        || requestCode == KEY_VERIFY_PIN_FOR_SEND
 
         fun start(activity: Activity, mode: Int, requestCode: Int) {
             Intent(activity, SecurityActivity::class.java).apply {

@@ -1,10 +1,7 @@
 package io.mozocoin.sdk.utils
 
 import android.app.Activity
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Typeface
@@ -115,6 +112,10 @@ fun Context.openTab(url: String) {
         }
     }
 
+    if (finalUrl.startsWith(Support.domainHomePage(), ignoreCase = true)) {
+        finalUrl = "https://".plus(finalUrl)
+    }
+
     val customTabsIntent = CustomTabsIntent.Builder()
             .setShowTitle(true)
             .setToolbarColor(color(R.color.mozo_color_primary))
@@ -127,12 +128,38 @@ fun Context.openTab(url: String) {
                 return
             }
 
-            context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            if (intent.resolveActivity(context.packageManager) != null)
+                context.startActivity(intent)
+            else "No activity found".logAsError()
         }
     }
 
-    CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
-    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(finalUrl), fallback)
+    val targetUri = Uri.parse(finalUrl)
+    try {
+        CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
+        CustomTabsHelper.openCustomTab(this, customTabsIntent, targetUri, fallback)
+    } catch (e: Exception) {
+        if (e !is ActivityNotFoundException) {
+            /**
+             * Try to open link by external browser
+             */
+            fallback.openUri(this, targetUri)
+        }
+        e.printStackTrace()
+    }
+}
+
+fun Context.openAppInStore() {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        data = Uri.parse("market://details?id=$packageName")
+    }
+
+    if (intent.resolveActivity(packageManager) != null) {
+        startActivity(intent)
+    } else {
+        openTab("https://play.google.com/store/apps/details?id=$packageName")
+    }
 }
 
 fun visibility(visible: Boolean, vararg views: View?) {
@@ -224,7 +251,7 @@ fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
 
 fun EditText.onAmountInputChanged(textChanged: ((String?) -> Unit)? = null, amountChanged: (BigDecimal) -> Unit) {
     inputType = InputType.TYPE_CLASS_NUMBER
-    keyListener = DigitsKeyListener.getInstance("0123456789" + DecimalFormatSymbols.getInstance().decimalSeparator)
+    keyListener = DigitsKeyListener.getInstance("0123456789.,")
     filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, MozoTx.getInstance().mozoDecimal().toInt()))
 
     onTextChanged {

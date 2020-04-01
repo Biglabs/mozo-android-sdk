@@ -6,8 +6,7 @@ import android.os.Bundle
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.common.service.ConnectionService
 import io.mozocoin.sdk.utils.customtabs.CustomTabsHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -29,7 +28,7 @@ class ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
     override fun onActivityResumed(activity: Activity) {
         customTabsHelper?.bindCustomTabsService(activity)
 
-        GlobalScope.launch(Dispatchers.Main) {
+        MainScope().launch {
             delay(1000)
 
             if (!activity.isFinishing && !activity.isDestroyed) {
