@@ -279,6 +279,7 @@
     <string name="mozo_transfer_contact_find_in_system">Find in MozoX System →</string>
     <string name="mozo_transfer_contact_find_err">We only support search by phone number.</string>
     <string name="mozo_transfer_contact_find_no_address">This phone number does not belong to any MozoX Wallet Address</string>
+    <string name="mozo_transfer_err_send_to_own_wallet">Could not transfer MozoX to your own wallet</string>
 
     <string name="mozo_transaction_detail_title">Transaction Detail</string>
     <string name="mozo_transaction_detail_wallet_address">Wallet Address</string>
@@ -292,7 +293,7 @@
     <string name="mozo_todo_unsolved">Unsolve %s</string>
     <string name="mozo_todo_unsolved_explain">Complete these actions to make sure there are no problems happen while using MozoX app:</string>
 
-    <string name="mozo_update_title">Please update MozoX</string>
+    <string name="mozo_update_title">Update required to use App</string>
     <string name="mozo_update_message_content">We’ve released a new version of the app\nPlease update the latest version.</string>
 
     <string name="mozo_text_gender_none">None</string>

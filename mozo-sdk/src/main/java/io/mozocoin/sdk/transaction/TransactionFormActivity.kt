@@ -113,16 +113,16 @@ internal class TransactionFormActivity : BaseActivity() {
                 IntentIntegrator
                         .parseActivityResult(requestCode, resultCode, data)
                         .contents?.let {
-                    selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
+                            selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
 
-                    showInputUI()
-                    if (selectedContact == null) {
-                        output_receiver_address?.setText(it)
-                        output_receiver_address?.dismissDropDown()
-                        validateInput(true)
-                    } else
-                        showContactInfoUI()
-                }
+                            showInputUI()
+                            if (selectedContact == null) {
+                                output_receiver_address?.setText(it)
+                                output_receiver_address?.dismissDropDown()
+                                validateInput(true)
+                            } else
+                                showContactInfoUI()
+                        }
             }
         }
     }
@@ -239,11 +239,15 @@ internal class TransactionFormActivity : BaseActivity() {
         button_submit?.click {
             if (output_receiver_address.isEnabled) {
                 if (validateInput()) {
-                    MozoTx.getInstance().verifyAddress(
-                            it.context,
-                            selectedContact?.soloAddress ?: output_receiver_address.text.toString()
-                    ) { isValid ->
-                        if (isValid) showConfirmationUI()
+                    val output = selectedContact?.soloAddress
+                            ?: output_receiver_address.text.toString()
+                    when (output) {
+                        MozoWallet.getInstance().getAddress() -> {
+                            MessageDialog.show(it.context, R.string.mozo_transfer_err_send_to_own_wallet)
+                        }
+                        else -> MozoTx.getInstance().verifyAddress(it.context, output) { isValid ->
+                            if (isValid) showConfirmationUI()
+                        }
                     }
                 }
             } else {
@@ -386,14 +390,14 @@ internal class TransactionFormActivity : BaseActivity() {
         if (txResponse != null) {
             MozoSDK.getInstance()
                     .contactViewModel.usersLiveData.observe(this@TransactionFormActivity,
-                    userContactsObserver)
+                            userContactsObserver)
             setContentView(R.layout.view_transaction_sent)
 
             transfer_completed_title.setText(R.string.mozo_transfer_action_complete)
             text_preview_amount_sent.text = history.amountDisplay()
             text_preview_rate_sent.text = MozoSDK.getInstance()
                     .profileViewModel.formatCurrencyDisplay(history.amountInDecimal().multiply(
-                    currentRate), true)
+                            currentRate), true)
 
             button_save_address?.apply {
                 isVisible = selectedContact == null

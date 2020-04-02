@@ -252,9 +252,12 @@
     <string name="mozo_transfer_confirmation">Xác nhận</string>
     <string name="mozo_transfer_from">Từ ví MozoX Offchain</string>
     <string name="mozo_transfer_receiver_address">Địa chỉ người nhận</string>
+    <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví MozoX hoặc số điện thoại</string>
     <string name="mozo_transfer_receiver_address_error">Lỗi: Địa chỉ người nhận không hợp lệ</string>
     <string name="mozo_transfer_amount">Số lượng</string>
     <string name="mozo_transfer_amount_hint">Nhập số MozoX cần gửi</string>
+    <string name="mozo_transfer_amount_error_invalid_phone">Lỗi: Số điện thoại không hợp lệ</string>
+    <string name="mozo_transfer_amount_error_invalid_country_code">Lỗi: Mã vùng không hợp lệ.</string>
     <string name="mozo_transfer_amount_error_not_enough">Lỗi: Số dư khả dụng không đủ</string>
     <string name="mozo_transfer_amount_on_chain_not_enough">Không đủ MozoX Onchain</string>
     <string name="mozo_transfer_amount_eth_not_enough">Không đủ ETH</string>
@@ -264,13 +267,11 @@
     <string name="mozo_transfer_action_complete">Thao tác hoàn tất</string>
     <string name="mozo_transfer_send_complete">Gửi thành công</string>
     <string name="mozo_transfer_send_complete_msg">Bạn vừa gửi:</string>
+    <string name="mozo_transfer_contact_not_found">Không tìm thấy trong danh bạ MozoX của bạn</string>
     <string name="mozo_transfer_contact_find_err">Hệ thống hiện chỉ hỗ trợ tìm với số điện thoại.</string>
     <string name="mozo_transfer_contact_find_in_system">Tìm trong hệ thống MozoX</string>
     <string name="mozo_transfer_contact_find_no_address">Số điện thoại này chưa có ví MozoX.</string>
-    <string name="mozo_transfer_contact_not_found">Không tìm thấy trong danh bạ MozoX của bạn</string>
-    <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví MozoX hoặc số điện thoại</string>
-    <string name="mozo_transfer_amount_error_invalid_phone">Lỗi: Số điện thoại không hợp lệ</string>
-    <string name="mozo_transfer_amount_error_invalid_country_code">Lỗi: Mã vùng không hợp lệ.</string>
+    <string name="mozo_transfer_err_send_to_own_wallet">Không thể chuyển MozoX cho chính bạn.</string>
 
     <string name="mozo_transaction_detail_title">Chi tiết giao dịch</string>
     <string name="mozo_transaction_detail_wallet_address">Địa chỉ ví</string>
@@ -283,6 +284,9 @@
     <string name="mozo_todo_title">Những việc cần làm</string>
     <string name="mozo_todo_unsolved">Chưa được xử lý %s</string>
     <string name="mozo_todo_unsolved_explain">Xin vui lòng giải quyết những vấn đề sau để ứng dụng MozoX phục vụ bạn tốt hơn:</string>
+
+    <string name="mozo_update_title">Khuyến nghị cập nhật ứng dụng</string>
+    <string name="mozo_update_message_content">Ứng dụng đã có phiên bản mới\nXin vui lòng cập nhật phiên bản mới nhất.</string>
 
     <string name="mozo_text_gender_none">Không</string>
     <string name="mozo_text_gender_male">Nam</string>
