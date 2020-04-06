@@ -496,6 +496,20 @@ internal class TransactionFormActivity : BaseActivity() {
         text_spendable?.visible()
     }
 
+    private fun validatePhone(value: String): Int = when {
+        value.isDigitsOnly() -> when {
+            value.startsWith("0") -> 0
+            else -> R.string.mozo_transfer_amount_error_invalid_phone
+        }
+
+        value.startsWith("+") -> if (MozoSDK.getInstance().contactViewModel.containCountryCode(value)) {
+            if (value.isValidPhone(this)) 0
+            else R.string.mozo_transfer_amount_error_invalid_phone
+        } else R.string.mozo_transfer_amount_error_invalid_country_code
+
+        else -> -1
+    }
+
     @SuppressLint("SetTextI18n")
     private fun validateInput(fromScan: Boolean = false): Boolean {
         var isValidAddress = true
@@ -508,19 +522,8 @@ internal class TransactionFormActivity : BaseActivity() {
 
         if (fromScan) return isValidAddress
 
-        if (!isValidAddress) {
-            when {
-                address.isDigitsOnly() -> {
-                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_phone)
-                }
-                address.startsWith("+") -> {
-                    if (MozoSDK.getInstance().contactViewModel.containCountryCode(address)) {
-                        if (!address.isValidPhone(this))
-                            showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_phone)
-
-                    } else showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
-                }
-            }
+        if (!isValidAddress) validatePhone(address).let {
+            if (it > 0) showErrorAddressUI(false, it)
         }
 
         var isValidAmount = true
@@ -541,24 +544,10 @@ internal class TransactionFormActivity : BaseActivity() {
     private val onFindInSystemClick: () -> Unit = {
         val value = output_receiver_address?.text?.toString()?.trim()
         if (!value.isNullOrEmpty()) {
+            val result = validatePhone(value)
             when {
-                value.isDigitsOnly() -> {
-                    MessageDialog.show(this, getString(R.string.mozo_transfer_amount_error_invalid_phone).split(": ")[1])
-                }
-                value.startsWith("+") -> {
-                    if (MozoSDK.getInstance().contactViewModel.containCountryCode(value)) {
-                        if (value.isValidPhone(this)) findContact(value)
-                        else MessageDialog.show(
-                                this,
-                                getString(R.string.mozo_transfer_amount_error_invalid_phone)
-                                        .split(": ")[1]
-                        )
-                    } else MessageDialog.show(
-                            this,
-                            getString(R.string.mozo_transfer_amount_error_invalid_country_code)
-                                    .split(": ")[1]
-                    )
-                }
+                result > 0 -> MessageDialog.show(this, getString(result).split(": ")[1])
+                result == 0 -> findContact(value)
                 else -> MessageDialog.show(this, R.string.mozo_transfer_contact_find_err)
             }
         } else {
