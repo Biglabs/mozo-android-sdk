@@ -1,1 +1,2 @@
+rootProject.name='MozoSDK'
 include ':sample', ':mozo-sdk'
