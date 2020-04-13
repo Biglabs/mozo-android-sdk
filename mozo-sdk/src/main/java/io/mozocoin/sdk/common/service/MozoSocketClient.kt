@@ -64,7 +64,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                                 MozoSDK.getInstance().contactViewModel.fetchUser(MozoSDK.getInstance().context)
                             }
                             Constant.NOTIFY_EVENT_STORE_BOOK_ADDED -> {
-                                MozoSDK.getInstance().contactViewModel.fetchStore(MozoSDK.getInstance().context)
+                                MozoSDK.getInstance().contactViewModel.appendStoreContact(broadcast.contact)
                             }
                             Constant.NOTIFY_EVENT_CONVERT -> {
                                 EventBus.getDefault().post(MessageEvent.ConvertOnChain())

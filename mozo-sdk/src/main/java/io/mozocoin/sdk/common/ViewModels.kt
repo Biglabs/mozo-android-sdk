@@ -245,5 +245,10 @@ internal object ViewModels {
         fun users(): List<Contact> = usersLiveData.value ?: emptyList()
         fun stores(): List<Contact> = storesLiveData.value ?: emptyList()
         fun contacts(): List<Contact> = users() + stores()
+
+        fun appendStoreContact(contact: Contact?) = MainScope().launch {
+            contact ?: return@launch
+            storesLiveData.value = stores().plus(contact)
+        }
     }
 }

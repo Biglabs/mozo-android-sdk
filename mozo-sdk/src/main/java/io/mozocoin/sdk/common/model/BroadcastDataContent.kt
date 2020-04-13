@@ -6,6 +6,7 @@ import java.math.BigDecimal
 data class BroadcastDataContent(
         val title: String?,
         val body: String?,
+        @SerializedName("data") val contact: Contact?,
         val event: String?,
         val from: String,
         val to: String,
