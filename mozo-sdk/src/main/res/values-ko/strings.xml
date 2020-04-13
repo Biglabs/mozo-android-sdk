@@ -271,6 +271,7 @@
     <string name="mozo_transfer_contact_find_err">폰 번호만 검색 가능</string>
     <string name="mozo_transfer_contact_find_in_system">모조X 시스템에 검색하기</string>
     <string name="mozo_transfer_contact_find_no_address">이 폰 번호와 연동된 모조X 지갑 없습니다.</string>
+    <string name="mozo_transfer_err_send_to_own_wallet">본인에게 MozoX 보내기 불가능</string>
 
     <string name="mozo_transaction_detail_title">거래 세부 정보</string>
     <string name="mozo_transaction_detail_wallet_address">월렛 주소</string>
@@ -283,6 +284,9 @@
     <string name="mozo_todo_title">해야 할 일</string>
     <string name="mozo_todo_unsolved">%s 처리되지 않았습니다</string>
     <string name="mozo_todo_unsolved_explain">모조X 앱을 문제 없이 사용하기 위해 아래에 나열된 것을 완료하세요.</string>
+
+    <string name="mozo_update_title">앱 사용을 위한 업데이트 필요합니다</string>
+    <string name="mozo_update_message_content">앱의 새로운 버전 나왔습니다\n최신 버전으로 업데이트 하세요.</string>
 
     <string name="mozo_text_gender_none">아니요</string>
     <string name="mozo_text_gender_male">남성</string>
