@@ -418,7 +418,7 @@ internal class TransactionFormActivity : BaseActivity() {
             button_transaction_detail?.apply {
                 gone()
                 click {
-                    TransactionDetails.start(this@TransactionFormActivity, history)
+                    TransactionDetailsActivity.start(this@TransactionFormActivity, history)
                 }
             }
 

@@ -83,8 +83,8 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 EventBus.getDefault().register(this)
             }
 
-            MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this, balanceAndRateObserver)
-            MozoSDK.getInstance().profileViewModel.profileLiveData.observe(this, profileObserver)
+            MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(viewLifecycleOwner, balanceAndRateObserver)
+            MozoSDK.getInstance().profileViewModel.profileLiveData.observe(viewLifecycleOwner, profileObserver)
         }
     }
 

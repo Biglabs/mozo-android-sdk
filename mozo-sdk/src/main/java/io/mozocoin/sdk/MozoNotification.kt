@@ -23,7 +23,7 @@ import io.mozocoin.sdk.common.model.Notification
 import io.mozocoin.sdk.common.model.NotificationGroup
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.service.MozoDatabase
-import io.mozocoin.sdk.transaction.TransactionDetails
+import io.mozocoin.sdk.transaction.TransactionDetailsActivity
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
 import java.util.*
@@ -379,7 +379,7 @@ class MozoNotification private constructor() {
                                 time = it.time / 1000L,
                                 txStatus = Constant.STATUS_SUCCESS
                         )
-                        TransactionDetails.start(context, txHistory)
+                        TransactionDetailsActivity.start(context, txHistory)
                     }
                 }
             }

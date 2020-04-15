@@ -23,7 +23,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
-internal class TransactionDetails : BaseActivity() {
+internal class TransactionDetailsActivity : BaseActivity() {
 
     private var mHistory: TransactionHistory? = null
     private var mPaymentRequest: PaymentRequest? = null
@@ -166,7 +166,7 @@ internal class TransactionDetails : BaseActivity() {
                     text_detail_receiver_phone?.text = contact.phoneNo
 
                 } else button_save_address?.click {
-                    AddressAddActivity.start(this@TransactionDetails, targetAddress)
+                    AddressAddActivity.start(this@TransactionDetailsActivity, targetAddress)
                 }
             }
             findContactJob = null
@@ -178,14 +178,14 @@ internal class TransactionDetails : BaseActivity() {
         private const val KEY_DATA_PAYMENT = "KEY_DATA_PAYMENT"
 
         fun start(context: Context, history: TransactionHistory) {
-            Intent(context, TransactionDetails::class.java).apply {
+            Intent(context, TransactionDetailsActivity::class.java).apply {
                 putExtra(KEY_DATA, history)
                 context.startActivity(this)
             }
         }
 
         fun start(context: Context, paymentRequest: PaymentRequest) {
-            Intent(context, TransactionDetails::class.java).apply {
+            Intent(context, TransactionDetailsActivity::class.java).apply {
                 putExtra(KEY_DATA_PAYMENT, paymentRequest)
                 context.startActivity(this)
             }

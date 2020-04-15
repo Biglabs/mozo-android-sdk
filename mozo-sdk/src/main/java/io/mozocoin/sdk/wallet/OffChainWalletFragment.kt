@@ -22,7 +22,7 @@ import io.mozocoin.sdk.common.model.BalanceInfo
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.service.MozoAPIsService
-import io.mozocoin.sdk.transaction.TransactionDetails
+import io.mozocoin.sdk.transaction.TransactionDetailsActivity
 import io.mozocoin.sdk.transaction.TransactionHistoryRecyclerAdapter
 import io.mozocoin.sdk.transaction.payment.PaymentRequestActivity
 import io.mozocoin.sdk.ui.dialog.QRCodeDialog
@@ -34,7 +34,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
     private val histories = arrayListOf<TransactionHistory>()
     private val onItemClick = { history: TransactionHistory ->
         if (context != null) {
-            TransactionDetails.start(context!!, history)
+            TransactionDetailsActivity.start(context!!, history)
         }
     }
 
@@ -111,7 +111,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
         if (MozoAuth.getInstance().isSignedIn()) {
             view?.postDelayed(250) {
                 MozoSDK.getInstance().profileViewModel.run {
-                    profileLiveData.observe(this@OffChainWalletFragment, profileObserver)
+                    profileLiveData.observe(this@OffChainWalletFragment.viewLifecycleOwner, profileObserver)
                     balanceAndRateLiveData.observeForever(balanceAndRateObserver)
                 }
             }
