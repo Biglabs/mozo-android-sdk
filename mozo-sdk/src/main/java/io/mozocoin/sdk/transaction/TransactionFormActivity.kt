@@ -8,7 +8,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
@@ -61,12 +60,17 @@ internal class TransactionFormActivity : BaseActivity() {
     private var isNeedBack2Edit = false
     private var mInputAmount = BigDecimal.ZERO
 
+    private var mPhoneContactUtils: PhoneContactUtils? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_transaction_form)
 
         MozoSDK.getInstance().contactViewModel.fetchData(this)
-
+        mPhoneContactUtils = PhoneContactUtils(output_receiver_address) {
+            selectedContact = it
+            showContactInfoUI()
+        }
         initUI()
         showInputUI()
 
@@ -91,12 +95,13 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         MozoSDK.getInstance().contactViewModel.usersLiveData.removeObserver(userContactsObserver)
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.removeObserver(
                 balanceAndRateObserver)
+        mPhoneContactUtils = null
         selectedContact = null
         updateTxStatusJob?.cancel()
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -193,14 +198,14 @@ internal class TransactionFormActivity : BaseActivity() {
             setAdapter(ContactSuggestionAdapter(
                     context,
                     MozoSDK.getInstance().contactViewModel.contacts(),
-                    onFindInSystemClick
+                    mPhoneContactUtils?.onFindInSystemClick
             ))
 
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     val value = output_receiver_address?.text?.toString()?.trim()
                     if (!value.isNullOrEmpty() && !WalletUtils.isValidAddress(value)) {
-                        onFindInSystemClick.invoke()
+                        mPhoneContactUtils?.onFindInSystemClick?.invoke()
                         return@setOnEditorActionListener true
                     }
                 }
@@ -320,6 +325,8 @@ internal class TransactionFormActivity : BaseActivity() {
             text_receiver_user_name?.text = name
             text_receiver_user_name?.isVisible = !name.isNullOrEmpty()
             text_receiver_user_address?.text = soloAddress
+
+            output_amount?.requestFocus()
 
             button_clear?.apply {
                 visible()
@@ -496,20 +503,6 @@ internal class TransactionFormActivity : BaseActivity() {
         text_spendable?.visible()
     }
 
-    private fun validatePhone(value: String): Int = when {
-        value.isDigitsOnly() -> when {
-            value.startsWith("0") -> 0
-            else -> R.string.mozo_transfer_amount_error_invalid_phone
-        }
-
-        value.startsWith("+") -> if (MozoSDK.getInstance().contactViewModel.containCountryCode(value)) {
-            if (value.isValidPhone(this)) 0
-            else R.string.mozo_transfer_amount_error_invalid_phone
-        } else R.string.mozo_transfer_amount_error_invalid_country_code
-
-        else -> -1
-    }
-
     @SuppressLint("SetTextI18n")
     private fun validateInput(fromScan: Boolean = false): Boolean {
         var isValidAddress = true
@@ -522,7 +515,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
         if (fromScan) return isValidAddress
 
-        if (!isValidAddress) validatePhone(address).let {
+        if (!isValidAddress) mPhoneContactUtils?.validatePhone(this, address)?.let {
             if (it > 0) showErrorAddressUI(false, it)
         }
 
@@ -539,34 +532,6 @@ internal class TransactionFormActivity : BaseActivity() {
         }
 
         return isValidAddress && isValidAmount
-    }
-
-    private val onFindInSystemClick: () -> Unit = {
-        val value = output_receiver_address?.text?.toString()?.trim()
-        if (!value.isNullOrEmpty()) {
-            val result = validatePhone(value)
-            when {
-                result > 0 -> MessageDialog.show(this, getString(result).split(": ")[1])
-                result == 0 -> findContact(value)
-                else -> MessageDialog.show(this, R.string.mozo_transfer_contact_find_err)
-            }
-        } else {
-            MessageDialog.show(this, R.string.mozo_transfer_contact_find_err)
-        }
-    }
-
-    private fun findContact(phone: String) {
-        MozoAPIsService.getInstance().findContact(this, phone, { data, _ ->
-            if (data?.soloAddress.isNullOrEmpty()) {
-                MessageDialog.show(this, R.string.mozo_transfer_contact_find_no_address)
-
-            } else {
-                selectedContact = data
-                showContactInfoUI()
-            }
-        }, {
-            findContact(phone)
-        })
     }
 
     companion object {

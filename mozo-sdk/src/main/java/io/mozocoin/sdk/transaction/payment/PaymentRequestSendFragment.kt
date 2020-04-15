@@ -4,13 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -18,10 +15,8 @@ import com.google.zxing.integration.android.IntentIntegrator
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
-import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.model.PaymentRequest
-import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.contact.AddressBookActivity
 import io.mozocoin.sdk.transaction.ContactSuggestionAdapter
 import io.mozocoin.sdk.ui.dialog.MessageDialog
@@ -32,12 +27,14 @@ import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
 import java.util.*
 
-class PaymentRequestSendFragment : Fragment() {
+class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
 
     private var mListener: PaymentRequestInteractionListener? = null
     private var generateQRJob: Job? = null
     private var amountBigDecimal = BigDecimal.ZERO
     private var selectedContact: Contact? = null
+
+    private var mPhoneContactUtils: PhoneContactUtils? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -46,12 +43,12 @@ class PaymentRequestSendFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_payment_send, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        mPhoneContactUtils = PhoneContactUtils(output_receiver_address) {
+            selectedContact = it
+            showContactInfoUI()
+        }
         val myAddress = MozoWallet.getInstance().getAddress()
         myAddress ?: return
 
@@ -105,7 +102,7 @@ class PaymentRequestSendFragment : Fragment() {
             setAdapter(ContactSuggestionAdapter(
                     context,
                     MozoSDK.getInstance().contactViewModel.contacts(),
-                    onFindInSystemClick
+                    mPhoneContactUtils?.onFindInSystemClick
             ))
         }
 
@@ -132,8 +129,8 @@ class PaymentRequestSendFragment : Fragment() {
         }
 
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(
-                this,
-                Observer<ViewModels.BalanceAndRate?> {
+                viewLifecycleOwner,
+                Observer {
                     it ?: return@Observer
                     payment_request_rate.text = MozoSDK.getInstance().profileViewModel
                             .formatCurrencyDisplay(
@@ -142,38 +139,6 @@ class PaymentRequestSendFragment : Fragment() {
                             )
                 }
         )
-    }
-
-    private val onFindInSystemClick: () -> Unit = {
-        context?.let {
-            val value = output_receiver_address?.text?.toString()?.trim()
-            if (!value.isNullOrEmpty() && value.isValidPhone(it)) {
-                findContact(value)
-
-            } else {
-                MessageDialog.show(
-                        it,
-                        R.string.mozo_transfer_contact_find_err
-                )
-            }
-        }
-    }
-
-    private fun findContact(phone: String) {
-        val context = context ?: return
-        MozoAPIsService.getInstance().findContact(context, phone, { data, _ ->
-            if (data != null) {
-                if (data.soloAddress.isNullOrEmpty()) {
-                    MessageDialog.show(context, R.string.mozo_transfer_contact_find_no_address)
-
-                } else {
-                    selectedContact = data
-                    showContactInfoUI()
-                }
-            }
-        }, {
-            findContact(phone)
-        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -212,13 +177,18 @@ class PaymentRequestSendFragment : Fragment() {
         generateQRJob?.cancel()
     }
 
-    private fun showContactInfoUI() {
+    override fun onDestroyView() {
+        mPhoneContactUtils = null
+        super.onDestroyView()
+    }
 
+    private fun showContactInfoUI() {
         hideErrorAddressUI()
         updateSubmitButton()
 
         selectedContact?.run {
             output_receiver_address?.visibility = View.INVISIBLE
+            output_receiver_address?.hideKeyboard()
             output_receiver_address_underline?.visibility = View.INVISIBLE
             button_scan_qr?.visibility = View.INVISIBLE
 
@@ -266,16 +236,8 @@ class PaymentRequestSendFragment : Fragment() {
 
         if (fromScan) return isValidAddress
 
-        if (!isValidAddress) {
-            when {
-                address.isDigitsOnly() && address.length < 20 -> {
-                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
-                }
-                address.startsWith("+") && !address.isValidPhone(context!!) -> {
-                    showErrorAddressUI(false,
-                            R.string.mozo_transfer_amount_error_invalid_country_code)
-                }
-            }
+        if (!isValidAddress && context != null) mPhoneContactUtils?.validatePhone(context!!, address)?.let {
+            if (it > 0) showErrorAddressUI(false, it)
         }
 
         return isValidAddress
