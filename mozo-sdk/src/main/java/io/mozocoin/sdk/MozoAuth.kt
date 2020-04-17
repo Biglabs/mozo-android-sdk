@@ -274,14 +274,13 @@ class MozoAuth private constructor() {
             /* Invoke Sign In event for subscriber */
             onSignedInBeforeWallet()
 
+            if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
+                saveUserInfo(context, data, callback = callback)
+                return@getProfile
+            }
+
             GlobalScope.launch {
-                if (data.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
-                    saveUserInfo(context, data, callback = callback)
-                    return@launch
-                }
-
                 doSaveUserInfoAsync(data).await()
-
                 MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
                     if (
                             it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
@@ -299,21 +298,24 @@ class MozoAuth private constructor() {
         })
     }
 
-    internal fun saveUserInfo(context: Context, profile: Profile, walletHelper: WalletHelper? = null, callback: ((success: Boolean) -> Unit)? = null) {
-        MozoWallet.getInstance().initWallet(context, profile, walletHelper) {
-            GlobalScope.launch {
-                if (it) {
-                    /* update local profile to match with server profile */
-                    profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
-                    mozoDB.profile().save(profile)
-                    /* save User info first */
-                    doSaveUserInfoAsync(profile).await()
+    internal fun saveUserInfo(
+            context: Context,
+            profile: Profile,
+            walletHelper: WalletHelper? = null,
+            callback: ((success: Boolean) -> Unit)? = null
+    ) = MozoWallet.getInstance().initWallet(context, profile, walletHelper) {
+        GlobalScope.launch {
+            if (it) {
+                /* update local profile to match with server profile */
+                profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
+                mozoDB.profile().save(profile)
+                /* save User info first */
+                doSaveUserInfoAsync(profile).await()
 
-                    MozoSDK.getInstance().profileViewModel.updateProfile(context, profile)
-                }
-                withContext(Dispatchers.Main) {
-                    callback?.invoke(it)
-                }
+                MozoSDK.getInstance().profileViewModel.updateProfile(context, profile)
+            }
+            withContext(Dispatchers.Main) {
+                callback?.invoke(it)
             }
         }
     }

@@ -112,7 +112,7 @@ class MozoNotification private constructor() {
     ) {
 
         mShowGroupNotifyJob?.cancel()
-        mShowGroupNotifyJob = GlobalScope.launch {
+        mShowGroupNotifyJob = MainScope().launch {
             delay(2000)
 
             val group = NotificationCompat.Builder(context, message.event ?: return@launch)
