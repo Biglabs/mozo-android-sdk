@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:paddingStart="@dimen/mozo_screen_margin"
-    android:paddingTop="15dp"
+    android:paddingTop="@dimen/mozo_screen_margin"
     android:paddingEnd="@dimen/mozo_screen_margin">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -36,16 +36,33 @@
         tools:text="Received" />
 
     <TextView
-        android:id="@+id/item_history_time"
+        android:id="@+id/item_history_address"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:lines="1"
         android:includeFontPadding="false"
         android:textColor="@color/mozo_color_section_text"
         android:textSize="11sp"
         android:textStyle="italic"
+        android:layout_marginEnd="10dp"
         app:layout_constraintStart_toStartOf="@id/item_history_type"
+        app:layout_constraintEnd_toStartOf="@id/item_history_time"
         app:layout_constraintTop_toBottomOf="@id/item_history_type"
+        tools:ignore="SmallSp"
+        tools:text="@tools:sample/full_names" />
+
+    <TextView
+        android:id="@+id/item_history_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:textColor="@color/mozo_color_section_text"
+        android:textSize="11sp"
+        android:lines="1"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/item_history_address"
         tools:ignore="SmallSp"
         tools:text="Jan 15, 2018 - 6:00 PM" />
 

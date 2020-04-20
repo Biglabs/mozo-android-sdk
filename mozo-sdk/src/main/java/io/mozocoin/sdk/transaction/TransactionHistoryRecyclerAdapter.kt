@@ -2,6 +2,7 @@ package io.mozocoin.sdk.transaction
 
 import android.graphics.Typeface.BOLD
 import android.text.SpannableString
+import android.text.TextUtils
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -167,16 +168,18 @@ internal class TransactionHistoryRecyclerAdapter(
             item_history_amount.text = String.format(Locale.US, "%s%s", amountSign, history.amountDisplay())
             item_history_amount.setTextColor(ContextCompat.getColor(itemView.context, amountColor))
 
-            if (history.contactName.isNullOrEmpty())
-                item_history_time.text = dateTime
-            else {
-                item_history_time.text = SpannableString(containerView.context.getString(
-                        if (isSentType) R.string.mozo_notify_content_to else R.string.mozo_notify_content_from,
-                        history.contactName
-                ) + " - $dateTime").apply {
-                    val start = indexOf(history.contactName!!, ignoreCase = true)
-                    set(start..start + history.contactName!!.length, StyleSpan(BOLD))
-                }
+            item_history_time.text = dateTime
+            val name = if (history.contactName.isNullOrEmpty()) {
+                item_history_address?.ellipsize = TextUtils.TruncateAt.MIDDLE
+                if (isSentType) history.addressTo else history.addressFrom
+            } else {
+                item_history_address?.ellipsize = TextUtils.TruncateAt.END
+                history.contactName
+            } ?: ""
+            item_history_address?.text = SpannableString(containerView.context
+                    .getString(if (isSentType) R.string.mozo_notify_content_to else R.string.mozo_notify_content_from, name)).apply {
+                val start = indexOf(name, ignoreCase = true)
+                set(start..start + name.length, StyleSpan(BOLD))
             }
 
             if (lastItem)
