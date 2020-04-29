@@ -3,13 +3,13 @@ package io.mozocoin.sdk.transaction
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
-import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.model.PaymentRequest
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.contact.AddressAddActivity
@@ -29,8 +29,9 @@ internal class TransactionDetailsActivity : BaseActivity() {
     private var mPaymentRequest: PaymentRequest? = null
 
     private var findContactJob: Job? = null
-    private var targetAddress: String? = null
     private var currentBalance = BigDecimal.ZERO
+    private var targetAddress: String? = null
+    private var mAmount = BigDecimal.ZERO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,10 +46,9 @@ internal class TransactionDetailsActivity : BaseActivity() {
 
         setContentView(R.layout.view_transaction_details)
 
-        var amount = BigDecimal.ZERO
         when {
-            mHistory != null        -> {
-                amount = mHistory!!.amountInDecimal()
+            mHistory != null -> {
+                mAmount = mHistory!!.amountInDecimal()
                 setTitle(R.string.mozo_transaction_detail_title)
             }
             mPaymentRequest != null -> {
@@ -56,23 +56,18 @@ internal class TransactionDetailsActivity : BaseActivity() {
                 val data = Support.parsePaymentRequest(mPaymentRequest!!.content!!)
                 targetAddress = data.firstOrNull()
                 data.lastOrNull()?.let {
-                    amount = it.toBigDecimal()
+                    mAmount = it.toBigDecimal()
                 }
 
                 setTitle(R.string.mozo_payment_request_title)
-                button_pay.visible()
-                button_pay.click {
-                    if (amount > currentBalance) {
-                        MessageDialog.show(this, R.string.mozo_dialog_error_not_enough_msg)
-                    } else
-                        TransactionFormActivity.start(this, targetAddress, amount.toString())
-                }
+                button_pay?.visible()
+                button_pay?.click(onPayClicked)
             }
         }
 
         bindData(MozoWallet.getInstance().getAddress() ?: "")
 
-        MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this, Observer<List<Contact>> {
+        MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this, Observer {
             it?.run {
                 displayContact()
             }
@@ -81,7 +76,7 @@ internal class TransactionDetailsActivity : BaseActivity() {
             currentBalance = it.balanceNonDecimal
             it?.rate?.run {
                 text_detail_amount_rate_side.text = MozoSDK.getInstance().profileViewModel
-                    .formatCurrencyDisplay(amount.multiply(this), true)
+                        .formatCurrencyDisplay(mAmount.multiply(this), true)
             }
         })
     }
@@ -97,7 +92,7 @@ internal class TransactionDetailsActivity : BaseActivity() {
         var detailTime = 0L
         var amountDisplay = ""
         when {
-            mHistory != null        -> {
+            mHistory != null -> {
                 sendType = mHistory!!.type(myAddress)
                 text_detail_status.setText(if (sendType) R.string.mozo_view_text_tx_sent else R.string.mozo_view_text_tx_received)
                 targetAddress = if (sendType) mHistory!!.addressTo else mHistory!!.addressFrom
@@ -130,7 +125,7 @@ internal class TransactionDetailsActivity : BaseActivity() {
 
         if (detailTime > 0) {
             text_detail_time.text =
-                Support.getDisplayDate(this, detailTime, string(R.string.mozo_format_date_time))
+                    Support.getDisplayDate(this, detailTime, string(R.string.mozo_format_date_time))
             text_detail_time.isVisible = true
         } else text_detail_time.isVisible = false
 
@@ -153,13 +148,13 @@ internal class TransactionDetailsActivity : BaseActivity() {
 
                 text_detail_receiver_name?.isVisible = isContact
                 text_detail_receiver_phone?.isVisible =
-                    isContact && !isStore && !contact?.phoneNo.isNullOrEmpty()
+                        isContact && !isStore && !contact?.phoneNo.isNullOrEmpty()
                 text_detail_store_address?.isVisible = isContact && isStore
 
                 if (contact != null) {
                     image_detail_receiver?.setImageResource(
-                        if (isStore) R.drawable.ic_store
-                        else R.drawable.ic_receiver
+                            if (isStore) R.drawable.ic_store
+                            else R.drawable.ic_receiver
                     )
                     text_detail_receiver_name?.text = contact.name
                     text_detail_store_address?.text = contact.physicalAddress
@@ -170,6 +165,19 @@ internal class TransactionDetailsActivity : BaseActivity() {
                 }
             }
             findContactJob = null
+        }
+    }
+
+    private val onPayClicked: (Button) -> Unit = {
+        when {
+            mAmount > currentBalance -> {
+                MessageDialog.show(this, R.string.mozo_dialog_error_not_enough_msg)
+            }
+            targetAddress == MozoWallet.getInstance().getAddress() -> {
+                MessageDialog.show(it.context, R.string.mozo_transfer_err_send_to_own_wallet)
+            }
+            else ->
+                TransactionFormActivity.start(this, targetAddress, mAmount.toString())
         }
     }
 
