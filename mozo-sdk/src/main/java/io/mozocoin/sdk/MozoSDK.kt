@@ -111,6 +111,10 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                          * Initialize Transaction Service
                          * */
                         MozoTx.getInstance()
+                        /**
+                         * Initialize Wallet Service
+                         * */
+                        MozoWallet.getInstance()
 
                         /* register network changes */
                         instance?.registerNetworkCallback()
