@@ -250,7 +250,6 @@
 
     <string name="mozo_transfer_title">MozoX 보내기</string>
     <string name="mozo_transfer_confirmation">확인</string>
-    <string name="mozo_transfer_from">MozoX Offchain 월렛에서</string>
     <string name="mozo_transfer_receiver_address">수신자 주소</string>
     <string name="mozo_transfer_receiver_address_error">오류 : 수신자 주소가 유효하지 않습니다.</string>
     <string name="mozo_transfer_receiver_address_hint">모조X 주소 또는 연락처 입력</string>

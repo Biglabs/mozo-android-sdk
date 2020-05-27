@@ -258,7 +258,6 @@
 
     <string name="mozo_transfer_title">Send MozoX</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>
-    <string name="mozo_transfer_from">From MozoX Offchain Wallet</string>
     <string name="mozo_transfer_receiver_address">Receiver Address</string>
     <string name="mozo_transfer_receiver_address_hint">Enter MozoX address or phone number</string>
     <string name="mozo_transfer_receiver_address_error">Error: The Receiver Address is not valid.</string>

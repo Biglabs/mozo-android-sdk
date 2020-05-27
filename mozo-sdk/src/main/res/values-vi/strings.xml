@@ -250,7 +250,6 @@
 
     <string name="mozo_transfer_title">Gửi MozoX</string>
     <string name="mozo_transfer_confirmation">Xác nhận</string>
-    <string name="mozo_transfer_from">Từ ví MozoX Offchain</string>
     <string name="mozo_transfer_receiver_address">Địa chỉ người nhận</string>
     <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví MozoX hoặc số điện thoại</string>
     <string name="mozo_transfer_receiver_address_error">Lỗi: Địa chỉ người nhận không hợp lệ</string>
