@@ -20,6 +20,7 @@ internal class WalletHelper {
     private var onChainPrivateKey: String? = null
 
     private var pinEncrypted: String? = null
+    var isAutoWallet = false
 
     constructor(mnemonic: String) {
         this.mnemonic = mnemonic
@@ -32,7 +33,10 @@ internal class WalletHelper {
         this.onChainAddress = walletInfo.onchainAddress
         this.pinEncrypted = walletInfo.pin
 
-        if (!this.pinEncrypted.isNullOrEmpty()) decrypt()
+        if (!this.pinEncrypted.isNullOrEmpty()) {
+            isAutoWallet = true
+            decrypt()
+        }
     }
 
     private fun initAddresses() {
@@ -72,10 +76,12 @@ internal class WalletHelper {
                     })
 
             if (pin.isNullOrEmpty()) {
+                isAutoWallet = true
                 MozoAuth.getInstance().getPinSecret()?.let { secret ->
                     pinEncrypted = CryptoUtils.encrypt(pinRaw, secret)
                 }
             } else {
+                isAutoWallet = false
                 pinEncrypted = null
             }
 

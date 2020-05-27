@@ -28,7 +28,7 @@ internal class ResetPinActivity : BaseActivity(), InteractionListener {
 
         reset_pin_toolbar?.apply {
             button_close?.isEnabled = false
-            onBackPress = { onBackPressed() }
+            onBackPress = ::onBackPressed
             onClosePress = {
                 fragments.forEach {
                     it.onCloseClicked()

@@ -37,7 +37,7 @@ internal class ChangePinActivity : BaseActivity() {
             return
         }
 
-        GlobalScope.launch(Dispatchers.Main) {
+        MainScope().launch {
             delay(500)
             loadWallet()
         }
@@ -199,19 +199,30 @@ internal class ChangePinActivity : BaseActivity() {
             if (wallet?.isUnlocked() == true) {
                 wallet.changePin(lastInputPin.toString())
 
-                withContext(Dispatchers.Main) {
-                    MozoWallet.getInstance().executeSaveWallet(this@ChangePinActivity, null) {
-                        val profile = MozoSDK.getInstance().profileViewModel.getProfile()
-                        if (it && profile != null) {
-                            profile.walletInfo = wallet.buildWalletInfo()
-                            MozoAuth.getInstance().saveUserInfo(this@ChangePinActivity, profile, wallet) { isSaveSuccess ->
-                                if (isSaveSuccess) {
-                                    MozoWallet.getInstance().getWallet()?.lock()
-                                    showChangePinSuccessUI()
-                                } else showChangePinFailedUI()
-                            }
+                fun callback(success: Boolean) {
+                    val profile = MozoSDK.getInstance().profileViewModel.getProfile()
+                    if (success && profile != null) {
+                        profile.walletInfo = wallet.buildWalletInfo()
+                        MozoAuth.getInstance().saveUserInfo(this@ChangePinActivity, profile, wallet) { isSaveSuccess ->
+                            if (isSaveSuccess) {
+                                MozoWallet.getInstance().getWallet()?.lock()
+                                showChangePinSuccessUI()
+                            } else showChangePinFailedUI()
+                        }
 
-                        } else showChangePinFailedUI()
+                    } else showChangePinFailedUI()
+                }
+
+                if (wallet.isAutoWallet) {
+                    MozoWallet.getInstance().syncWalletAutoToPin(
+                            wallet.buildWalletInfo(),
+                            this@ChangePinActivity,
+                            ::callback
+                    )
+                } else {
+                    withContext(Dispatchers.Main) {
+                        MozoWallet.getInstance()
+                                .executeSaveWallet(this@ChangePinActivity, null, ::callback)
                     }
                 }
             } else showChangePinFailedUI()

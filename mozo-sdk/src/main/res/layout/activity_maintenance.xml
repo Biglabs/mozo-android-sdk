@@ -50,15 +50,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <io.mozocoin.sdk.ui.view.MozoIconTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_content_question"
             android:drawablePadding="6.5dp"
             android:gravity="center"
             android:text="@string/mozo_maintenance_tips_title"
             android:textColor="@color/mozo_color_section_text"
-            android:textSize="@dimen/mozo_text_size" />
+            android:textSize="@dimen/mozo_text_size"
+            app:drawableStartCompat="@drawable/ic_content_question" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,13 +86,12 @@
                 android:textSize="@dimen/mozo_text_size"
                 tools:text="@tools:sample/lorem/random" />
 
-            <io.mozocoin.sdk.ui.view.MozoIconTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/button_read_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:drawableEnd="@drawable/ic_action_arrow_right"
                 android:drawablePadding="8dp"
                 android:includeFontPadding="false"
                 android:paddingStart="0dp"
@@ -101,7 +100,9 @@
                 android:text="@string/mozo_button_read_more"
                 android:textColor="@color/mozo_color_primary"
                 android:textSize="@dimen/mozo_text_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:drawableEndCompat="@drawable/ic_action_arrow_more"
+                app:drawableTint="@color/mozo_color_primary" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

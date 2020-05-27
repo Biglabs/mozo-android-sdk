@@ -5,21 +5,22 @@ import android.app.Activity
 import android.app.Application
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
-import android.content.ComponentCallbacks
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.view.View
 import androidx.annotation.IntDef
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
-import io.mozocoin.sdk.common.*
-import io.mozocoin.sdk.common.service.MozoDatabase
+import io.mozocoin.sdk.common.ActivityLifecycleCallbacks
+import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.ConnectionService
 import io.mozocoin.sdk.ui.MaintenanceActivity
+import io.mozocoin.sdk.ui.UpdateRequiredActivity
+import io.mozocoin.sdk.utils.launchActivity
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -48,8 +49,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     private fun registerNetworkCallback() {
         val myJob = JobInfo.Builder(0, ComponentName(context, ConnectionService::class.java))
-                .setRequiresCharging(true)
-                .setMinimumLatency(1000)
+                .setMinimumLatency(2000)
                 .setOverrideDeadline(2000)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 //.setPersisted(true)
@@ -96,43 +96,30 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 Companion.isRetailerApp = isRetailerApp
                 instance = MozoSDK(context.applicationContext)
 
-                /* initialize Database Service */
-                MozoDatabase.getInstance(context)
-                /* initialize Wallet Service */
-                MozoWallet.getInstance()
-                /* initialize Transaction Service */
-                MozoTx.getInstance()
-
                 // Preload custom tabs service for improved performance
                 if (context is Application) {
                     context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
                 }
 
-                /* register network changes */
-                instance?.registerNetworkCallback()
+                /**
+                 * Initialize Authentication Service
+                 * */
+                MozoAuth.getInstance().syncProfile(context) { success ->
+                    if (!success) MozoAuth.getInstance().signOut(true)
+                    else {
+                        /**
+                         * Initialize Transaction Service
+                         * */
+                        MozoTx.getInstance()
+                        /**
+                         * Initialize Wallet Service
+                         * */
+                        MozoWallet.getInstance()
 
-                context.registerComponentCallbacks(object : ComponentCallbacks {
-                    override fun onLowMemory() {
-
+                        /* register network changes */
+                        instance?.registerNetworkCallback()
                     }
-
-                    override fun onConfigurationChanged(newConfig: Configuration?) {
-                        newConfig ?: return
-
-                        val symbol = getInstance().profileViewModel
-                                .exchangeRateLiveData.value?.token?.currencySymbol
-                                ?: Constant.DEFAULT_CURRENCY_SYMBOL
-                        if (
-                                when (Locale.getDefault().language) {
-                                    Locale.KOREA.language -> symbol != Constant.CURRENCY_SYMBOL_KRW
-                                    Locale("vi").language -> symbol != Constant.CURRENCY_SYMBOL_VND
-                                    else -> symbol != Constant.DEFAULT_CURRENCY_SYMBOL
-                                }
-                        ) {
-                            getInstance().profileViewModel.fetchExchangeRate(context)
-                        }
-                    }
-                })
+                }
             }
         }
 
@@ -189,6 +176,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         fun stopMaintenanceMode() {
             EventBus.getDefault().post(MessageEvent.StopMaintenanceMode())
+        }
+
+        @JvmStatic
+        fun startUpdateRequired(context: Context) {
+            context.launchActivity<UpdateRequiredActivity> { }
         }
 
         @JvmStatic

@@ -78,18 +78,15 @@ internal class ImportContactsActivity : BaseActivity() {
                 //prevent response too fast
                 val waitingTime = System.currentTimeMillis() - timeBeforeRequest
 
-                GlobalScope.launch {
-                    delay(if (waitingTime < 2000) 2000 else 0)
+                MainScope().launch {
+                    delay(if (waitingTime < 2000) 2000L else 0L)
+                    Toast.makeText(
+                            this@ImportContactsActivity,
+                            R.string.mozo_address_msg_import_success,
+                            Toast.LENGTH_SHORT
+                    ).show()
 
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                                this@ImportContactsActivity,
-                                R.string.mozo_address_msg_import_success,
-                                Toast.LENGTH_SHORT
-                        ).show()
-
-                        checkingProcess()
-                    }
+                    checkingProcess()
                 }
             }
         }

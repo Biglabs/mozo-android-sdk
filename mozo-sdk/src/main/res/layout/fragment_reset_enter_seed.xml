@@ -262,7 +262,7 @@
             <EditText
                 android:id="@+id/reset_pin_seed_12"
                 style="@style/MozoTextViewStyle.Seed"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionDone|flagForceAscii"
                 android:importantForAutofill="no"
                 app:layout_constraintBaseline_toBaselineOf="@id/reset_pin_seed_6"
                 app:layout_constraintEnd_toEndOf="parent"

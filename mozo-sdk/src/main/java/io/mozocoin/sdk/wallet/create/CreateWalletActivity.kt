@@ -42,8 +42,8 @@ internal class CreateWalletActivity : BaseActivity() {
         }
 
         button_continue?.click {
-            when {
-                button_create_manual?.isSelected == true -> {
+            when (button_create_manual?.isSelected) {
+                true -> {
                     SecurityActivity.start(this, SecurityActivity.KEY_CREATE_PIN, KEY_CREATE_WALLET_MANUAL)
 
                 }

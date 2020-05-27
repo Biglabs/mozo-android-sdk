@@ -2,8 +2,6 @@ package io.mozocoin.sdk
 
 import android.content.Context
 import io.mozocoin.sdk.common.*
-import io.mozocoin.sdk.common.MessageEvent
-import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.model.WalletInfo
@@ -12,7 +10,6 @@ import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.contact.AddressBookActivity
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
-import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.logAsInfo
 import io.mozocoin.sdk.utils.string
@@ -172,26 +169,38 @@ class MozoWallet private constructor() {
     private fun syncWalletInfo(walletInfo: WalletInfo, context: Context, callback: ((isSuccess: Boolean) -> Unit)? = null) {
         registerEventBus()
         MozoAPIsService.getInstance().saveWallet(context, walletInfo, { data, errorCode ->
-            when (errorCode) {
-                ErrorCode.ERROR_WALLET_ADDRESS_IN_USED.key,
-                ErrorCode.ERROR_WALLET_ADDRESS_EXISTING.key,
-                ErrorCode.ERROR_WALLET_DIFFERENT.key -> {
-                    MessageDialog(context, context.string(ErrorCode.ERROR_WALLET_DIFFERENT.message))
-                            .setAction(R.string.mozo_button_restore) {
-                                EventBus.getDefault().post(MessageEvent.CloseActivities())
-                                MozoAuth.getInstance().signOut()
-                            }
-                            .cancelable(false)
-                            .show()
-                }
-            }
-
-            val isSuccess = data != null
-            SharedPrefsUtils.setNeedSyncWallet(!isSuccess)
-            callback?.invoke(isSuccess)
+            afterSyncWallet(context, data, errorCode, callback)
         }, {
             syncWalletInfo(walletInfo, context, callback)
         })
+    }
+
+    internal fun syncWalletAutoToPin(walletInfo: WalletInfo, context: Context, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+        mProfile!!.apply { this.walletInfo = walletInfo }
+        MozoAPIsService.getInstance().saveWalletAutoToPin(context, walletInfo, { data, errorCode ->
+            afterSyncWallet(context, data, errorCode, callback)
+        }, {
+            syncWalletAutoToPin(walletInfo, context, callback)
+        })
+    }
+
+    private fun afterSyncWallet(context: Context, data: Profile?, errorCode: String?, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+        when (errorCode) {
+            ErrorCode.ERROR_WALLET_ADDRESS_IN_USED.key,
+            ErrorCode.ERROR_WALLET_ADDRESS_EXISTING.key,
+            ErrorCode.ERROR_WALLET_DIFFERENT.key -> {
+                MessageDialog(context, context.string(ErrorCode.ERROR_WALLET_DIFFERENT.message))
+                        .setAction(R.string.mozo_button_restore) {
+                            EventBus.getDefault().post(MessageEvent.CloseActivities())
+                            MozoAuth.getInstance().signOut()
+                        }
+                        .cancelable(false)
+                        .show()
+            }
+        }
+
+        val isSuccess = data != null
+        callback?.invoke(isSuccess)
     }
 
     internal fun syncOnChainWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {

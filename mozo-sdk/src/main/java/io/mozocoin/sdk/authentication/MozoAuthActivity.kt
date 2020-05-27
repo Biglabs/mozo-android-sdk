@@ -18,9 +18,9 @@ import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.logAsError
 import io.mozocoin.sdk.utils.setMatchParent
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import net.openid.appauth.*
 import net.openid.appauth.browser.BrowserBlacklist
@@ -115,11 +115,11 @@ internal class MozoAuthActivity : FragmentActivity() {
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
         val authRequestBuilder = if (modeSignIn) {
             AuthorizationRequest.Builder(
-                    mAuthStateManager.current.authorizationServiceConfiguration!!,
-                    clientId,
-                    ResponseTypeValues.CODE,
-                    Uri.parse(appScheme)
-            )
+                            mAuthStateManager.current.authorizationServiceConfiguration!!,
+                            clientId,
+                            ResponseTypeValues.CODE,
+                            Uri.parse(appScheme)
+                    )
                     .setPrompt("consent")
                     .setScope("openid profile phone")
                     .setAdditionalParameters(
@@ -131,11 +131,11 @@ internal class MozoAuthActivity : FragmentActivity() {
 
         } else /* SIGN OUT */ {
             val signInRequest = AuthorizationRequest.Builder(
-                    mAuthStateManager.current.authorizationServiceConfiguration!!,
-                    clientId,
-                    ResponseTypeValues.CODE,
-                    Uri.parse(appScheme)
-            )
+                            mAuthStateManager.current.authorizationServiceConfiguration!!,
+                            clientId,
+                            ResponseTypeValues.CODE,
+                            Uri.parse(appScheme)
+                    )
                     .setPrompt("consent")
                     .setScope("openid profile phone")
                     .setAdditionalParameters(
@@ -149,14 +149,14 @@ internal class MozoAuthActivity : FragmentActivity() {
             val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
             val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
             AuthorizationRequest.Builder(
-                    AuthorizationServiceConfiguration(
-                            signOutEndpoint,
-                            tokenEndpoint
-                    ),
-                    clientId,
-                    ResponseTypeValues.CODE,
-                    signInRequest.toUri()
-            )
+                            AuthorizationServiceConfiguration(
+                                    signOutEndpoint,
+                                    tokenEndpoint
+                            ),
+                            clientId,
+                            ResponseTypeValues.CODE,
+                            signInRequest.toUri()
+                    )
                     .setState(signInRequest.state)
                     .setCodeVerifier(signInRequest.codeVerifier, signInRequest.codeVerifierChallenge, signInRequest.codeVerifierChallengeMethod)
                     .setNonce(signInRequest.nonce)
@@ -220,7 +220,7 @@ internal class MozoAuthActivity : FragmentActivity() {
      * Performs the authorization request, using the browser selected in the spinner,
      * and a user-provided `login_hint` if available.
      */
-    private fun doAuth() = GlobalScope.launch(Dispatchers.Main) {
+    private fun doAuth() = MainScope().launch {
         try {
             mAuthIntentLatch.await()
         } catch (ex: Exception) {
@@ -327,7 +327,7 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
     }
 
-    private fun finishAuth(exception: Exception? = null) = GlobalScope.launch(Dispatchers.Main) {
+    private fun finishAuth(exception: Exception? = null) = MainScope().launch {
         if (
                 exception is AuthorizationException
                 && exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code

@@ -126,7 +126,7 @@
         <item name="android:layout_marginEnd">9dp</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:background">@drawable/mozo_dr_input_seed_underline</item>
-        <item name="android:imeOptions">actionNext</item>
+        <item name="android:imeOptions">actionNext|flagForceAscii|flagNoExtractUi|flagNoFullscreen</item>
         <item name="android:inputType">text</item>
         <item name="android:digits">qwertyuiopasdfghjklzxcvbnm</item>
         <item name="android:gravity">center</item>

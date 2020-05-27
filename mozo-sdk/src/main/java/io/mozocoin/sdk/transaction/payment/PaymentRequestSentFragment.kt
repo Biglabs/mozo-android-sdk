@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_payment_sent.*
 
 class PaymentRequestSentFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.fragment_payment_sent, container, false)
+            inflater.inflate(R.layout.fragment_payment_sent, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,12 +31,12 @@ class PaymentRequestSentFragment : Fragment() {
         val amount = arguments?.getString(KEY_AMOUNT)?.toBigDecimal().safe()
         payment_request_amount.text = amount.displayString()
 
-        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this, Observer {
+        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(viewLifecycleOwner, Observer {
             payment_request_rate.text = MozoSDK.getInstance().profileViewModel
-                .formatCurrencyDisplay(
-                    amount.multiply(it.rate),
-                    true
-                )
+                    .formatCurrencyDisplay(
+                            amount.multiply(it.rate),
+                            true
+                    )
         })
     }
 

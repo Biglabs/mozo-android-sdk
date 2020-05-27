@@ -11,10 +11,7 @@ import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.safe
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -50,11 +47,16 @@ internal object ViewModels {
                 callback?.invoke(null)
                 return
             }
-            GlobalScope.launch {
-                val profile = if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
-                else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
 
-                val userInfo = MozoDatabase.getInstance(context).userInfo().get()
+            GlobalScope.launch {
+                val profile = withContext(Dispatchers.IO) {
+                    if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
+                    else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
+                }
+                val userInfo = withContext(Dispatchers.IO) {
+                    MozoDatabase.getInstance(context).userInfo().get()
+                }
+
                 withContext(Dispatchers.Main) {
                     userInfoLiveData.value = userInfo
                     profileLiveData.value = profile
@@ -89,7 +91,6 @@ internal object ViewModels {
         }
 
         fun fetchExchangeRate(context: Context) {
-            exchangeRateLiveData.value = exchangeRateLiveData.value ?: Support.getDefaultCurrency()
             updateBalanceAndRate()
 
             MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().language, { data, _ ->
@@ -108,10 +109,8 @@ internal object ViewModels {
             })
         }
 
-        private fun updateBalanceAndRate() {
-            if (exchangeRateLiveData.value == null) {
-                exchangeRateLiveData.value = Support.getDefaultCurrency()
-            }
+        private fun updateBalanceAndRate() = MainScope().launch {
+            exchangeRateLiveData.value = exchangeRateLiveData.value ?: Support.getDefaultCurrency()
             val balanceNonDecimal = balanceInfoLiveData.value?.balanceNonDecimal().safe()
             val rate = exchangeRateLiveData.value?.token?.rate().safe()
             val balanceInCurrency = balanceNonDecimal.multiply(rate)
@@ -127,12 +126,12 @@ internal object ViewModels {
             )
         }
 
-        fun updateProfile(context: Context, p: Profile) = GlobalScope.launch(Dispatchers.Main) {
+        fun updateProfile(context: Context, p: Profile) = MainScope().launch {
             profileLiveData.value = p
             fetchBalance(context)
         }
 
-        fun updateUserInfo(u: UserInfo) = GlobalScope.launch(Dispatchers.Main) {
+        fun updateUserInfo(u: UserInfo) = MainScope().launch {
             userInfoLiveData.value = u
             MozoAuth.invokeProfileChangeListener(u)
         }
@@ -171,7 +170,7 @@ internal object ViewModels {
                 amount.multiply((if (useOffChain) balanceAndRateLiveData.value?.rate else exchangeRateLiveData.value?.eth?.rate).safe())
         )
 
-        fun clear() = GlobalScope.launch(Dispatchers.Main) {
+        fun clear() = MainScope().launch {
             profileLiveData.value = null
             balanceInfoLiveData.value = null
         }
@@ -246,5 +245,10 @@ internal object ViewModels {
         fun users(): List<Contact> = usersLiveData.value ?: emptyList()
         fun stores(): List<Contact> = storesLiveData.value ?: emptyList()
         fun contacts(): List<Contact> = users() + stores()
+
+        fun appendStoreContact(contact: Contact?) = MainScope().launch {
+            contact ?: return@launch
+            storesLiveData.value = stores().plus(contact)
+        }
     }
 }

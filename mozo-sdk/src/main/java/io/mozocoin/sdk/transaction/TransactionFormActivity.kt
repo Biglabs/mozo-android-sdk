@@ -8,7 +8,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
@@ -61,12 +60,17 @@ internal class TransactionFormActivity : BaseActivity() {
     private var isNeedBack2Edit = false
     private var mInputAmount = BigDecimal.ZERO
 
+    private var mPhoneContactUtils: PhoneContactUtils? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_transaction_form)
 
         MozoSDK.getInstance().contactViewModel.fetchData(this)
-
+        mPhoneContactUtils = PhoneContactUtils(output_receiver_address) {
+            selectedContact = it
+            showContactInfoUI()
+        }
         initUI()
         showInputUI()
 
@@ -91,12 +95,13 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         MozoSDK.getInstance().contactViewModel.usersLiveData.removeObserver(userContactsObserver)
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.removeObserver(
                 balanceAndRateObserver)
+        mPhoneContactUtils = null
         selectedContact = null
         updateTxStatusJob?.cancel()
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -113,16 +118,16 @@ internal class TransactionFormActivity : BaseActivity() {
                 IntentIntegrator
                         .parseActivityResult(requestCode, resultCode, data)
                         .contents?.let {
-                    selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
+                            selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
 
-                    showInputUI()
-                    if (selectedContact == null) {
-                        output_receiver_address?.setText(it)
-                        output_receiver_address?.dismissDropDown()
-                        validateInput(true)
-                    } else
-                        showContactInfoUI()
-                }
+                            showInputUI()
+                            if (selectedContact == null) {
+                                output_receiver_address?.setText(it)
+                                output_receiver_address?.dismissDropDown()
+                                validateInput(true)
+                            } else
+                                showContactInfoUI()
+                        }
             }
         }
     }
@@ -193,14 +198,14 @@ internal class TransactionFormActivity : BaseActivity() {
             setAdapter(ContactSuggestionAdapter(
                     context,
                     MozoSDK.getInstance().contactViewModel.contacts(),
-                    onFindInSystemClick
+                    mPhoneContactUtils?.onFindInSystemClick
             ))
 
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     val value = output_receiver_address?.text?.toString()?.trim()
                     if (!value.isNullOrEmpty() && !WalletUtils.isValidAddress(value)) {
-                        onFindInSystemClick.invoke()
+                        mPhoneContactUtils?.onFindInSystemClick?.invoke()
                         return@setOnEditorActionListener true
                     }
                 }
@@ -239,11 +244,15 @@ internal class TransactionFormActivity : BaseActivity() {
         button_submit?.click {
             if (output_receiver_address.isEnabled) {
                 if (validateInput()) {
-                    MozoTx.getInstance().verifyAddress(
-                            it.context,
-                            selectedContact?.soloAddress ?: output_receiver_address.text.toString()
-                    ) { isValid ->
-                        if (isValid) showConfirmationUI()
+                    val output = selectedContact?.soloAddress
+                            ?: output_receiver_address.text.toString()
+                    when (output) {
+                        MozoWallet.getInstance().getAddress() -> {
+                            MessageDialog.show(it.context, R.string.mozo_transfer_err_send_to_own_wallet)
+                        }
+                        else -> MozoTx.getInstance().verifyAddress(it.context, output) { isValid ->
+                            if (isValid) showConfirmationUI()
+                        }
                     }
                 }
             } else {
@@ -317,6 +326,8 @@ internal class TransactionFormActivity : BaseActivity() {
             text_receiver_user_name?.isVisible = !name.isNullOrEmpty()
             text_receiver_user_address?.text = soloAddress
 
+            output_amount?.requestFocus()
+
             button_clear?.apply {
                 visible()
                 click {
@@ -386,14 +397,14 @@ internal class TransactionFormActivity : BaseActivity() {
         if (txResponse != null) {
             MozoSDK.getInstance()
                     .contactViewModel.usersLiveData.observe(this@TransactionFormActivity,
-                    userContactsObserver)
+                            userContactsObserver)
             setContentView(R.layout.view_transaction_sent)
 
             transfer_completed_title.setText(R.string.mozo_transfer_action_complete)
             text_preview_amount_sent.text = history.amountDisplay()
             text_preview_rate_sent.text = MozoSDK.getInstance()
                     .profileViewModel.formatCurrencyDisplay(history.amountInDecimal().multiply(
-                    currentRate), true)
+                            currentRate), true)
 
             button_save_address?.apply {
                 isVisible = selectedContact == null
@@ -407,7 +418,7 @@ internal class TransactionFormActivity : BaseActivity() {
             button_transaction_detail?.apply {
                 gone()
                 click {
-                    TransactionDetails.start(this@TransactionFormActivity, history)
+                    TransactionDetailsActivity.start(this@TransactionFormActivity, history)
                 }
             }
 
@@ -504,19 +515,8 @@ internal class TransactionFormActivity : BaseActivity() {
 
         if (fromScan) return isValidAddress
 
-        if (!isValidAddress) {
-            when {
-                address.isDigitsOnly() -> {
-                    showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_phone)
-                }
-                address.startsWith("+") -> {
-                    if (MozoSDK.getInstance().contactViewModel.containCountryCode(address)) {
-                        if (!address.isValidPhone(this))
-                            showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_phone)
-
-                    } else showErrorAddressUI(false, R.string.mozo_transfer_amount_error_invalid_country_code)
-                }
-            }
+        if (!isValidAddress) mPhoneContactUtils?.validatePhone(this, address)?.let {
+            if (it > 0) showErrorAddressUI(false, it)
         }
 
         var isValidAmount = true
@@ -532,48 +532,6 @@ internal class TransactionFormActivity : BaseActivity() {
         }
 
         return isValidAddress && isValidAmount
-    }
-
-    private val onFindInSystemClick: () -> Unit = {
-        val value = output_receiver_address?.text?.toString()?.trim()
-        if (!value.isNullOrEmpty()) {
-            when {
-                value.isDigitsOnly() -> {
-                    MessageDialog.show(this, getString(R.string.mozo_transfer_amount_error_invalid_phone).split(": ")[1])
-                }
-                value.startsWith("+") -> {
-                    if (MozoSDK.getInstance().contactViewModel.containCountryCode(value)) {
-                        if (value.isValidPhone(this)) findContact(value)
-                        else MessageDialog.show(
-                                this,
-                                getString(R.string.mozo_transfer_amount_error_invalid_phone)
-                                        .split(": ")[1]
-                        )
-                    } else MessageDialog.show(
-                            this,
-                            getString(R.string.mozo_transfer_amount_error_invalid_country_code)
-                                    .split(": ")[1]
-                    )
-                }
-                else -> MessageDialog.show(this, R.string.mozo_transfer_contact_find_err)
-            }
-        } else {
-            MessageDialog.show(this, R.string.mozo_transfer_contact_find_err)
-        }
-    }
-
-    private fun findContact(phone: String) {
-        MozoAPIsService.getInstance().findContact(this, phone, { data, _ ->
-            if (data?.soloAddress.isNullOrEmpty()) {
-                MessageDialog.show(this, R.string.mozo_transfer_contact_find_no_address)
-
-            } else {
-                selectedContact = data
-                showContactInfoUI()
-            }
-        }, {
-            findContact(phone)
-        })
     }
 
     companion object {

@@ -16,7 +16,7 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.PaymentRequest
 import io.mozocoin.sdk.common.service.MozoAPIsService
-import io.mozocoin.sdk.transaction.TransactionDetails
+import io.mozocoin.sdk.transaction.TransactionDetailsActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.SwipeToDeleteCallback
@@ -28,7 +28,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
 
     private val requests = arrayListOf<PaymentRequest>()
     private val adapter = PaymentRequestRecyclerAdapter(requests) {
-        TransactionDetails.start(this.context!!, requests[it])
+        TransactionDetailsActivity.start(this.context!!, requests[it])
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -65,7 +65,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
                 IntentIntegrator.parseActivityResult(requestCode, resultCode, data).contents?.let {
                     val param = Support.parsePaymentRequest(it)
                     if (param.isNotEmpty()) {
-                        TransactionDetails.start(
+                        TransactionDetailsActivity.start(
                                 this.context!!,
                                 PaymentRequest(content = it)
                         )

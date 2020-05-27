@@ -130,7 +130,7 @@ class ConnectionService : JobService() {
             }
         }
 
-        fun removeConnecttionChangeListener(listener: ConnectionChangedListener) {
+        fun removeConnectionChangeListener(listener: ConnectionChangedListener) {
             listeners?.remove(listener)
         }
 

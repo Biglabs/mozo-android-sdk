@@ -2,9 +2,7 @@ package io.mozocoin.sdk.ui
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.Px
 import androidx.core.view.children
@@ -22,14 +20,11 @@ import io.mozocoin.sdk.wallet.OnChainWalletFragment
 import kotlinx.android.synthetic.main.fragment_mozo_wallet.*
 import kotlinx.android.synthetic.main.view_wallet_state_not_login.*
 
-class MozoWalletFragment : Fragment() {
+class MozoWalletFragment : Fragment(R.layout.fragment_mozo_wallet) {
 
     private val tabFragments = arrayListOf<Fragment>(OffChainWalletFragment.getInstance(), OnChainWalletFragment.getInstance())
     private var unLoadedTabPosition = -1
     private var mPadding = arrayOf(/* left */0, /* top */0, /* right */0, /* bottom */0)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_mozo_wallet, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -112,6 +107,7 @@ class MozoWalletFragment : Fragment() {
         }
     }
 
+    @Suppress("unused")
     fun updatePadding(@Px left: Int = 0, @Px top: Int = 0, @Px right: Int = 0, @Px bottom: Int = 0) {
         mPadding[0] = left
         mPadding[1] = top
