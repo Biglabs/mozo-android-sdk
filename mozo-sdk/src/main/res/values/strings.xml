@@ -46,7 +46,7 @@
     <string name="mozo_button_logout">Log Out Mozo</string>
     <string name="mozo_button_logout_short">Log Out</string>
     <string name="mozo_button_send_mozo">Send Mozo</string>
-    <string name="mozo_button_transfer">Transfer</string>
+    <string name="mozo_button_transfer">Send</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
     <string name="mozo_button_request">Request</string>
     <string name="mozo_button_offchain_wallet">Offchain Wallet</string>
