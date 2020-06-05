@@ -103,8 +103,11 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun initializeAuthRequest() {
         val appScheme = getString(R.string.auth_redirect_uri, "com.biglabs.mozosdk.${applicationInfo.packageName}")
         val clientId = getString(
-                if (MozoSDK.isRetailerApp) R.string.auth_client_id_retailer
-                else R.string.auth_client_id_shopper
+                when {
+                    MozoSDK.isInternalApps -> R.string.auth_client_id_operation
+                    MozoSDK.isRetailerApp -> R.string.auth_client_id_retailer
+                    else -> R.string.auth_client_id_shopper
+                }
         )
 
         if (mAuthStateManager.current.authorizationServiceConfiguration == null) {
@@ -115,11 +118,11 @@ internal class MozoAuthActivity : FragmentActivity() {
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
         val authRequestBuilder = if (modeSignIn) {
             AuthorizationRequest.Builder(
-                            mAuthStateManager.current.authorizationServiceConfiguration!!,
-                            clientId,
-                            ResponseTypeValues.CODE,
-                            Uri.parse(appScheme)
-                    )
+                    mAuthStateManager.current.authorizationServiceConfiguration!!,
+                    clientId,
+                    ResponseTypeValues.CODE,
+                    Uri.parse(appScheme)
+            )
                     .setPrompt("consent")
                     .setScope("openid profile phone")
                     .setAdditionalParameters(
@@ -131,11 +134,11 @@ internal class MozoAuthActivity : FragmentActivity() {
 
         } else /* SIGN OUT */ {
             val signInRequest = AuthorizationRequest.Builder(
-                            mAuthStateManager.current.authorizationServiceConfiguration!!,
-                            clientId,
-                            ResponseTypeValues.CODE,
-                            Uri.parse(appScheme)
-                    )
+                    mAuthStateManager.current.authorizationServiceConfiguration!!,
+                    clientId,
+                    ResponseTypeValues.CODE,
+                    Uri.parse(appScheme)
+            )
                     .setPrompt("consent")
                     .setScope("openid profile phone")
                     .setAdditionalParameters(
@@ -149,14 +152,14 @@ internal class MozoAuthActivity : FragmentActivity() {
             val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
             val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
             AuthorizationRequest.Builder(
-                            AuthorizationServiceConfiguration(
-                                    signOutEndpoint,
-                                    tokenEndpoint
-                            ),
-                            clientId,
-                            ResponseTypeValues.CODE,
-                            signInRequest.toUri()
-                    )
+                    AuthorizationServiceConfiguration(
+                            signOutEndpoint,
+                            tokenEndpoint
+                    ),
+                    clientId,
+                    ResponseTypeValues.CODE,
+                    signInRequest.toUri()
+            )
                     .setState(signInRequest.state)
                     .setCodeVerifier(signInRequest.codeVerifier, signInRequest.codeVerifierChallenge, signInRequest.codeVerifierChallengeMethod)
                     .setNonce(signInRequest.nonce)

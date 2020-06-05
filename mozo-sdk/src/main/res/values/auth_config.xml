@@ -2,6 +2,7 @@
 <resources>
     <string name="auth_client_id_shopper" translatable="false">shopper_mobile_app</string>
     <string name="auth_client_id_retailer" translatable="false">retailer_mobile_app</string>
+    <string name="auth_client_id_operation" translatable="false">operation_mobile_app</string>
     <string name="auth_redirect_uri" translatable="false">%s:/oauth2redirect/mozo-provider</string>
 
     <string name="auth_end_point_authorization" translatable="false">https://%s/auth/realms/mozo/protocol/openid-connect/auth</string>

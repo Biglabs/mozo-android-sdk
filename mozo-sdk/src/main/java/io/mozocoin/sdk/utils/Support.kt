@@ -133,5 +133,13 @@ class Support {
             }
             view.isVisible = true
         }
+
+        internal fun isInternalApps(context: Context): Boolean {
+            val packageName = context.applicationContext.packageName
+            return when {
+                packageName.startsWith("io.mozocoin.tools.operation") -> true
+                else -> false
+            }
+        }
     }
 }

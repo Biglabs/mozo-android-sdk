@@ -20,6 +20,7 @@ import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.ConnectionService
 import io.mozocoin.sdk.ui.MaintenanceActivity
 import io.mozocoin.sdk.ui.UpdateRequiredActivity
+import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.launchActivity
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -80,6 +81,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         internal var isRetailerApp = false
 
         @Volatile
+        internal var isInternalApps = false
+
+        @Volatile
         internal var isReadyForWallet = true
 
         @Volatile
@@ -90,10 +94,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @JvmStatic
         @Synchronized
-        fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_STAGING, isRetailerApp: Boolean = false) {
+        fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_STAGING, useForBusiness: Boolean = false) {
             if (instance == null) {
                 serviceEnvironment = environment
-                Companion.isRetailerApp = isRetailerApp
+                isRetailerApp = useForBusiness
+                isInternalApps = Support.isInternalApps(context)
                 instance = MozoSDK(context.applicationContext)
 
                 // Preload custom tabs service for improved performance
