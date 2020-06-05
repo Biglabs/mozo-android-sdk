@@ -16,19 +16,19 @@
     <string name="mozo_address_add_input_name_hint">Nhập tên người nhận</string>
     <string name="mozo_address_add_msg_saved">Đã lưu địa chỉ</string>
     <string name="mozo_address_add_msg_error">Địa chỉ đã tồn tại</string>
-    <string name="mozo_address_update_msg">Thêm bạn bè vào danh bạ MozoX từ danh bạ điện thoại nhanh chóng</string>
+    <string name="mozo_address_update_msg">Thêm bạn bè vào danh bạ Mozo từ danh bạ điện thoại nhanh chóng</string>
     <string name="mozo_address_import_title">Đồng bộ danh bạ</string>
-    <string name="mozo_address_import_msg">Bạn bè trong danh bạ điện thoại sẽ tự động được thêm vào danh bạ MozoX.</string>
+    <string name="mozo_address_import_msg">Bạn bè trong danh bạ điện thoại sẽ tự động được thêm vào danh bạ Mozo.</string>
     <string name="mozo_address_import_last_updated">Cập nhật gần nhất:</string>
-    <string name="mozo_address_require_permission">Để đồng bộ danh bạ điện thoại với danh bạ MozoX. Những danh bạ đã tồn tại sẽ bị ghi đè bởi thông tin trong danh bạ MozoX.</string>
-    <string name="mozo_address_require_permission_title">MozoX cần quyền truy cập danh bạ của bạn</string>
-    <string name="mozo_address_require_permission_force">Trước hết bạn cần cấp quyền truy cập danh bạ</string>
+    <string name="mozo_address_require_permission">Để đồng bộ danh bạ điện thoại với danh bạ Mozo. Những danh bạ đã tồn tại sẽ bị ghi đè bởi thông tin trong danh bạ Mozo.</string>
+    <string name="mozo_address_require_permission_title">Mozo cần quyền truy cập danh bạ của bạn</string>
+    <string name="mozo_address_require_permission_force">Trước hết bạn cần cấp quyền cho Mozo truy cập danh bạ</string>
     <string name="mozo_address_require_permission_force_title">Không thể truy cập danh bạ</string>
     <string name="mozo_address_msg_not_import">Chưa được đồng bộ</string>
     <string name="mozo_address_msg_import_success">Nhập từ danh bạ thành công</string>
     <string name="mozo_address_msg_no_contact">Danh bạ trống, không thể tiến hành đồng bộ.</string>
 
-    <string name="mozo_dialog_qr_code">Địa chỉ ví MozoX của bạn</string>
+    <string name="mozo_dialog_qr_code">Địa chỉ ví Mozo của bạn</string>
     <string name="mozo_dialog_loading_msg">Đang khởi tạo giao diện</string>
     <string name="mozo_dialog_copied_msg">Đã sao chép</string>
 
@@ -42,18 +42,18 @@
     <string name="mozo_dialog_error_system_time_msg_sub">Xin vui lòng cập nhật ngày giờ và thử lại sau.</string>
 
     <string name="mozo_button_deposit">Gửi vào</string>
-    <string name="mozo_button_login">Đăng nhập MozoX</string>
-    <string name="mozo_button_logout">Đăng xuất MozoX</string>
+    <string name="mozo_button_login">Đăng nhập Mozo</string>
+    <string name="mozo_button_logout">Đăng xuất Mozo</string>
     <string name="mozo_button_logout_short">Đăng xuất</string>
-    <string name="mozo_button_send_mozo">Gửi MozoX</string>
+    <string name="mozo_button_send_mozo">Gửi Mozo</string>
     <string name="mozo_button_transfer">Gửi</string>
     <string name="mozo_button_transaction_history">Lịch sử giao dịch</string>
     <string name="mozo_button_request">Yêu cầu</string>
     <string name="mozo_button_offchain_wallet">Ví Offchain</string>
     <string name="mozo_button_onchain_wallets">Ví Onchain</string>
-    <string name="mozo_button_onchain_how_to_buy">Hướng dẫn thêm MozoX Onchain</string>
+    <string name="mozo_button_onchain_how_to_buy">Hướng dẫn thêm MozoX</string>
     <string name="mozo_button_onchain_tx_history">Đi đến <b>Etherscan.io</b></string>
-    <string name="mozo_button_onchain_convert">Chuyển đổi thành MozoX Offchain</string>
+    <string name="mozo_button_onchain_convert">Chuyển thành điểm thưởng Mozo</string>
     <string name="mozo_button_onchain_converting">Đang xử lý giao dịch…</string>
     <string name="mozo_button_hide_transaction">Ẩn màn hình</string>
     <string name="mozo_button_back_on_chain">Trở về ví Onchain</string>
@@ -99,8 +99,8 @@
     <string name="mozo_backup_success_content">Nhớ cất giữ cụm từ khôi phục vào nơi bí mật một cách an toàn. Bạn bắt buộc phải có nó để khôi phục lại ví trong trường hợp mất thiết bị.</string>
     <string name="mozo_backup_confirm_failed">Chuỗi ký tự phục hồi không hợp lệ</string>
 
-    <string name="mozo_convert_title">Đổi thành MozoX Offchain</string>
-    <string name="mozo_convert_amount_hint">Nhập số lượng đổi thành MozoX Offchain</string>
+    <string name="mozo_convert_title">Đổi thành Mozo</string>
+    <string name="mozo_convert_amount_hint">Nhập số lượng MozoX để đổi thành điểm thưởng Mozo</string>
     <string name="mozo_convert_slow">Chậm</string>
     <string name="mozo_convert_normal">Bình thường</string>
     <string name="mozo_convert_fast">Nhanh</string>
@@ -113,33 +113,33 @@
     <string name="mozo_convert_submit_hide_explain">Khi ẩn màn hình này, bạn vẫn sẽ nhận được thông báo khi việc chuyển đổi <b>hoàn tất</b> hoặc <b>thất bại</b>.</string>
     <string name="mozo_convert_submit_waiting_title">Đang chờ kết quả…</string>
     <string name="mozo_convert_submit_success_title">Chuyển đổi thành công</string>
-    <string name="mozo_convert_submit_success_content">Bạn vừa đổi thành công MozoX từ <b>Onchain</b> thành <b>Offchain</b>:</string>
+    <string name="mozo_convert_submit_success_content">Bạn vừa đổi thành công từ <b>MozoX</b> thành điểm thưởng <b>Mozo</b>:</string>
     <string name="mozo_convert_submit_fail_title">Chuyển đổi thất bại</string>
-    <string name="mozo_convert_submit_fail_content">"Không thể hoàn tất việc chuyển đổi.\n\nXin đợi một lúc và thử lại."</string>
-    <string name="mozo_convert_on_in_off_detected">&lt;b>Phát hiện %s MozoX Onchain&lt;/b>&lt;br/>Bạn có muốn chuyển MozoX Onchain trong ví thành MozoX Offchain?</string>
-    <string name="mozo_convert_on_in_off_converting">&lt;b>Đang chuyển đổi MozoX Offchain…&lt;/b></string>
-    <string name="mozo_convert_on_in_off_warning">Số dư ETH: &lt;b>%s&lt;/b>&lt;br/>Bạn cần chuyển &lt;b>%s ETH&lt;/b> vào ví MozoX Offchain này để trả phí giao dịch</string>
+    <string name="mozo_convert_submit_fail_content">Không thể chuyển đổi từ <b>MozoX</b> thành điểm thưởng <b>Mozo</b>.\n\nXin vui lòng thử lại sau.</string>
+    <string name="mozo_convert_on_in_off_detected">&lt;b>Phát hiện %s MozoX trong Ví Onchain&lt;/b>&lt;br/>Bạn có muốn chuyển MozoX trong ví thành điểm thưởng Mozo?</string>
+    <string name="mozo_convert_on_in_off_converting">&lt;b>Đang chuyển đổi thành Mozo…&lt;/b></string>
+    <string name="mozo_convert_on_in_off_warning">Số dư ETH: &lt;b>%s&lt;/b>&lt;br/>Bạn cần chuyển &lt;b>%s ETH&lt;/b> vào ví Onchain này để trả phí giao dịch</string>
     <string name="mozo_convert_on_in_off_eth_balance">Số dư ETH: &lt;b>%s&lt;/b></string>
 
-    <string name="mozo_create_wallet_title">Tạo ví MozoX</string>
+    <string name="mozo_create_wallet_title">Tạo ví Mozo</string>
     <string name="mozo_create_wallet_select_method">Bạn muốn:</string>
-    <string name="mozo_create_wallet_have_another_account">Đã có tài khoản MozoX khác? %s</string>
+    <string name="mozo_create_wallet_have_another_account">Đã có tài khoản Mozo khác? %s</string>
     <string name="mozo_create_wallet_auto_section">Tạo ví tự động</string>
     <string name="mozo_create_wallet_auto_explain">Cụm từ khôi phục* và mã PIN được tự động tạo và ghi nhớ bởi hệ thống.</string>
     <string name="mozo_create_wallet_manual_section">Tạo ví do bạn điều khiển</string>
     <string name="mozo_create_wallet_manual_explain">Bạn cần phải ghi lại cụm từ khôi phục và tự tạo mã PIN của riêng mình.</string>
     <string name="mozo_create_wallet_hint_explain_title">*Cụm từ khôi phục là gì?</string>
     <string name="mozo_create_wallet_hint_explain">Cụm từ khôi phục là một tập các từ được phát sinh ngẫu nhiên bởi thuật toán. Bạn phải ghi lại những từ này phòng trường hợp mất thiết bị hoặc quên mã PIN, bạn có thể dùng nó để phục hồi ví hoặc tạo PIN mới.</string>
-    <string name="mozo_create_wallet_creating">Đang tạo ví MozoX…</string>
+    <string name="mozo_create_wallet_creating">Đang tạo ví Mozo…</string>
 
     <string name="mozo_pin_title">Tạo mã PIN</string>
     <string name="mozo_pin_title_restore">Khôi phục lại ví</string>
     <string name="mozo_pin_title_verify">Xác nhận mã PIN</string>
     <string name="mozo_pin_title_change">Thay đổi mã PIN</string>
     <string name="mozo_pin_sub_title">Nhập mã PIN</string>
-    <string name="mozo_pin_sub_title_commom">Nhập mã PIN</string>
+    <string name="mozo_pin_sub_title_common">Nhập mã PIN</string>
     <string name="mozo_pin_sub_title_restore">Nhập mã PIN\nđể khôi phục lại ví</string>
-    <string name="mozo_pin_sub_title_send">Nhập mã PIN\nđể gửi MozoX</string>
+    <string name="mozo_pin_sub_title_send">Nhập mã PIN\nđể gửi Mozo</string>
     <string name="mozo_pin_content">Mã PIN phải đủ 6 số</string>
     <string name="mozo_pin_confirm_sub_title">Xác nhận mã PIN</string>
     <string name="mozo_pin_confirm_content">Nhập lại mã PIN</string>
@@ -171,41 +171,41 @@
     <plurals name="mozo_notify_title_leave">
         <item quantity="other">Khách đã rời khỏi</item>
     </plurals>
-    <string name="mozo_notify_title_received">Đã nhận %s MozoX</string>
-    <string name="mozo_notify_title_sent">Đã gửi %s MozoX</string>
-    <string name="mozo_notify_title_airdrop_bonus">Bạn được thưởng %s MozoX</string>
+    <string name="mozo_notify_title_received">Đã nhận %s Mozo</string>
+    <string name="mozo_notify_title_sent">Đã gửi %s Mozo</string>
+    <string name="mozo_notify_title_airdrop_bonus">Bạn được thưởng %s Mozo</string>
     <string name="mozo_notify_title_promo_used">Khuyến mãi đã sử dụng</string>
     <string name="mozo_notify_title_promo_used_content">Tại %s</string>
     <string name="mozo_notify_title_promo_purchased">Khách hàng đã mua khuyến mãi</string>
     <string name="mozo_notify_content_from">Từ %s</string>
     <string name="mozo_notify_content_to">Đến %s</string>
-    <string name="mozo_notify_content_invited">%s đã tham gia MozoX</string>
+    <string name="mozo_notify_content_invited">%s đã tham gia Mozo</string>
     <string name="mozo_notify_content_airdrop_sign_up">Khi đăng nhập thành công</string>
     <string name="mozo_notify_content_airdrop_founder">Khi cửa hàng của bạn gia nhập MozoX thành công</string>
-    <string name="mozo_notify_content_airdrop_1k_retailer">Trở thành một trong 1,000 nhà bán lẻ MozoX đầu tiên</string>
+    <string name="mozo_notify_content_airdrop_1k_retailer">Trở thành một trong 1,000 nhà bán lẻ Mozo đầu tiên</string>
 
     <string name="mozo_notify_content_customer_join_group">Tổng khách vừa đến: %d</string>
     <string name="mozo_notify_content_customer_left_group">Tổng khách đã rời khỏi: %d</string>
-    <string name="mozo_notify_title_invited_group">Bạn bè của bạn đã tham gia MozoX</string>
-    <string name="mozo_notify_content_sent_group">Tổng: %s MozoX</string>
-    <string name="mozo_notify_content_received_group">Tổng: %s MozoX</string>
+    <string name="mozo_notify_title_invited_group">Bạn bè của bạn đã tham gia Mozo</string>
+    <string name="mozo_notify_content_sent_group">Tổng: %s Mozo</string>
+    <string name="mozo_notify_content_received_group">Tổng: %s Mozo</string>
     <string name="mozo_notify_content_invited_group">Đã có %d người tham gia MozoX</string>
 
     <string name="mozo_notify_warning_internet">Kết nối internet có vấn đề 😔</string>
     <string name="mozo_notify_warning_action">Thiết lập →</string>
 
-    <string name="mozo_notify_to_do_airdrop_nearby">Nhận MozoX từ những airdrop gần đây 🎁</string>
-    <string name="mozo_notify_to_do_airdrop_nearby_action">Xem những cửa hàng gần nhất để nhận MozoX → </string>
-    <string name="mozo_notify_to_do_airdrop_expire">Sự kiện airdrop sắp kết thúc ⏳</string>
+    <string name="mozo_notify_to_do_airdrop_nearby">Nhận Mozo từ những Airdrop gần đây 🎁</string>
+    <string name="mozo_notify_to_do_airdrop_nearby_action">Xem những cửa hàng gần nhất để nhận Mozo → </string>
+    <string name="mozo_notify_to_do_airdrop_expire">Chương trình Airdrop sắp kết thúc ⏳</string>
     <string name="mozo_notify_to_do_airdrop_expire_action">Xem và tạo sự kiện mới → </string>
-    <string name="mozo_notify_to_do_airdrop_empty">Chưa có sự kiện airdrop nào 😐</string>
+    <string name="mozo_notify_to_do_airdrop_empty">Chưa có chương trình Airdrop nào 😐</string>
     <string name="mozo_notify_to_do_airdrop_empty_action">Tạo để tăng lượt khách đến cửa hàng → </string>
-    <string name="mozo_notify_to_do_airdrop_out_of_mozo">Sự kiện airdrop sắp hết MozoX 😞</string>
-    <string name="mozo_notify_to_do_airdrop_out_of_mozo_action">Xem và chuyển thêm MozoX → </string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo">Chương trình Airdrop sắp hết Mozo 😞</string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo_action">Xem và chuyển thêm Mozo → </string>
     <string name="mozo_notify_to_do_location">Định vị bị tắt 🗺</string>
     <string name="mozo_notify_to_do_location_action">Bật định vị để trải nghiệm tốt hơn → </string>
     <string name="mozo_notify_to_do_bluetooth">Bluetooth bị tắt 😔…</string>
-    <string name="mozo_notify_to_do_bluetooth_action">Bật bluetooth để nhận MozoX → </string>
+    <string name="mozo_notify_to_do_bluetooth_action">Bật bluetooth để nhận Mozo → </string>
     <string name="mozo_notify_to_do_promo_nearby">Khuyến mãi hấp dẫn ở gần đây 🤩</string>
     <string name="mozo_notify_to_do_promo_nearby_action">Khám phá khuyến mãi yêu thích của bạn → </string>
     <string name="mozo_notify_to_do_promo_expire">Khuyến mãi sắp kết thúc 👌</string>
@@ -216,29 +216,29 @@
     <string name="mozo_notify_to_do_voucher_nearby_action">Sử dụng khuyến mãi đã mua → </string>
     <string name="mozo_notify_to_do_voucher_expired">Khuyến mãi bạn đã mua sắp hết hạn 😣</string>
     <string name="mozo_notify_to_do_voucher_expired_action">Sử dụng khuyến mãi đã mua → </string>
-    <string name="mozo_notify_to_do_low_mozo_shopper">Ví của bạn sắp hết MozoX 😞</string>
-    <string name="mozo_notify_to_do_low_mozo_shopper_action">Xem những cửa hàng gần nhất để nhận MozoX → </string>
-    <string name="mozo_notify_to_do_low_mozo_retailer">Ví của bạn sắp hết MozoX 😞</string>
-    <string name="mozo_notify_to_do_low_mozo_retailer_action">Mua thêm MozoX → </string>
+    <string name="mozo_notify_to_do_low_mozo_shopper">Ví của bạn sắp hết Mozo 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_shopper_action">Xem những cửa hàng gần nhất để nhận Mozo → </string>
+    <string name="mozo_notify_to_do_low_mozo_retailer">Ví của bạn sắp hết Mozo 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_retailer_action">Mua thêm Mozo → </string>
     <string name="mozo_notify_to_do_unsecured">Ví không an toàn 😱</string>
     <string name="mozo_notify_to_do_unsecured_action">Thiết lập PIN của riêng bạn → </string>
 
     <string name="mozo_maintenance_title">Rất tiếc, hệ thống đang bảo trì. Chúng tôi sẽ sớm quay lại.</string>
     <string name="mozo_maintenance_tips_title">Bạn có biết?</string>
 
-    <string name="mozo_payment_request_title">Yêu cầu MozoX</string>
+    <string name="mozo_payment_request_title">Yêu cầu Mozo</string>
     <string name="mozo_payment_request_amount">Tổng nhận</string>
     <string name="mozo_payment_request_tab_list">Danh sách được yêu cầu</string>
     <string name="mozo_payment_request_tab_create">Tạo yêu cầu</string>
-    <string name="mozo_payment_request_explain">Bạn có thể yêu cầu một người dùng khác gửi MozoX đến ví của mình bằng việc tạo một yêu cầu nhận MozoX</string>
+    <string name="mozo_payment_request_explain">Bạn có thể yêu cầu một người dùng khác gửi Mozo đến ví của mình bằng việc tạo một yêu cầu nhận Mozo.</string>
     <string name="mozo_payment_request_btn_send">Gửi yêu cầu</string>
-    <string name="mozo_payment_request_btn_scan">Quét để gửi MozoX</string>
+    <string name="mozo_payment_request_btn_scan">Quét để gửi Mozo</string>
     <string name="mozo_payment_request_text_scan_to_transfer">Quét để gửi:</string>
     <string name="mozo_payment_request_text_send_to">Gửi yêu cầu đến</string>
     <string name="mozo_payment_request_text_send_success">Gửi yêu cầu thành công</string>
-    <string name="mozo_payment_request_text_sent">Đã gửi yêu cầu nhận:</string>
+    <string name="mozo_payment_request_text_sent">Đã gửi yêu cầu nhận Mozo đến:</string>
     <string name="mozo_payment_request_text_empty">Danh sách yêu cầu trống hoặc mạng quá chậm</string>
-    <string name="mozo_payment_request_text_empty_msg">Bất kỳ yêu cầu MozoX nào từ bạn bè sẽ được hiển thị tại đây.</string>
+    <string name="mozo_payment_request_text_empty_msg">Bất kỳ yêu cầu Mozo nào từ bạn bè sẽ được hiển thị tại đây.</string>
     <string name="mozo_payment_request_item_label_from">Từ:</string>
     <string name="mozo_payment_request_item_label_amount">Yêu cầu:</string>
 
@@ -248,10 +248,10 @@
     <string name="mozo_settings_menu_currencies">Đơn vị tiền</string>
     <string name="mozo_settings_menu_change_password">Đổi mật khẩu</string>
 
-    <string name="mozo_transfer_title">Gửi MozoX</string>
+    <string name="mozo_transfer_title">Gửi Mozo</string>
     <string name="mozo_transfer_confirmation">Xác nhận</string>
     <string name="mozo_transfer_receiver_address">Địa chỉ người nhận</string>
-    <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví MozoX hoặc số điện thoại</string>
+    <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví Mozo hoặc số điện thoại</string>
     <string name="mozo_transfer_receiver_address_error">Lỗi: Địa chỉ người nhận không hợp lệ</string>
     <string name="mozo_transfer_amount">Số lượng</string>
     <string name="mozo_transfer_amount_hint">Nhập số MozoX cần gửi</string>
@@ -262,27 +262,27 @@
     <string name="mozo_transfer_amount_eth_not_enough">Không đủ ETH</string>
     <string name="mozo_transfer_amount_error_too_low">Lỗi: Số lượng quá nhỏ, vui lòng nhập số hợp lệ</string>
     <string name="mozo_transfer_amount_error">Lỗi: Vui lòng nhập giá trị bằng số thập phân</string>
-    <string name="mozo_transfer_spendable">Số dư khả dụng: %s MozoX</string>
+    <string name="mozo_transfer_spendable">Số dư khả dụng: %s Mozo</string>
     <string name="mozo_transfer_action_complete">Thao tác hoàn tất</string>
     <string name="mozo_transfer_send_complete">Gửi thành công</string>
     <string name="mozo_transfer_send_complete_msg">Bạn vừa gửi:</string>
-    <string name="mozo_transfer_contact_not_found">Không tìm thấy trong danh bạ MozoX của bạn</string>
+    <string name="mozo_transfer_contact_not_found">Không tìm thấy trong danh bạ Mozo của bạn</string>
     <string name="mozo_transfer_contact_find_err">Hệ thống hiện chỉ hỗ trợ tìm với số điện thoại.</string>
-    <string name="mozo_transfer_contact_find_in_system">Tìm trong hệ thống MozoX</string>
-    <string name="mozo_transfer_contact_find_no_address">Số điện thoại này chưa có ví MozoX.</string>
-    <string name="mozo_transfer_err_send_to_own_wallet">Không thể chuyển MozoX cho chính bạn.</string>
+    <string name="mozo_transfer_contact_find_in_system">Tìm trong hệ thống Mozo →</string>
+    <string name="mozo_transfer_contact_find_no_address">Số điện thoại này chưa có ví Mozo.</string>
+    <string name="mozo_transfer_err_send_to_own_wallet">Không thể chuyển Mozo cho chính bạn.</string>
 
     <string name="mozo_transaction_detail_title">Chi tiết giao dịch</string>
     <string name="mozo_transaction_detail_wallet_address">Địa chỉ ví</string>
     <string name="mozo_transaction_view_button">Xem chi tiết giao dịch</string>
     <string name="mozo_transaction_history_title">Lịch sử giao dịch</string>
-    <string name="mozo_transaction_history_offchain_text">Ví MozoX Offchain</string>
+    <string name="mozo_transaction_history_offchain_text">Ví Mozo</string>
     <string name="mozo_transaction_history_empty">Lịch sử giao dịch trống hoặc mạng quá chậm</string>
-    <string name="mozo_transaction_history_empty_msg">Chuyển MozoX cho bạn bè hoặc yêu cầu họ gửi MozoX cho bạn.</string>
+    <string name="mozo_transaction_history_empty_msg">Chuyển Mozo cho bạn bè hoặc yêu cầu họ gửi Mozo cho bạn.</string>
 
     <string name="mozo_todo_title">Những việc cần làm</string>
     <string name="mozo_todo_unsolved">Chưa được xử lý %s</string>
-    <string name="mozo_todo_unsolved_explain">Xin vui lòng giải quyết những vấn đề sau để ứng dụng MozoX phục vụ bạn tốt hơn:</string>
+    <string name="mozo_todo_unsolved_explain">Xin vui lòng giải quyết những vấn đề sau để ứng dụng Mozo phục vụ bạn tốt hơn:</string>
 
     <string name="mozo_update_title">Khuyến nghị cập nhật ứng dụng</string>
     <string name="mozo_update_message_content">Ứng dụng đã có phiên bản mới\nXin vui lòng cập nhật phiên bản mới nhất.</string>
@@ -291,9 +291,8 @@
     <string name="mozo_text_gender_male">Nam</string>
     <string name="mozo_text_gender_female">Nữ</string>
 
-    <string name="mozo_view_balance_title">Tổng MozoX Offchain</string>
-    <string name="mozo_view_address_title">Địa chỉ ví MozoX Offchain của bạn</string>
-    <string name="mozo_view_text_mozo_off_chain">MozoX</string>
+    <string name="mozo_view_balance_title">Tổng Mozo</string>
+    <string name="mozo_view_address_title">Địa chỉ ví Mozo của bạn</string>
     <string name="mozo_view_text_address">Địa chỉ:</string>
     <string name="mozo_view_text_hint">Đang tải…</string>
     <string name="mozo_view_text_to">Đến</string>

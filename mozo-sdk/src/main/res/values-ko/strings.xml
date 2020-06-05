@@ -16,19 +16,19 @@
     <string name="mozo_address_add_input_name_hint">담당자 이름 입력</string>
     <string name="mozo_address_add_msg_saved">저장된 주소</string>
     <string name="mozo_address_add_msg_error">이 주소는 이미 주소록에 있습니다</string>
-    <string name="mozo_address_update_msg">연락처집에서 모조X로 빠르게 가져오기</string>
+    <string name="mozo_address_update_msg">빠르게 연락처집에서 Mozo로 가져오기</string>
     <string name="mozo_address_import_title">연락처 동기화</string>
-    <string name="mozo_address_import_msg">핸드폰에 있는 연락처를 자동적으로 모조X 연락처로 가져옵니다</string>
+    <string name="mozo_address_import_msg">핸드폰에 있는 연락처를 자동적으로 Mozo 연락처로 가져옵니다</string>
     <string name="mozo_address_import_last_updated">최근 업데이트:</string>
-    <string name="mozo_address_require_permission">모조X 연락처와 동기화를 위하여 모조X에 있는 연락처 정보로 존재하고 있는 연락처를 겹쳐쓴다.</string>
-    <string name="mozo_address_require_permission_force">연락처 집 접근 권한 허용하세요</string>
+    <string name="mozo_address_require_permission">Mozo 연락처와 동기화를 위하여 Mozo에 있는 연락처 정보로 존재하고 있는 연락처를 겹쳐쓴다.</string>
+    <string name="mozo_address_require_permission_title">Mozo는 연락처 집에 접근 권한 필요한다</string>
+    <string name="mozo_address_require_permission_force">Mozo에게 연락처 집 접근 권한 허용하세요</string>
     <string name="mozo_address_require_permission_force_title">연락처 집 접근 불가</string>
-    <string name="mozo_address_require_permission_title">모조X는 연락처 집에 접근 권한 필요한다</string>
     <string name="mozo_address_msg_not_import">동기화하지 않음</string>
     <string name="mozo_address_msg_import_success">연락처 동기화 성공</string>
     <string name="mozo_address_msg_no_contact">연락처 집 정보 없음. 동기화 불가</string>
 
-    <string name="mozo_dialog_qr_code">MozoX 월렛 주소</string>
+    <string name="mozo_dialog_qr_code">Mozo 월렛 주소</string>
     <string name="mozo_dialog_loading_msg">인터페이스 만들기</string>
     <string name="mozo_dialog_copied_msg">클립 보드에 복사 됩니다</string>
 
@@ -42,18 +42,18 @@
     <string name="mozo_dialog_error_system_time_msg_sub">시간 업데이트 하시고 다시 시도해보세요.</string>
 
     <string name="mozo_button_deposit">예금</string>
-    <string name="mozo_button_login">MozoX에 로그인</string>
-    <string name="mozo_button_logout">MozoX 로그 아웃</string>
+    <string name="mozo_button_login">Mozo에 로그인</string>
+    <string name="mozo_button_logout">Mozo 로그 아웃</string>
     <string name="mozo_button_logout_short">로그아웃</string>
-    <string name="mozo_button_send_mozo">MozoX 코인 보내기</string>
+    <string name="mozo_button_send_mozo">Mozo 보내기</string>
     <string name="mozo_button_transfer">전송하기</string>
     <string name="mozo_button_transaction_history">거래 내역</string>
     <string name="mozo_button_request">요청</string>
     <string name="mozo_button_offchain_wallet">Offchain 지갑</string>
     <string name="mozo_button_onchain_wallets">Onchain 지갑</string>
-    <string name="mozo_button_onchain_how_to_buy">MozoX Onchain을 추가하는 방법은 무엇입니까?</string>
+    <string name="mozo_button_onchain_how_to_buy">MozoX를 추가하는 방법은 무엇입니까?</string>
     <string name="mozo_button_onchain_tx_history"><b>Etherscan.io</b>로 이동합니다</string>
-    <string name="mozo_button_onchain_convert">MozoX Offchain으로 변환하기</string>
+    <string name="mozo_button_onchain_convert">Mozo으로 변환</string>
     <string name="mozo_button_onchain_converting">보류중인 거래 …</string>
     <string name="mozo_button_hide_transaction">거래 숨기기</string>
     <string name="mozo_button_back_on_chain">Onchain 지갑으로 돌아 가기</string>
@@ -99,8 +99,8 @@
     <string name="mozo_backup_success_content">복구 문구를 안전한 곳에서 보관했다는 것을 확인하세요. 이 앱은 삭제되면 복구 문구 없이 지갑 복구를 못합니다.</string>
     <string name="mozo_backup_confirm_failed">잘못된 복구 문구</string>
 
-    <string name="mozo_convert_title">Offchain으로 변환하기</string>
-    <string name="mozo_convert_amount_hint">MozoX Offchain을 변환 할 금액을 입력하십시오.</string>
+    <string name="mozo_convert_title">Mozo으로 변환하기</string>
+    <string name="mozo_convert_amount_hint">Mozo로 변환할 MozoX 수 입력</string>
     <string name="mozo_convert_slow">느리다</string>
     <string name="mozo_convert_normal">정상</string>
     <string name="mozo_convert_fast">빠르다</string>
@@ -113,33 +113,33 @@
     <string name="mozo_convert_submit_hide_explain">이 화면을 숨기면 거래가 <b>완료되거나 실패 할</b> 때 알림을 받게됩니다.</string>
     <string name="mozo_convert_submit_waiting_title">거래 상태를 기다리는 중…</string>
     <string name="mozo_convert_submit_success_title">성공적으로 변환</string>
-    <string name="mozo_convert_submit_success_content">당신은 MozoX를 <b>Onchain</b>에서 <b>Offchain</b>으로 변환했습니다:</string>
+    <string name="mozo_convert_submit_success_content"><b>MozoX</b>를 <b>Mozo</b>로 변환하셨습니다</string>
     <string name="mozo_convert_submit_fail_title">변환 실패</string>
-    <string name="mozo_convert_submit_fail_content">"<b>Onchain</b>에서 <b>Offchain</b>으로 MozoX 변환을 완료 할 수 없습니다.\n\n잠시 후 다시 시도하십시오"</string>
-    <string name="mozo_convert_on_in_off_detected">&lt;b>%s MozoX Onchain이 감지 됩니다.&lt;/b>&lt;br/>이 지갑에 있는 MozoX Onchain을 MozoX Offchain으로 변환 하시겠습니까?</string>
-    <string name="mozo_convert_on_in_off_converting">&lt;b>MozoX Offchain으로 변환 중 …&lt;/b></string>
-    <string name="mozo_convert_on_in_off_warning">ETH 잔액은 &lt;b>%s&lt;/b>입니다.&lt;br/>TX 요금을 지불하기 위하여 이 MozoX Offchain 지갑 주소로 &lt;b>%s ETH&lt;/b>를 전송해야합니다.</string>
+    <string name="mozo_convert_submit_fail_content"><b>MozoX</b>에서 <b>Mozo</b>로 변환을 완료 할 수 없습니다.\n\n잠시 후 다시 시도하십시오.</string>
+    <string name="mozo_convert_on_in_off_detected">&lt;b>Onchain 지갑에서 %s MozoX 발견&lt;/b>&lt;br/>이 지갑에 있는 MozoX를 Mozo로 변환하시겠습니까?</string>
+    <string name="mozo_convert_on_in_off_converting">&lt;b>Mozo로 변환 중…&lt;/b></string>
+    <string name="mozo_convert_on_in_off_warning">ETH 잔액은 &lt;b>%s&lt;/b>입니다.&lt;br/>TX 요금을 지불하기 위하여 이 Onchain 지갑 주소로 &lt;b>%s ETH&lt;/b>를 전송해야합니다.</string>
     <string name="mozo_convert_on_in_off_eth_balance">ETH 잔액은 &lt;b>%s&lt;/b>입니다.</string>
 
-    <string name="mozo_create_wallet_title">모조X 지갑 만들기</string>
+    <string name="mozo_create_wallet_title">Mozo 지갑 만들기</string>
     <string name="mozo_create_wallet_select_method">당신이 원하는 것은:</string>
-    <string name="mozo_create_wallet_have_another_account">다른 모조X 계정을 가지고 계신거에요? %s</string>
+    <string name="mozo_create_wallet_have_another_account">다른 Mozo 계정을 가지고 계신거에요? %s</string>
     <string name="mozo_create_wallet_auto_section">지갑 자동 만들기</string>
     <string name="mozo_create_wallet_auto_explain">당신의 복구 문구* 및 보안 PIN을 자동적으로 생성되어 시스템에 저장됩니다.</string>
     <string name="mozo_create_wallet_manual_section">지갑 직접 만들기</string>
     <string name="mozo_create_wallet_manual_explain">당신이 만든 복구 문구 및 보안 PIN을 백업해야 합니다.</string>
     <string name="mozo_create_wallet_hint_explain_title">*복구 문구는 무엇입니까?</string>
     <string name="mozo_create_wallet_hint_explain">복구 문구는 전자 지갑 보안을 위한 임의 글자 세트입니다. 전자 지갑 분실이나 PIN을 잊어버릴 경우, 자기 전자 지갑을 복구하거나 PIN을 재설정하기 위해 이 글자들을 꼭 써 놓아야 합니다.</string>
-    <string name="mozo_create_wallet_creating">당신의 모조X 지갑 만드는 중…</string>
+    <string name="mozo_create_wallet_creating">당신의 Mozo 지갑 만드는 중…</string>
 
     <string name="mozo_pin_title">보안 PIN 생성</string>
     <string name="mozo_pin_title_restore">월렛 복구</string>
     <string name="mozo_pin_title_verify">PIN 코드 확인</string>
     <string name="mozo_pin_title_change">보안 PIN 변경</string>
     <string name="mozo_pin_sub_title">PIN 코드 입력</string>
-    <string name="mozo_pin_sub_title_commom">MozoX를 보내도록 보안 PIN을</string>
+    <string name="mozo_pin_sub_title_common">Mozo를 보내도록 보안 PIN을</string>
     <string name="mozo_pin_sub_title_restore">월렛을 복구할 PIN 코드를\n입력하십시오</string>
-    <string name="mozo_pin_sub_title_send">MozoX를 보내도록 보안 PIN을\n입력하십시오</string>
+    <string name="mozo_pin_sub_title_send">Mozo를 보내도록 보안 PIN을\n입력하십시오</string>
     <string name="mozo_pin_content">PIN은 최소 6 자리 숫자 여야 합니다</string>
     <string name="mozo_pin_confirm_sub_title">보안 PIN 확인</string>
     <string name="mozo_pin_confirm_content">PIN 코드를 다시 입력하십시오</string>
@@ -171,41 +171,41 @@
     <plurals name="mozo_notify_title_leave">
         <item quantity="other">고객이 출발했습니다.</item>
     </plurals>
-    <string name="mozo_notify_title_received">MozoX %s 를 받았습니다.</string>
-    <string name="mozo_notify_title_sent">MozoX %s 를 보냈습니다.</string>
-    <string name="mozo_notify_title_airdrop_bonus">%s 개 보너스 모조X를 가지고 있습니다.</string>
+    <string name="mozo_notify_title_received">Mozo %s 를 받았습니다.</string>
+    <string name="mozo_notify_title_sent">Mozo %s 를 보냈습니다.</string>
+    <string name="mozo_notify_title_airdrop_bonus">%s 개 보너스 Mozo를 가지고 있습니다.</string>
     <string name="mozo_notify_title_promo_used">사용한 프로모션</string>
     <string name="mozo_notify_title_promo_used_content">%s에</string>
     <string name="mozo_notify_title_promo_purchased">프로모션을 구매한 구매자</string>
     <string name="mozo_notify_content_from">%s 부터</string>
     <string name="mozo_notify_content_to">%s 까지</string>
-    <string name="mozo_notify_content_invited">%s는 MozoX에 가입했습니다.</string>
+    <string name="mozo_notify_content_invited">%s Mozo에 가입했습니다</string>
     <string name="mozo_notify_content_airdrop_sign_up">우리와 함께 가입을 위하여</string>
     <string name="mozo_notify_content_airdrop_founder">검증 된 상점이 되기 위하여</string>
-    <string name="mozo_notify_content_airdrop_1k_retailer">처음 1,000 명의 MozoX 소매 업체가 되십시오.</string>
+    <string name="mozo_notify_content_airdrop_1k_retailer">처음 1,000 명의 Mozo 소매 업체가 되십시오.</string>
 
     <string name="mozo_notify_content_customer_join_group">총 고객은 도착 : %d </string>
     <string name="mozo_notify_content_customer_left_group">떠난 총 고객: %d</string>
-    <string name="mozo_notify_title_invited_group">친구들이 모조X에 가입했습니다.</string>
-    <string name="mozo_notify_content_sent_group">총: %s 모조X</string>
-    <string name="mozo_notify_content_received_group">총: %s 모조X</string>
+    <string name="mozo_notify_title_invited_group">친구들이 Mozo에 가입했습니다.</string>
+    <string name="mozo_notify_content_sent_group">총: %s Mozo</string>
+    <string name="mozo_notify_content_received_group">총: %s Mozo</string>
     <string name="mozo_notify_content_invited_group">총 가입한 친구 수 : %d</string>
 
     <string name="mozo_notify_warning_internet">인터넷 연결 문제 있다 😔</string>
     <string name="mozo_notify_warning_action">설정 바로가기 →</string>
 
-    <string name="mozo_notify_to_do_airdrop_nearby">근처에 있는 에어드롭에서 모조X를 받으세요 🎁</string>
-    <string name="mozo_notify_to_do_airdrop_nearby_action">모조X 제공하는 스토어 살펴보기 → </string>
+    <string name="mozo_notify_to_do_airdrop_nearby">근처에 있는 Airdrop에서 Mozo를 받으세요 🎁</string>
+    <string name="mozo_notify_to_do_airdrop_nearby_action">Mozo 있는 가장 가까이 스토어 보기 → </string>
     <string name="mozo_notify_to_do_airdrop_expire">에어드롭 이베트 곧 종료됩니다 ⏳</string>
     <string name="mozo_notify_to_do_airdrop_expire_action">새로운 이벤트 리뷰하고 만들기 → </string>
     <string name="mozo_notify_to_do_airdrop_empty">진행 계획 있는 에어드롭 이번트 없습니다 😐</string>
     <string name="mozo_notify_to_do_airdrop_empty_action">방문 손님 향상 시키기 위해 만들기 → </string>
-    <string name="mozo_notify_to_do_airdrop_out_of_mozo">에어드롭 이벤트에 모조X 거의다 배분했습니다 😞</string>
-    <string name="mozo_notify_to_do_airdrop_out_of_mozo_action">모조X 보기 와 추가하기 → </string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo">Airdrop 이벤트에 Mozo 거의다 배분했습니다 😞</string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo_action">Mozo 보기와 추가하기 → </string>
     <string name="mozo_notify_to_do_location">위치 기능 꺼져 있다  🗺</string>
     <string name="mozo_notify_to_do_location_action">더 좋은 체험을 위해 위치 기능 켜십시요 → </string>
     <string name="mozo_notify_to_do_bluetooth">블루투스 꺼져 있다 😔…</string>
-    <string name="mozo_notify_to_do_bluetooth_action">모조X 받기 위해 블루투스 기능 켜십시요 → </string>
+    <string name="mozo_notify_to_do_bluetooth_action">Mozo 받기 위해 블루투스 기능 켜십시요 → </string>
     <string name="mozo_notify_to_do_promo_nearby">매력적인 프로모션 근처 있다 🤩</string>
     <string name="mozo_notify_to_do_promo_nearby_action">좋아하는 프로모션 보기 → </string>
     <string name="mozo_notify_to_do_promo_expire">곧 종료된 프로모션 👌</string>
@@ -216,29 +216,29 @@
     <string name="mozo_notify_to_do_voucher_nearby_action">구매한 프로모션 사용하기 → </string>
     <string name="mozo_notify_to_do_voucher_expired">구매한 프로모션은 곧 만료 된다 😣</string>
     <string name="mozo_notify_to_do_voucher_expired_action">구매한 프로모션 사용하기 → </string>
-    <string name="mozo_notify_to_do_low_mozo_shopper">당신 지갑에 모조X 거의 다 떨어진다 😞</string>
-    <string name="mozo_notify_to_do_low_mozo_shopper_action">모조X 제공하는 스토어 살펴보기 → </string>
-    <string name="mozo_notify_to_do_low_mozo_retailer">당신 지갑에 모조X 거의 다 떨어진다 😞</string>
-    <string name="mozo_notify_to_do_low_mozo_retailer_action">모조X 더 구매하기 → </string>
+    <string name="mozo_notify_to_do_low_mozo_shopper">당신 지갑에 Mozo 거의 다 떨어진다 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_shopper_action">Mozo 있는 가장 가까이 스토어 보기 → </string>
+    <string name="mozo_notify_to_do_low_mozo_retailer">당신 지갑에 Mozo 거의 다 떨어진다 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_retailer_action">Mozo 더 구매하기 → </string>
     <string name="mozo_notify_to_do_unsecured">안전하지 않은 지갑 😱</string>
     <string name="mozo_notify_to_do_unsecured_action">당신의 PIN을 만들기 → </string>
 
     <string name="mozo_maintenance_title">죄송합니다. 유지 보수를 위해 대기 중입니다. 우리는 곧 돌아오겠습니다.</string>
     <string name="mozo_maintenance_tips_title">당신이 알고 계십니까?</string>
 
-    <string name="mozo_payment_request_title">MozoX 요청</string>
+    <string name="mozo_payment_request_title">Mozo 요청</string>
     <string name="mozo_payment_request_amount">수신 금액</string>
     <string name="mozo_payment_request_tab_list">요청한 리스트</string>
     <string name="mozo_payment_request_tab_create">요청 만들기</string>
-    <string name="mozo_payment_request_explain">MozoX를 수신 요청하는 방식으로 다른 사용자에게 MozoX 를 자신의 월렛으로 보내도록 요청할 수 있습니다.</string>
+    <string name="mozo_payment_request_explain">Mozo를 수신 요청하는 방식으로 다른 사용자에게 Mozo 를 자신의 월렛으로 보내도록 요청할 수 있습니다.</string>
     <string name="mozo_payment_request_btn_send">요청 보내기</string>
-    <string name="mozo_payment_request_btn_scan">MozoX를 보내도록 스캔하십시오</string>
+    <string name="mozo_payment_request_btn_scan">Mozo를 보내도록 스캔하십시오.</string>
     <string name="mozo_payment_request_text_scan_to_transfer">보낼 스캔:</string>
     <string name="mozo_payment_request_text_send_to">요청 보내기</string>
     <string name="mozo_payment_request_text_send_success">요청을 성공적으로 보냈습니다</string>
-    <string name="mozo_payment_request_text_sent">에게 MozoX를 보내달라고 요청을 보냈습니다:</string>
+    <string name="mozo_payment_request_text_sent">에게 Mozo를 보내달라고 요청을 보냈습니다:</string>
     <string name="mozo_payment_request_text_empty">요청한 리스트가 비어 있거나 연결 속도가 너무 느립니다.</string>
-    <string name="mozo_payment_request_text_empty_msg">친구들이 보낸 MozoX 요청은 여기에 표시됩니다.</string>
+    <string name="mozo_payment_request_text_empty_msg">친구들이 보낸 Mozo 요청은 여기에 표시됩니다.</string>
     <string name="mozo_payment_request_item_label_from">부터:</string>
     <string name="mozo_payment_request_item_label_amount">요청하기:</string>
 
@@ -248,11 +248,11 @@
     <string name="mozo_settings_menu_currencies">통화 단위</string>
     <string name="mozo_settings_menu_change_password">비밀번호 변경</string>
 
-    <string name="mozo_transfer_title">MozoX 보내기</string>
+    <string name="mozo_transfer_title">Mozo 보내기</string>
     <string name="mozo_transfer_confirmation">확인</string>
     <string name="mozo_transfer_receiver_address">수신자 주소</string>
     <string name="mozo_transfer_receiver_address_error">오류 : 수신자 주소가 유효하지 않습니다.</string>
-    <string name="mozo_transfer_receiver_address_hint">모조X 주소 또는 연락처 입력</string>
+    <string name="mozo_transfer_receiver_address_hint">Mozo 주소 또는 연락처 입력</string>
     <string name="mozo_transfer_amount_error_invalid_phone">오류 : 폰 번호 틀렸습니다</string>
     <string name="mozo_transfer_amount_error_invalid_country_code">오류 : 국가 코드가 잘못되었습니다.</string>
     <string name="mozo_transfer_amount">금액</string>
@@ -262,27 +262,27 @@
     <string name="mozo_transfer_amount_eth_not_enough">ETH 밸런스가 충분하지 않습니다.</string>
     <string name="mozo_transfer_amount_error_too_low">오류 : 금액이 너무 적습니다. 유효한 금액을 입력하십시오.</string>
     <string name="mozo_transfer_amount_error">오류 : 십진수로 값을 입력하십시오.</string>
-    <string name="mozo_transfer_spendable">가용 잔액: %s MozoX</string>
+    <string name="mozo_transfer_spendable">가용 잔액: %s Mozo</string>
     <string name="mozo_transfer_action_complete">액션 완료</string>
     <string name="mozo_transfer_send_complete">보내기 완료</string>
     <string name="mozo_transfer_send_complete_msg">방금 보낸 내용:</string>
-    <string name="mozo_transfer_contact_not_found">모조X 연락처 집에서 검색한 결과 없습니다</string>
+    <string name="mozo_transfer_contact_not_found">Mozo 연락처 집에서 검색한 결과 없습니다</string>
     <string name="mozo_transfer_contact_find_err">폰 번호만 검색 가능</string>
-    <string name="mozo_transfer_contact_find_in_system">모조X 시스템에 검색하기</string>
-    <string name="mozo_transfer_contact_find_no_address">이 폰 번호와 연동된 모조X 지갑 없습니다.</string>
-    <string name="mozo_transfer_err_send_to_own_wallet">본인에게 MozoX 보내기 불가능</string>
+    <string name="mozo_transfer_contact_find_in_system">Mozo 시스템에 검색 →</string>
+    <string name="mozo_transfer_contact_find_no_address">이 폰 번호와 연동된 Mozo 지갑 없습니다.</string>
+    <string name="mozo_transfer_err_send_to_own_wallet">본인에게 Mozo 보내기 불가능</string>
 
     <string name="mozo_transaction_detail_title">거래 세부 정보</string>
     <string name="mozo_transaction_detail_wallet_address">월렛 주소</string>
     <string name="mozo_transaction_view_button">거래 세부 정보를 보기</string>
     <string name="mozo_transaction_history_title">거래 내역</string>
-    <string name="mozo_transaction_history_offchain_text">MozoX Offchain 월렛</string>
+    <string name="mozo_transaction_history_offchain_text">Mozo 월렛</string>
     <string name="mozo_transaction_history_empty">거래 내역이 비어 있거나 연결 속도가 너무 느립니다.</string>
-    <string name="mozo_transaction_history_empty_msg">MozoX를 친구들에게 전송하거나 MozoX를 보내달라고 요청하십시오.</string>
+    <string name="mozo_transaction_history_empty_msg">Mozo를 친구들에게 전송하거나 Mozo를 보내달라고 요청하십시오.</string>
 
     <string name="mozo_todo_title">해야 할 일</string>
     <string name="mozo_todo_unsolved">%s 처리되지 않았습니다</string>
-    <string name="mozo_todo_unsolved_explain">모조X 앱을 문제 없이 사용하기 위해 아래에 나열된 것을 완료하세요.</string>
+    <string name="mozo_todo_unsolved_explain">Mozo 앱을 문제 없이 사용하기 위해 아래에 나열된 것을 완료하세요:</string>
 
     <string name="mozo_update_title">앱 사용을 위한 업데이트 필요합니다</string>
     <string name="mozo_update_message_content">앱의 새로운 버전 나왔습니다\n최신 버전으로 업데이트 하세요.</string>
@@ -291,9 +291,8 @@
     <string name="mozo_text_gender_male">남성</string>
     <string name="mozo_text_gender_female">여성</string>
 
-    <string name="mozo_view_balance_title">MozoX Offchain 밸런스</string>
-    <string name="mozo_view_address_title">귀하의 MozoX Offchain 월렛 주소</string>
-    <string name="mozo_view_text_mozo_off_chain">MozoX Offchain</string>
+    <string name="mozo_view_balance_title">Mozo 밸런스</string>
+    <string name="mozo_view_address_title">귀하의 Mozo 월렛 주소</string>
     <string name="mozo_view_text_address">주소:</string>
     <string name="mozo_view_text_hint">로드 중 …</string>
     <string name="mozo_view_text_to">까지</string>

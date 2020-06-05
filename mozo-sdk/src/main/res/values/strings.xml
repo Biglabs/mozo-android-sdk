@@ -16,19 +16,19 @@
     <string name="mozo_address_add_input_name_hint">Enter Contact Name</string>
     <string name="mozo_address_add_msg_saved">Address Saved</string>
     <string name="mozo_address_add_msg_error">This address already exists in your Address Book</string>
-    <string name="mozo_address_update_msg">Quickly add friends to MozoX Address Book from the phone book</string>
+    <string name="mozo_address_update_msg">Quickly add friends to Mozo Address Book from the phone book</string>
     <string name="mozo_address_import_title">Synchronize Contacts</string>
-    <string name="mozo_address_import_msg">Friends in your contact list will automatically be added to MozoX Address Book.</string>
+    <string name="mozo_address_import_msg">Friends in your contact list will automatically be added to Mozo Address Book.</string>
     <string name="mozo_address_import_last_updated">Last updated:</string>
-    <string name="mozo_address_require_permission">To synchronize your contacts with MozoX Address Book, any existing contact will be overwritten by MozoX Address Book.</string>
-    <string name="mozo_address_require_permission_title">MozoX would like to access your Contact Book</string>
-    <string name="mozo_address_require_permission_force">You must give MozoX permission to access the Contact Book first</string>
+    <string name="mozo_address_require_permission">To synchronize your contacts with Mozo Address Book, any existing contact will be overwritten by Mozo Address Book.</string>
+    <string name="mozo_address_require_permission_title">Mozo would like to access your Contact Book</string>
+    <string name="mozo_address_require_permission_force">You must give Mozo permission to access the Contact Book first</string>
     <string name="mozo_address_require_permission_force_title">Cannot access your Contact Book</string>
     <string name="mozo_address_msg_not_import">Not yet synchronized</string>
     <string name="mozo_address_msg_import_success">Synchronize Contacts successful!</string>
     <string name="mozo_address_msg_no_contact">Cannot synchronize, your Contact Book is empty.</string>
 
-    <string name="mozo_dialog_qr_code">Your MozoX Wallet Address</string>
+    <string name="mozo_dialog_qr_code">Your Mozo Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
     <string name="mozo_dialog_copied_msg">Copied to clipboard</string>
 
@@ -42,18 +42,18 @@
     <string name="mozo_dialog_error_system_time_msg_sub">Please update the date and time, then try again.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
-    <string name="mozo_button_login">Sign In to MozoX</string>
-    <string name="mozo_button_logout">Log Out MozoX</string>
+    <string name="mozo_button_login">Sign In to Mozo</string>
+    <string name="mozo_button_logout">Log Out Mozo</string>
     <string name="mozo_button_logout_short">Log Out</string>
-    <string name="mozo_button_send_mozo">Send MozoX</string>
+    <string name="mozo_button_send_mozo">Send Mozo</string>
     <string name="mozo_button_transfer">Transfer</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
     <string name="mozo_button_request">Request</string>
     <string name="mozo_button_offchain_wallet">Offchain Wallet</string>
     <string name="mozo_button_onchain_wallets">Onchain Wallets</string>
-    <string name="mozo_button_onchain_how_to_buy">How to add MozoX Onchain?</string>
+    <string name="mozo_button_onchain_how_to_buy">How to add MozoX?</string>
     <string name="mozo_button_onchain_tx_history">Go to <b>Etherscan.io</b></string>
-    <string name="mozo_button_onchain_convert">Convert to MozoX Offchain</string>
+    <string name="mozo_button_onchain_convert">Convert to Mozo</string>
     <string name="mozo_button_onchain_converting">Pending transaction…</string>
     <string name="mozo_button_hide_transaction">Hide transaction</string>
     <string name="mozo_button_back_on_chain">Back to Onchain Wallet</string>
@@ -102,8 +102,8 @@
     <string name="mozo_backup_success_content">Be sure to store your recovery phrase in a secure place. If this app is deleted, your wallet cannot be recovered without it.</string>
     <string name="mozo_backup_confirm_failed">Invalid Recovery Phrase</string>
 
-    <string name="mozo_convert_title">Convert To Offchain</string>
-    <string name="mozo_convert_amount_hint">Enter amount to convert MozoX Offchain</string>
+    <string name="mozo_convert_title">Convert To Mozo</string>
+    <string name="mozo_convert_amount_hint">Enter amount of MozoX to convert to Mozo</string>
     <string name="mozo_convert_gas_limit" translatable="false">Gas limit</string>
     <string name="mozo_convert_gas_price" translatable="false">Gas price</string>
     <string name="mozo_convert_slow">Slow</string>
@@ -118,33 +118,33 @@
     <string name="mozo_convert_submit_hide_explain">When you hide this screen, you will receive notify when transaction <b>complete</b> or <b>fail</b>.</string>
     <string name="mozo_convert_submit_waiting_title">Waiting for transaction status…</string>
     <string name="mozo_convert_submit_success_title">Convert Successful</string>
-    <string name="mozo_convert_submit_success_content">You have just converted MozoX from <b>Onchain</b> to <b>Offchain</b>:</string>
+    <string name="mozo_convert_submit_success_content">You have just converted <b>MozoX</b> to <b>Mozo</b>:</string>
     <string name="mozo_convert_submit_fail_title">Convert Failed</string>
-    <string name="mozo_convert_submit_fail_content">Cannot complete convert MozoX from <b>Onchain</b> to <b>Offchain</b>.\n\nPlease try again after some time.</string>
-    <string name="mozo_convert_on_in_off_detected">&lt;b>Detected %s MozoX Onchain&lt;/b>&lt;br/>Do you want to convert these MozoX Onchain in this wallet into MozoX Offchain?</string>
-    <string name="mozo_convert_on_in_off_converting">&lt;b>Converting MozoX Offchain…&lt;/b></string>
-    <string name="mozo_convert_on_in_off_warning">Your ETH balance is: &lt;b>%s&lt;/b>&lt;br/>You need to transfer &lt;b>%s ETH&lt;/b> into this MozoX Offchain Wallet address to pay TX Fee</string>
+    <string name="mozo_convert_submit_fail_content">Cannot convert from <b>MozoX</b> to <b>Mozo</b>.\n\nPlease try again later.</string>
+    <string name="mozo_convert_on_in_off_detected">&lt;b>Detected %s MozoX in Onchain wallet&lt;/b>&lt;br/>Do you want to convert these MozoX in this wallet into Mozo?</string>
+    <string name="mozo_convert_on_in_off_converting">&lt;b>Converting to Mozo…&lt;/b></string>
+    <string name="mozo_convert_on_in_off_warning">Your ETH balance is: &lt;b>%s&lt;/b>&lt;br/>You need to transfer &lt;b>%s ETH&lt;/b> into this Onchain Wallet address to pay TX Fee</string>
     <string name="mozo_convert_on_in_off_eth_balance">Your ETH balance is: &lt;b>%s&lt;/b></string>
 
-    <string name="mozo_create_wallet_title">Create MozoX Wallet</string>
+    <string name="mozo_create_wallet_title">Create Mozo Wallet</string>
     <string name="mozo_create_wallet_select_method">You want:</string>
-    <string name="mozo_create_wallet_have_another_account">Already have another MozoX account? %s</string>
+    <string name="mozo_create_wallet_have_another_account">Already have another Mozo account? %s</string>
     <string name="mozo_create_wallet_auto_section">Create Wallet Automatically</string>
     <string name="mozo_create_wallet_auto_explain">Your Recovery Phrase* and security PIN will be auto generated and remembered by our system.</string>
     <string name="mozo_create_wallet_manual_section">Create Wallet Manually</string>
     <string name="mozo_create_wallet_manual_explain">You will need to back up your Recovery Phrase and security PIN created by you.</string>
     <string name="mozo_create_wallet_hint_explain_title">*What are Recovery Phrase?</string>
     <string name="mozo_create_wallet_hint_explain">Recovery Phrase are random set of words used to secure your digital wallet. You should write down these words in order so that in the event you lose your digital wallet of forget your PIN, you can recover your wallet and/or reset your PIN.</string>
-    <string name="mozo_create_wallet_creating">Creating your MozoX wallet…</string>
+    <string name="mozo_create_wallet_creating">Creating your Mozo wallet…</string>
 
     <string name="mozo_pin_title">Create Security PIN</string>
     <string name="mozo_pin_title_restore">Restore Wallet</string>
     <string name="mozo_pin_title_verify">Security PIN Confirmation</string>
     <string name="mozo_pin_title_change">Change Security PIN</string>
     <string name="mozo_pin_sub_title">Enter Security PIN</string>
-    <string name="mozo_pin_sub_title_commom">Enter your Security PIN</string>
+    <string name="mozo_pin_sub_title_common">Enter your Security PIN</string>
     <string name="mozo_pin_sub_title_restore">Enter your Security PIN\nto restore wallet</string>
-    <string name="mozo_pin_sub_title_send">Enter your Security PIN\nto send MozoX</string>
+    <string name="mozo_pin_sub_title_send">Enter your Security PIN\nto send Mozo</string>
     <string name="mozo_pin_content">Security PIN must be 6 digit numbers</string>
     <string name="mozo_pin_confirm_sub_title">Confirm Security PIN</string>
     <string name="mozo_pin_confirm_content">Re-enter your PIN</string>
@@ -178,41 +178,41 @@
         <item quantity="one">Customer departed</item>
         <item quantity="other">Customers departed</item>
     </plurals>
-    <string name="mozo_notify_title_received">Received %s MozoX</string>
-    <string name="mozo_notify_title_sent">Sent %s MozoX</string>
-    <string name="mozo_notify_title_airdrop_bonus">You got %s Bonus MozoX</string>
+    <string name="mozo_notify_title_received">Received %s Mozo</string>
+    <string name="mozo_notify_title_sent">Sent %s Mozo</string>
+    <string name="mozo_notify_title_airdrop_bonus">You got %s Bonus Mozo</string>
     <string name="mozo_notify_title_promo_used">Promotion used</string>
     <string name="mozo_notify_title_promo_used_content">At %s</string>
     <string name="mozo_notify_title_promo_purchased">Shopper purchased promotion</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
-    <string name="mozo_notify_content_invited">%s joined MozoX</string>
+    <string name="mozo_notify_content_invited">%s joined Mozo</string>
     <string name="mozo_notify_content_airdrop_sign_up">For signing up with us</string>
     <string name="mozo_notify_content_airdrop_founder">For being verified store</string>
-    <string name="mozo_notify_content_airdrop_1k_retailer">For being a 1st 1,000 MozoX Retailers</string>
+    <string name="mozo_notify_content_airdrop_1k_retailer">For being a 1st 1,000 Mozo Retailers</string>
 
     <string name="mozo_notify_content_customer_join_group">Total Customer Arrived: %d</string>
     <string name="mozo_notify_content_customer_left_group">Total Customer Departed: %d</string>
-    <string name="mozo_notify_title_invited_group">Your friends have joined MozoX</string>
-    <string name="mozo_notify_content_sent_group">Total: %s MozoX</string>
-    <string name="mozo_notify_content_received_group">Total: %s MozoX</string>
+    <string name="mozo_notify_title_invited_group">Your friends have joined Mozo</string>
+    <string name="mozo_notify_content_sent_group">Total: %s Mozo</string>
+    <string name="mozo_notify_content_received_group">Total: %s Mozo</string>
     <string name="mozo_notify_content_invited_group">Total Friends have joined: %d</string>
 
     <string name="mozo_notify_warning_internet">Your internet connection has a problem 😔</string>
     <string name="mozo_notify_warning_action">Go to Settings →</string>
 
-    <string name="mozo_notify_to_do_airdrop_nearby">Get MozoX from nearby airdrop events 🎁</string>
-    <string name="mozo_notify_to_do_airdrop_nearby_action">Discover stores offering MozoX → </string>
+    <string name="mozo_notify_to_do_airdrop_nearby">Get Mozo from nearby Airdrop events 🎁</string>
+    <string name="mozo_notify_to_do_airdrop_nearby_action">Discover stores offering Mozo → </string>
     <string name="mozo_notify_to_do_airdrop_expire">Airdrop events that will expire soon ⏳</string>
     <string name="mozo_notify_to_do_airdrop_expire_action">Review and create a new airdrop event → </string>
     <string name="mozo_notify_to_do_airdrop_empty">No planned airdrop events 😐</string>
     <string name="mozo_notify_to_do_airdrop_empty_action">Create to increase foot traffic → </string>
-    <string name="mozo_notify_to_do_airdrop_out_of_mozo">Airdrop events is almost out of MozoX 😞</string>
-    <string name="mozo_notify_to_do_airdrop_out_of_mozo_action">Review and add more MozoX → </string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo">Airdrop events is almost out of Mozo 😞</string>
+    <string name="mozo_notify_to_do_airdrop_out_of_mozo_action">Review and add more Mozo → </string>
     <string name="mozo_notify_to_do_location">Location service is off 🗺</string>
     <string name="mozo_notify_to_do_location_action">Turn on for better experience → </string>
     <string name="mozo_notify_to_do_bluetooth">Bluetooth is tuned off 😔…</string>
-    <string name="mozo_notify_to_do_bluetooth_action">Turn on bluetooth to receive MozoX → </string>
+    <string name="mozo_notify_to_do_bluetooth_action">Turn on bluetooth to receive Mozo → </string>
     <string name="mozo_notify_to_do_promo_nearby">Interesting promotions nearby 🤩</string>
     <string name="mozo_notify_to_do_promo_nearby_action">Discover your bookmarked promotions → </string>
     <string name="mozo_notify_to_do_promo_expire">Promotions that will expire soon 👌</string>
@@ -223,32 +223,32 @@
     <string name="mozo_notify_to_do_voucher_nearby_action">Discover your purchased promotions → </string>
     <string name="mozo_notify_to_do_voucher_expired">Purchased promotions expiring soon 😣</string>
     <string name="mozo_notify_to_do_voucher_expired_action">Discover your purchased promotions → </string>
-    <string name="mozo_notify_to_do_low_mozo_shopper">Your wallet is almost out of MozoX 😞</string>
-    <string name="mozo_notify_to_do_low_mozo_shopper_action">Discover stores offering MozoX → </string>
-    <string name="mozo_notify_to_do_low_mozo_retailer">Your wallet is almost out of MozoX 😞</string>
-    <string name="mozo_notify_to_do_low_mozo_retailer_action">Buy more MozoX → </string>
+    <string name="mozo_notify_to_do_low_mozo_shopper">Your wallet is almost out of Mozo 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_shopper_action">Discover stores offering Mozo → </string>
+    <string name="mozo_notify_to_do_low_mozo_retailer">Your wallet is almost out of Mozo 😞</string>
+    <string name="mozo_notify_to_do_low_mozo_retailer_action">Buy more Mozo → </string>
     <string name="mozo_notify_to_do_unsecured">Unsecure wallet 😱</string>
     <string name="mozo_notify_to_do_unsecured_action">Set up your own PIN → </string>
 
     <string name="mozo_maintenance_title">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>
     <string name="mozo_maintenance_tips_title">Did you know?</string>
 
-    <string name="mozo_payment_request_title">Request MozoX</string>
+    <string name="mozo_payment_request_title">Request Mozo</string>
     <string name="mozo_payment_request_amount">Receive Amount</string>
     <string name="mozo_payment_request_tab_list">Requested List</string>
     <string name="mozo_payment_request_tab_create">Create Request</string>
-    <string name="mozo_payment_request_explain">You can ask another user to send MozoX to your wallet address by creating a Request.</string>
+    <string name="mozo_payment_request_explain">You can ask another user to send Mozo to your wallet address by creating a Request.</string>
     <string name="mozo_payment_request_btn_send">Send Request</string>
-    <string name="mozo_payment_request_btn_scan">Scan To Send MozoX</string>
+    <string name="mozo_payment_request_btn_scan">Scan To Send Mozo</string>
     <string name="mozo_payment_request_text_scan_to_transfer">Scan to send:</string>
     <string name="mozo_payment_request_text_send_to">Send request to</string>
     <string name="mozo_payment_request_text_send_success">Send Request Successful</string>
-    <string name="mozo_payment_request_text_sent">You sent Request MozoX to:</string>
+    <string name="mozo_payment_request_text_sent">You sent Request Mozo to:</string>
     <string name="mozo_payment_request_text_empty">Requested List is empty or your connection is too slow</string>
-    <string name="mozo_payment_request_text_empty_msg">Any MozoX Request from your friends will be displayed here.</string>
+    <string name="mozo_payment_request_text_empty_msg">Any Mozo Request from your friends will be displayed here.</string>
     <string name="mozo_payment_request_item_label_from">From:</string>
     <string name="mozo_payment_request_item_label_amount">Request:</string>
-    <string name="mozo_payment_request_item_amount" translatable="false">%s MozoX</string>
+    <string name="mozo_payment_request_item_amount" translatable="false">%s Mozo</string>
 
     <string name="mozo_settings_title">Settings</string>
     <string name="mozo_change_settings_title">Change Settings</string>
@@ -256,10 +256,10 @@
     <string name="mozo_settings_menu_currencies">Currencies</string>
     <string name="mozo_settings_menu_change_password">Change password</string>
 
-    <string name="mozo_transfer_title">Send MozoX</string>
+    <string name="mozo_transfer_title">Send Mozo</string>
     <string name="mozo_transfer_confirmation">Confirmation</string>
     <string name="mozo_transfer_receiver_address">Receiver Address</string>
-    <string name="mozo_transfer_receiver_address_hint">Enter MozoX address or phone number</string>
+    <string name="mozo_transfer_receiver_address_hint">Enter Mozo address or phone number</string>
     <string name="mozo_transfer_receiver_address_error">Error: The Receiver Address is not valid.</string>
     <string name="mozo_transfer_amount">Amount</string>
     <string name="mozo_transfer_amount_hint">Enter amount to send</string>
@@ -270,27 +270,27 @@
     <string name="mozo_transfer_amount_eth_not_enough">ETH balance is not enough.</string>
     <string name="mozo_transfer_amount_error_too_low">Error: Amount is too low, please input valid amount.</string>
     <string name="mozo_transfer_amount_error">Error: Please input value in decimal format.</string>
-    <string name="mozo_transfer_spendable">Spendable: %s MozoX</string>
+    <string name="mozo_transfer_spendable">Spendable: %s Mozo</string>
     <string name="mozo_transfer_action_complete">Action Complete</string>
     <string name="mozo_transfer_send_complete">Send Completed</string>
     <string name="mozo_transfer_send_complete_msg">You have just sent:</string>
-    <string name="mozo_transfer_contact_not_found">Can\'t find this contact in your MozoX Address Book</string>
-    <string name="mozo_transfer_contact_find_in_system">Find in MozoX System →</string>
+    <string name="mozo_transfer_contact_not_found">Can\'t find this contact in your Mozo Address Book</string>
+    <string name="mozo_transfer_contact_find_in_system">Find in Mozo System →</string>
     <string name="mozo_transfer_contact_find_err">We only support search by phone number.</string>
-    <string name="mozo_transfer_contact_find_no_address">This phone number does not belong to any MozoX Wallet Address</string>
-    <string name="mozo_transfer_err_send_to_own_wallet">Could not transfer MozoX to your own wallet</string>
+    <string name="mozo_transfer_contact_find_no_address">This phone number does not belong to any Mozo Wallet Address</string>
+    <string name="mozo_transfer_err_send_to_own_wallet">Could not send Mozo to your own wallet</string>
 
     <string name="mozo_transaction_detail_title">Transaction Detail</string>
     <string name="mozo_transaction_detail_wallet_address">Wallet Address</string>
     <string name="mozo_transaction_view_button">View Transaction Detail</string>
     <string name="mozo_transaction_history_title">Transaction History</string>
-    <string name="mozo_transaction_history_offchain_text">MozoX Offchain Wallet</string>
+    <string name="mozo_transaction_history_offchain_text">Mozo Wallet</string>
     <string name="mozo_transaction_history_empty">Transaction History is empty or your connection is too slow</string>
-    <string name="mozo_transaction_history_empty_msg">Transfer MozoX to your friends or request them to send you MozoX.</string>
+    <string name="mozo_transaction_history_empty_msg">Send Mozo to your friends or request them to send you Mozo.</string>
 
     <string name="mozo_todo_title">To Do List</string>
     <string name="mozo_todo_unsolved">Unsolve %s</string>
-    <string name="mozo_todo_unsolved_explain">Complete these actions to make sure there are no problems happen while using MozoX app:</string>
+    <string name="mozo_todo_unsolved_explain">Complete these actions to make sure there are no problems happen while using Mozo app:</string>
 
     <string name="mozo_update_title">Update required to use App</string>
     <string name="mozo_update_message_content">We’ve released a new version of the app\nPlease update the latest version.</string>
@@ -299,9 +299,9 @@
     <string name="mozo_text_gender_male">Male</string>
     <string name="mozo_text_gender_female">Female</string>
 
-    <string name="mozo_view_balance_title">MozoX Offchain Balance</string>
-    <string name="mozo_view_address_title">Your MozoX Offchain Wallet Address</string>
-    <string name="mozo_view_text_mozo_off_chain">MozoX Offchain</string>
+    <string name="mozo_view_balance_title">Mozo Balance</string>
+    <string name="mozo_view_address_title">Your Mozo Wallet Address</string>
+    <string name="mozo_view_text_mozo_off_chain" translatable="false">Mozo</string>
     <string name="mozo_view_text_address">Address:</string>
     <string name="mozo_view_text_hint">Loading…</string>
     <string name="mozo_view_text_to">To</string>

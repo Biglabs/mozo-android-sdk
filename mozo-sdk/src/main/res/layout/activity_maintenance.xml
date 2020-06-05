@@ -73,7 +73,7 @@
                 android:textColor="@color/mozo_color_title"
                 android:textSize="@dimen/mozo_text_size"
                 android:textStyle="bold"
-                tools:text="How do MozoX Tokens work as a rewards program?" />
+                tools:text="How do Mozo work as a rewards program?" />
 
             <TextView
                 android:id="@+id/maintenance_tips_content"

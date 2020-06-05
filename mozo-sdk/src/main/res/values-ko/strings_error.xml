@@ -6,10 +6,10 @@
 
     <string name="error_convert_status_pending">에테 리움 네트워크로 거래를 보낼 수 없거나 전송되었지만 실패했습니다. 데이터를 확인하고 다시 시도하십시오.</string>
 
-    <string name="error_fatal">MozoX 서버에 연결할 수 없습니다. 자세한 내용은 문의하십시오</string>
+    <string name="error_fatal">Mozo 서버에 연결할 수 없습니다. 자세한 내용은 문의하십시오.</string>
     <string name="error_required_login">기간이 만료되었습니다. 다시 로그인하십시오.</string>
 
-    <string name="error_tx_invalid_address">이 지갑 주소는 존재하지 않습니다. 등록 된 MozoX 지갑 주소만 지원합니다.</string>
+    <string name="error_tx_invalid_address">이 지갑 주소는 존재하지 않습니다. 등록 된 Mozo 지갑 주소만 지원합니다.</string>
 
     <string name="error_wallet_different">월렛 계정이 업데이트되었지만 사용중인 장치와 동기화되지 않았습니다. 시작하기 전에 월렛을 복구하십시오.</string>
     <string name="error_wallet_busy">보류중인 거래가 있습니다. 다른 거래를 보낼 수 없습니다. 약 3 분 정도 기다렸다가 나중에 다시 시도하십시오.</string>
