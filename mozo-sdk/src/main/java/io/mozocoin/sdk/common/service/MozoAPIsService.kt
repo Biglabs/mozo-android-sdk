@@ -506,12 +506,12 @@ internal class MozoAPIsService private constructor() {
     }
 
     private fun <T> shouldHandleException(call: Call<T>): Boolean {
-        val path = call.request().url().encodedPath()
+        val path = call.request().url.encodedPath
         return path.endsWith("/user-profile", true)
     }
 
     private fun <T> shouldHandleMaintenance(call: Call<T>): Boolean {
-        val path = call.request().url().encodedPath()
+        val path = call.request().url.encodedPath
         return when {
             path.endsWith("system-status", true) -> false
             else -> true
@@ -529,7 +529,7 @@ internal class MozoAPIsService private constructor() {
                     val request = original.newBuilder()
                             .header("Authorization", "Bearer $accessToken")
                             .header("Content-Type", "application/json")
-                            .method(original.method(), original.body())
+                            .method(original.method, original.body)
                             .build()
                     it.proceed(request)
                 }
