@@ -39,7 +39,7 @@ class Constant {
         internal const val DOMAIN_API_PRODUCTION = "gateway.mozocoin.io"
 
         internal const val DOMAIN_AUTH_DEV = "dev.keycloak.mozocoin.io"
-        internal const val DOMAIN_AUTH_STAGING = "staging.keycloak.mozocoin.io"
+        internal const val DOMAIN_AUTH_STAGING = "staging.login.mozocoin.io"
         internal const val DOMAIN_AUTH_PRODUCTION = "login.mozocoin.io"
 
         internal const val DOMAIN_SOCKET_DEV = "dev.noti.mozocoin.io"
