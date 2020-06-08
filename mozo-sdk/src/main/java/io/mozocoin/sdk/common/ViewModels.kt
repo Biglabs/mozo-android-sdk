@@ -93,7 +93,7 @@ internal object ViewModels {
         fun fetchExchangeRate(context: Context) {
             updateBalanceAndRate()
 
-            MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().language, { data, _ ->
+            MozoAPIsService.getInstance().getExchangeRate(context, Locale.getDefault().toLanguageTag(), { data, _ ->
                 if (data != null) {
                     exchangeRateLiveData.value = data
                     if (data.token?.currency == Constant.DEFAULT_CURRENCY) {

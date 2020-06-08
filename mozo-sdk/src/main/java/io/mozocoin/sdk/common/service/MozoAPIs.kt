@@ -66,7 +66,7 @@ internal interface MozoAPIs {
     @GET("${MozoAPIsService.APIS_STORE}/solo/contract/solo-token/balance/{address}")
     fun getBalance(@Path("address") address: String): Call<Base<BalanceInfo>>
 
-    @GET("${MozoAPIsService.APIS_SOLOMON}/exchange/rateETHAndToken")
+    @GET("${MozoAPIsService.APIS_SOLOMON}/exchange/rateETHAndToken/v1")
     fun getExchangeRate(@Query("locale") locale: String): Call<Base<ExchangeRateData>>
 
     @POST("${MozoAPIsService.APIS_STORE}/solo/contract/solo-token/transfer")

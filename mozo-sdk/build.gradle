@@ -76,11 +76,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     // Crypto
-    compileOnly("org.bitcoinj:bitcoinj-core:0.15.8") {
-        transitive = true
-        exclude group: 'org.bouncycastle', module: 'bcprov-jdk15to18'
-    }
-    compileOnly 'org.cryptonode.jncryptor:jncryptor:1.2.0'
+    implementation 'org.bitcoinj:bitcoinj-core:0.15.3'
+    implementation 'org.cryptonode.jncryptor:jncryptor:1.2.0'
     implementation 'org.web3j:core:4.6.0-android'
 
     // Other
