@@ -1,41 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tips_retailer_question">
-        <item>Đồng MozoX là gì? Nó được dùng để làm gì?</item>
-        <item>Làm thế nào để thu hút khách hàng bằng MozoX?</item>
-        <item>Sự khác biệt giữa MozoX và các biện pháp truyền thông quảng cáo khác?</item>
-        <item>MozoX hoạt động ra sao để được xem là hệ thống điểm thưởng dùng công nghệ blockchain?</item>
+        <item>Điểm thưởng Mozo là gì? Nó được dùng để làm gì?</item>
+        <item>Mozo hoạt động ra sao để được xem là hệ thống điểm thưởng dùng công nghệ blockchain?</item>
+        <item>Làm thế nào để mua điểm thưởng Mozo?</item>
+        <item>Làm thế nào để thu hút khách hàng bằng Mozo?</item>
+        <item>Sự khác biệt giữa Mozo và các biện pháp truyền thông quảng cáo khác?</item>
         <item>Hashtag là gì? Tại sao phải chọn hashtag khi thiết lập thông tin cửa hàng?</item>
-        <item>Tôi có thể thu hồi lại MozoX sau khi đã thiết lập sự kiện airdrop không?</item>
+        <item>Tôi có thể thay đổi số điện thoại của tài khoản đang dùng để quản lý cửa hàng hay không?</item>
+        <item>Số lượng Mozo được airdrop bao nhiêu là phù hợp?</item>
+        <item>Tôi có thể thu hồi lại Mozo sau khi đã thiết lập sự kiện airdrop không?</item>
+        <item>Sự kiện Airdrop sau khi đã tạo có thể xóa, sửa được không?</item>
+        <item>Có bao nhiêu sự kiện Airdrop có thể được tạo?</item>
         <item>Làm thế nào để chia sẻ quyền quản lý cho những người quản lý khác tại cửa hàng của tôi?</item>
-        <item>Khi nào thì MozoX được airdrop cho khách hàng của tôi?</item>
+        <item>Khi nào thì Mozo được airdrop cho khách hàng của tôi?</item>
+        <item>Khuyến mãi trong hệ thống Mozo là gì?</item>
+        <item>Khi bị mất điện thoại, làm sao để lấy lại tài khoản Mozo?</item>
+        <item>Khi cần hỗ trợ tôi sẽ phải liên hệ như thế nào?</item>
+        <item>Mã PIN là gì, có khác với mật khẩu đăng nhập hay không?</item>
+        <item>Làm sao để mua Mozo?</item>
     </string-array>
 
     <string-array name="tips_retailer_answer">
-        <item>MozoX là điểm thưởng dùng công nghệ blockchain mà người bán hàng có thể lì xì cho khách hàng khi họ đến cửa hàng. Người nhận được lì xì có thể dùng nó để được hưởng khuyến mãi do người bán hàng tạo ra.</item>
+        <item>Mozo là điểm thưởng dùng công nghệ blockchain mà người bán hàng có thể lì xì cho khách hàng khi họ đến cửa hàng. Người nhận được lì xì có thể dùng nó để được hưởng khuyến mãi do người bán hàng tạo ra.</item>
+        <item>Khách hàng sẽ phải tích lũy đủ điểm thưởng Mozo để có thể quy đổi các chương trình hậu mãi, giảm giá và khuyến mãi trong các chương trình dành riêng cho khách hàng thân thiết. Do đó họ có động lực để đi đến những nơi đã được thiết lập chương trình lì xì bởi người bán hàng và nhà điều hành dịch vụ. Ứng dụng công nghệ mới blockchain, Mozo bảo bảo tính an toàn hơn hẳn tất cả các ứng dụng cổ điển trong lĩnh vực này. Ngoài ra, kết hợp với công nghệ định vị, Mozo bảo đảm lượt khách đến đúng vị trí mong muốn.&lt;br/>
+            Người bán hàng và nhà điều hành dịch vụ sẽ dùng ứng dụng Mozo Kinh doanh để thiết lập các chương trình lì xì gắn với beacon, loại thiết bị định vị bảo đảm khách hàng phải đến nơi cần đến. Công cụ này giúp họ có thể làm chủ được cách bố trí lượt khách. Hơn nữa, họ có thể thiết lập các chương trình hậu mãi, giảm giá và khuyến mãi với ứng dụng Mozo Kinh doanh.&lt;br/>
+            Khách hàng sẽ dùng ứng dụng Ví Mozo để duyệt, tìm kiếm và khám phá tất cả các chương trình lì xì, hậu mãi, giảm giá và khuyến mãi được thiết lập bởi người bán hàng và nhà điều hành dịch vụ.&lt;br/>
+            Ứng dụng Ví Mozo và Mozo Kinh doanh còn hỗ trợ việc thực hiện các giao dịch hậu mãi, giảm giá và khuyến mãi một cách hiệu quả.
+        </item>
+        <item>Người bán hàng một khi trở thành thành viên của Mozo sẽ được nhận một số điểm thưởng để dùng thử. Sau khi dùng hết, người bán hàng có thể mua trực tiếp với Mozo.</item>
         <item>Khách hàng sẽ dùng điểm thưởng đổi khuyến mãi do người bán hàng tạo ra nên có động lực đi đến cửa hàng để thu thập điểm thưởng.</item>
-        <item>Với MozoX, bạn chỉ lì xì cho khách hàng thực sự đến cửa hàng của bạn nên tỉ lệ chuyển đổi là 1:1 trong mối tương quan giữa số tiền bỏ ra và lượt khách đến cửa hàng của bạn. Các kênh quảng cáo truyền thống chỉ bảo đảm người dùng bấm xem thông tin trực tuyến của bạn chứ không chắc chắn người dùng sẽ đến cửa hàng.</item>
-        <item>Khách hàng sẽ phải tích lũy đủ điểm thưởng MozoX để có thể quy đổi các chương trình hậu mãi, giảm giá và khuyến mãi trong các chương trình dành riêng cho khách hàng thân thiết. Do đó họ có động lực để đi đến những nơi đã được thiết lập chương trình lì xì bởi người bán hàng và nhà điều hành dịch vụ. Ứng dụng công nghệ mới blockchain, MozoX bảo bảo tính an toàn hơn hẳn tất cả các ứng dụng cổ điển trong lĩnh vực này. Ngoài ra, kết hợp với công nghệ định vị, MozoX bảo đảm lượt khách đến đúng vị trí mong muốn.\nNgười bán hàng và nhà điều hành dịch vụ sẽ dùng MozoX Retailer App để thiết lập các chương trình lì xì gắn với beacon, loại thiết bị định vị bảo đảm khách hàng phải đến nơi cần đến. Công cụ này giúp họ có thể làm chủ được cách bố trí lượt khách. Hơn nữa, họ có thể thiết lập các chương trình hậu mãi, giảm giá và khuyến mãi với MozoX Retailer App.\nKhách hàng sẽ dùng MozoX App để duyệt, tìm kiếm và khám phá tất cả các chương trình lì xì, hậu mãi, giảm giá và khuyến mãi được thiết lập bởi người bán hàng và nhà điều hành dịch vụ.\nCác MozoX App còn hỗ trợ việc thực hiện các giao dịch hậu mãi, giảm giá và khuyến mãi một cách hiệu quả.</item>
-        <item>Hashtag là một cụm từ bắt đầu bằng dấu #. Người dùng MozoX sẽ khám phá cửa hàng của bạn bằng những từ khóa là hashtag mà bạn đã thiết lập.</item>
-        <item>Bạn không thể lấy lại MozoX khi trạng thái của sự kiện Airdrop là &quot;Hẹn giờ&quot;, &quot;Đang chạy&quot; hoặc &quot;Hết MozoX&quot;. Nhưng bạn có thể rút MozoX khi trạng thái của sự kiện Airdrop là &quot;kết thúc&quot; và sự kiện airdrop không sử dụng hết MozoX</item>
-        <item>Bạn có thể chia sẻ quyền quản lý bằng cách thêm họ như tài khoản phụ. Tài khoản phụ sẽ có quyền tương tự như tài khoản chính, ngoại trừ việc không thể chỉnh sửa thông tin store, beacon và tài khoản phụ. Lưu ý rằng ví của tài khoản phụ khi mới tạo ra là 0 MozoX. Để ví của tài khoản phụ có tiền, bạn có thể chuyển MozoX cho họ</item>
+        <item>Với Mozo, bạn chỉ lì xì cho khách hàng thực sự đến cửa hàng của bạn nên tỉ lệ chuyển đổi là 1:1 trong mối tương quan giữa số tiền bỏ ra và lượt khách đến cửa hàng của bạn. Các kênh quảng cáo truyền thống chỉ bảo đảm người dùng bấm xem thông tin trực tuyến của bạn chứ không chắc chắn người dùng sẽ đến cửa hàng.</item>
+        <item>Hashtag là một cụm từ bắt đầu bằng dấu #. Người dùng Mozo sẽ khám phá cửa hàng của bạn bằng những từ khóa là hashtag mà bạn đã thiết lập.</item>
+        <item>Bạn không thể thay đổi số điện thoại mà bạn đã đăng ký với chúng tôi. Trong hệ thống Mozo, chúng tôi sử dụng số điện thoại để xác định và đó là khóa riêng. Do đó số điện thoại rất quan trọng. Nếu bạn muốn thay đổi số điện thoại, bạn phải liên hệ với nhóm Mozo.</item>
+        <item>Chúng tôi đề nghị bạn nên tặng cho mỗi khách 10,000 Mozo.</item>
+        <item>Bạn không thể lấy lại Mozo khi trạng thái của sự kiện Airdrop là \"Hẹn giờ\", \"Đang chạy\" hoặc \"Hết Mozo\". Nhưng bạn có thể rút Mozo khi trạng thái của sự kiện Airdrop là \"Kết thúc\" và sự kiện airdrop không sử dụng hết Mozo.</item>
+        <item>Một khi đã thiết lập, bạn không thể thay đổi.</item>
+        <item>Bạn có thể tạo nhiều sự kiện miễn số dư trong ví của bạn đủ.</item>
+        <item>Bạn có thể chia sẻ quyền quản lý bằng cách thêm họ như tài khoản phụ. Tài khoản phụ sẽ có quyền tương tự như tài khoản chính, ngoại trừ việc không thể chỉnh sửa thông tin tài khoản phụ. Lưu ý rằng ví của tài khoản phụ khi mới tạo ra là 0 Mozo. Để ví của tài khoản phụ có tiền, bạn có thể chuyển Mozo cho họ</item>
         <item>Nếu họ bước vào vùng phát sóng của beacon trong cửa hàng khi sự kiện đang diễn ra thì họ sẽ nhận được airdrop</item>
+        <item>Khuyến mãi thu hút khách hàng bằng cách cho phép khách hàng trả Mozo để được hưởng giảm giá từ sản phẩm và dịch vụ của bạn. (Ví dụ: Trả 1.000 Mozo để được giảm giá 20% trên một sản phẩm bạn lựa chọn)</item>
+        <item>Trước tiên bạn cần lấy lại số điện thoại đã dùng để đăng ký tài khoản Mozo, hãy liên lạc với nhà mạng để làm điều này. Sau khi đã lấy lại được số điện thoại cũ, bạn có thể đăng nhập nó trên chiếc điện thoại mới của bạn, đồng thời bạn nên đổi mật khẩu để ngăn quyền truy cập trên chiếc điện thoại bị mất bằng cách chọn Quên Mật Khẩu? tại màn hình Đăng Nhập.</item>
+        <item>Xin vui lòng liên lạc với đội ngũ hỗ trợ Mozo theo các kênh sau:&lt;br/>
+            &lt;a href=\"https://t.me/MozoXRetailerApp\">Telegram&lt;/a>&lt;br/>
+            &lt;a href=\"https://open.kakao.com/o/g6tvra5\">Kakao Talk&lt;/a>&lt;br/>
+            &lt;a href=\"https://zalo.me/428563224447178063\">Zalo&lt;/a>&lt;br/>
+            &lt;a href=\"https://www.facebook.com/mozocoin.io\">Facebook&lt;/a>&lt;br/>
+            &lt;a href=\"https://twitter.com/MozoToken\">Twitter&lt;/a>&lt;br/>
+            &lt;br/>
+            Hoặc gởi email đến &lt;a href=\"mailto:support@mozocoin.io\">support@mozocoin.io&lt;/a>
+        </item>
+        <item>PIN là một dạng mã số cá nhân. PIN tương tự như mật khẩu dùng để bảo vệ tài sản của bạn khỏi những truy cập không được phép.&lt;/a>
+            Trong Mozo, mật khẩu dùng để bảo vệ tài khoản của bạn (số điện thoại và được yêu cầu nhập khi bạn đăng nhập). PIN dùng để bảo vệ Ví của bạn. Bạn sẽ bị yêu cầu nhập PIN mỗi khi thực hiện lệnh chuyển Mozo.
+        </item>
+        <item>Bạn có thể MUA Mozo tại &lt;a href=\"https://mozocoin.io/retailer-portal/buy-mozo-by-crypto\">https://mozocoin.io/retailer-portal/buy-mozo-by-crypto&lt;/a>&lt;br/>
+            &lt;br/>
+            Bạn phải chắc mình đã có \"Ví\" trên ứng dụng Mozo Kinh doanh hoặc Ví Mozo trước khi MUA.&lt;br/>
+            Nếu bạn chưa có \"Ví\", xin vui lòng theo hướng dẫn tại:&lt;br/>
+            - &lt;a href=\"https://mozocoin.io/retailer/help-center#how-to-sign-up-on-mozox-retailer-app\">Ứng dụng Mozo Kinh doanh&lt;/a>&lt;br/>
+            - &lt;a href=\"https://mozocoin.io#home-faq-shopper-6\">Ứng dụng Ví Mozo&lt;/a>&lt;br/>
+            &lt;br/>
+            Sau khi đăng nhập hoàn tất, quay trở lại để mua.&lt;br/>
+            &lt;br/>
+            Chọn ETH hoặc BTC.&lt;br/>
+            Nhập số Mozo muốn mua (hay số ETH/BTC mà bạn muốn chuyển đổi thành Mozo)&lt;br/>
+            Bấm \"Mua\"&lt;br/>
+            Hệ thống sẽ cung cấp cho bạn một địa chỉ dành riêng. Ban sẽ dùng bất kỳ phần mềm Ví nào để chuyển ETH/BTC vào địa chỉ này.&lt;br/>
+            &lt;br/>
+            Lưu ý:&lt;br/>
+            - Địa chỉ dành riêng chỉ có giá trị trong vòng 24h và được sử dụng để chuyển 1 lần. Sau khi thực hiện xong, bạn có thể xin một địa chỉ khác. Nếu bạn cố tình thực hiện nhiều hơn, bạn sẽ bị mất mà không có cách nào để phục hồi được.&lt;br/>
+            - Bạn nên xin một địa chỉ để dành nếu thực sự muốn mua. Nếu bạn xin địa chỉ để dành mà không thực hiện chuyển ETH/BTC, hệ thống có thể khóa tài khoản của bạn trong vòng một tuần trước khi xin địa chỉ dành riêng khác.&lt;br/>
+        </item>
     </string-array>
 
 
     <string-array name="tips_shopper_question">
-        <item>Đồng MozoX là gì? Nó được dùng để làm gì?</item>
-        <item>Làm sao để nhận được MozoX?</item>
-        <item>Làm thế nào để tặng MozoX cho bạn bè của tôi ?</item>
-        <item>Cách bao lâu tôi có thể nhận tiếp MozoX từ cùng một cửa hàng khi tôi đến?</item>
-        <item>Tại sao tôi phải bật Bluetooth để nhận MozoX từ sự kiện Airdrop</item>
+        <item>Điểm thưởng Mozo là gì? Nó được dùng để làm gì?</item>
+        <item>Làm sao để nhận được Mozo?</item>
+        <item>Làm thế nào để tặng Mozo cho bạn bè của tôi ?</item>
+        <item>Cách bao lâu tôi có thể nhận tiếp Mozo từ cùng một cửa hàng khi tôi đến?</item>
+        <item>Tại sao tôi phải bật Bluetooth để nhận Mozo từ sự kiện Airdrop</item>
+        <item>Khi bị mất điện thoại, làm sao để lấy lại tài khoản Mozo?</item>
+        <item>Khi cần hỗ trợ tôi sẽ phải liên hệ như thế nào?</item>
+        <item>Mã PIN là gì, có khác với mật khẩu đăng nhập hay không?</item>
     </string-array>
 
     <string-array name="tips_shopper_answer">
-        <item>MozoX là điểm thưởng dùng công nghệ blockchain mà người bán hàng có thể lì xì cho khách hàng khi họ đến cửa hàng. Người nhận được lì xì có thể dùng nó để được hưởng khuyến mãi do người bán hàng tạo ra.</item>
-        <item>MozoX App cung cấp khá nhiều công cụ để bạn khám phá những địa điểm có lì xì như bản đồ, danh sách, tìm kiếm… Chọn thời gian thích hợp và đi đến cửa hàng. Nhớ bật bluetooth để nhận MozoX.</item>
-        <item>Sử dụng tính năng &quot;Gởi&quot; trên màn hình &quot;Ví&quot; của bạn và gởi MozoX tới địa chỉ ví người bạn muốn gởi.\nMẹo: \n\t- Nếu bạn của bạn ở bên cạnh, quét mã QR trên màn hình &quot;Ví&quot; của họ để chuyển. Nhớ lưu vào danh bạ để sau này sử dụng.</item>
-        <item>Mỗi cửa hàng sẽ thiết lập &quot;Tần suất Airdrop&quot; cho mỗi sự kiện Airdrop mà họ tạo. Chỉ cần bạn đến sau khoảng thời gian này, bạn có thể nhận MozoX lần nữa. Thông thường sẽ là mỗi lần một ngày.</item>
-        <item>Mỗi cửa hàng đều gắn một thiết bị cảm biến beacon. Khi bạn đến cửa hàng và bật Bluetooth, thiết bị này sẽ nhận dạng và hệ thống sẽ tự động Airdrop MozoX cho bạn.</item>
+        <item>Mozo là điểm thưởng dùng công nghệ blockchain mà người bán hàng có thể lì xì cho khách hàng khi họ đến cửa hàng. Người nhận được lì xì có thể dùng nó để được hưởng khuyến mãi do người bán hàng tạo ra.</item>
+        <item>Ứng dụng Ví Mozo cung cấp khá nhiều công cụ để bạn khám phá những địa điểm có lì xì như bản đồ, danh sách, tìm kiếm… Chọn thời gian thích hợp và đi đến cửa hàng. Nhớ bật bluetooth để nhận Mozo.</item>
+        <item>Sử dụng tính năng \"Gởi\" trên màn hình \"Ví\" của bạn và gởi Mozo tới địa chỉ ví người bạn muốn gởi.&lt;br/>
+            Bạn có thể chuyển cho bạn bè bắng cách dùng số điện thoại.&lt;br/>
+            Mẹo:&lt;br/>
+            - Nếu bạn của bạn ở bên cạnh, quét mã QR trên màn hình \"Ví\" của họ để chuyển. Nhớ lưu vào danh bạ để sau này sử dụng.
+        </item>
+        <item>Mỗi cửa hàng sẽ thiết lập "Tần suất Airdrop" cho mỗi sự kiện Airdrop mà họ tạo. Chỉ cần bạn đến sau khoảng thời gian này, bạn có thể nhận Mozo lần nữa. Thông thường sẽ là mỗi lần một ngày.</item>
+        <item>Mỗi cửa hàng đều gắn một thiết bị cảm biến beacon. Khi bạn đến cửa hàng và bật Bluetooth, thiết bị này sẽ nhận dạng và hệ thống sẽ tự động Airdrop Mozo cho bạn.</item>
+        <item>Trước tiên bạn cần lấy lại số điện thoại đã dùng để đăng ký tài khoản Mozo, hãy liên lạc với nhà mạng để làm điều này. Sau khi đã lấy lại được số điện thoại cũ, bạn có thể đăng nhập nó trên chiếc điện thoại mới của bạn, đồng thời bạn nên đổi mật khẩu để ngăn quyền truy cập trên chiếc điện thoại bị mất bằng cách chọn Quên Mật Khẩu? tại màn hình Đăng Nhập.</item>
+        <item>Xin vui lòng liên lạc với đội ngũ hỗ trợ Mozo theo các kênh sau:&lt;br/>
+            &lt;a href=\"https://t.me/MozoXRetailerApp\">Telegram&lt;/a>&lt;br/>
+            &lt;a href=\"https://open.kakao.com/o/g6tvra5\">Kakao Talk&lt;/a>&lt;br/>
+            &lt;a href=\"https://zalo.me/428563224447178063\">Zalo&lt;/a>&lt;br/>
+            &lt;a href=\"https://www.facebook.com/mozocoin.io\">Facebook&lt;/a>&lt;br/>
+            &lt;a href=\"https://twitter.com/MozoToken\">Twitter&lt;/a>&lt;br/>
+            &lt;br/>
+            Hoặc gởi email đến &lt;a href=\"mailto:support@mozocoin.io\">support@mozocoin.io&lt;/a>
+        </item>
+        <item>PIN là một dạng mã số cá nhân. PIN tương tự như mật khẩu dùng để bảo vệ tài sản của bạn khỏi những truy cập không được phép.&lt;/a>
+            Trong Mozo, mật khẩu dùng để bảo vệ tài khoản của bạn (số điện thoại và được yêu cầu nhập khi bạn đăng nhập). PIN dùng để bảo vệ Ví của bạn. Bạn sẽ bị yêu cầu nhập PIN mỗi khi thực hiện lệnh chuyển Mozo.
+        </item>
     </string-array>
 </resources>

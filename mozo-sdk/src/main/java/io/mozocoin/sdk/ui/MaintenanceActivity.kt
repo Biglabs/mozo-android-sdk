@@ -1,6 +1,8 @@
 package io.mozocoin.sdk.ui
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
+import androidx.core.text.HtmlCompat
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
@@ -8,6 +10,7 @@ import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.openTab
+import io.mozocoin.sdk.utils.safe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -33,6 +36,7 @@ internal class MaintenanceActivity : BaseActivity() {
         button_read_more?.click {
             openTab(referenceUrl ?: return@click)
         }
+        maintenance_tips_content?.movementMethod = LinkMovementMethod.getInstance()
 
         randomTips()
     }
@@ -74,7 +78,7 @@ internal class MaintenanceActivity : BaseActivity() {
         val index = Random.nextInt(tipsQuestion?.size ?: 0)
 
         maintenance_tips_title?.text = tipsQuestion?.getOrNull(index)
-        maintenance_tips_content?.text = tipsAnswer?.getOrNull(index)
+        maintenance_tips_content?.text = HtmlCompat.fromHtml(tipsAnswer?.getOrNull(index).safe(), HtmlCompat.FROM_HTML_MODE_COMPACT)
         referenceUrl = "https://${Support.domainHomePage()}/${tipsUrls?.getOrNull(index) ?: ""}"
     }
 
