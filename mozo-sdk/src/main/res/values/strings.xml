@@ -235,6 +235,7 @@
 
     <string name="mozo_payment_request_title">Request Mozo</string>
     <string name="mozo_payment_request_amount">Receive Amount</string>
+    <string name="mozo_payment_request_amount_hint">Enter amount to receive</string>
     <string name="mozo_payment_request_tab_list">Requested List</string>
     <string name="mozo_payment_request_tab_create">Create Request</string>
     <string name="mozo_payment_request_explain">You can ask another user to send Mozo to your wallet address by creating a Request.</string>

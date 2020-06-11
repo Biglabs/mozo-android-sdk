@@ -228,6 +228,7 @@
 
     <string name="mozo_payment_request_title">Yêu cầu Mozo</string>
     <string name="mozo_payment_request_amount">Tổng nhận</string>
+    <string name="mozo_payment_request_amount_hint">Nhập số Mozo cần nhận</string>
     <string name="mozo_payment_request_tab_list">Danh sách được yêu cầu</string>
     <string name="mozo_payment_request_tab_create">Tạo yêu cầu</string>
     <string name="mozo_payment_request_explain">Bạn có thể yêu cầu một người dùng khác gửi Mozo đến ví của mình bằng việc tạo một yêu cầu nhận Mozo.</string>
@@ -254,7 +255,7 @@
     <string name="mozo_transfer_receiver_address_hint">Nhập địa chỉ ví Mozo hoặc số điện thoại</string>
     <string name="mozo_transfer_receiver_address_error">Lỗi: Địa chỉ người nhận không hợp lệ</string>
     <string name="mozo_transfer_amount">Số lượng</string>
-    <string name="mozo_transfer_amount_hint">Nhập số MozoX cần gửi</string>
+    <string name="mozo_transfer_amount_hint">Nhập số Mozo cần gửi</string>
     <string name="mozo_transfer_amount_error_invalid_phone">Lỗi: Số điện thoại không hợp lệ</string>
     <string name="mozo_transfer_amount_error_invalid_country_code">Lỗi: Mã vùng không hợp lệ.</string>
     <string name="mozo_transfer_amount_error_not_enough">Lỗi: Số dư khả dụng không đủ</string>
