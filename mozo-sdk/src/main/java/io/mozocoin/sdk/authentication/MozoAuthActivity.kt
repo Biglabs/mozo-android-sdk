@@ -127,7 +127,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                     .setScope("openid profile phone")
                     .setAdditionalParameters(
                             mutableMapOf(
-                                    "kc_locale" to locale.toLanguageTag(),
+                                    "kc_locale" to locale.language,
                                     "application_type" to "native"
                             )
                     )
@@ -143,7 +143,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                     .setScope("openid profile phone")
                     .setAdditionalParameters(
                             mutableMapOf(
-                                    "kc_locale" to locale.toLanguageTag(),
+                                    "kc_locale" to locale.language,
                                     "application_type" to "native"
                             )
                     )
@@ -167,7 +167,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                     .setScope("openid profile phone")
                     .setAdditionalParameters(
                             mutableMapOf(
-                                    "kc_locale" to locale.toLanguageTag(),
+                                    "kc_locale" to locale.language,
                                     "application_type" to "native"
                             )
                     )
