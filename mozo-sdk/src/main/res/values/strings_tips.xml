@@ -141,5 +141,5 @@
         <item>help-center?section=faq-retailer#retailer-faq-support-4</item>
     </string-array>
 
-    <string name="tips_buy_on_chain" translatable="false">help-center?section=faq-partner#home-faq-how-to-buy-mozox-onchain-on-exchange</string>
+    <string name="tips_buy_on_chain" translatable="false">help-center?section=faq-contributer#home-faq-how-to-buy-mozox-onchain-on-exchange</string>
 </resources>
