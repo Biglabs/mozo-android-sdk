@@ -28,7 +28,6 @@
     <string name="mozo_address_msg_import_success">연락처 동기화 성공</string>
     <string name="mozo_address_msg_no_contact">연락처 집 정보 없음. 동기화 불가</string>
 
-    <string name="mozo_dialog_qr_code">Mozo 월렛 주소</string>
     <string name="mozo_dialog_loading_msg">인터페이스 만들기</string>
     <string name="mozo_dialog_copied_msg">클립 보드에 복사 됩니다</string>
 

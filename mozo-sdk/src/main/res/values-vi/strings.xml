@@ -28,7 +28,6 @@
     <string name="mozo_address_msg_import_success">Nhập từ danh bạ thành công</string>
     <string name="mozo_address_msg_no_contact">Danh bạ trống, không thể tiến hành đồng bộ.</string>
 
-    <string name="mozo_dialog_qr_code">Địa chỉ ví Mozo của bạn</string>
     <string name="mozo_dialog_loading_msg">Đang khởi tạo giao diện</string>
     <string name="mozo_dialog_copied_msg">Đã sao chép</string>
 

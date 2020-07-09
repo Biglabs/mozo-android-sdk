@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:text="@string/mozo_dialog_qr_code"
+        android:text="@string/mozo_view_address_title"
         android:textColor="@color/mozo_color_section_text"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@id/image_qr_code"

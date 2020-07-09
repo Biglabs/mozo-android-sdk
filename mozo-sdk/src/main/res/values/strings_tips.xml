@@ -25,8 +25,8 @@
         <item>Mozo Tokens are digital utility tokens that can be used by merchants to reward customers for visiting their venues. Customers can collect Mozo Tokens and redeem them for discounts on products and services as determined by each merchant.</item>
         <item>Customers will accumulate enough reward tokens aka Mozo to redeem them for deals, discounts and promotions in the rewards program. So these customers now have an incentive to go to where retailers and venue operators are set up airdrop events. By applying blockchain technology, Mozo is more secure and convenient than any traditional loyalty applications. Furthermore, by incorporating with location based service technology, Mozo ensures that user really physically enter the venue.&lt;br/>
             Retailers and venue operators use Mozo Business App to set up airdrop events through the use of a beacon, a specific location detector, that requires the users must be in range of the beacon in order to receive Mozo. This will help Retailers and venue operators control their foot traffic. Additionally, using Mozo Business App, Retailers and venue operators can set up their deals, discounts and promotions.&lt;br/>
-            Customers use Mozo Wallet App to browse, search, discover airdrop events, deals, discounts and promotions offered by both Retailer and venu operator.&lt;br/>
-            Mozo Wallet and Business App also help Retailers/venue operators and customers consummates the deals, discounts and promotions in effective and efficient way.</item>
+            Customers use Mozo Consumer App to browse, search, discover airdrop events, deals, discounts and promotions offered by both Retailer and venu operator.&lt;br/>
+            Mozo Consumer and Business App also help Retailers/venue operators and customers consummates the deals, discounts and promotions in effective and efficient way.</item>
         <item>When you sign up to be a Mozo Retailer, we will give you a certain number of Mozo Tokens to help you get started. Once you have used all the initial Mozo Tokens as a reward for your customers, you can purchase more Mozo Tokens directly from us.</item>
         <item>By offering Mozo Tokens for visiting your venue, customers will have an incentive to come there and, by offering discounts through a redemption program, you are ensured that customers will want to keep collecting Mozo Tokens.</item>
         <item>With Mozo, you only reward customers when they physically enter your venue, so there is a 1:1 correlation between advertising monies spent and customers at your venue. Other advertising channels do not offer any guarantees that their clicks or banners will result in customers in your venue.</item>
@@ -54,17 +54,17 @@
         </item>
         <item>You can BUY Mozo at &lt;a href=\"https://mozocoin.io/retailer-portal/buy-mozo-by-crypto\">https://mozocoin.io/retailer-portal/buy-mozo-by-crypto&lt;/a>&lt;br/>
             &lt;br/>
-            Please make sure you have a Mozo wallet using the Mozo Wallet App or Mozo Business App before BUYing.&lt;br/>
+            Please make sure you have a Mozo wallet using the Mozo App before BUYing.&lt;br/>
             If you don\'t have wallet, please follow these instructions:&lt;br/>
             - &lt;a href=\"https://mozocoin.io/retailer/help-center#how-to-sign-up-on-mozox-retailer-app\">Mozo Business App&lt;/a>&lt;br/>
-            - &lt;a href=\"https://mozocoin.io#home-faq-shopper-6\">Mozo Wallet App&lt;/a>&lt;br/>
+            - &lt;a href=\"https://mozocoin.io#home-faq-shopper-6\">Mozo Consumer App&lt;/a>&lt;br/>
             &lt;br/>
             After signing up successfully, return to our website and try again.&lt;br/>
             &lt;br/>
             Choose ETH or BTC.&lt;br/>
             Input number of Mozo you want to BUY (or number of ETH/BTC you want to change to Mozo)&lt;br/>
             Click on \"Buy\" button.&lt;br/>
-            The system will provide a reserved ETH/BTC address. You should transfer your ETH/BTC to this address and the system will transfer Mozo to your wallet in Mozo Business App or Mozo Wallet App.&lt;br/>
+            The system will provide a reserved ETH/BTC address. You should transfer your ETH/BTC to this address and the system will transfer Mozo to your wallet in Mozo Business App or Mozo Consumer App.&lt;br/>
             &lt;br/>
             Note:&lt;br/>
             - This address will be reserved for 24 hours and can be used only once. You will need another address if you want to do another transaction. This means that you can only transfer ETH or BTC to this reserved address once. If you try transfer more than once using the same reserved address, your ETH or BTC will be lost. We are not able to recover your coins.&lt;br/>
@@ -107,7 +107,7 @@
 
     <string-array name="tips_shopper_answer">
         <item>Mozo Tokens are digital utility tokens that can be used by merchants to reward customers for visiting their venues. Customers can collect Mozo Tokens and redeem them for discounts on products and services as determined by each merchant.</item>
-        <item>Mozo Wallet App provides functions so that allow you to discover airdrop events using a map view or a list view, search… Check the airdrop date and time and then go to store during those dates and times to receive Mozo. DO NOT forget to turn on bluetooth when you enter the store.</item>
+        <item>Mozo Consumer App provides functions so that allow you to discover airdrop events using a map view or a list view, search… Check the airdrop date and time and then go to store during those dates and times to receive Mozo. DO NOT forget to turn on bluetooth when you enter the store.</item>
         <item>On the wallet screen, using the feature \"Send Mozo\" to send Mozo to your friend\'s wallet.&lt;br/>
             You can send Mozo by inputting your friend\'s phone number.&lt;br/>
             Best practise:&lt;br/>
