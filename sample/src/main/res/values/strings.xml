@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">Demo SDK Mobile</string>
+    <string name="app_name" translatable="false">MozoSDK Demo</string>
     <string name="activity_wallet_info_title" translatable="false">Wallet Info</string>
 </resources>

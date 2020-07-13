@@ -321,7 +321,7 @@ internal class SecurityActivity : BaseActivity() {
             }
             else -> {
                 pin_toolbar.screen_title.setText(R.string.mozo_pin_sub_title)
-                sub_title_pin.setText(R.string.mozo_pin_sub_title_commom)
+                sub_title_pin.setText(R.string.mozo_pin_sub_title_common)
             }
         }
     }

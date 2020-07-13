@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.ViewGroup
+import android.view.WindowManager
 
 fun Activity.setMatchParent() {
     val attrs = window.attributes
@@ -41,3 +42,17 @@ inline fun <reified T : Any> Context.launchActivity(
 
 inline fun <reified T : Any> newIntent(context: Context): Intent =
         Intent(context, T::class.java)
+
+fun Activity.adjustFontScale(scale: Float = 1.30f) {
+    val configuration = resources.configuration
+    if (configuration.fontScale > scale) {
+
+        configuration.fontScale = scale
+        val metrics = resources.displayMetrics
+        val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        wm.defaultDisplay.getMetrics(metrics)
+        metrics.scaledDensity = configuration.fontScale * metrics.density
+        @Suppress("DEPRECATION")
+        baseContext.resources.updateConfiguration(configuration, metrics)
+    }
+}

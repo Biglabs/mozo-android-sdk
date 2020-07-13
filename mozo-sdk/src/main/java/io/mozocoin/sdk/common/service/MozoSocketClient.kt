@@ -1,5 +1,6 @@
 package io.mozocoin.sdk.common.service
 
+import android.os.Build
 import com.google.gson.Gson
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoNotification
@@ -20,6 +21,7 @@ import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import java.util.*
+import javax.net.ssl.SSLParameters
 import kotlin.math.pow
 
 internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
@@ -108,6 +110,12 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         "error [message: ${e?.message}]".logAsInfo(TAG)
         disconnect()
         doRetryConnect()
+    }
+
+    override fun onSetSSLParameters(sslParameters: SSLParameters?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            super.onSetSSLParameters(sslParameters)
+        }
     }
 
     companion object {

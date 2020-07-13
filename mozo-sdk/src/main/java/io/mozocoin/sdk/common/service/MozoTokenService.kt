@@ -91,7 +91,7 @@ internal class MozoTokenService private constructor() {
                     val request = original.newBuilder()
                             .header("Authorization", "Bearer $accessToken")
                             .header("Content-Type", "application/json")
-                            .method(original.method(), original.body())
+                            .method(original.method, original.body)
                             .build()
                     it.proceed(request)
                 }

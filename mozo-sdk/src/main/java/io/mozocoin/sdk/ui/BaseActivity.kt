@@ -5,11 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.utils.adjustFontScale
 import kotlinx.android.synthetic.main.view_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 internal open class BaseActivity : AppCompatActivity() {
+
+    override fun onAttachedToWindow() {
+        adjustFontScale()
+        super.onAttachedToWindow()
+    }
 
     @CallSuper
     override fun onStart() {

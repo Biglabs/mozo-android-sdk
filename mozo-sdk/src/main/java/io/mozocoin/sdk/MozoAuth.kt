@@ -303,19 +303,38 @@ class MozoAuth private constructor() {
             profile: Profile,
             walletHelper: WalletHelper? = null,
             callback: ((success: Boolean) -> Unit)? = null
-    ) = MozoWallet.getInstance().initWallet(context, profile, walletHelper) {
-        GlobalScope.launch {
-            if (it) {
-                /* update local profile to match with server profile */
-                profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
+    ) {
+        if (MozoSDK.isInternalApps) {
+            /**
+             * Skip initialize Wallet for Internal apps
+             */
+            GlobalScope.launch {
                 mozoDB.profile().save(profile)
                 /* save User info first */
                 doSaveUserInfoAsync(profile).await()
 
                 MozoSDK.getInstance().profileViewModel.updateProfile(context, profile)
+
+                withContext(Dispatchers.Main) {
+                    callback?.invoke(true)
+                }
             }
-            withContext(Dispatchers.Main) {
-                callback?.invoke(it)
+            return
+        }
+        MozoWallet.getInstance().initWallet(context, profile, walletHelper) {
+            GlobalScope.launch {
+                if (it) {
+                    /* update local profile to match with server profile */
+                    profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
+                    mozoDB.profile().save(profile)
+                    /* save User info first */
+                    doSaveUserInfoAsync(profile).await()
+
+                    MozoSDK.getInstance().profileViewModel.updateProfile(context, profile)
+                }
+                withContext(Dispatchers.Main) {
+                    callback?.invoke(it)
+                }
             }
         }
     }

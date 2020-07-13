@@ -34,7 +34,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
     private val histories = arrayListOf<TransactionHistory>()
     private val onItemClick = { history: TransactionHistory ->
         if (context != null) {
-            TransactionDetailsActivity.start(context!!, history)
+            TransactionDetailsActivity.start(requireContext(), history)
         }
     }
 
@@ -59,7 +59,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
         wallet_fragment_btn_payment_request?.apply {
             visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
             click {
-                if (context != null) PaymentRequestActivity.start(context!!)
+                if (context != null) PaymentRequestActivity.start(requireContext())
             }
         }
         wallet_fragment_btn_send?.apply {
@@ -134,7 +134,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
     }
 
     override fun onRefresh() {
-        MozoSDK.getInstance().profileViewModel.fetchBalance(context!!)
+        MozoSDK.getInstance().profileViewModel.fetchBalance(requireContext())
         fetchData()
     }
 
@@ -186,7 +186,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
             if (!isAdded || activity == null) return@launch
             if (context == null || currentAddress == null) return@launch
 
-            MozoAPIsService.getInstance().getTransactionHistory(context!!, currentAddress!!,
+            MozoAPIsService.getInstance().getTransactionHistory(requireContext(), currentAddress!!,
                     page = Constant.PAGING_START_INDEX,
                     size = 10,
                     callback = { data, _ ->
@@ -221,7 +221,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
             /**
              * Detect Onchain MozoX inside Offchain Wallet Address
              * */
-            MozoAPIsService.getInstance().getOnChainBalanceInOffChain(context!!, currentAddress!!, { data, _ ->
+            MozoAPIsService.getInstance().getOnChainBalanceInOffChain(requireContext(), currentAddress!!, { data, _ ->
                 data ?: return@getOnChainBalanceInOffChain
 
                 wallet_info_detected_on_chain?.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
