@@ -28,7 +28,6 @@
     <string name="mozo_address_msg_import_success">연락처 동기화 성공</string>
     <string name="mozo_address_msg_no_contact">연락처 집 정보 없음. 동기화 불가</string>
 
-    <string name="mozo_dialog_qr_code">Mozo 월렛 주소</string>
     <string name="mozo_dialog_loading_msg">인터페이스 만들기</string>
     <string name="mozo_dialog_copied_msg">클립 보드에 복사 됩니다</string>
 
@@ -99,7 +98,7 @@
     <string name="mozo_backup_success_content">복구 문구를 안전한 곳에서 보관했다는 것을 확인하세요. 이 앱은 삭제되면 복구 문구 없이 지갑 복구를 못합니다.</string>
     <string name="mozo_backup_confirm_failed">잘못된 복구 문구</string>
 
-    <string name="mozo_convert_title">Mozo으로 변환하기</string>
+    <string name="mozo_convert_title">Mozo으로 변환</string>
     <string name="mozo_convert_amount_hint">Mozo로 변환할 MozoX 수 입력</string>
     <string name="mozo_convert_slow">느리다</string>
     <string name="mozo_convert_normal">정상</string>

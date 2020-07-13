@@ -28,7 +28,6 @@
     <string name="mozo_address_msg_import_success">Synchronize Contacts successful!</string>
     <string name="mozo_address_msg_no_contact">Cannot synchronize, your Contact Book is empty.</string>
 
-    <string name="mozo_dialog_qr_code">Your Mozo Wallet Address</string>
     <string name="mozo_dialog_loading_msg">Creating Interface</string>
     <string name="mozo_dialog_copied_msg">Copied to clipboard</string>
 

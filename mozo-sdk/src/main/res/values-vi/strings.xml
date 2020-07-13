@@ -28,7 +28,6 @@
     <string name="mozo_address_msg_import_success">Nhập từ danh bạ thành công</string>
     <string name="mozo_address_msg_no_contact">Danh bạ trống, không thể tiến hành đồng bộ.</string>
 
-    <string name="mozo_dialog_qr_code">Địa chỉ ví Mozo của bạn</string>
     <string name="mozo_dialog_loading_msg">Đang khởi tạo giao diện</string>
     <string name="mozo_dialog_copied_msg">Đã sao chép</string>
 
@@ -99,7 +98,7 @@
     <string name="mozo_backup_success_content">Nhớ cất giữ cụm từ khôi phục vào nơi bí mật một cách an toàn. Bạn bắt buộc phải có nó để khôi phục lại ví trong trường hợp mất thiết bị.</string>
     <string name="mozo_backup_confirm_failed">Chuỗi ký tự phục hồi không hợp lệ</string>
 
-    <string name="mozo_convert_title">Đổi thành Mozo</string>
+    <string name="mozo_convert_title">Chuyển thành điểm thưởng Mozo</string>
     <string name="mozo_convert_amount_hint">Nhập số lượng MozoX để đổi thành điểm thưởng Mozo</string>
     <string name="mozo_convert_slow">Chậm</string>
     <string name="mozo_convert_normal">Bình thường</string>
