@@ -117,7 +117,7 @@
     <string name="mozo_convert_submit_fail_content"><b>MozoX</b>에서 <b>Mozo</b>로 변환을 완료 할 수 없습니다.\n\n잠시 후 다시 시도하십시오.</string>
     <string name="mozo_convert_on_in_off_detected">&lt;b>Onchain 지갑에서 %s MozoX 발견&lt;/b>&lt;br/>이 지갑에 있는 MozoX를 Mozo로 변환하시겠습니까?</string>
     <string name="mozo_convert_on_in_off_converting">&lt;b>Mozo로 변환 중…&lt;/b></string>
-    <string name="mozo_convert_on_in_off_warning">ETH 잔액은 &lt;b>%s&lt;/b>입니다.&lt;br/>TX 요금을 지불하기 위하여 이 Onchain 지갑 주소로 &lt;b>%s ETH&lt;/b>를 전송해야합니다.</string>
+    <string name="mozo_convert_on_in_off_warning">ETH 잔액은 &lt;b>%1$s&lt;/b>입니다.&lt;br/>TX 요금을 지불하기 위하여 이 Onchain 지갑 주소로 &lt;b>%2$s ETH&lt;/b>를 전송해야합니다.</string>
     <string name="mozo_convert_on_in_off_eth_balance">ETH 잔액은 &lt;b>%s&lt;/b>입니다.</string>
 
     <string name="mozo_create_wallet_title">Mozo 지갑 만들기</string>
