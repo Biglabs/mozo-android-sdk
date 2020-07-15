@@ -108,7 +108,7 @@ fun Context.openTab(url: String) {
 
         val uri = Uri.parse(finalUrl)
         if (uri.getQueryParameter(langParam).isNullOrEmpty()) {
-            finalUrl = uri.buildUpon().appendQueryParameter(langParam, Locale.getDefault().language).build().toString()
+            finalUrl = uri.buildUpon().appendQueryParameter(langParam, Locale.getDefault().toLanguageTag()).build().toString()
         }
     }
 
