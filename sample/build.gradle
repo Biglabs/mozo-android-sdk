@@ -7,8 +7,8 @@ android {
         applicationId "com.biglabs.mozo.example.shopper"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
     }
 
     buildTypes {

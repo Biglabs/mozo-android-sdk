@@ -108,7 +108,7 @@ fun Context.openTab(url: String) {
 
         val uri = Uri.parse(finalUrl)
         if (uri.getQueryParameter(langParam).isNullOrEmpty()) {
-            finalUrl = uri.buildUpon().appendQueryParameter(langParam, Locale.getDefault().language).build().toString()
+            finalUrl = uri.buildUpon().appendQueryParameter(langParam, Locale.getDefault().toLanguageTag()).build().toString()
         }
     }
 
@@ -257,7 +257,10 @@ fun EditText.onAmountInputChanged(textChanged: ((String?) -> Unit)? = null, amou
     onTextChanged {
         textChanged?.invoke(it?.toString())
 
-        if (it.isNullOrEmpty()) return@onTextChanged
+        if (it.isNullOrEmpty()) {
+            amountChanged(BigDecimal.ZERO)
+            return@onTextChanged
+        }
         if (it.startsWith(DecimalFormatSymbols.getInstance().decimalSeparator)) {
             setText(String.format(Locale.US, "0%s", it))
             setSelection(it.length + 1)
