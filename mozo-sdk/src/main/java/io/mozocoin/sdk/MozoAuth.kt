@@ -48,13 +48,7 @@ class MozoAuth private constructor() {
                 val symbol = MozoSDK.getInstance().profileViewModel
                         .exchangeRateLiveData.value?.token?.currencySymbol
                         ?: Constant.DEFAULT_CURRENCY_SYMBOL
-                if (
-                        when (Locale.getDefault().language) {
-                            Locale.KOREA.language -> symbol != Constant.CURRENCY_SYMBOL_KRW
-                            Locale("vi").language -> symbol != Constant.CURRENCY_SYMBOL_VND
-                            else -> symbol != Constant.DEFAULT_CURRENCY_SYMBOL
-                        }
-                ) {
+                if (symbol != Currency.getInstance(Locale.getDefault()).symbol) {
                     MozoSDK.getInstance().profileViewModel.fetchExchangeRate(MozoSDK.getInstance().context)
                 }
             }
