@@ -28,7 +28,7 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
 
     private val requests = arrayListOf<PaymentRequest>()
     private val adapter = PaymentRequestRecyclerAdapter(requests) {
-        TransactionDetailsActivity.start(this.context!!, requests[it])
+        TransactionDetailsActivity.start(this.requireContext(), requests[it])
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -66,11 +66,11 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
                     val param = Support.parsePaymentRequest(it)
                     if (param.isNotEmpty()) {
                         TransactionDetailsActivity.start(
-                                this.context!!,
+                                this.requireContext(),
                                 PaymentRequest(content = it)
                         )
                     } else {
-                        MessageDialog.show(this.context!!, R.string.mozo_dialog_error_scan_invalid_msg)
+                        MessageDialog.show(this.requireContext(), R.string.mozo_dialog_error_scan_invalid_msg)
                     }
                 }
             }
