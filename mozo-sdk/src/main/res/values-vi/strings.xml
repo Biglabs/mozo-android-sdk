@@ -176,6 +176,8 @@
     <string name="mozo_notify_title_promo_used">Khuyến mãi đã sử dụng</string>
     <string name="mozo_notify_title_promo_used_content">Tại %s</string>
     <string name="mozo_notify_title_promo_purchased">Khách hàng đã mua khuyến mãi</string>
+    <string name="mozo_notify_title_covid_warning">Cảnh báo Covid-19!</string>
+    <string name="mozo_notify_content_covid_warning">Có %d vùng cảnh báo Covid-19 gần bạn</string>
     <string name="mozo_notify_content_from">Từ %s</string>
     <string name="mozo_notify_content_to">Đến %s</string>
     <string name="mozo_notify_content_invited">%s đã tham gia Mozo</string>
