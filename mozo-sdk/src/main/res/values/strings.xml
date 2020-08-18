@@ -183,6 +183,8 @@
     <string name="mozo_notify_title_promo_used">Promotion used</string>
     <string name="mozo_notify_title_promo_used_content">At %s</string>
     <string name="mozo_notify_title_promo_purchased">Shopper purchased promotion</string>
+    <string name="mozo_notify_title_covid_warning">Covid-19 Warning!</string>
+    <string name="mozo_notify_content_covid_warning">There are %d new Covid warning zones near you.</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
     <string name="mozo_notify_content_invited">%s joined Mozo</string>
