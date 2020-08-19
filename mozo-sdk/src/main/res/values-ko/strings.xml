@@ -176,6 +176,8 @@
     <string name="mozo_notify_title_promo_used">사용한 프로모션</string>
     <string name="mozo_notify_title_promo_used_content">%s에</string>
     <string name="mozo_notify_title_promo_purchased">프로모션을 구매한 구매자</string>
+    <string name="mozo_notify_title_covid_warning">Covid-19 경고!</string>
+    <string name="mozo_notify_content_covid_warning">근처에 새로운 Covid 경고 구역이 %d개 있다.</string>
     <string name="mozo_notify_content_from">%s 부터</string>
     <string name="mozo_notify_content_to">%s 까지</string>
     <string name="mozo_notify_content_invited">%s Mozo에 가입했습니다</string>
