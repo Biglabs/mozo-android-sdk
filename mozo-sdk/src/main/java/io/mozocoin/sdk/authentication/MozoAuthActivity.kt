@@ -235,8 +235,8 @@ internal class MozoAuthActivity : FragmentActivity() {
                 mAuthRequest.get(),
                 mAuthIntent.get()
         )
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
 
         startActivityForResult(intent, KEY_DO_AUTHENTICATION)
