@@ -10,7 +10,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.core.view.postDelayed
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoTodoList
@@ -30,8 +31,9 @@ import kotlinx.android.synthetic.main.item_todo_header.*
 
 internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
-    private val todoData = arrayListOf<Todo>()
-    private val todoAdapter = TodoAdapter(this, todoData)
+    private val todoAdapter by lazy {
+        TodoAdapter(this, todo_recycler_empty)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +53,21 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
             setHasFixedSize(true)
             adapter = todoAdapter
         }
+
+        /**
+         * Initialize Mozo Todo Service
+         */
+        MozoTodoList.getInstance()
     }
 
     override fun onResume() {
         super.onResume()
         todo_recycler_refresh?.isRefreshing = true
-        MozoTodoList.getInstance().fetchData(this, todoDataCallback)
         registerReceiver(onBluetoothStateChangedListener, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
+
+        todo_recycler?.postDelayed(1000) {
+            MozoTodoList.getInstance().fetchData(this, todoDataCallback)
+        }
     }
 
     override fun onPause() {
@@ -75,14 +85,10 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
     }
 
     private val todoDataCallback: (TodoSettings, List<Todo>) -> Unit = { settings, data ->
-        todoAdapter.updateSettings(settings)
-        todoData.clear()
-        todoData.addAll(data)
+        todoAdapter.todoSettings = settings
+        todoAdapter.updateData(data.toMutableList())
 
-        todo_recycler?.adapter?.notifyDataSetChanged()
         todo_recycler_refresh?.isRefreshing = false
-
-        todo_recycler_empty?.isVisible = todoData.isEmpty()
     }
 
     private val onBluetoothStateChangedListener = object : BroadcastReceiver() {
@@ -93,12 +99,18 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         }
     }
 
-    class TodoAdapter(val todoActivity: TodoActivity, val data: List<Todo>) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
-        private var todoSettings: TodoSettings? = null
+    class TodoAdapter(val todoActivity: TodoActivity, private val emptyView: View?) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
+        var todoSettings: TodoSettings? = null
+        private val data: MutableList<Todo> = mutableListOf()
 
-        fun updateSettings(settings: TodoSettings?) {
-            todoSettings = settings
-            notifyDataSetChanged()
+        fun updateData(newData: MutableList<Todo>) {
+            val diffCallback = DiffCallback(data, newData)
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+            data.clear()
+            data.addAll(newData)
+            emptyView?.visibility = if (itemCount == 0) View.VISIBLE else View.GONE
+            diffResult.dispatchUpdatesTo(this)
         }
 
         override fun getItemCount(): Int = data.size + 1
@@ -171,7 +183,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
             }
         }
 
-        abstract inner class TodoViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+        abstract class TodoViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
             abstract fun bind(d: Todo?)
         }
 
@@ -179,6 +191,26 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
             private const val TYPE_HEADER = 0
             private const val TYPE_ITEMS = 1
         }
+    }
+
+    class DiffCallback(
+            private val oldList: MutableList<Todo>,
+            private val newList: MutableList<Todo>
+    ) : DiffUtil.Callback() {
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                oldList[oldItemPosition].id == newList[newItemPosition].id
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                oldList[oldItemPosition].severity == newList[newItemPosition].severity
+                        && oldList[oldItemPosition].id == newList[newItemPosition].id
+
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Todo {
+            return newList[newItemPosition]
+        }
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
     }
 
     companion object {

@@ -213,6 +213,8 @@
     <string name="mozo_notify_to_do_promo_expire_action">Tạo khuyến mãi mới → </string>
     <string name="mozo_notify_to_do_promo_empty">Chưa có khuyến mãi nào 😐</string>
     <string name="mozo_notify_to_do_promo_empty_action">Tạo khuyến mãi → </string>
+    <string name="mozo_notify_to_do_promo_special">Bạn được tặng những ưu đãi đặc biệt 🎁</string>
+    <string name="mozo_notify_to_do_promo_special_action">Xem → </string>
     <string name="mozo_notify_to_do_voucher_nearby">Khuyến mãi bạn đã mua ở gần đây 🤣</string>
     <string name="mozo_notify_to_do_voucher_nearby_action">Sử dụng khuyến mãi đã mua → </string>
     <string name="mozo_notify_to_do_voucher_expired">Khuyến mãi bạn đã mua sắp hết hạn 😣</string>
@@ -223,6 +225,8 @@
     <string name="mozo_notify_to_do_low_mozo_retailer_action">Mua thêm Mozo → </string>
     <string name="mozo_notify_to_do_unsecured">Ví không an toàn 😱</string>
     <string name="mozo_notify_to_do_unsecured_action">Thiết lập PIN của riêng bạn → </string>
+    <string name="mozo_notify_to_do_message_new">Bạn có tin nhắn chưa đọc 📩️</string>
+    <string name="mozo_notify_to_do_message_new_action">Đọc → </string>
 
     <string name="mozo_maintenance_title">Rất tiếc, hệ thống đang bảo trì. Chúng tôi sẽ sớm quay lại.</string>
     <string name="mozo_maintenance_tips_title">Bạn có biết?</string>

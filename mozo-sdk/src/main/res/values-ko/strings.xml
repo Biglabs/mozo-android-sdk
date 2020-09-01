@@ -213,6 +213,8 @@
     <string name="mozo_notify_to_do_promo_expire_action">새로운 프로모션 만들기 → </string>
     <string name="mozo_notify_to_do_promo_empty">진행 계획 있는 프로모션 없습니다 😐</string>
     <string name="mozo_notify_to_do_promo_empty_action">프로모션 만들기 → </string>
+    <string name="mozo_notify_to_do_promo_special">특별한 혜택을 받았습니다 🎁</string>
+    <string name="mozo_notify_to_do_promo_special_action">보기 → </string>
     <string name="mozo_notify_to_do_voucher_nearby">구매한 프로모션은 근처 있다 🤣</string>
     <string name="mozo_notify_to_do_voucher_nearby_action">구매한 프로모션 사용하기 → </string>
     <string name="mozo_notify_to_do_voucher_expired">구매한 프로모션은 곧 만료 된다 😣</string>
@@ -223,6 +225,8 @@
     <string name="mozo_notify_to_do_low_mozo_retailer_action">Mozo 더 구매하기 → </string>
     <string name="mozo_notify_to_do_unsecured">안전하지 않은 지갑 😱</string>
     <string name="mozo_notify_to_do_unsecured_action">당신의 PIN을 만들기 → </string>
+    <string name="mozo_notify_to_do_message_new">읽지 않은 메시지가 있습니다 📩️</string>
+    <string name="mozo_notify_to_do_message_new_action">읽기 → </string>
 
     <string name="mozo_maintenance_title">죄송합니다. 유지 보수를 위해 대기 중입니다. 우리는 곧 돌아오겠습니다.</string>
     <string name="mozo_maintenance_tips_title">당신이 알고 계십니까?</string>
