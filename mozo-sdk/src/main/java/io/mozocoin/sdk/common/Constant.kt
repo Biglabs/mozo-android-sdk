@@ -5,7 +5,7 @@ import java.util.*
 class Constant {
     companion object {
         const val PAGING_START_INDEX = 0
-        const val PAGING_SIZE = 50
+        const val PAGING_SIZE = 100
         const val LIST_VISIBLE_THRESHOLD = 10
 
         const val STATUS_SUCCESS = "SUCCESS"
