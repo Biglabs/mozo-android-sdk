@@ -18,5 +18,6 @@ data class BroadcastDataContent(
         val isComeIn: Boolean,
         val storeName: String,
         val promoName: String? = null,
-        var imageId: String? = null
+        var imageId: String? = null,
+        val numNewWarningZone: Int = 0
 )

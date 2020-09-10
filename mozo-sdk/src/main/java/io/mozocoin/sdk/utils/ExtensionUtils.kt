@@ -71,13 +71,13 @@ fun Context?.isStoragePermissionGranted() = this != null && ContextCompat.checkS
 
 internal fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-internal fun Context.copyText(text: String?) {
+fun Context.copyText(text: String?) {
     if (!text.isNullOrEmpty()) {
         clipboard().setPrimaryClip(ClipData.newPlainText("mozo_wallet_text", text))
     }
 }
 
-internal fun Context.copyWithToast(text: String?) {
+fun Context.copyWithToast(text: String?) {
     if (!text.isNullOrEmpty()) {
         clipboard().setPrimaryClip(ClipData.newPlainText("mozo_wallet_text", text))
         Toast.makeText(this, R.string.mozo_dialog_copied_msg, Toast.LENGTH_SHORT).show()

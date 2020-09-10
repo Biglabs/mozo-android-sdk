@@ -183,6 +183,8 @@
     <string name="mozo_notify_title_promo_used">Promotion used</string>
     <string name="mozo_notify_title_promo_used_content">At %s</string>
     <string name="mozo_notify_title_promo_purchased">Shopper purchased promotion</string>
+    <string name="mozo_notify_title_covid_warning">Covid-19 Warning!</string>
+    <string name="mozo_notify_content_covid_warning">There are %d new Covid warning zones near you.</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
     <string name="mozo_notify_content_invited">%s joined Mozo</string>
@@ -218,6 +220,8 @@
     <string name="mozo_notify_to_do_promo_expire_action">Create a new promotion → </string>
     <string name="mozo_notify_to_do_promo_empty">No planned promotions 😐</string>
     <string name="mozo_notify_to_do_promo_empty_action">Create promotion → </string>
+    <string name="mozo_notify_to_do_promo_special">You are offered special promotions 🎁</string>
+    <string name="mozo_notify_to_do_promo_special_action">View → </string>
     <string name="mozo_notify_to_do_voucher_nearby">Purchased promotions nearby 🤣</string>
     <string name="mozo_notify_to_do_voucher_nearby_action">Discover your purchased promotions → </string>
     <string name="mozo_notify_to_do_voucher_expired">Purchased promotions expiring soon 😣</string>
@@ -228,6 +232,8 @@
     <string name="mozo_notify_to_do_low_mozo_retailer_action">Buy more Mozo → </string>
     <string name="mozo_notify_to_do_unsecured">Unsecure wallet 😱</string>
     <string name="mozo_notify_to_do_unsecured_action">Set up your own PIN → </string>
+    <string name="mozo_notify_to_do_message_new">You have some unread messages 📩</string>
+    <string name="mozo_notify_to_do_message_new_action">Read → </string>
 
     <string name="mozo_maintenance_title">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>
     <string name="mozo_maintenance_tips_title">Did you know?</string>

@@ -44,7 +44,9 @@ enum class TodoType(@StringRes val title: Int, @StringRes val action: Int) {
     VOUCHER_EXPIRED(R.string.mozo_notify_to_do_voucher_expired, R.string.mozo_notify_to_do_voucher_expired_action),
     LOW_MOZOX_RETAILER(R.string.mozo_notify_to_do_low_mozo_retailer, R.string.mozo_notify_to_do_low_mozo_retailer_action),
     LOW_MOZOX_SHOPPER(R.string.mozo_notify_to_do_low_mozo_shopper, R.string.mozo_notify_to_do_low_mozo_shopper_action),
-    UNSECURE_WALLET(R.string.mozo_notify_to_do_unsecured, R.string.mozo_notify_to_do_unsecured_action);
+    UNSECURE_WALLET(R.string.mozo_notify_to_do_unsecured, R.string.mozo_notify_to_do_unsecured_action),
+    MESSAGE_NEW(R.string.mozo_notify_to_do_message_new, R.string.mozo_notify_to_do_message_new_action),
+    NEW_SPECIAL_PROMOTION(R.string.mozo_notify_to_do_promo_special, R.string.mozo_notify_to_do_promo_special_action);
 
     companion object {
         fun find(key: String?) = values().find { it.name.equals(key, ignoreCase = true) }

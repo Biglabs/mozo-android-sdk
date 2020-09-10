@@ -5,7 +5,7 @@ import java.util.*
 class Constant {
     companion object {
         const val PAGING_START_INDEX = 0
-        const val PAGING_SIZE = 50
+        const val PAGING_SIZE = 100
         const val LIST_VISIBLE_THRESHOLD = 10
 
         const val STATUS_SUCCESS = "SUCCESS"
@@ -25,6 +25,7 @@ class Constant {
         const val NOTIFY_EVENT_PROMO_USED = "promotion_used"
         const val NOTIFY_EVENT_PROMO_PURCHASED = "promotion_purchased"
         const val NOTIFY_EVENT_GROUP_BROADCAST = "group_broadcast"
+        const val NOTIFY_EVENT_WARNING_COVID = "covid_event"
 
         internal const val DEFAULT_DECIMAL = 2
         internal const val DEFAULT_CURRENCY = "USD"

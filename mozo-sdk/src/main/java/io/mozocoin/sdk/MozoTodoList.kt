@@ -57,8 +57,8 @@ class MozoTodoList private constructor() {
             MozoAPIsService.getInstance().getTodoSettings(
                     activity,
                     { data, _ ->
-                        todoSettings = data
                         countDownLatch?.countDown()
+                        todoSettings = data
                         checkCountDown(callback)
 
                     }, ::fetchSettings
@@ -74,17 +74,14 @@ class MozoTodoList private constructor() {
                     currentLocation?.latitude ?: 0.0,
                     currentLocation?.longitude ?: 0.0,
                     { data, _ ->
+                        countDownLatch?.countDown()
+                        todoData = data?.items
 
-                        if (data?.totalItems != null) {
-                            listeners.map { l ->
-                                l.onTodoTotalChanged(data.totalItems)
-                            }
+                        if (todoData != null) {
+                            listeners.forEach { it.onTodoTotalChanged(todoData!!.size) }
                         }
 
-                        todoData = data?.items
-                        countDownLatch?.countDown()
                         checkCountDown(callback)
-
                     }, {
                 fetchData(activity, callback)
             })
