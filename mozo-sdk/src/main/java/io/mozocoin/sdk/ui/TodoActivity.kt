@@ -19,10 +19,7 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.TodoType
 import io.mozocoin.sdk.common.model.Todo
 import io.mozocoin.sdk.common.model.TodoSettings
-import io.mozocoin.sdk.utils.Support
-import io.mozocoin.sdk.utils.click
-import io.mozocoin.sdk.utils.mozoSetup
-import io.mozocoin.sdk.utils.openTab
+import io.mozocoin.sdk.utils.*
 import io.mozocoin.sdk.wallet.ChangePinActivity
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_todo.*
@@ -144,10 +141,10 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
             override fun bind(d: Todo?) {
                 d ?: return
 
-                val color = todoSettings?.colors?.get(d.severity ?: "") ?: "#969696"
+                val color = todoSettings?.colors?.get(d.severity) ?: "#969696"
                 item_todo_container?.setBorderColor(Color.parseColor(color))
                 item_todo_container_mask?.click {
-                    handleItemClick(d.id ?: return@click)
+                    handleItemClick(d)
                 }
 
                 TodoType.find(d.id)?.let {
@@ -156,8 +153,8 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
                 }
             }
 
-            private fun handleItemClick(type: String) {
-                when (type) {
+            private fun handleItemClick(todo: Todo) {
+                when (todo.id ?: return) {
                     TodoType.BLUETOOTH_OFF.name -> {
                         BluetoothAdapter.getDefaultAdapter()?.run {
                             if (!isEnabled) enable()
@@ -177,7 +174,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
                         todoActivity.startActivity(Intent(todoActivity, ChangePinActivity::class.java))
                     }
                     else -> MozoTodoList.getInstance().listeners.map { l ->
-                        l.onTodoItemClicked(todoActivity, type)
+                        l.onTodoItemClicked(todoActivity, todo.id.safe(), todo.data)
                     }
                 }
             }

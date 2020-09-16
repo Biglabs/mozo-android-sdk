@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.core.app.ActivityCompat
 import io.mozocoin.sdk.common.model.Todo
+import io.mozocoin.sdk.common.model.TodoData
 import io.mozocoin.sdk.common.model.TodoSettings
 import io.mozocoin.sdk.common.service.LocationService
 import io.mozocoin.sdk.common.service.MozoAPIsService
@@ -163,7 +164,7 @@ class MozoTodoList private constructor() {
 
     interface TodoInteractListener {
         fun onTodoTotalChanged(total: Int, itemHighLight: Todo?)
-        fun onTodoItemClicked(todoActivity: Activity, type: String)
+        fun onTodoItemClicked(todoActivity: Activity, type: String, data: TodoData?)
     }
 
     companion object {
