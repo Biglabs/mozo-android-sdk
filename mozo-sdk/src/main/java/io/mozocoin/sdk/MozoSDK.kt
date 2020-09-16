@@ -38,8 +38,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 .get(ViewModels.ContactViewModel::class.java)
     }
 
-    internal var notifyActivityClass: Class<out Activity>? = null
-
     internal var ignoreInternetErrActivities: ArrayList<Class<out Activity>>? = null
 
     internal var remindAnchorView: View? = null
@@ -137,7 +135,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @JvmStatic
         fun attachNotificationReceiverActivity(activity: Class<out Activity>) {
-            getInstance().notifyActivityClass = activity
+            MozoNotification.getInstance().notifyActivityClass = activity
         }
 
         @JvmStatic

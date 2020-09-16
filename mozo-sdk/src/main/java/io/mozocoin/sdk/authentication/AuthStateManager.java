@@ -30,6 +30,7 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -41,7 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class AuthStateManager {
 
     private static final AtomicReference<WeakReference<AuthStateManager>> INSTANCE_REF =
-            new AtomicReference<>(new WeakReference<AuthStateManager>(null));
+            new AtomicReference<>(new WeakReference<>(null));
 
     private static final String TAG = "AuthStateManager";
 
@@ -129,7 +130,7 @@ public class AuthStateManager {
     @AnyThread
     public void clearSession() {
         AuthState currentState = getCurrent();
-        AuthState clearedState = new AuthState(currentState.getAuthorizationServiceConfiguration());
+        AuthState clearedState = new AuthState(Objects.requireNonNull(currentState.getAuthorizationServiceConfiguration()));
         if (currentState.getLastRegistrationResponse() != null) {
             clearedState.update(currentState.getLastRegistrationResponse());
         }
