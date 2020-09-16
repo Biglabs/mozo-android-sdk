@@ -178,6 +178,8 @@
     <string name="mozo_notify_title_promo_purchased">프로모션을 구매한 구매자</string>
     <string name="mozo_notify_title_covid_warning">Covid-19 경고!</string>
     <string name="mozo_notify_content_covid_warning">근처에 새로운 Covid 경고 구역이 %d개 있다.</string>
+    <string name="mozo_notify_title_lucky_draw">Bạn đã trúng thưởng!</string>
+    <string name="mozo_notify_content_lucky_draw">Chúc mừng bạn đã nhận được phần thưởng từ chương trình quay số may mắn của Mozo.</string>
     <string name="mozo_notify_content_from">%s 부터</string>
     <string name="mozo_notify_content_to">%s 까지</string>
     <string name="mozo_notify_content_invited">%s Mozo에 가입했습니다</string>
@@ -227,6 +229,10 @@
     <string name="mozo_notify_to_do_unsecured_action">당신의 PIN을 만들기 → </string>
     <string name="mozo_notify_to_do_message_new">읽지 않은 메시지가 있습니다 📩️</string>
     <string name="mozo_notify_to_do_message_new_action">읽기 → </string>
+    <string name="mozo_notify_to_do_lucky_draw_award">Mozo 추첨 프로그램에서 선물을 받았습니다.🎁</string>
+    <string name="mozo_notify_to_do_lucky_draw_award_action">메시지 보기 → </string>
+    <string name="mozo_notify_to_do_lucky_draw_notice">특별한 상을 받으려면 친구 초대 행사에 참여하세요</string>
+    <string name="mozo_notify_to_do_lucky_draw_notice_action">친구 초대 → </string>
 
     <string name="mozo_maintenance_title">죄송합니다. 유지 보수를 위해 대기 중입니다. 우리는 곧 돌아오겠습니다.</string>
     <string name="mozo_maintenance_tips_title">당신이 알고 계십니까?</string>

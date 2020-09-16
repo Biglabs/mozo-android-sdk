@@ -46,6 +46,35 @@ class MozoTodoList private constructor() {
         }
     }
 
+    internal fun fetchTodo() {
+        lastActivity ?: return
+        val isBluetoothOff = bluetoothAdapter?.state == BluetoothAdapter.STATE_OFF
+                || bluetoothAdapter?.state == BluetoothAdapter.STATE_TURNING_OFF
+        MozoAPIsService.getInstance().getTodoList4Shopper(
+                lastActivity!!,
+                isBluetoothOff,
+                currentLocation?.latitude ?: 0.0,
+                currentLocation?.longitude ?: 0.0,
+                { data, _ ->
+                    countDownLatch?.countDown()
+                    todoData = data?.items
+
+                    if (todoData != null) {
+                        val itemHighLight = todoData?.maxByOrNull { it.priority ?: 0 }
+                        listeners.forEach {
+                            it.onTodoTotalChanged(
+                                    todoData!!.size,
+                                    if ((itemHighLight?.priority ?: 0) > 0) itemHighLight else null
+                            )
+                        }
+                    }
+
+                    checkCountDown(lastCallback)
+                }, {
+            fetchData(lastActivity!!, lastCallback)
+        })
+    }
+
     fun fetchData(activity: Activity, callback: ((TodoSettings, List<Todo>) -> Unit)? = null) {
         if (!getLocationPermission(activity)) return
         lastActivity = activity
@@ -63,28 +92,6 @@ class MozoTodoList private constructor() {
 
                     }, ::fetchSettings
             )
-        }
-
-        fun fetchTodo() {
-            val isBluetoothOff = bluetoothAdapter?.state == BluetoothAdapter.STATE_OFF
-                    || bluetoothAdapter?.state == BluetoothAdapter.STATE_TURNING_OFF
-            MozoAPIsService.getInstance().getTodoList4Shopper(
-                    activity,
-                    isBluetoothOff,
-                    currentLocation?.latitude ?: 0.0,
-                    currentLocation?.longitude ?: 0.0,
-                    { data, _ ->
-                        countDownLatch?.countDown()
-                        todoData = data?.items
-
-                        if (todoData != null) {
-                            listeners.forEach { it.onTodoTotalChanged(todoData!!.size) }
-                        }
-
-                        checkCountDown(callback)
-                    }, {
-                fetchData(activity, callback)
-            })
         }
 
         if (todoSettings == null) fetchSettings()
@@ -155,7 +162,7 @@ class MozoTodoList private constructor() {
     } else true
 
     interface TodoInteractListener {
-        fun onTodoTotalChanged(total: Int)
+        fun onTodoTotalChanged(total: Int, itemHighLight: Todo?)
         fun onTodoItemClicked(todoActivity: Activity, type: String)
     }
 

@@ -2,10 +2,7 @@ package io.mozocoin.sdk.common.service
 
 import android.os.Build
 import com.google.gson.Gson
-import io.mozocoin.sdk.MozoAuth
-import io.mozocoin.sdk.MozoNotification
-import io.mozocoin.sdk.MozoSDK
-import io.mozocoin.sdk.MozoWallet
+import io.mozocoin.sdk.*
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.BroadcastData
@@ -73,6 +70,9 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                             }
                             Constant.NOTIFY_EVENT_PROFILE_CHANGED -> {
                                 MozoAuth.getInstance().syncProfile(MozoSDK.getInstance().context)
+                            }
+                            Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD -> {
+                                MozoTodoList.getInstance().fetchTodo()
                             }
                         }
 

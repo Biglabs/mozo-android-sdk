@@ -223,7 +223,8 @@ class MozoNotification private constructor() {
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED,
                     Constant.NOTIFY_EVENT_PROMO_USED,
                     Constant.NOTIFY_EVENT_GROUP_BROADCAST,
-                    Constant.NOTIFY_EVENT_WARNING_COVID
+                    Constant.NOTIFY_EVENT_WARNING_COVID,
+                    Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD
             )).contains(event?.toLowerCase(Locale.ROOT)) && MozoSDK.shouldShowNotification
 
         @Synchronized
@@ -245,6 +246,7 @@ class MozoNotification private constructor() {
             Constant.NOTIFY_EVENT_PROMO_USED -> R.drawable.im_notification_promo_used
             Constant.NOTIFY_EVENT_GROUP_BROADCAST -> R.drawable.im_notification_group_broadcast
             Constant.NOTIFY_EVENT_WARNING_COVID -> R.drawable.im_notification_covid_warning
+            Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD -> R.drawable.im_notification_lucky_draw
             else -> R.drawable.im_notification_balance_changed
         }
 
@@ -317,6 +319,10 @@ class MozoNotification private constructor() {
                 Constant.NOTIFY_EVENT_WARNING_COVID -> {
                     title = context.getString(R.string.mozo_notify_title_covid_warning)
                     content = context.getString(R.string.mozo_notify_content_covid_warning, message.numNewWarningZone)
+                }
+                Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD -> {
+                    title = context.getString(R.string.mozo_notify_title_lucky_draw)
+                    content = context.getString(R.string.mozo_notify_content_lucky_draw)
                 }
                 else -> {
                     val address = if (isSendType) message.to else message.from
