@@ -31,6 +31,7 @@ class MozoTodoList private constructor() {
     private var lastCallback: ((TodoSettings, List<Todo>) -> Unit)? = null
 
     internal var listeners: ArrayList<TodoInteractListener> = arrayListOf()
+    private var todoFinishListeners: ArrayList<TodoFinishListener> = arrayListOf()
 
     init {
         locationService.setListener {
@@ -111,12 +112,21 @@ class MozoTodoList private constructor() {
         TodoActivity.start(context)
     }
 
+    fun close() {
+        todoFinishListeners.forEach { it.onRequestFinish() }
+        todoFinishListeners.clear()
+    }
+
     fun addListener(l: TodoInteractListener) {
         listeners.add(l)
     }
 
     fun removeListener(l: TodoInteractListener) {
         listeners.remove(l)
+    }
+
+    internal fun registerTodoFinishListener(listener: TodoFinishListener) {
+        todoFinishListeners.add(listener)
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -164,7 +174,11 @@ class MozoTodoList private constructor() {
 
     interface TodoInteractListener {
         fun onTodoTotalChanged(total: Int, itemHighLight: Todo?)
-        fun onTodoItemClicked(todoActivity: Activity, type: String, data: TodoData?)
+        fun onTodoItemClicked(type: String, data: TodoData?)
+    }
+
+    internal interface TodoFinishListener {
+        fun onRequestFinish()
     }
 
     companion object {

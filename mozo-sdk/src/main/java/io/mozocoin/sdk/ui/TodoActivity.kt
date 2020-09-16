@@ -26,10 +26,15 @@ import kotlinx.android.synthetic.main.activity_todo.*
 import kotlinx.android.synthetic.main.item_todo.*
 import kotlinx.android.synthetic.main.item_todo_header.*
 
-internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
+internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener, MozoTodoList.TodoFinishListener {
 
     private val todoAdapter by lazy {
-        TodoAdapter(this, todo_recycler_empty)
+        TodoAdapter(todo_recycler_empty)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        MozoTodoList.getInstance().registerTodoFinishListener(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +86,10 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         MozoTodoList.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    override fun onRequestFinish() {
+        finish()
+    }
+
     private val todoDataCallback: (TodoSettings, List<Todo>) -> Unit = { settings, data ->
         todoAdapter.todoSettings = settings
         todoAdapter.updateData(data.toMutableList())
@@ -96,7 +105,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         }
     }
 
-    class TodoAdapter(val todoActivity: TodoActivity, private val emptyView: View?) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
+    class TodoAdapter(private val emptyView: View?) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
         var todoSettings: TodoSettings? = null
         private val data: MutableList<Todo> = mutableListOf()
 
@@ -161,20 +170,20 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
                         }
                     }
                     TodoType.LOCATION_SERVICE_OFF.name -> {
-                        todoActivity.startActivity(
+                        itemView.context.startActivity(
                                 Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS).apply {
                                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 }
                         )
                     }
                     TodoType.LOW_MOZOX_RETAILER.name -> {
-                        todoActivity.openTab("${Support.homePage()}/retailer-portal/buy-mozo-by-crypto")
+                        itemView.context.openTab("${Support.homePage()}/retailer-portal/buy-mozo-by-crypto")
                     }
                     TodoType.UNSECURE_WALLET.name -> {
-                        todoActivity.startActivity(Intent(todoActivity, ChangePinActivity::class.java))
+                        itemView.context.launchActivity<ChangePinActivity> { }
                     }
                     else -> MozoTodoList.getInstance().listeners.map { l ->
-                        l.onTodoItemClicked(todoActivity, todo.id.safe(), todo.data)
+                        l.onTodoItemClicked(todo.id.safe(), todo.data)
                     }
                 }
             }
