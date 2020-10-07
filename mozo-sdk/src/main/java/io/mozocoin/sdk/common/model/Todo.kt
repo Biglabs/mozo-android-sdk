@@ -1,11 +1,12 @@
 package io.mozocoin.sdk.common.model
 
-import com.google.gson.annotations.SerializedName
+import io.mozocoin.sdk.common.TodoType
 
-data class Todo(
-        @SerializedName("id")
-        val id: String? = null,
-
-        @SerializedName("severity")
-        val severity: String? = null
-)
+public data class Todo(
+        val id: String?,
+        val data: TodoData?,
+        val severity: String,
+        val priority: Int?
+) {
+    public fun idKey() = TodoType.find(id) ?: TodoType.LOCATION_SERVICE_OFF
+}

@@ -19,20 +19,22 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.TodoType
 import io.mozocoin.sdk.common.model.Todo
 import io.mozocoin.sdk.common.model.TodoSettings
-import io.mozocoin.sdk.utils.Support
-import io.mozocoin.sdk.utils.click
-import io.mozocoin.sdk.utils.mozoSetup
-import io.mozocoin.sdk.utils.openTab
+import io.mozocoin.sdk.utils.*
 import io.mozocoin.sdk.wallet.ChangePinActivity
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_todo.*
 import kotlinx.android.synthetic.main.item_todo.*
 import kotlinx.android.synthetic.main.item_todo_header.*
 
-internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
+internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener, MozoTodoList.TodoFinishListener {
 
     private val todoAdapter by lazy {
-        TodoAdapter(this, todo_recycler_empty)
+        TodoAdapter(todo_recycler_empty)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        MozoTodoList.getInstance().registerTodoFinishListener(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +86,10 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         MozoTodoList.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    override fun onRequestFinish() {
+        finish()
+    }
+
     private val todoDataCallback: (TodoSettings, List<Todo>) -> Unit = { settings, data ->
         todoAdapter.todoSettings = settings
         todoAdapter.updateData(data.toMutableList())
@@ -99,7 +105,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         }
     }
 
-    class TodoAdapter(val todoActivity: TodoActivity, private val emptyView: View?) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
+    class TodoAdapter(private val emptyView: View?) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
         var todoSettings: TodoSettings? = null
         private val data: MutableList<Todo> = mutableListOf()
 
@@ -144,10 +150,10 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
             override fun bind(d: Todo?) {
                 d ?: return
 
-                val color = todoSettings?.colors?.get(d.severity ?: "") ?: "#969696"
+                val color = todoSettings?.colors?.get(d.severity) ?: "#969696"
                 item_todo_container?.setBorderColor(Color.parseColor(color))
                 item_todo_container_mask?.click {
-                    handleItemClick(d.id ?: return@click)
+                    handleItemClick(d)
                 }
 
                 TodoType.find(d.id)?.let {
@@ -156,28 +162,28 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
                 }
             }
 
-            private fun handleItemClick(type: String) {
-                when (type) {
+            private fun handleItemClick(todo: Todo) {
+                when (todo.id ?: return) {
                     TodoType.BLUETOOTH_OFF.name -> {
                         BluetoothAdapter.getDefaultAdapter()?.run {
                             if (!isEnabled) enable()
                         }
                     }
                     TodoType.LOCATION_SERVICE_OFF.name -> {
-                        todoActivity.startActivity(
+                        itemView.context.startActivity(
                                 Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS).apply {
                                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 }
                         )
                     }
                     TodoType.LOW_MOZOX_RETAILER.name -> {
-                        todoActivity.openTab("${Support.homePage()}/retailer-portal/buy-mozo-by-crypto")
+                        itemView.context.openTab("${Support.homePage()}/retailer-portal/buy-mozo-by-crypto")
                     }
                     TodoType.UNSECURE_WALLET.name -> {
-                        todoActivity.startActivity(Intent(todoActivity, ChangePinActivity::class.java))
+                        itemView.context.launchActivity<ChangePinActivity> { }
                     }
                     else -> MozoTodoList.getInstance().listeners.map { l ->
-                        l.onTodoItemClicked(todoActivity, type)
+                        l.onTodoItemClicked(todo.id.safe(), todo.data)
                     }
                 }
             }

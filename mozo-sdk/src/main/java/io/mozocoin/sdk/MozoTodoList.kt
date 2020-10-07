@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.core.app.ActivityCompat
 import io.mozocoin.sdk.common.model.Todo
+import io.mozocoin.sdk.common.model.TodoData
 import io.mozocoin.sdk.common.model.TodoSettings
 import io.mozocoin.sdk.common.service.LocationService
 import io.mozocoin.sdk.common.service.MozoAPIsService
@@ -30,6 +31,7 @@ class MozoTodoList private constructor() {
     private var lastCallback: ((TodoSettings, List<Todo>) -> Unit)? = null
 
     internal var listeners: ArrayList<TodoInteractListener> = arrayListOf()
+    private var todoFinishListeners: ArrayList<TodoFinishListener> = arrayListOf()
 
     init {
         locationService.setListener {
@@ -44,6 +46,35 @@ class MozoTodoList private constructor() {
                 locationService.clearListener()
             }
         }
+    }
+
+    internal fun fetchTodo() {
+        lastActivity ?: return
+        val isBluetoothOff = bluetoothAdapter?.state == BluetoothAdapter.STATE_OFF
+                || bluetoothAdapter?.state == BluetoothAdapter.STATE_TURNING_OFF
+        MozoAPIsService.getInstance().getTodoList4Shopper(
+                lastActivity!!,
+                isBluetoothOff,
+                currentLocation?.latitude ?: 0.0,
+                currentLocation?.longitude ?: 0.0,
+                { data, _ ->
+                    countDownLatch?.countDown()
+                    todoData = data?.items
+
+                    if (todoData != null) {
+                        val itemHighLight = todoData?.maxByOrNull { it.priority ?: 0 }
+                        listeners.forEach {
+                            it.onTodoTotalChanged(
+                                    todoData!!.size,
+                                    if ((itemHighLight?.priority ?: 0) > 0) itemHighLight else null
+                            )
+                        }
+                    }
+
+                    checkCountDown(lastCallback)
+                }, {
+            fetchData(lastActivity!!, lastCallback)
+        })
     }
 
     fun fetchData(activity: Activity, callback: ((TodoSettings, List<Todo>) -> Unit)? = null) {
@@ -65,28 +96,6 @@ class MozoTodoList private constructor() {
             )
         }
 
-        fun fetchTodo() {
-            val isBluetoothOff = bluetoothAdapter?.state == BluetoothAdapter.STATE_OFF
-                    || bluetoothAdapter?.state == BluetoothAdapter.STATE_TURNING_OFF
-            MozoAPIsService.getInstance().getTodoList4Shopper(
-                    activity,
-                    isBluetoothOff,
-                    currentLocation?.latitude ?: 0.0,
-                    currentLocation?.longitude ?: 0.0,
-                    { data, _ ->
-                        countDownLatch?.countDown()
-                        todoData = data?.items
-
-                        if (todoData != null) {
-                            listeners.forEach { it.onTodoTotalChanged(todoData!!.size) }
-                        }
-
-                        checkCountDown(callback)
-                    }, {
-                fetchData(activity, callback)
-            })
-        }
-
         if (todoSettings == null) fetchSettings()
         else countDownLatch?.countDown()
 
@@ -103,12 +112,21 @@ class MozoTodoList private constructor() {
         TodoActivity.start(context)
     }
 
+    fun close() {
+        todoFinishListeners.forEach { it.onRequestFinish() }
+        todoFinishListeners.clear()
+    }
+
     fun addListener(l: TodoInteractListener) {
         listeners.add(l)
     }
 
     fun removeListener(l: TodoInteractListener) {
         listeners.remove(l)
+    }
+
+    internal fun registerTodoFinishListener(listener: TodoFinishListener) {
+        todoFinishListeners.add(listener)
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -155,8 +173,12 @@ class MozoTodoList private constructor() {
     } else true
 
     interface TodoInteractListener {
-        fun onTodoTotalChanged(total: Int)
-        fun onTodoItemClicked(todoActivity: Activity, type: String)
+        fun onTodoTotalChanged(total: Int, itemHighLight: Todo?)
+        fun onTodoItemClicked(type: String, data: TodoData?)
+    }
+
+    internal interface TodoFinishListener {
+        fun onRequestFinish()
     }
 
     companion object {

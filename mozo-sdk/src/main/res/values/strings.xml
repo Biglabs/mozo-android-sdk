@@ -185,6 +185,8 @@
     <string name="mozo_notify_title_promo_purchased">Shopper purchased promotion</string>
     <string name="mozo_notify_title_covid_warning">Covid-19 Warning!</string>
     <string name="mozo_notify_content_covid_warning">There are %d new Covid warning zones near you.</string>
+    <string name="mozo_notify_title_lucky_draw">Bạn đã trúng thưởng!</string>
+    <string name="mozo_notify_content_lucky_draw">Chúc mừng bạn đã nhận được phần thưởng từ chương trình quay số may mắn của Mozo.</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
     <string name="mozo_notify_content_invited">%s joined Mozo</string>
@@ -234,6 +236,10 @@
     <string name="mozo_notify_to_do_unsecured_action">Set up your own PIN → </string>
     <string name="mozo_notify_to_do_message_new">You have some unread messages 📩</string>
     <string name="mozo_notify_to_do_message_new_action">Read → </string>
+    <string name="mozo_notify_to_do_lucky_draw_award">You are received awards from Mozo lucky draw program 🎁</string>
+    <string name="mozo_notify_to_do_lucky_draw_award_action">View messages → </string>
+    <string name="mozo_notify_to_do_lucky_draw_notice">Join friend inviting event in order to get special awards</string>
+    <string name="mozo_notify_to_do_lucky_draw_notice_action">Invite friends → </string>
 
     <string name="mozo_maintenance_title">Sorry, we\'re down for maintenance. We\'ll be back shortly.</string>
     <string name="mozo_maintenance_tips_title">Did you know?</string>

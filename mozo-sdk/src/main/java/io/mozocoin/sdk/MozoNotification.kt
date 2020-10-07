@@ -1,5 +1,6 @@
 package io.mozocoin.sdk
 
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -36,12 +37,13 @@ class MozoNotification private constructor() {
         MozoSDK.getInstance().context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
+    internal var notifyActivityClass: Class<out Activity>? = null
     private var onNotificationReceiveListener: OnNotificationReceiveListener? = null
 
     private var mShowGroupNotifyJob: Job? = null
 
     internal fun showNotification(message: BroadcastDataContent) = GlobalScope.launch {
-        MozoSDK.getInstance().notifyActivityClass ?: return@launch
+        notifyActivityClass ?: return@launch
 
         val context = MozoSDK.getInstance().context
         val notification = prepareNotification(context, message)
@@ -52,10 +54,11 @@ class MozoNotification private constructor() {
             createChannel(message.event).join()
         }
 
+        val intentUniqueId = (System.currentTimeMillis() and 0xfffffff).toInt()
         val pendingIntent = PendingIntent.getActivity(
                 context,
-                REQUEST_CODE,
-                prepareDataIntent(notification),
+                intentUniqueId,
+                prepareDataIntent(notification, message),
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
         val singleNotify =
@@ -191,8 +194,8 @@ class MozoNotification private constructor() {
 
     companion object {
 
-        const val REQUEST_CODE = 0x3020
         const val KEY_DATA = "mozo_notification_data"
+        const val KEY_TYPE = "mozo_notification_type"
 
         internal const val EXTRAS_ITEM_AMOUNT = "EXTRAS_ITEM_AMOUNT"
         internal const val EXTRAS_ITEM_DATA = "EXTRAS_ITEM_DATA"
@@ -223,15 +226,21 @@ class MozoNotification private constructor() {
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED,
                     Constant.NOTIFY_EVENT_PROMO_USED,
                     Constant.NOTIFY_EVENT_GROUP_BROADCAST,
-                    Constant.NOTIFY_EVENT_WARNING_COVID
+                    Constant.NOTIFY_EVENT_WARNING_COVID,
+                    Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD
             )).contains(event?.toLowerCase(Locale.ROOT)) && MozoSDK.shouldShowNotification
 
         @Synchronized
-        internal fun prepareDataIntent(message: Notification): Intent = Intent(
+        internal fun prepareDataIntent(message: Notification, broadcastContent: BroadcastDataContent): Intent = Intent(
                 MozoSDK.getInstance().context,
-                MozoSDK.getInstance().notifyActivityClass
+                getInstance().notifyActivityClass
         ).apply {
             putExtra(KEY_DATA, Gson().toJson(message))
+            if (message.type == Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD) {
+                putExtra(message.type, broadcastContent.messageId)
+            } else {
+                putExtra(message.type, message.content)
+            }
         }
 
         internal fun getNotificationIcon(type: String?) = when (type ?: "") {
@@ -245,6 +254,7 @@ class MozoNotification private constructor() {
             Constant.NOTIFY_EVENT_PROMO_USED -> R.drawable.im_notification_promo_used
             Constant.NOTIFY_EVENT_GROUP_BROADCAST -> R.drawable.im_notification_group_broadcast
             Constant.NOTIFY_EVENT_WARNING_COVID -> R.drawable.im_notification_covid_warning
+            Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD -> R.drawable.im_notification_lucky_draw
             else -> R.drawable.im_notification_balance_changed
         }
 
@@ -317,6 +327,10 @@ class MozoNotification private constructor() {
                 Constant.NOTIFY_EVENT_WARNING_COVID -> {
                     title = context.getString(R.string.mozo_notify_title_covid_warning)
                     content = context.getString(R.string.mozo_notify_content_covid_warning, message.numNewWarningZone)
+                }
+                Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD -> {
+                    title = context.getString(R.string.mozo_notify_title_lucky_draw)
+                    content = context.getString(R.string.mozo_notify_content_lucky_draw)
                 }
                 else -> {
                     val address = if (isSendType) message.to else message.from

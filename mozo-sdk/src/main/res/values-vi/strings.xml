@@ -178,6 +178,8 @@
     <string name="mozo_notify_title_promo_purchased">Khách hàng đã mua khuyến mãi</string>
     <string name="mozo_notify_title_covid_warning">Cảnh báo Covid-19!</string>
     <string name="mozo_notify_content_covid_warning">Có %d vùng cảnh báo Covid-19 mới ở gần bạn.</string>
+    <string name="mozo_notify_title_lucky_draw">Bạn đã trúng thưởng!</string>
+    <string name="mozo_notify_content_lucky_draw">Chúc mừng bạn đã nhận được phần thưởng từ chương trình quay số may mắn của Mozo.</string>
     <string name="mozo_notify_content_from">Từ %s</string>
     <string name="mozo_notify_content_to">Đến %s</string>
     <string name="mozo_notify_content_invited">%s đã tham gia Mozo</string>
@@ -227,6 +229,10 @@
     <string name="mozo_notify_to_do_unsecured_action">Thiết lập PIN của riêng bạn → </string>
     <string name="mozo_notify_to_do_message_new">Bạn có tin nhắn chưa đọc 📩️</string>
     <string name="mozo_notify_to_do_message_new_action">Đọc → </string>
+    <string name="mozo_notify_to_do_lucky_draw_award">Bạn nhận được quà tặng từ chương trình quay số may mắn của Mozo 🎁</string>
+    <string name="mozo_notify_to_do_lucky_draw_award_action">Xem tin nhắn → </string>
+    <string name="mozo_notify_to_do_lucky_draw_notice">Tham gia sự kiện mời bạn bè để nhận nhiều phần quà hấp dẫn.</string>
+    <string name="mozo_notify_to_do_lucky_draw_notice_action">Mời bạn bè → </string>
 
     <string name="mozo_maintenance_title">Rất tiếc, hệ thống đang bảo trì. Chúng tôi sẽ sớm quay lại.</string>
     <string name="mozo_maintenance_tips_title">Bạn có biết?</string>

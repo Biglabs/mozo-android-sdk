@@ -33,7 +33,8 @@ class Notification(
                 !Constant.NOTIFY_EVENT_CUSTOMER_CAME.equals(type, ignoreCase = true) &&
                 !Constant.NOTIFY_EVENT_PROMO_USED.equals(type, ignoreCase = true) &&
                 !Constant.NOTIFY_EVENT_PROMO_PURCHASED.equals(type, ignoreCase = true) &&
-                !Constant.NOTIFY_EVENT_WARNING_COVID.equals(type, ignoreCase = true)
+                !Constant.NOTIFY_EVENT_WARNING_COVID.equals(type, ignoreCase = true) &&
+                !Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD.equals(type, ignoreCase = true)
         )
             set(
                     max(indexOfFirst { it.isDigit() }, 0),
