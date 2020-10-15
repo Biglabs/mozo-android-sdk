@@ -14,17 +14,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/view_empty_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableTop="@drawable/im_search_empty"
         android:drawablePadding="15dp"
         android:gravity="center"
         android:text="@string/mozo_address_book_no_result"
         android:textColor="@color/mozo_color_line"
         android:textStyle="italic"
         android:visibility="gone"
+        app:drawableTopCompat="@drawable/im_search_empty"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
