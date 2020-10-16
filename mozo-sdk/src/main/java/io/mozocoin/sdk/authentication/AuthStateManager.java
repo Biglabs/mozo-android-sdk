@@ -24,6 +24,7 @@ import android.util.Log;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
+import net.openid.appauth.AuthorizationServiceConfiguration;
 import net.openid.appauth.RegistrationResponse;
 import net.openid.appauth.TokenResponse;
 
@@ -130,11 +131,14 @@ public class AuthStateManager {
     @AnyThread
     public void clearSession() {
         AuthState currentState = getCurrent();
-        AuthState clearedState = new AuthState(Objects.requireNonNull(currentState.getAuthorizationServiceConfiguration()));
-        if (currentState.getLastRegistrationResponse() != null) {
-            clearedState.update(currentState.getLastRegistrationResponse());
+        AuthorizationServiceConfiguration configuration = currentState.getAuthorizationServiceConfiguration();
+        if (configuration != null) {
+            AuthState clearedState = new AuthState(configuration);
+            if (currentState.getLastRegistrationResponse() != null) {
+                clearedState.update(currentState.getLastRegistrationResponse());
+            }
+            replace(clearedState);
         }
-        replace(clearedState);
     }
 
     @AnyThread
