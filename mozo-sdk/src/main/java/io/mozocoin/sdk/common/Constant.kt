@@ -27,6 +27,7 @@ class Constant {
         const val NOTIFY_EVENT_GROUP_BROADCAST = "group_broadcast"
         const val NOTIFY_EVENT_WARNING_COVID = "covid_event"
         const val NOTIFY_EVENT_LUCKY_DRAW_AWARD = "lucky_draw_award"
+        const val NOTIFY_EVENT_INVITATION_SETUP_EVENT = "invitation_setup_event"
 
         internal const val DEFAULT_DECIMAL = 2
         internal const val DEFAULT_CURRENCY = "USD"

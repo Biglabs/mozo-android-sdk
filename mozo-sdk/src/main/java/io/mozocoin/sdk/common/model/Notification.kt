@@ -29,18 +29,21 @@ class Notification(
 
     fun titleDisplay() = SpannableString(title).apply {
         set(0, length, StyleSpan(Typeface.BOLD))
-        if (
-                !Constant.NOTIFY_EVENT_CUSTOMER_CAME.equals(type, ignoreCase = true) &&
-                !Constant.NOTIFY_EVENT_PROMO_USED.equals(type, ignoreCase = true) &&
-                !Constant.NOTIFY_EVENT_PROMO_PURCHASED.equals(type, ignoreCase = true) &&
-                !Constant.NOTIFY_EVENT_WARNING_COVID.equals(type, ignoreCase = true) &&
-                !Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD.equals(type, ignoreCase = true)
+
+        val ignore = mutableListOf(
+                Constant.NOTIFY_EVENT_CUSTOMER_CAME,
+                Constant.NOTIFY_EVENT_PROMO_USED,
+                Constant.NOTIFY_EVENT_PROMO_PURCHASED,
+                Constant.NOTIFY_EVENT_WARNING_COVID,
+                Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD,
+                Constant.NOTIFY_EVENT_GROUP_BROADCAST,
+                Constant.NOTIFY_EVENT_INVITATION_SETUP_EVENT
         )
-            set(
-                    max(indexOfFirst { it.isDigit() }, 0),
-                    length,
-                    ForegroundColorSpan(MozoSDK.getInstance().context.color(R.color.mozo_color_primary))
-            )
+        if (!ignore.contains(type)) set(
+                max(indexOfFirst { it.isDigit() }, 0),
+                length,
+                ForegroundColorSpan(MozoSDK.getInstance().context.color(R.color.mozo_color_primary))
+        )
     }
 
     fun contentDisplay() = SpannableString(content).apply {

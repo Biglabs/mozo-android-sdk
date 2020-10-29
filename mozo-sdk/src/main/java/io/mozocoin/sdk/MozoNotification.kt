@@ -41,6 +41,10 @@ class MozoNotification private constructor() {
     private var onNotificationReceiveListener: OnNotificationReceiveListener? = null
 
     private var mShowGroupNotifyJob: Job? = null
+    private val ignoreGroup = mutableListOf(
+            Constant.NOTIFY_EVENT_GROUP_BROADCAST,
+            Constant.NOTIFY_EVENT_INVITATION_SETUP_EVENT
+    )
 
     internal fun showNotification(message: BroadcastDataContent) = GlobalScope.launch {
         notifyActivityClass ?: return@launch
@@ -71,18 +75,29 @@ class MozoNotification private constructor() {
                     setDefaults(android.app.Notification.DEFAULT_ALL)
                     setContentIntent(pendingIntent)
 
-                    if (notification.type != Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
-                        setLargeIcon(context.bitmap(notification.icon()))
-                        setGroup(notificationGroup.name)
-                        extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
-                        extras.putString(EXTRAS_ITEM_DATA, notification.raw)
+                    when (notification.type) {
+                        Constant.NOTIFY_EVENT_GROUP_BROADCAST -> {
+                            /**
+                             * No additional information
+                             * */
+                        }
+                        Constant.NOTIFY_EVENT_INVITATION_SETUP_EVENT -> {
+                            setStyle(NotificationCompat.BigTextStyle()
+                                    .bigText(notification.contentDisplay()))
+                        }
+                        else -> {
+                            setLargeIcon(context.bitmap(notification.icon()))
+                            setGroup(notificationGroup.name)
+                            extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
+                            extras.putString(EXTRAS_ITEM_DATA, notification.raw)
+                        }
                     }
                 }
 
         val id = atomicInteger.incrementAndGet()
         NotificationManagerCompat.from(context).notify(id, singleNotify.build())
 
-        if (notification.type != Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
+        if (!ignoreGroup.contains(notification.type)) {
             return@launch doGroupNotificationDelayed(
                     context,
                     message,
@@ -217,7 +232,8 @@ class MozoNotification private constructor() {
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED,
                     Constant.NOTIFY_EVENT_CUSTOMER_CAME,
                     Constant.NOTIFY_EVENT_PROMO_PURCHASED,
-                    Constant.NOTIFY_EVENT_GROUP_BROADCAST
+                    Constant.NOTIFY_EVENT_GROUP_BROADCAST,
+                    Constant.NOTIFY_EVENT_INVITATION_SETUP_EVENT
             ) else
             arrayOf(
                     Constant.NOTIFY_EVENT_AIRDROPPED,
@@ -252,9 +268,10 @@ class MozoNotification private constructor() {
             Constant.NOTIFY_EVENT_CUSTOMER_CAME,
             Constant.NOTIFY_EVENT_PROMO_PURCHASED -> R.drawable.im_notification_customer_came
             Constant.NOTIFY_EVENT_PROMO_USED -> R.drawable.im_notification_promo_used
-            Constant.NOTIFY_EVENT_GROUP_BROADCAST -> R.drawable.im_notification_group_broadcast
             Constant.NOTIFY_EVENT_WARNING_COVID -> R.drawable.im_notification_covid_warning
             Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD -> R.drawable.im_notification_lucky_draw
+            Constant.NOTIFY_EVENT_INVITATION_SETUP_EVENT,
+            Constant.NOTIFY_EVENT_GROUP_BROADCAST -> R.drawable.im_notification_group_broadcast
             else -> R.drawable.im_notification_balance_changed
         }
 
@@ -266,10 +283,7 @@ class MozoNotification private constructor() {
             )
 
             var title = ""
-            if (message.event == Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
-                title = message.title ?: ""
-
-            } else if (message.amount != null) {
+            if (message.amount != null) {
                 title = context.getString(
                         when (message.event ?: "") {
                             Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
@@ -320,10 +334,6 @@ class MozoNotification private constructor() {
                     title = context.getString(R.string.mozo_notify_title_promo_purchased)
                     content = message.promoName ?: ""
                 }
-                Constant.NOTIFY_EVENT_GROUP_BROADCAST -> {
-                    title = message.title ?: ""
-                    content = message.body ?: ""
-                }
                 Constant.NOTIFY_EVENT_WARNING_COVID -> {
                     title = context.getString(R.string.mozo_notify_title_covid_warning)
                     content = context.getString(R.string.mozo_notify_content_covid_warning, message.numNewWarningZone)
@@ -331,6 +341,10 @@ class MozoNotification private constructor() {
                 Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD -> {
                     title = context.getString(R.string.mozo_notify_title_lucky_draw)
                     content = context.getString(R.string.mozo_notify_content_lucky_draw)
+                }
+                Constant.NOTIFY_EVENT_INVITATION_SETUP_EVENT, Constant.NOTIFY_EVENT_GROUP_BROADCAST -> {
+                    title = message.title ?: ""
+                    content = message.body ?: ""
                 }
                 else -> {
                     val address = if (isSendType) message.to else message.from
