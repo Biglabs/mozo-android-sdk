@@ -7,6 +7,7 @@
     <string name="error_convert_status_pending">Không thể gởi giao dịch đến hệ thống Ethereum hoặc đã gởi nhưng xảy ra lỗi. Xin vui lòng kiểm tra thông tin và thực hiện lại giao dịch</string>
 
     <string name="error_fatal">Không thể kết nối máy chủ Mozo. Liên hệ tư vấn viên để biết thêm thông tin</string>
+    <string name="error_temporary_suspend">Tính năng này tạm thời bị khóa. Sẽ khả dụng sớm trong đợt phát hành tới. Xin vui lòng theo dõi những cập nhật của chúng tôi trên kho Ứng dụng.</string>
     <string name="error_required_login">Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại</string>
 
     <string name="error_tx_invalid_address">Địa chỉ ví không tồn tại. Hệ thống chỉ cho phép thực hiện giao dịch với những địa chỉ ví Mozo đã được đăng ký.</string>
