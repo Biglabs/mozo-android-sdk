@@ -18,6 +18,19 @@ task sourceJar(type: Jar) {
     archiveClassifier = "sources"
 }
 
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+}
+
+// build a jar with javadoc
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
 publishing {
     publications {
         MozoSDK(MavenPublication) {
@@ -25,6 +38,7 @@ publishing {
             artifactId artifactProjectId
             artifact("$buildDir/outputs/aar/mozo-sdk-release.aar")
             artifact sourceJar
+            artifact javadocJar
             version mozo_sdk_version_name
 
             pom {

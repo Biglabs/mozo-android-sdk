@@ -7,7 +7,7 @@
     <string name="error_convert_status_pending">Can not send transaction to Ethereum network or sent but failed. Please check your data and try again</string>
 
     <string name="error_fatal">Cannot connect to Mozo servers. Please contact us for more information.</string>
-    <string name="error_temporary_suspend">This feature is temporarily suspended. It will be available soon in next release. Please check for our updates on App stores.</string>
+    <string name="error_temporary_suspend">This feature is temporarily suspended. It will be available soon in next release.\nPlease check for our updates on App stores.</string>
     <string name="error_required_login">Your session is expired. Please login again</string>
 
     <string name="error_tx_invalid_address">This wallet address does not exist. We only support registered Mozo wallet addresses.</string>
