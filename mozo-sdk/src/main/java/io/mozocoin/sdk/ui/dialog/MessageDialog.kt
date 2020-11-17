@@ -10,7 +10,7 @@ import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.string
 import kotlinx.android.synthetic.main.dialog_message.*
 
-class MessageDialog(context: Context, val message: String) : BaseDialog(context) {
+class MessageDialog(context: Context, val message: CharSequence) : BaseDialog(context) {
 
     private var buttonText: String? = null
     private var buttonAction: (() -> Unit)? = null
@@ -19,12 +19,12 @@ class MessageDialog(context: Context, val message: String) : BaseDialog(context)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_message)
 
-        dialog_msg_content.text = message
+        dialog_msg_content?.text = message
 
         buttonText?.let {
-            button_close.text = it
+            button_close?.text = it
         }
-        button_close.click {
+        button_close?.click {
             dismiss()
             buttonAction?.invoke()
         }
@@ -72,7 +72,7 @@ class MessageDialog(context: Context, val message: String) : BaseDialog(context)
             show(context, context.getString(message))
         }
 
-        fun show(context: Context, message: String) = synchronized(this) {
+        fun show(context: Context, message: CharSequence) = synchronized(this) {
             MessageDialog(context, message).show()
         }
 
