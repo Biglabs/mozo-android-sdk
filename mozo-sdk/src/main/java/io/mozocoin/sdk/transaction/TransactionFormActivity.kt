@@ -23,11 +23,11 @@ import io.mozocoin.sdk.common.model.TransactionResponse
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.contact.AddressAddActivity
 import io.mozocoin.sdk.contact.AddressBookActivity
+import io.mozocoin.sdk.databinding.ViewTransactionFormBinding
+import io.mozocoin.sdk.databinding.ViewTransactionSentBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.view_transaction_form.*
-import kotlinx.android.synthetic.main.view_transaction_sent.*
 import kotlinx.coroutines.*
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
@@ -36,6 +36,8 @@ import java.util.*
 @Suppress("unused")
 internal class TransactionFormActivity : BaseActivity() {
 
+    private lateinit var bindingForm: ViewTransactionFormBinding
+    private lateinit var bindingSent: ViewTransactionSentBinding
     private var currentBalance = BigDecimal.ZERO
     private var currentRate = BigDecimal.ZERO
     private var selectedContact: Contact? = null
@@ -64,10 +66,12 @@ internal class TransactionFormActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.view_transaction_form)
+        bindingForm = ViewTransactionFormBinding.inflate(layoutInflater)
+        bindingSent = ViewTransactionSentBinding.inflate(layoutInflater)
+        setContentView(bindingForm.root)
 
         MozoSDK.getInstance().contactViewModel.fetchData(this)
-        mPhoneContactUtils = PhoneContactUtils(output_receiver_address) {
+        mPhoneContactUtils = PhoneContactUtils(bindingForm.outputReceiverAddress) {
             selectedContact = it
             showContactInfoUI()
         }
@@ -84,13 +88,13 @@ internal class TransactionFormActivity : BaseActivity() {
         if (address != null && amount != null) {
             isViewOnlyMode = true
             selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
-            output_receiver_address.setText(address)
-            output_amount.setText(amount)
+            bindingForm.outputReceiverAddress.setText(address)
+            bindingForm.outputAmount.setText(amount)
             mInputAmount = amount.toBigDecimal()
 
             showContactInfoUI()
             showConfirmationUI()
-            button_submit.performClick()
+            bindingForm.buttonSubmit.performClick()
         }
     }
 
@@ -122,8 +126,8 @@ internal class TransactionFormActivity : BaseActivity() {
 
                             showInputUI()
                             if (selectedContact == null) {
-                                output_receiver_address?.setText(it)
-                                output_receiver_address?.dismissDropDown()
+                                bindingForm.outputReceiverAddress.setText(it)
+                                bindingForm.outputReceiverAddress.dismissDropDown()
                                 validateInput(true)
                             } else
                                 showContactInfoUI()
@@ -133,7 +137,8 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun sendTx() {
-        val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
+        val address = selectedContact?.soloAddress
+                ?: bindingForm.outputReceiverAddress.text.toString()
 
         showLoading()
         MozoTx.getInstance()
@@ -162,25 +167,25 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun initUI() {
-        transfer_container?.click {
+        bindingForm.transferContainer.click {
             it.hideKeyboard()
         }
 
-        output_receiver_address?.apply {
+        bindingForm.outputReceiverAddress.apply {
             onTextChanged {
                 hideErrorAddressUI()
                 updateSubmitButton()
             }
             onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-                output_receiver_address_label?.isSelected = hasFocus
-                output_receiver_address_underline?.isSelected = hasFocus
-                if (hasFocus && output_receiver_address?.length() ?: 0 > 0) {
-                    output_receiver_address?.showDropDown()
+                bindingForm.outputReceiverAddressLabel.isSelected = hasFocus
+                bindingForm.outputReceiverAddressUnderline.isSelected = hasFocus
+                if (hasFocus && bindingForm.outputReceiverAddress.length() > 0) {
+                    bindingForm.outputReceiverAddress.showDropDown()
                 }
             }
             setOnClickListener {
-                if (output_receiver_address?.length() ?: 0 > 0)
-                    output_receiver_address?.showDropDown()
+                if (bindingForm.outputReceiverAddress.length() > 0)
+                    bindingForm.outputReceiverAddress.showDropDown()
             }
 
             /**
@@ -191,8 +196,8 @@ internal class TransactionFormActivity : BaseActivity() {
                 (adapter.getItem(position) as? Contact)?.let {
                     selectedContact = it
                     showContactInfoUI()
-                    output_receiver_address?.text = null
-                    output_amount?.requestFocus()
+                    bindingForm.outputReceiverAddress.text = null
+                    bindingForm.outputAmount.requestFocus()
                 }
             }
             setAdapter(ContactSuggestionAdapter(
@@ -203,7 +208,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    val value = output_receiver_address?.text?.toString()?.trim()
+                    val value = bindingForm.outputReceiverAddress.text?.toString()?.trim()
                     if (!value.isNullOrEmpty() && !WalletUtils.isValidAddress(value)) {
                         mPhoneContactUtils?.onFindInSystemClick?.invoke()
                         return@setOnEditorActionListener true
@@ -213,39 +218,41 @@ internal class TransactionFormActivity : BaseActivity() {
             }
         }
 
-        output_amount?.onAmountInputChanged(
+        bindingForm.outputAmount.onAmountInputChanged(
                 textChanged = {
                     hideErrorAmountUI()
                     updateSubmitButton()
                     if (it.isNullOrEmpty()) {
-                        output_amount_rate?.text = ""
-                        text_preview_rate?.text = ""
+                        bindingForm.outputAmountRate.text = ""
+                        bindingForm.textPreviewRate.text = ""
                     }
                 },
                 amountChanged = { amount ->
                     mInputAmount = amount
-                    output_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
-                    text_preview_rate?.text =
-                            MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(amount.multiply(
-                                    currentRate), true)
+                    bindingForm.outputAmountRate.text = MozoWallet.getInstance().amountInCurrency(amount)
+                    bindingForm.textPreviewRate.text = MozoSDK.getInstance().profileViewModel
+                            .formatCurrencyDisplay(
+                                    amount.multiply(currentRate),
+                                    true
+                            )
                 }
         )
 
-        output_amount?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-            output_amount_label?.isSelected = hasFocus
-            output_amount_underline?.isSelected = hasFocus
+        bindingForm.outputAmount.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            bindingForm.outputAmountLabel.isSelected = hasFocus
+            bindingForm.outputAmountUnderline.isSelected = hasFocus
         }
 
-        transfer_toolbar?.onBackPress = { onBackPressed() }
-        button_address_book?.click { AddressBookActivity.startForResult(this, KEY_PICK_ADDRESS) }
-        button_scan_qr?.click {
+        bindingForm.transferToolbar.onBackPress = { onBackPressed() }
+        bindingForm.buttonAddressBook.click { AddressBookActivity.startForResult(this, KEY_PICK_ADDRESS) }
+        bindingForm.buttonScanQr.click {
             Support.scanQRCode(this)
         }
-        button_submit?.click {
-            if (output_receiver_address.isEnabled) {
+        bindingForm.buttonSubmit.click {
+            if (bindingForm.outputReceiverAddress.isEnabled) {
                 if (validateInput()) {
                     val output = selectedContact?.soloAddress
-                            ?: output_receiver_address.text.toString()
+                            ?: bindingForm.outputReceiverAddress.text.toString()
                     when (output) {
                         MozoWallet.getInstance().getAddress() -> {
                             MessageDialog.show(it.context, R.string.mozo_transfer_err_send_to_own_wallet)
@@ -260,7 +267,7 @@ internal class TransactionFormActivity : BaseActivity() {
                     status ?: return@checkNetworkStatus
                     sendTx()
                 }, {
-                    button_submit?.performClick()
+                    bindingForm.buttonSubmit.performClick()
                 })
             }
         }
@@ -270,11 +277,11 @@ internal class TransactionFormActivity : BaseActivity() {
         bar?.run {
             currentBalance = balanceNonDecimal
             currentRate = rate
-            Support.formatSpendableText(text_spendable, currentBalance.displayString())
+            Support.formatSpendableText(bindingForm.textSpendable, currentBalance.displayString())
 
             if (isViewOnlyMode) {
-                text_preview_rate?.text =
-                        MozoSDK.getInstance().profileViewModel.formatCurrencyDisplay(
+                bindingForm.textPreviewRate.text = MozoSDK.getInstance().profileViewModel
+                        .formatCurrencyDisplay(
                                 mInputAmount.multiply(currentRate),
                                 true
                         )
@@ -283,29 +290,29 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun showInputUI() {
-        output_receiver_address?.isEnabled = true
-        output_amount?.isEnabled = true
+        bindingForm.outputReceiverAddress.isEnabled = true
+        bindingForm.outputAmount.isEnabled = true
         visible(
-                output_receiver_address,
-                output_receiver_address_underline,
-                button_address_book,
-                button_scan_qr,
-                output_amount,
-                output_amount_rate,
-                output_amount_underline
+                bindingForm.outputReceiverAddress,
+                bindingForm.outputReceiverAddressUnderline,
+                bindingForm.buttonAddressBook,
+                bindingForm.buttonScanQr,
+                bindingForm.outputAmount,
+                bindingForm.outputAmountRate,
+                bindingForm.outputAmountUnderline
         )
         gone(
-                output_receiver_address_user,
-                send_state_container,
-                confirmation_state_separator,
-                output_amount_preview_container
+                bindingForm.outputReceiverAddressUser,
+                bindingForm.sendStateContainer,
+                bindingForm.confirmationStateSeparator,
+                bindingForm.outputAmountPreviewContainer
         )
 
-        transfer_toolbar?.showBackButton(false)
-        button_submit?.setText(R.string.mozo_button_continue)
+        bindingForm.transferToolbar.showBackButton(false)
+        bindingForm.buttonSubmit.setText(R.string.mozo_button_continue)
 
-        if (output_amount_error_msg?.visibility != View.VISIBLE) {
-            text_spendable?.visible()
+        if (bindingForm.outputAmountErrorMsg.visibility != View.VISIBLE) {
+            bindingForm.textSpendable.visible()
         }
     }
 
@@ -313,22 +320,22 @@ internal class TransactionFormActivity : BaseActivity() {
         hideErrorAddressUI()
         updateSubmitButton()
         selectedContact?.run {
-            output_receiver_address?.visibility = View.INVISIBLE
-            output_receiver_address_underline?.visibility = View.INVISIBLE
-            button_scan_qr?.visibility = View.INVISIBLE
+            bindingForm.outputReceiverAddress.visibility = View.INVISIBLE
+            bindingForm.outputReceiverAddressUnderline.visibility = View.INVISIBLE
+            bindingForm.buttonScanQr.visibility = View.INVISIBLE
 
-            output_receiver_address_user?.visible()
-            output_receiver_icon?.setImageResource(if (isStore) R.drawable.ic_store else R.drawable.ic_receiver)
-            text_receiver_phone?.text = if (isStore) physicalAddress else phoneNo
-            text_receiver_phone?.isVisible = text_receiver_phone?.length() ?: 0 > 0
+            bindingForm.outputReceiverAddressUser.visible()
+            bindingForm.outputReceiverIcon.setImageResource(if (isStore) R.drawable.ic_store else R.drawable.ic_receiver)
+            bindingForm.textReceiverPhone.text = if (isStore) physicalAddress else phoneNo
+            bindingForm.textReceiverPhone.isVisible = bindingForm.textReceiverPhone.length() > 0
 
-            text_receiver_user_name?.text = name
-            text_receiver_user_name?.isVisible = !name.isNullOrEmpty()
-            text_receiver_user_address?.text = soloAddress
+            bindingForm.textReceiverUserName.text = name
+            bindingForm.textReceiverUserName.isVisible = !name.isNullOrEmpty()
+            bindingForm.textReceiverUserAddress.text = soloAddress
 
-            output_amount?.requestFocus()
+            bindingForm.outputAmount.requestFocus()
 
-            button_clear?.apply {
+            bindingForm.buttonClear.apply {
                 visible()
                 click {
                     selectedContact = null
@@ -341,51 +348,30 @@ internal class TransactionFormActivity : BaseActivity() {
 
     private fun showConfirmationUI() {
         isNeedBack2Edit = true
-        output_receiver_address?.isEnabled = false
-        output_receiver_address?.setSelection(0)
+        bindingForm.outputReceiverAddress.isEnabled = false
+        bindingForm.outputReceiverAddress.setSelection(0)
 
-        output_amount?.isEnabled = false
+        bindingForm.outputAmount.isEnabled = false
         gone(
-                output_receiver_address_underline,
-                button_address_book,
-                button_scan_qr,
-                output_amount,
-                output_amount_rate,
-                output_amount_underline,
-                text_spendable,
-                button_clear
+                bindingForm.outputReceiverAddressUnderline,
+                bindingForm.buttonAddressBook,
+                bindingForm.buttonScanQr,
+                bindingForm.outputAmount,
+                bindingForm.outputAmountRate,
+                bindingForm.outputAmountUnderline,
+                bindingForm.textSpendable,
+                bindingForm.buttonClear
         )
-        text_preview_amount?.text = mInputAmount.displayString()
+        bindingForm.textPreviewAmount.text = mInputAmount.displayString()
         visible(
-                send_state_container,
-                confirmation_state_separator,
-                output_amount_preview_container
+                bindingForm.sendStateContainer,
+                bindingForm.confirmationStateSeparator,
+                bindingForm.outputAmountPreviewContainer
         )
 
-        transfer_toolbar?.showBackButton(true)
-        button_submit?.setText(R.string.mozo_button_send)
-        button_submit?.isClickable = true
-    }
-
-    private fun updateContactUI() {
-        button_save_address?.isVisible = selectedContact == null
-        val contact = selectedContact
-
-        if (contact == null) {
-            text_preview_address_sent?.text = history.addressTo
-            output_receiver_address_user_sent?.gone()
-            return
-        }
-
-        output_receiver_address_user_sent?.visible()
-        output_receiver_icon_sent?.setImageResource(if (contact.isStore) R.drawable.ic_store else R.drawable.ic_receiver)
-
-        text_preview_address_sent?.gone()
-        text_receiver_user_name_sent?.text = contact.name
-        text_receiver_user_name_sent?.isVisible = !contact.name.isNullOrEmpty()
-        text_receiver_user_address_sent?.text = contact.soloAddress
-        text_receiver_phone_sent?.text = if (contact.isStore) contact.physicalAddress else contact.phoneNo
-        text_receiver_phone_sent?.isVisible = text_receiver_phone_sent?.length() ?: 0 > 0
+        bindingForm.transferToolbar.showBackButton(true)
+        bindingForm.buttonSubmit.setText(R.string.mozo_button_send)
+        bindingForm.buttonSubmit.isClickable = true
     }
 
     private val userContactsObserver = Observer<List<Contact>?> {
@@ -393,20 +379,23 @@ internal class TransactionFormActivity : BaseActivity() {
         updateContactUI()
     }
 
-    private fun showResultUI(txResponse: TransactionResponse?) = GlobalScope.launch(Dispatchers.Main) {
+    private fun showResultUI(txResponse: TransactionResponse?) = MainScope().launch {
         if (txResponse != null) {
-            MozoSDK.getInstance()
-                    .contactViewModel.usersLiveData.observe(this@TransactionFormActivity,
-                            userContactsObserver)
-            setContentView(R.layout.view_transaction_sent)
+            MozoSDK.getInstance().contactViewModel.usersLiveData.observe(
+                    this@TransactionFormActivity,
+                    userContactsObserver
+            )
+            setContentView(bindingSent.root)
 
-            transfer_completed_title.setText(R.string.mozo_transfer_action_complete)
-            text_preview_amount_sent.text = history.amountDisplay()
-            text_preview_rate_sent.text = MozoSDK.getInstance()
-                    .profileViewModel.formatCurrencyDisplay(history.amountInDecimal().multiply(
-                            currentRate), true)
+            bindingSent.transferCompletedTitle.setText(R.string.mozo_transfer_action_complete)
+            bindingSent.textPreviewAmountSent.text = history.amountDisplay()
+            bindingSent.textPreviewRateSent.text = MozoSDK.getInstance().profileViewModel
+                    .formatCurrencyDisplay(
+                            history.amountInDecimal().multiply(currentRate),
+                            true
+                    )
 
-            button_save_address?.apply {
+            bindingSent.buttonSaveAddress.apply {
                 isVisible = selectedContact == null
                 click {
                     AddressAddActivity.start(this@TransactionFormActivity, history.addressTo)
@@ -415,7 +404,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
             history.txHash = txResponse.tx.hash ?: ""
 
-            button_transaction_detail?.apply {
+            bindingSent.buttonTransactionDetail.apply {
                 gone()
                 click {
                     TransactionDetailsActivity.start(this@TransactionFormActivity, history)
@@ -427,24 +416,47 @@ internal class TransactionFormActivity : BaseActivity() {
         }
     }
 
+    private fun updateContactUI() {
+        bindingSent.buttonSaveAddress.isVisible = selectedContact == null
+        val contact = selectedContact
+
+        if (contact == null) {
+            bindingSent.textPreviewAddressSent.text = history.addressTo
+            bindingSent.outputReceiverAddressUserSent.gone()
+            return
+        }
+
+        bindingSent.outputReceiverAddressUserSent.visible()
+        bindingSent.outputReceiverIconSent.setImageResource(
+                if (contact.isStore) R.drawable.ic_store else R.drawable.ic_receiver
+        )
+
+        bindingSent.textPreviewAddressSent.gone()
+        bindingSent.textReceiverUserNameSent.text = contact.name
+        bindingSent.textReceiverUserNameSent.isVisible = !contact.name.isNullOrEmpty()
+        bindingSent.textReceiverUserAddressSent.text = contact.soloAddress
+        bindingSent.textReceiverPhoneSent.text = if (contact.isStore) contact.physicalAddress else contact.phoneNo
+        bindingSent.textReceiverPhoneSent.isVisible = bindingSent.textReceiverPhoneSent.length() > 0
+    }
+
     private fun updateTxStatus() {
         MozoTx.getInstance().getTransactionStatus(this, history.txHash ?: return) {
             when {
                 it.isSuccess() -> {
-                    transfer_completed_title.setText(R.string.mozo_transfer_send_complete)
-                    transfer_info_container.visible()
-                    transfer_status_container.gone()
-                    button_transaction_detail.visible()
+                    bindingSent.transferCompletedTitle.setText(R.string.mozo_transfer_send_complete)
+                    bindingSent.transferInfoContainer.visible()
+                    bindingSent.transferStatusContainer.gone()
+                    bindingSent.buttonTransactionDetail.visible()
                 }
                 it.isFailed() -> {
-                    text_tx_status_icon.setImageResource(R.drawable.ic_error)
-                    text_tx_status_label.setText(R.string.mozo_view_text_tx_failed)
+                    bindingSent.textTxStatusIcon.setImageResource(R.drawable.ic_error)
+                    bindingSent.textTxStatusLabel.setText(R.string.mozo_view_text_tx_failed)
                 }
             }
 
             updateTxStatusJob = if (it.isSuccess() || it.isFailed()) {
-                text_tx_status_loading.gone()
-                text_tx_status_icon.visible()
+                bindingSent.textTxStatusLoading.gone()
+                bindingSent.textTxStatusIcon.visible()
                 null
             } else /* PENDING */ {
                 updateTxStatusJob?.cancel()
@@ -457,58 +469,59 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun updateSubmitButton() {
-        button_submit?.isEnabled =
-                (selectedContact != null || output_receiver_address.length() > 0) && output_amount.length() > 0
+        bindingForm.buttonSubmit.isEnabled = (selectedContact != null || bindingForm.outputReceiverAddress.length() > 0)
+                && bindingForm.outputAmount.length() > 0
     }
 
-    private fun showLoading() = GlobalScope.launch(Dispatchers.Main) {
-        transfer_loading_container?.visible()
+    private fun showLoading() = MainScope().launch {
+        bindingForm.transferLoadingContainer.visible()
     }
 
-    private fun hideLoading() = GlobalScope.launch(Dispatchers.Main) {
-        transfer_loading_container?.gone()
+    private fun hideLoading() = MainScope().launch {
+        bindingForm.transferLoadingContainer.gone()
     }
 
     private fun showErrorAddressUI(fromScan: Boolean = false, @StringRes errorId: Int = R.string.mozo_transfer_receiver_address_error) {
         val errorColor = color(R.color.mozo_color_error)
-        output_receiver_address_label?.setTextColor(errorColor)
-        output_receiver_address_underline?.setBackgroundColor(errorColor)
-        output_receiver_address_error_msg?.visible()
-        output_receiver_address_error_msg?.setText(
+        bindingForm.outputReceiverAddressLabel.setTextColor(errorColor)
+        bindingForm.outputReceiverAddressUnderline.setBackgroundColor(errorColor)
+        bindingForm.outputReceiverAddressErrorMsg.visible()
+        bindingForm.outputReceiverAddressErrorMsg.setText(
                 if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
         )
     }
 
     private fun hideErrorAddressUI() {
-        output_receiver_address_label?.setTextColor(ContextCompat.getColorStateList(this,
+        bindingForm.outputReceiverAddressLabel.setTextColor(ContextCompat.getColorStateList(this,
                 R.color.mozo_color_input_focus))
-        output_receiver_address_underline?.setBackgroundResource(R.drawable.mozo_color_line_focus)
-        output_receiver_address_error_msg?.gone()
+        bindingForm.outputReceiverAddressUnderline.setBackgroundResource(R.drawable.mozo_color_line_focus)
+        bindingForm.outputReceiverAddressErrorMsg.gone()
     }
 
     private fun showErrorAmountUI(@StringRes errorId: Int? = null) {
         val errorColor = color(R.color.mozo_color_error)
-        output_amount_label?.setTextColor(errorColor)
-        output_amount_underline?.setBackgroundColor(errorColor)
-        output_amount_error_msg?.setText(errorId ?: R.string.mozo_transfer_amount_error)
-        output_amount_error_msg?.visible()
-        text_spendable?.gone()
+        bindingForm.outputAmountLabel.setTextColor(errorColor)
+        bindingForm.outputAmountUnderline.setBackgroundColor(errorColor)
+        bindingForm.outputAmountErrorMsg.setText(errorId ?: R.string.mozo_transfer_amount_error)
+        bindingForm.outputAmountErrorMsg.visible()
+        bindingForm.textSpendable.gone()
     }
 
     private fun hideErrorAmountUI() {
-        output_amount_label?.setTextColor(ContextCompat.getColorStateList(this,
+        bindingForm.outputAmountLabel.setTextColor(ContextCompat.getColorStateList(this,
                 R.color.mozo_color_input_focus))
-        output_amount_underline?.setBackgroundResource(R.drawable.mozo_color_line_focus)
-        output_amount_error_msg?.gone()
-        text_spendable?.visible()
+        bindingForm.outputAmountUnderline.setBackgroundResource(R.drawable.mozo_color_line_focus)
+        bindingForm.outputAmountErrorMsg.gone()
+        bindingForm.textSpendable.visible()
     }
 
     @SuppressLint("SetTextI18n")
     private fun validateInput(fromScan: Boolean = false): Boolean {
         var isValidAddress = true
-        val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
+        val address = selectedContact?.soloAddress
+                ?: bindingForm.outputReceiverAddress.text.toString()
         if (!WalletUtils.isValidAddress(address)) {
-            if (fromScan) output_receiver_address.text = null
+            if (fromScan) bindingForm.outputReceiverAddress.text = null
             showErrorAddressUI(fromScan)
             isValidAddress = false
         }

@@ -175,7 +175,7 @@ class MozoNotification private constructor() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel(channel: String) = GlobalScope.launch(Dispatchers.Main) {
+    private fun createChannel(channel: String) = MainScope().launch {
         var channelName = channel.split("_")[0]
         channelName =
                 channelName.substring(0, 1).toUpperCase(Locale.getDefault()) + channelName.substring(1)
@@ -365,7 +365,7 @@ class MozoNotification private constructor() {
                         .notifications()
                         .get(itemId)
 
-                launch(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     getInstance().onNotificationReceiveListener?.onReceived(result)
                 }
             }
@@ -410,7 +410,7 @@ class MozoNotification private constructor() {
             GlobalScope.launch {
                 val result =
                         MozoDatabase.getInstance(MozoSDK.getInstance().context).notifications().getAll()
-                launch(Dispatchers.Main) { callback.invoke(result) }
+                withContext(Dispatchers.Main) { callback.invoke(result) }
             }
         }
 
@@ -441,7 +441,7 @@ class MozoNotification private constructor() {
                 MozoDatabase.getInstance(MozoSDK.getInstance().context)
                         .notifications()
                         .updateRead(notification)
-                launch(Dispatchers.Main) { callback.invoke(notification) }
+                withContext(Dispatchers.Main) { callback.invoke(notification) }
             }
         }
 
@@ -458,7 +458,7 @@ class MozoNotification private constructor() {
                 MozoDatabase.getInstance(MozoSDK.getInstance().context)
                         .notifications()
                         .updateRead(*result.toTypedArray())
-                launch(Dispatchers.Main) { callback.invoke(result) }
+                withContext(Dispatchers.Main) { callback.invoke(result) }
             }
         }
 

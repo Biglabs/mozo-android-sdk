@@ -12,6 +12,9 @@ import io.mozocoin.sdk.common.dao.UserInfoDao
 import io.mozocoin.sdk.common.model.Notification
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.UserInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Database(entities = [UserInfo::class, Profile::class, Notification::class], version = 6, exportSchema = false)
 internal abstract class MozoDatabase : RoomDatabase() {
@@ -22,9 +25,11 @@ internal abstract class MozoDatabase : RoomDatabase() {
 
     fun clear() {
         instance ?: return
-        if (isOpen) {
-            userInfo().deleteAll()
-            notifications().deleteAll()
+        GlobalScope.launch(Dispatchers.IO) {
+            if (isOpen) {
+                userInfo().deleteAll()
+                notifications().deleteAll()
+            }
         }
     }
 

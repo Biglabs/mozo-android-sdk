@@ -16,18 +16,21 @@ import io.mozocoin.sdk.common.OnLoadMoreListener
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.ViewTransactionHistoryBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.mozoSetup
-import kotlinx.android.synthetic.main.view_transaction_history.*
 import kotlinx.coroutines.*
 
 internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
+    private lateinit var binding: ViewTransactionHistoryBinding
     private val histories = arrayListOf<TransactionHistory>()
     private val onItemClick = { history: TransactionHistory ->
         TransactionDetailsActivity.start(this@TransactionHistoryActivity, history)
     }
-    private var historyAdapter = TransactionHistoryRecyclerAdapter(histories, onItemClick, this)
+    private val historyAdapter: TransactionHistoryRecyclerAdapter by lazy {
+        TransactionHistoryRecyclerAdapter(layoutInflater, histories, onItemClick, this)
+    }
 
     private var currentAddress: String? = null
     private var currentPage = Constant.PAGING_START_INDEX
@@ -37,27 +40,31 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.view_transaction_history)
+        binding = ViewTransactionHistoryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         MozoSDK.getInstance().profileViewModel.run {
             profileLiveData.observe(this@TransactionHistoryActivity, profileObserver)
         }
 
-        list_history_refresh?.apply {
+        binding.listHistoryRefresh.apply {
             mozoSetup()
             setOnRefreshListener(this@TransactionHistoryActivity)
             isRefreshing = true
         }
 
-        list_history.setHasFixedSize(true)
-        list_history.itemAnimator = DefaultItemAnimator()
-        list_history.adapter = historyAdapter
-        list_history.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                history_top_bar_hover.isSelected = recyclerView.canScrollVertically(-1)
-            }
-        })
-        history_filter_group.setOnCheckedChangeListener { _, checkedId ->
+        binding.listHistory.apply {
+            setHasFixedSize(true)
+            itemAnimator = DefaultItemAnimator()
+            adapter = historyAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    binding.historyTopBarHover.isSelected = recyclerView.canScrollVertically(-1)
+                }
+            })
+        }
+
+        binding.historyFilterGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.history_filter_all -> historyAdapter.filter(TransactionHistoryRecyclerAdapter.FILTER_ALL)
                 R.id.history_filter_received -> historyAdapter.filter(TransactionHistoryRecyclerAdapter.FILTER_RECEIVED)
@@ -65,7 +72,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
             }
         }
 
-        list_history_empty_view?.onPrimaryClicked = {
+        binding.listHistoryEmptyView.onPrimaryClicked = {
             onBackPressed()
         }
     }
@@ -93,8 +100,8 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
                 currentAddress ?: return,
                 page = currentPage,
                 callback = { data, _ ->
-                    list_history_refresh?.isRefreshing = false
-                    list_history_empty_view?.isVisible = data?.items.isNullOrEmpty()
+                    binding.listHistoryRefresh.isRefreshing = false
+                    binding.listHistoryEmptyView.isVisible = data?.items.isNullOrEmpty()
 
                     if (data?.items == null) {
                         historyAdapter.setCanLoadMore(false)

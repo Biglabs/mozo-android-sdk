@@ -6,25 +6,22 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.model.PaymentRequest
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.contact.AddressAddActivity
+import io.mozocoin.sdk.databinding.ViewTransactionDetailsBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.view_transaction_details.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.math.BigDecimal
 
 internal class TransactionDetailsActivity : BaseActivity() {
 
+    private lateinit var binding: ViewTransactionDetailsBinding
     private var mHistory: TransactionHistory? = null
     private var mPaymentRequest: PaymentRequest? = null
 
@@ -44,7 +41,8 @@ internal class TransactionDetailsActivity : BaseActivity() {
             return
         }
 
-        setContentView(R.layout.view_transaction_details)
+        binding = ViewTransactionDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         when {
             mHistory != null -> {
@@ -60,25 +58,27 @@ internal class TransactionDetailsActivity : BaseActivity() {
                 }
 
                 setTitle(R.string.mozo_payment_request_title)
-                button_pay?.visible()
-                button_pay?.click(onPayClicked)
+                binding.buttonPay.apply {
+                    visible()
+                    click(onPayClicked)
+                }
             }
         }
 
         bindData(MozoWallet.getInstance().getAddress() ?: "")
 
-        MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this, Observer {
+        MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this) {
             it?.run {
                 displayContact()
             }
-        })
-        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this, Observer {
+        }
+        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(this) {
             currentBalance = it.balanceNonDecimal
             it?.rate?.run {
-                text_detail_amount_rate_side.text = MozoSDK.getInstance().profileViewModel
+                binding.textDetailAmountRateSide.text = MozoSDK.getInstance().profileViewModel
                         .formatCurrencyDisplay(mAmount.multiply(this), true)
             }
-        })
+        }
     }
 
     override fun onDestroy() {
@@ -94,7 +94,7 @@ internal class TransactionDetailsActivity : BaseActivity() {
         when {
             mHistory != null -> {
                 sendType = mHistory!!.type(myAddress)
-                text_detail_status.setText(if (sendType) R.string.mozo_view_text_tx_sent else R.string.mozo_view_text_tx_received)
+                binding.textDetailStatus.setText(if (sendType) R.string.mozo_view_text_tx_sent else R.string.mozo_view_text_tx_received)
                 targetAddress = if (sendType) mHistory!!.addressTo else mHistory!!.addressFrom
 
                 detailTime = mHistory!!.time * 1000L
@@ -105,31 +105,34 @@ internal class TransactionDetailsActivity : BaseActivity() {
                 val data = Support.parsePaymentRequest(mPaymentRequest!!.content!!)
                 targetAddress = data.firstOrNull()
 
-                text_detail_status.setText(R.string.mozo_button_send_mozo)
+                binding.textDetailStatus.setText(R.string.mozo_button_send_mozo)
                 data.lastOrNull()?.let {
                     amountDisplay = it.toBigDecimal().displayString()
                 }
             }
         }
         if (sendType) {
-            text_detail_receiver?.setText(R.string.mozo_view_text_to)
-            image_tx_type?.setBackgroundResource(R.drawable.mozo_bg_icon_send)
+            binding.textDetailReceiver.setText(R.string.mozo_view_text_to)
+            binding.imageTxType.setBackgroundResource(R.drawable.mozo_bg_icon_send)
 
         } else {
-            text_detail_receiver?.setText(R.string.mozo_view_text_from)
-            image_tx_type?.setBackgroundResource(R.drawable.mozo_bg_icon_received)
-            image_tx_type?.rotation = 180f
+            binding.textDetailReceiver.setText(R.string.mozo_view_text_from)
+            binding.imageTxType.setBackgroundResource(R.drawable.mozo_bg_icon_received)
+            binding.imageTxType.rotation = 180f
         }
 
-        text_detail_receiver_wallet_address?.text = targetAddress
+        binding.textDetailReceiverWalletAddress.text = targetAddress
 
         if (detailTime > 0) {
-            text_detail_time.text =
-                    Support.getDisplayDate(this, detailTime, string(R.string.mozo_format_date_time))
-            text_detail_time.isVisible = true
-        } else text_detail_time.isVisible = false
+            binding.textDetailTime.text = Support.getDisplayDate(
+                    this,
+                    detailTime,
+                    string(R.string.mozo_format_date_time)
+            )
+            binding.textDetailTime.isVisible = true
+        } else binding.textDetailTime.isVisible = false
 
-        text_detail_amount_value.text = amountDisplay
+        binding.textDetailAmountValue.text = amountDisplay
 
         displayContact()
     }
@@ -138,29 +141,29 @@ internal class TransactionDetailsActivity : BaseActivity() {
         findContactJob?.cancel()
         findContactJob = GlobalScope.launch {
             val contact = MozoSDK.getInstance().contactViewModel.findByAddress(targetAddress)
-            launch(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
                 val isContact = contact != null
                 val isStore = contact?.isStore == true
 
-                button_save_address?.isGone = isContact && !contact?.name.isNullOrEmpty()
-                button_save_address_top_line?.isGone = isContact
-                image_detail_receiver?.isVisible = isContact
+                binding.buttonSaveAddress.isGone = isContact && !contact?.name.isNullOrEmpty()
+                binding.buttonSaveAddressTopLine.isGone = isContact
+                binding.imageDetailReceiver.isVisible = isContact
 
-                text_detail_receiver_name?.isVisible = isContact
-                text_detail_receiver_phone?.isVisible =
+                binding.textDetailReceiverName.isVisible = isContact
+                binding.textDetailReceiverPhone.isVisible =
                         isContact && !isStore && !contact?.phoneNo.isNullOrEmpty()
-                text_detail_store_address?.isVisible = isContact && isStore
+                binding.textDetailStoreAddress.isVisible = isContact && isStore
 
                 if (contact != null) {
-                    image_detail_receiver?.setImageResource(
+                    binding.imageDetailReceiver.setImageResource(
                             if (isStore) R.drawable.ic_store
                             else R.drawable.ic_receiver
                     )
-                    text_detail_receiver_name?.text = contact.name
-                    text_detail_store_address?.text = contact.physicalAddress
-                    text_detail_receiver_phone?.text = contact.phoneNo
+                    binding.textDetailReceiverName.text = contact.name
+                    binding.textDetailStoreAddress.text = contact.physicalAddress
+                    binding.textDetailReceiverPhone.text = contact.phoneNo
 
-                } else button_save_address?.click {
+                } else binding.buttonSaveAddress.click {
                     AddressAddActivity.start(this@TransactionDetailsActivity, targetAddress)
                 }
             }

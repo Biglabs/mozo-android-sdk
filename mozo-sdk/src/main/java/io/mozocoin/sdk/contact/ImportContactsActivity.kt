@@ -22,30 +22,30 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.model.ContactInfoDTO
 import io.mozocoin.sdk.common.model.ImportContactRequestDTO
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.ActivityImportContactsBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.safe
-import kotlinx.android.synthetic.main.activity_import_contacts.*
 import kotlinx.coroutines.*
 
 internal class ImportContactsActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityImportContactsBinding
     private val apiService by lazy { MozoAPIsService.getInstance() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_import_contacts)
-        setSupportActionBar(toolbar)
+        binding = ActivityImportContactsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         checkingProcess()
 
-        button_update?.click {
+        binding.buttonUpdate.click {
             fetchContacts()
         }
-
     }
 
     private fun checkingProcess() {
@@ -64,7 +64,7 @@ internal class ImportContactsActivity : BaseActivity() {
 
         getPhones {
             if (it.isNullOrEmpty()) {
-                lo_updating?.gone()
+                binding.loUpdating.gone()
                 MessageDialog.show(this, R.string.mozo_address_msg_no_contact)
                 return@getPhones
             }
@@ -94,10 +94,10 @@ internal class ImportContactsActivity : BaseActivity() {
 
     private fun updateUIState(time: Long? = 0L, status: String? = null) {
         val isProcessing = status == KEY_IMPORT_PROCESSING
-        lo_updating?.isVisible = isProcessing
+        binding.loUpdating.isVisible = isProcessing
 
         if (!isProcessing) {
-            import_contacts_last_time?.text = if (time == null)
+            binding.importContactsLastTime.text = if (time == null)
                 getString(R.string.mozo_address_msg_not_import)
             else Support.getDisplayDate(
                     this,

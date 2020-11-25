@@ -19,15 +19,16 @@ import io.mozocoin.sdk.common.model.ConvertRequest
 import io.mozocoin.sdk.common.model.GasInfo
 import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.ActivityConvertOnChainBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.activity_convert_on_chain.*
 import java.math.BigDecimal
 import java.util.*
 
 internal class ConvertOnChainActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityConvertOnChainBinding
     private val wallet: WalletInfo? by lazy { MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
     private var mGasInfo: GasInfo? = null
     private var mGasPrice: BigDecimal = BigDecimal.ZERO
@@ -36,7 +37,7 @@ internal class ConvertOnChainActivity : BaseActivity() {
     private var mBalanceOfOnchain: BigDecimal = BigDecimal.ZERO
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> { bar ->
-        input_convert_amount.filters = arrayOf<InputFilter>(
+        binding.inputConvertAmount.filters = arrayOf<InputFilter>(
                 DecimalDigitsInputFilter(
                         12,
                         bar?.decimal ?: Constant.DEFAULT_DECIMAL
@@ -46,29 +47,30 @@ internal class ConvertOnChainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_convert_on_chain)
+        binding = ActivityConvertOnChainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        input_convert_amount.onTextChanged {
+        binding.inputConvertAmount.onTextChanged {
             when {
                 it.isNullOrEmpty() -> {
-                    input_convert_amount_rate?.text = ""
-                    button_continue?.isEnabled = false
+                    binding.inputConvertAmountRate.text = ""
+                    binding.buttonContinue.isEnabled = false
 
                 }
                 it.startsWith(".") -> {
-                    input_convert_amount.setText(String.format(Locale.US, "0%s", it))
-                    input_convert_amount.setSelection(it.length + 1)
+                    binding.inputConvertAmount.setText(String.format(Locale.US, "0%s", it))
+                    binding.inputConvertAmount.setSelection(it.length + 1)
 
                 }
                 else -> {
                     val amount = BigDecimal(it.toString())
-                    input_convert_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
-                    button_continue?.isEnabled = true
+                    binding.inputConvertAmountRate.text = MozoWallet.getInstance().amountInCurrency(amount)
+                    binding.buttonContinue.isEnabled = true
                 }
             }
         }
 
-        convert_gas_price_seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.convertGasPriceSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 mGasInfo ?: return
                 mGasPrice = BigDecimal((progress / 100.0) * (mGasInfo!!.fast - mGasInfo!!.low) + mGasInfo!!.low)
@@ -83,11 +85,11 @@ internal class ConvertOnChainActivity : BaseActivity() {
             }
         })
 
-        button_continue.click {
+        binding.buttonContinue.click {
             ConvertBroadcastActivity.start(this, prepareRequestData() ?: return@click)
         }
 
-        button_read_more.click {
+        binding.buttonReadMore.click {
             //openTab("https://kb.myetherwallet.com/gas/what-is-gas-ethereum.html")
         }
 
@@ -109,26 +111,26 @@ internal class ConvertOnChainActivity : BaseActivity() {
     }
 
     private fun updateGasPriceUI() {
-        convert_gas_price?.text = mGasPrice.displayString()
+        binding.convertGasPrice.text = mGasPrice.displayString()
 
-        convert_gas_price_seek_slow.highlight(false)
-        convert_gas_price_seek_normal.highlight(false)
-        convert_gas_price_seek_fast.highlight(false)
-        when (TransferSpeed.calculate(convert_gas_price_seek?.progress ?: 0)) {
+        binding.convertGasPriceSeekSlow.highlight(false)
+        binding.convertGasPriceSeekNormal.highlight(false)
+        binding.convertGasPriceSeekFast.highlight(false)
+        when (TransferSpeed.calculate(binding.convertGasPriceSeek.progress)) {
             TransferSpeed.SLOW -> {
-                convert_gas_price_seek_slow.highlight(true)
+                binding.convertGasPriceSeekSlow.highlight(true)
             }
             TransferSpeed.NORMAL -> {
-                convert_gas_price_seek_normal.highlight(true)
+                binding.convertGasPriceSeekNormal.highlight(true)
             }
             TransferSpeed.FAST -> {
-                convert_gas_price_seek_fast.highlight(true)
+                binding.convertGasPriceSeekFast.highlight(true)
             }
         }
     }
 
     private fun showLoading(show: Boolean) {
-        convert_loading_container?.isVisible = show
+        binding.convertLoadingContainer.isVisible = show
     }
 
     private fun fetchData() {
@@ -138,14 +140,14 @@ internal class ConvertOnChainActivity : BaseActivity() {
             data ?: return@getGasInfo
 
             mGasInfo = data
-            convert_gas_limit?.text = data.gasLimit.displayString()
+            binding.convertGasLimit.text = data.gasLimit.displayString()
 
             val normalPercent = (data.average.toFloat() - data.low) / (data.fast.toFloat() - data.low) * 100
-            convert_gas_price_seek?.progress = normalPercent.toInt()
+            binding.convertGasPriceSeek.progress = normalPercent.toInt()
 
-            val params = convert_gas_price_seek_normal?.layoutParams as ConstraintLayout.LayoutParams
+            val params = binding.convertGasPriceSeekNormal.layoutParams as ConstraintLayout.LayoutParams
             params.horizontalBias = normalPercent / 100
-            convert_gas_price_seek_normal?.layoutParams = params
+            binding.convertGasPriceSeekNormal.layoutParams = params
 
             mGasPrice = BigDecimal(data.average)
             updateGasPriceUI()
@@ -163,17 +165,17 @@ internal class ConvertOnChainActivity : BaseActivity() {
                     mBalanceOfOnchain = data.balanceOfToken?.balanceNonDecimal().safe()
 
                     Support.formatSpendableText(
-                            output_amount_spendable,
+                            binding.outputAmountSpendable,
                             data.balanceOfToken?.balanceNonDecimal().displayString(),
                             true
                     )
 
-                    input_convert_amount?.showKeyboard()
+                    binding.inputConvertAmount.showKeyboard()
                 }, this::fetchData)
     }
 
     private fun prepareRequestData(): ConvertRequest? {
-        val amount = input_convert_amount?.text?.toString()?.toBigDecimal().safe()
+        val amount = binding.inputConvertAmount.text?.toString()?.toBigDecimal().safe()
         val gasPrice = mGasPrice.toWei()
         when {
             amount <= BigDecimal.ZERO -> {
@@ -202,7 +204,7 @@ internal class ConvertOnChainActivity : BaseActivity() {
                     gasPrice,
                     wallet?.offchainAddress!!,
                     finalAmount,
-                    convert_gas_price_seek?.progress ?: 0
+                    binding.convertGasPriceSeek.progress
             )
         }
         return null

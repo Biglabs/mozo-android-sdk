@@ -15,8 +15,10 @@
         android:id="@+id/item_history_type_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_marginBottom="14dp"
         android:contentDescription="@string/mozo_button_send"
         android:padding="8.5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_action_send"
@@ -40,14 +42,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:lines="1"
+        android:layout_marginEnd="10dp"
         android:includeFontPadding="false"
+        android:lines="1"
         android:textColor="@color/mozo_color_section_text"
         android:textSize="11sp"
         android:textStyle="italic"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintStart_toStartOf="@id/item_history_type"
         app:layout_constraintEnd_toStartOf="@id/item_history_time"
+        app:layout_constraintStart_toStartOf="@id/item_history_type"
         app:layout_constraintTop_toBottomOf="@id/item_history_type"
         tools:ignore="SmallSp"
         tools:text="@tools:sample/full_names" />
@@ -57,12 +59,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
+        android:lines="1"
         android:textColor="@color/mozo_color_section_text"
         android:textSize="11sp"
-        android:lines="1"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@id/item_history_address"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="SmallSp"
         tools:text="Jan 15, 2018 - 6:00 PM" />
 
@@ -81,11 +83,10 @@
 
     <View
         android:id="@+id/item_divider"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="14dp"
         android:background="@color/mozo_color_line"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_history_time" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,17 +13,14 @@ import io.mozocoin.sdk.common.TransferSpeed
 import io.mozocoin.sdk.common.model.ConvertRequest
 import io.mozocoin.sdk.common.model.TransactionResponse
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.ActivityConvertBroadcastBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.activity_convert_broadcast.*
-import kotlinx.android.synthetic.main.activity_convert_broadcast_confirm.*
-import kotlinx.android.synthetic.main.activity_convert_broadcast_result.*
-import kotlinx.android.synthetic.main.activity_convert_broadcast_submit.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 
 internal class ConvertBroadcastActivity : BaseActivity() {
-
+    private lateinit var binding: ActivityConvertBroadcastBinding
     private var convertRequest: ConvertRequest? = null
     private var checkStatusJob: Job? = null
     private var isOnChain = true
@@ -45,19 +42,19 @@ internal class ConvertBroadcastActivity : BaseActivity() {
                 return
             }
         }
-
-        setContentView(R.layout.activity_convert_broadcast)
+        binding = ActivityConvertBroadcastBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         updateUI()
 
-        button_confirm.click {
+        binding.flipPageConfirm.buttonConfirm.click {
             sendConvertRequest()
         }
 
-        button_hide.click {
+        binding.flipPageSubmit.buttonHide.click {
             EventBus.getDefault().post(MessageEvent.CloseActivities())
         }
 
-        button_back_to_wallet.click {
+        binding.flipPageResult.buttonBackToWallet.click {
             EventBus.getDefault().post(MessageEvent.CloseActivities())
         }
     }
@@ -78,8 +75,8 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         if (!lastTxHash.isNullOrEmpty()) {
             val amountInDecimal = SharedPrefsUtils.getLastAmountConvertOnChainInOffChain()?.toBigDecimal().safe()
             val amount = MozoTx.getInstance().amountNonDecimal(amountInDecimal)
-            convert_broadcast_result_amount?.text = amount.displayString()
-            convert_broadcast_result_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(amount)
+            binding.flipPageResult.convertBroadcastResultAmount.text = amount.displayString()
+            binding.flipPageResult.convertBroadcastResultAmountRate.text = MozoWallet.getInstance().amountInCurrency(amount)
 
             checkConvertStatus(lastTxHash)
             return
@@ -90,21 +87,21 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         val amount = MozoTx.getInstance().amountNonDecimal(convertRequest!!.value)
         val amountDisplay = amount.displayString()
         val amountCurrency = MozoWallet.getInstance().amountInCurrency(amount)
-        convert_amount_on_chain?.text = amountDisplay
-        convert_amount_on_chain_rate.text = amountCurrency
-        convert_amount_off_chain?.text = amountDisplay
-        convert_amount_off_chain_rate.text = amountCurrency
+        binding.flipPageConfirm.convertAmountOnChain.text = amountDisplay
+        binding.flipPageConfirm.convertAmountOnChainRate.text = amountCurrency
+        binding.flipPageConfirm.convertAmountOffChain.text = amountDisplay
+        binding.flipPageConfirm.convertAmountOffChainRate.text = amountCurrency
 
-        convert_broadcast_result_amount?.text = amountDisplay
-        convert_broadcast_result_amount_rate?.text = amountCurrency
+        binding.flipPageResult.convertBroadcastResultAmount.text = amountDisplay
+        binding.flipPageResult.convertBroadcastResultAmountRate.text = amountCurrency
 
-        convert_gas_limit?.text = convertRequest!!.gasLimit.displayString()
-        convert_gas_price?.text = convertRequest!!.gasPrice.toGwei().displayString()
-        convert_gas_price_speed?.setText(TransferSpeed.calculate(convertRequest!!.gasPriceProgress).display)
+        binding.flipPageConfirm.convertGasLimit.text = convertRequest!!.gasLimit.displayString()
+        binding.flipPageConfirm.convertGasPrice.text = convertRequest!!.gasPrice.toGwei().displayString()
+        binding.flipPageConfirm.convertGasPriceSpeed.setText(TransferSpeed.calculate(convertRequest!!.gasPriceProgress).display)
     }
 
     private fun showLoading(show: Boolean) {
-        convert_loading_container?.isVisible = show
+        binding.convertLoadingContainer.isVisible = show
     }
 
     private fun sendConvertRequest() {
@@ -139,7 +136,7 @@ internal class ConvertBroadcastActivity : BaseActivity() {
     private fun submitRequest(response: TransactionResponse) {
         showLoading(false)
         updateContainerUI(FLOW_STEP_WAITING)
-        convert_broadcast_submit_title?.setText(R.string.mozo_convert_submit_broadcasting_title)
+        binding.flipPageSubmit.convertBroadcastSubmitTitle.setText(R.string.mozo_convert_submit_broadcasting_title)
         checkStatusJob?.cancel()
         isCanBack = false
 
@@ -153,7 +150,7 @@ internal class ConvertBroadcastActivity : BaseActivity() {
             if (!isOnChain) {
                 SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(data.tx.hash, convertRequest?.value.toString())
             }
-            convert_broadcast_submit_title?.setText(R.string.mozo_convert_submit_broadcast_title)
+            binding.flipPageSubmit.convertBroadcastSubmitTitle.setText(R.string.mozo_convert_submit_broadcast_title)
             checkConvertStatus(data.tx.hash)
         }, {
             submitRequest(response)
@@ -168,10 +165,10 @@ internal class ConvertBroadcastActivity : BaseActivity() {
             return
         }
         updateContainerUI(FLOW_STEP_WAITING)
-        checkStatusJob = GlobalScope.launch(Dispatchers.Main) {
+        checkStatusJob = MainScope().launch {
             delay(2000)
 
-            convert_broadcast_submit_title?.setText(R.string.mozo_convert_submit_waiting_title)
+            binding.flipPageSubmit.convertBroadcastSubmitTitle.setText(R.string.mozo_convert_submit_waiting_title)
 
             MozoAPIsService.getInstance().getConvertStatus(this@ConvertBroadcastActivity, hash, { data, _ ->
                 data ?: return@getConvertStatus
@@ -196,11 +193,11 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         updateContainerUI(FLOW_STEP_RESULT)
 
         if (success) {
-            convert_broadcast_result_icon?.setImageResource(R.drawable.ic_send_complete)
-            convert_broadcast_result_title?.setText(R.string.mozo_convert_submit_success_title)
-            convert_broadcast_result_content?.setText(R.string.mozo_convert_submit_success_content)
-            convert_broadcast_result_hash?.text = hash
-            convert_broadcast_result_hash?.click {
+            binding.flipPageResult.convertBroadcastResultIcon.setImageResource(R.drawable.ic_send_complete)
+            binding.flipPageResult.convertBroadcastResultTitle.setText(R.string.mozo_convert_submit_success_title)
+            binding.flipPageResult.convertBroadcastResultContent.setText(R.string.mozo_convert_submit_success_content)
+            binding.flipPageResult.convertBroadcastResultHash.text = hash
+            binding.flipPageResult.convertBroadcastResultHash.click {
                 openTab(StringBuilder("https://")
                         .append(Support.domainEhterscan())
                         .append("/tx/")
@@ -208,19 +205,19 @@ internal class ConvertBroadcastActivity : BaseActivity() {
                         .toString()
                 )
             }
-            convert_broadcast_result_amount_group?.visible()
+            binding.flipPageResult.convertBroadcastResultAmountGroup.visible()
         } else {
-            convert_broadcast_result_icon?.setImageResource(R.drawable.ic_send_failed)
-            convert_broadcast_result_title?.setText(R.string.mozo_convert_submit_fail_title)
-            convert_broadcast_result_content?.setText(R.string.mozo_convert_submit_fail_content)
-            convert_broadcast_result_amount_group?.visibility = View.INVISIBLE
+            binding.flipPageResult.convertBroadcastResultIcon.setImageResource(R.drawable.ic_send_failed)
+            binding.flipPageResult.convertBroadcastResultTitle.setText(R.string.mozo_convert_submit_fail_title)
+            binding.flipPageResult.convertBroadcastResultContent.setText(R.string.mozo_convert_submit_fail_content)
+            binding.flipPageResult.convertBroadcastResultAmountGroup.visibility = View.INVISIBLE
         }
     }
 
     private fun updateContainerUI(step: Int) {
-        convert_broadcast_flipper?.displayedChild = step
-        convert_broadcast_toolbar?.showBackButton(step == FLOW_STEP_CONFIRM)
-        convert_broadcast_toolbar?.showCloseButton(step == FLOW_STEP_CONFIRM)
+        binding.convertBroadcastFlipper.displayedChild = step
+        binding.convertBroadcastToolbar.showBackButton(step == FLOW_STEP_CONFIRM)
+        binding.convertBroadcastToolbar.showCloseButton(step == FLOW_STEP_CONFIRM)
     }
 
     companion object {

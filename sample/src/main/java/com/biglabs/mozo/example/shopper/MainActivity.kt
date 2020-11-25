@@ -10,21 +10,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.biglabs.mozo.example.shopper.databinding.ActivityMainBinding
 import io.mozocoin.sdk.*
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.ui.MozoWalletFragment
 import io.mozocoin.sdk.ui.SettingsActivity
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
-        tab_layout?.setupWithViewPager(pager ?: return)
-        pager?.adapter = TabsPagerAdapter(supportFragmentManager)
+        binding.tabLayout.setupWithViewPager(binding.pager)
+        binding.pager.adapter = TabsPagerAdapter(supportFragmentManager)
 
         MozoAuth.getInstance().addAuthStateListener(object : AuthStateListener() {
 

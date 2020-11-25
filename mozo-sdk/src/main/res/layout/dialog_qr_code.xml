@@ -17,11 +17,10 @@
     <ImageView
         android:id="@+id/image_qr_code"
         android:layout_width="@dimen/mozo_qr_large_size"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/mozo_qr_large_size"
         android:layout_marginTop="33dp"
         android:contentDescription="@string/mozo_button_show_qr_code"
         android:padding="@dimen/mozo_screen_margin"
-        app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

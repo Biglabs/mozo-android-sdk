@@ -11,38 +11,40 @@ import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.service.ConnectionService
+import io.mozocoin.sdk.databinding.DialogErrorBinding
 import io.mozocoin.sdk.ui.MozoSnackbar
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.visible
-import kotlinx.android.synthetic.main.dialog_error.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(context) {
 
+    private lateinit var binding: DialogErrorBinding
     private var errorType = TYPE_GENERAL
     private var errorMessage: String? = null
     private var identifier: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_error)
+        binding = DialogErrorBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        button_contact_telegram.click {
+        binding.buttonContactTelegram.click {
             MozoSDK.contactTelegram(context)
         }
 
-        button_contact_zalo.click {
+        binding.buttonContactZalo.click {
             MozoSDK.contactZalo(context)
         }
 
-        button_contact_kakao.click {
+        binding.buttonContactKakao.click {
             MozoSDK.contactKaKaoTalk(context)
         }
 
-        button_try_again.click {
+        binding.buttonTryAgain.click {
             retry()
         }
 
@@ -79,63 +81,63 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         errorMessage = argument.getString(ERROR_MESSAGE)
 
         visible(
-                image_error_type,
-                text_title_error
+                binding.imageErrorType,
+                binding.textTitleError
         )
         gone(
-                button_contact_telegram,
-                button_contact_zalo,
-                button_contact_kakao
+                binding.buttonContactTelegram,
+                binding.buttonContactZalo,
+                binding.buttonContactKakao
         )
-        button_try_again?.setText(R.string.mozo_button_try_again)
+        binding.buttonTryAgain.setText(R.string.mozo_button_try_again)
 
         when (errorType) {
             TYPE_GENERAL -> {
-                image_error_type?.setImageResource(R.drawable.ic_error_general)
-                text_title_error?.setText(R.string.mozo_dialog_error_msg)
+                binding.imageErrorType.setImageResource(R.drawable.ic_error_general)
+                binding.textTitleError.setText(R.string.mozo_dialog_error_msg)
             }
             TYPE_NETWORK -> {
-                image_error_type?.setImageResource(R.drawable.ic_error_network)
-                text_title_error?.setText(R.string.mozo_dialog_error_network_msg)
-                text_msg_error?.setText(R.string.mozo_dialog_error_network_msg_sub)
-                text_msg_error?.visible()
+                binding.imageErrorType.setImageResource(R.drawable.ic_error_network)
+                binding.textTitleError.setText(R.string.mozo_dialog_error_network_msg)
+                binding.textMsgError.setText(R.string.mozo_dialog_error_network_msg_sub)
+                binding.textMsgError.visible()
             }
             TYPE_TIMEOUT -> {
-                image_error_type?.setImageResource(R.drawable.ic_error_timeout)
-                text_title_error?.setText(R.string.mozo_dialog_error_timeout_msg)
+                binding.imageErrorType.setImageResource(R.drawable.ic_error_timeout)
+                binding.textTitleError.setText(R.string.mozo_dialog_error_timeout_msg)
             }
             TYPE_WITH_CONTACT -> {
                 gone(
-                        image_error_type,
-                        text_title_error
+                        binding.imageErrorType,
+                        binding.textTitleError
                 )
                 visible(
-                        text_msg_error,
-                        button_contact_telegram,
-                        button_contact_zalo,
-                        button_contact_kakao
+                        binding.textMsgError,
+                        binding.buttonContactTelegram,
+                        binding.buttonContactZalo,
+                        binding.buttonContactKakao
                 )
-                text_msg_error?.setText(R.string.error_fatal)
-                button_try_again?.setText(R.string.mozo_button_ok)
+                binding.textMsgError.setText(R.string.error_fatal)
+                binding.buttonTryAgain.setText(R.string.mozo_button_ok)
             }
             TYPE_DEACTIVATED -> {
                 gone(
-                        image_error_type,
-                        text_title_error
+                        binding.imageErrorType,
+                        binding.textTitleError
                 )
                 visible(
-                        text_msg_error,
-                        button_contact_telegram,
-                        button_contact_zalo,
-                        button_contact_kakao
+                        binding.textMsgError,
+                        binding.buttonContactTelegram,
+                        binding.buttonContactZalo,
+                        binding.buttonContactKakao
                 )
-                text_msg_error?.setText(R.string.error_account_deactivated)
-                button_try_again?.setText(R.string.mozo_button_ok)
+                binding.textMsgError.setText(R.string.error_account_deactivated)
+                binding.buttonTryAgain.setText(R.string.mozo_button_ok)
             }
         }
 
         errorMessage?.let {
-            text_msg_error?.text = it
+            binding.textMsgError.text = it
         }
 
         if (errorType == TYPE_NETWORK) {

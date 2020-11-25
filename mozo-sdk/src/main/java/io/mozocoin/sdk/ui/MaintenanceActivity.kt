@@ -7,6 +7,7 @@ import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.ActivityMaintenanceBinding
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.openTab
@@ -14,13 +15,13 @@ import io.mozocoin.sdk.utils.safe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_maintenance.*
 import org.greenrobot.eventbus.Subscribe
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 internal class MaintenanceActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityMaintenanceBinding
     private var tipsQuestion: Array<String>? = null
     private var tipsAnswer: Array<String>? = null
     private var tipsUrls: Array<String>? = null
@@ -31,12 +32,13 @@ internal class MaintenanceActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_maintenance)
+        binding = ActivityMaintenanceBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        button_read_more?.click {
+        binding.buttonReadMore.click {
             openTab(referenceUrl ?: return@click)
         }
-        maintenance_tips_content?.movementMethod = LinkMovementMethod.getInstance()
+        binding.maintenanceTipsContent.movementMethod = LinkMovementMethod.getInstance()
 
         randomTips()
     }
@@ -77,8 +79,8 @@ internal class MaintenanceActivity : BaseActivity() {
 
         val index = Random.nextInt(tipsQuestion?.size ?: 0)
 
-        maintenance_tips_title?.text = tipsQuestion?.getOrNull(index)
-        maintenance_tips_content?.text = HtmlCompat.fromHtml(tipsAnswer?.getOrNull(index).safe(), HtmlCompat.FROM_HTML_MODE_COMPACT)
+        binding.maintenanceTipsTitle.text = tipsQuestion?.getOrNull(index)
+        binding.maintenanceTipsContent.text = HtmlCompat.fromHtml(tipsAnswer?.getOrNull(index).safe(), HtmlCompat.FROM_HTML_MODE_COMPACT)
         referenceUrl = "https://${Support.domainHomePage()}/${tipsUrls?.getOrNull(index) ?: ""}"
     }
 

@@ -4,8 +4,8 @@ import android.os.Parcelable
 import androidx.room.Ignore
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.utils.displayString
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 import kotlin.math.pow
 

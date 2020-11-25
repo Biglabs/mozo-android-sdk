@@ -10,8 +10,7 @@ import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.logAsError
 import io.mozocoin.sdk.utils.logAsInfo
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationService
 import okhttp3.OkHttpClient
@@ -60,7 +59,7 @@ internal class MozoTokenService private constructor() {
             callback: ((isExpired: Boolean) -> Unit)?,
             retry: (() -> Unit)? = null
     ) {
-        GlobalScope.launch(Dispatchers.Main) {
+        MainScope().launch {
             mAPIs.getUserInfo().enqueue(object : Callback<Any> {
                 override fun onResponse(call: Call<Any>, response: Response<Any>) {
                     callback?.invoke(!response.isSuccessful)

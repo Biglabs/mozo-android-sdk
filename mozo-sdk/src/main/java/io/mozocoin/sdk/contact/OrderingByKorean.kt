@@ -1,20 +1,22 @@
 package io.mozocoin.sdk.contact
 
 import java.util.*
+import kotlin.Comparator
+import kotlin.math.min
 
 object OrderingByKorean {
-    private val REVERSE = -1
-    private val LEFT_FIRST = -1
-    private val RIGHT_FIRST = 1
+    private const val REVERSE = -1
+    private const val LEFT_FIRST = -1
+    private const val RIGHT_FIRST = 1
 
     private val comparator: Comparator<String>
-        get() = Comparator { left, right -> OrderingByKorean.compare(left, right) }
+        get() = Comparator { left, right -> compare(left, right) }
 
     private fun compare(l: String, r: String): Int {
-        val left = l.toUpperCase().replace(" ", "")
-        val right = r.toUpperCase().replace(" ", "")
+        val left = l.toUpperCase(Locale.getDefault()).replace(" ", "")
+        val right = r.toUpperCase(Locale.getDefault()).replace(" ", "")
 
-        val minLen = Math.min(left.length, right.length)
+        val minLen = min(left.length, right.length)
 
         for (i in 0 until minLen) {
             val leftChar = left[i]

@@ -86,6 +86,7 @@
             android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/mozo_color_title"
+            android:textIsSelectable="true"
             android:textSize="13sp"
             tools:text="@tools:sample/us_phones" />
 
@@ -97,6 +98,7 @@
             android:ellipsize="middle"
             android:singleLine="true"
             android:textColor="@color/mozo_color_section_text"
+            android:textIsSelectable="true"
             android:textSize="13sp"
             tools:text="0x97309d3698ALKJLKJLJKFLDJEL:KJF:LS:SKLEFA1898F0C41" />
     </LinearLayout>
@@ -224,37 +226,30 @@
         app:srcCompat="@drawable/ic_action_send"
         tools:background="@drawable/mozo_bg_icon_send" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <io.mozocoin.sdk.ui.view.MozoIconTextView
         android:id="@+id/text_detail_amount_value"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/mozo_screen_margin"
         android:layout_marginTop="48dp"
+        android:drawablePadding="7dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:gravity="start|center_vertical"
         android:includeFontPadding="false"
         android:lines="1"
-        android:paddingStart="37dp"
-        android:paddingEnd="0dp"
+        android:minWidth="80dp"
         android:text="@string/mozo_view_text_hint"
         android:textColor="@color/mozo_color_title"
         android:textSize="25sp"
         app:autoSizeMinTextSize="12sp"
         app:autoSizeTextType="uniform"
+        app:drawableSize="30dp"
+        app:drawableStartCompat="@drawable/ic_mozo_offchain"
         app:layout_constraintEnd_toStartOf="@id/text_detail_amount_rate_side"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_detail_address_underline"
         app:layout_goneMarginEnd="0dp" />
-
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:contentDescription="@string/mozo_transfer_amount"
-        app:layout_constraintBottom_toBottomOf="@id/text_detail_amount_value"
-        app:layout_constraintStart_toStartOf="@id/text_detail_amount_value"
-        app:layout_constraintTop_toTopOf="@id/text_detail_amount_value"
-        app:srcCompat="@drawable/ic_mozo_offchain" />
 
     <io.mozocoin.sdk.ui.widget.MozoToolbar
         android:id="@+id/tx_detail_toolbar"

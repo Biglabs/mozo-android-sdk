@@ -2,7 +2,9 @@ package io.mozocoin.sdk.ui
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.Px
 import androidx.core.view.children
@@ -13,29 +15,34 @@ import com.google.android.material.tabs.TabLayout
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.databinding.FragmentMozoWalletBinding
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.find
 import io.mozocoin.sdk.wallet.OffChainWalletFragment
 import io.mozocoin.sdk.wallet.OnChainWalletFragment
-import kotlinx.android.synthetic.main.fragment_mozo_wallet.*
-import kotlinx.android.synthetic.main.view_wallet_state_not_login.*
 
-class MozoWalletFragment : Fragment(R.layout.fragment_mozo_wallet) {
+class MozoWalletFragment : Fragment() {
 
+    private var _binding: FragmentMozoWalletBinding? = null
+    private val binding get() = _binding!!
     private val tabFragments = arrayListOf<Fragment>(OffChainWalletFragment.getInstance(), OnChainWalletFragment.getInstance())
     private var unLoadedTabPosition = -1
     private var mPadding = arrayOf(/* left */0, /* top */0, /* right */0, /* bottom */0)
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentMozoWalletBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.rootContainer.updatePadding(mPadding[0], mPadding[1], mPadding[2], mPadding[3])
 
-        root?.updatePadding(mPadding[0], mPadding[1], mPadding[2], mPadding[3])
-
-        button_login?.click {
+        binding.walletFragmentLoginRequired.findViewById<View>(R.id.button_login).click {
             MozoAuth.getInstance().signIn()
         }
 
-        wallet_fragment_tabs?.apply {
+        binding.walletFragmentTabs.apply {
             for (i in 1..tabCount) {
                 updateTextStyle(getTabAt(i), false)
             }
@@ -53,7 +60,12 @@ class MozoWalletFragment : Fragment(R.layout.fragment_mozo_wallet) {
                 }
             })
         }
-        loadFragment(wallet_fragment_tabs.selectedTabPosition)
+        loadFragment(binding.walletFragmentTabs.selectedTabPosition)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -113,7 +125,7 @@ class MozoWalletFragment : Fragment(R.layout.fragment_mozo_wallet) {
         mPadding[1] = top
         mPadding[2] = right
         mPadding[3] = bottom
-        root?.updatePadding(left, top, right, bottom)
+        binding.rootContainer.updatePadding(left, top, right, bottom)
     }
 
     companion object {

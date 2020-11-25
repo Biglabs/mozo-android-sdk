@@ -7,18 +7,20 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.ErrorCode
 import io.mozocoin.sdk.common.model.PaymentRequest
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.ActivityPaymentRequestBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.replace
-import kotlinx.android.synthetic.main.activity_payment_request.*
 
 internal class PaymentRequestActivity : BaseActivity(), PaymentRequestInteractionListener {
 
+    private lateinit var binding: ActivityPaymentRequestBinding
     private var isSendCompleted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_payment_request)
+        binding = ActivityPaymentRequestBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         replace(R.id.payment_request_content_frame, PaymentRequestTabsFragment.getInstance())
     }
@@ -27,12 +29,12 @@ internal class PaymentRequestActivity : BaseActivity(), PaymentRequestInteractio
         if (isSendCompleted) finish()
         else {
             super.onBackPressed()
-            payment_request_toolbar?.showBackButton(false)
+            binding.paymentRequestToolbar.showBackButton(false)
         }
     }
 
     override fun onCreateRequestClicked(amount: String) {
-        payment_request_toolbar.showBackButton(true)
+        binding.paymentRequestToolbar.showBackButton(true)
         replace(
                 R.id.payment_request_content_frame,
                 PaymentRequestSendFragment.getInstance(amount),
@@ -50,7 +52,7 @@ internal class PaymentRequestActivity : BaseActivity(), PaymentRequestInteractio
             }
             data?.let {
                 isSendCompleted = true
-                payment_request_toolbar.showBackButton(false)
+                binding.paymentRequestToolbar.showBackButton(false)
                 replace(R.id.payment_request_content_frame, PaymentRequestSentFragment.getInstance(amount, toAddress))
             }
         }, {

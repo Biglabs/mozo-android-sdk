@@ -3,7 +3,6 @@ package io.mozocoin.sdk.wallet.reset
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -11,28 +10,30 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.postDelayed
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.WalletHelper
+import io.mozocoin.sdk.databinding.FragmentResetEnterSeedBinding
 import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.hideKeyboard
 import io.mozocoin.sdk.utils.visible
-import kotlinx.android.synthetic.main.fragment_reset_enter_seed.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.web3j.crypto.MnemonicUtils
 
 internal class EnterSeedFragment : ResetPinBaseFragment() {
 
+    private var _binding: FragmentResetEnterSeedBinding? = null
+    private val binding get() = _binding!!
     private lateinit var clipboard: ClipboardManager
 
     private var mInteractionListener: InteractionListener? = null
     private var mInputView: Array<EditText>? = null
     private var isCancelableRightButton = false
+
+    private var verifyJob: Job? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -44,36 +45,38 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_reset_enter_seed, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentResetEnterSeedBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         mInputView = arrayOf(
-                reset_pin_seed_1,
-                reset_pin_seed_2,
-                reset_pin_seed_3,
-                reset_pin_seed_4,
-                reset_pin_seed_5,
-                reset_pin_seed_6,
-                reset_pin_seed_7,
-                reset_pin_seed_8,
-                reset_pin_seed_9,
-                reset_pin_seed_10,
-                reset_pin_seed_11,
-                reset_pin_seed_12
+                binding.resetPinSeed1,
+                binding.resetPinSeed2,
+                binding.resetPinSeed3,
+                binding.resetPinSeed4,
+                binding.resetPinSeed5,
+                binding.resetPinSeed6,
+                binding.resetPinSeed7,
+                binding.resetPinSeed8,
+                binding.resetPinSeed9,
+                binding.resetPinSeed10,
+                binding.resetPinSeed11,
+                binding.resetPinSeed12
         )
 
         mInputView?.forEach {
             it.onFocusChangeListener = onFocusChange
         }
-        reset_pin_sub_title?.onFocusChangeListener = onFocusChange
+        binding.resetPinSubTitle.onFocusChangeListener = onFocusChange
 
-        reset_pin_seed_12?.setOnEditorActionListener { _, actionId, _ ->
+        binding.resetPinSeed12.setOnEditorActionListener { _, actionId, _ ->
             if (KeyEvent.KEYCODE_ENDCALL == actionId) {
-                reset_pin_sub_title?.requestFocus()
-                reset_pin_sub_title?.hideKeyboard()
+                binding.resetPinSubTitle.requestFocus()
+                binding.resetPinSubTitle.hideKeyboard()
 
                 checkAllInputs()
             }
@@ -87,7 +90,14 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        reset_pin_seed_1?.requestFocus()
+        binding.resetPinSeed1.requestFocus()
+    }
+
+    override fun onDestroyView() {
+        verifyJob?.cancel()
+        verifyJob = null
+        super.onDestroyView()
+        _binding = null
     }
 
     private val onFocusChange = View.OnFocusChangeListener { v, hasFocus ->
@@ -106,12 +116,12 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
 
     private fun checkSingleInput(v: EditText) {
         val seed = v.text.toString()
-        GlobalScope.launch {
+        verifyJob = GlobalScope.launch {
             val word = MnemonicUtils.getWords().firstOrNull { it.equals(seed, true) }
             withContext(Dispatchers.Main) {
                 v.isActivated = !word.isNullOrEmpty()
                 v.isSelected = word.isNullOrEmpty()
-                showInlineError(R.string.mozo_pin_reset_msg_error, word.isNullOrEmpty())
+                showInlineError(R.string.mozo_pin_reset_msg_error, word.isNullOrEmpty()).join()
             }
         }
     }
@@ -121,14 +131,14 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
 
         mInputView?.forEachIndexed { index, v ->
             val seed = v.text.toString()
-            GlobalScope.launch {
+            verifyJob = GlobalScope.launch {
                 val word = MnemonicUtils.getWords().firstOrNull { it.equals(seed, true) }
                 if (word.isNullOrEmpty()) hasIncorrectWord = true
                 withContext(Dispatchers.Main) {
                     v.isActivated = !word.isNullOrEmpty()
                     v.isSelected = word.isNullOrEmpty()
                     if (index == (mInputView?.size ?: 0) - 1) {
-                        showInlineError(R.string.mozo_pin_reset_msg_error, hasIncorrectWord)
+                        showInlineError(R.string.mozo_pin_reset_msg_error, hasIncorrectWord).join()
                         mInteractionListener?.getCloseButton()?.isEnabled = !hasIncorrectWord
                     }
                 }
@@ -137,7 +147,7 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
     }
 
     private fun finalVerify() {
-        reset_pin_loading_view?.visible()
+        binding.resetPinLoadingView.visible()
         mInteractionListener?.run {
             hideToolbarActions(left = true, right = false)
             getCloseButton()?.setText(R.string.mozo_button_cancel)
@@ -146,7 +156,7 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
 
         val mnemonic = mInputView?.map { it.text.toString().trim() }?.joinToString(separator = " ") { s -> s }
         if (!mnemonic.isNullOrEmpty() && MnemonicUtils.validateMnemonic(mnemonic)) {
-            GlobalScope.launch {
+            verifyJob = GlobalScope.launch {
                 val wallet = WalletHelper(mnemonic)
                 val isCorrectWallet = wallet.buildWalletInfo().offchainAddress
                         .equals(MozoWallet.getInstance().getAddress(), ignoreCase = true)
@@ -170,8 +180,9 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
         }
     }
 
-    private fun showInlineError(@StringRes error: Int, showing: Boolean) = GlobalScope.launch(Dispatchers.Main) {
-        reset_pin_sub_title?.apply {
+    private fun showInlineError(@StringRes error: Int, showing: Boolean) = MainScope().launch {
+        if (!isAdded || isDetached) return@launch
+        binding.resetPinSubTitle.apply {
             setText(
                     if (showing) error
                     else R.string.mozo_pin_reset_sub_title
@@ -179,7 +190,7 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
             isSelected = showing
         }
 
-        reset_pin_loading_view?.gone()
+        binding.resetPinLoadingView.gone()
         mInteractionListener?.run {
             getCloseButton()?.setText(R.string.mozo_button_submit)
             hideToolbarActions(left = false, right = false)
@@ -193,10 +204,13 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
             EventBus.getDefault().post(MessageEvent.CloseActivities())
 
         } else {
-            reset_pin_sub_title?.requestFocus()
-            reset_pin_sub_title?.hideKeyboard()
-
-            Handler().postDelayed({ finalVerify() }, 200)
+            binding.resetPinSubTitle.apply {
+                requestFocus()
+                hideKeyboard()
+                postDelayed(200) {
+                    finalVerify()
+                }
+            }
         }
     }
 

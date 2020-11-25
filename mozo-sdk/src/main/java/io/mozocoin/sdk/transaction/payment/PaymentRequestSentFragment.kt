@@ -6,18 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.databinding.FragmentPaymentSentBinding
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.safe
 import io.mozocoin.sdk.utils.visible
-import kotlinx.android.synthetic.main.fragment_payment_sent.*
 
 class PaymentRequestSentFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_payment_sent, container, false)
+    private var _binding: FragmentPaymentSentBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentPaymentSentBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,34 +33,39 @@ class PaymentRequestSentFragment : Fragment() {
         updateContactUI()
 
         val amount = arguments?.getString(KEY_AMOUNT)?.toBigDecimal().safe()
-        payment_request_amount.text = amount.displayString()
+        binding.paymentRequestAmount.text = amount.displayString()
 
-        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(viewLifecycleOwner, Observer {
-            payment_request_rate.text = MozoSDK.getInstance().profileViewModel
+        MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(viewLifecycleOwner) {
+            binding.paymentRequestRate.text = MozoSDK.getInstance().profileViewModel
                     .formatCurrencyDisplay(
                             amount.multiply(it.rate),
                             true
                     )
-        })
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun updateContactUI() {
         val address = arguments?.getString(KEY_ADDRESS)
         val contact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
         if (contact == null) {
-            output_receiver_address_user?.gone()
-            payment_request_address.text = address
+            binding.outputReceiverAddressUser.gone()
+            binding.paymentRequestAddress.text = address
             return
         }
 
-        output_receiver_address_user?.visible()
-        output_receiver_icon?.setImageResource(if (contact.isStore) R.drawable.ic_store else R.drawable.ic_receiver)
-        text_receiver_phone?.text = if (contact.isStore) contact.physicalAddress else contact.phoneNo
-        text_receiver_phone?.isVisible = text_receiver_phone?.length() ?: 0 > 0
+        binding.outputReceiverAddressUser.visible()
+        binding.outputReceiverIcon.setImageResource(if (contact.isStore) R.drawable.ic_store else R.drawable.ic_receiver)
+        binding.textReceiverPhone.text = if (contact.isStore) contact.physicalAddress else contact.phoneNo
+        binding.textReceiverPhone.isVisible = binding.textReceiverPhone.length() > 0
 
-        text_receiver_user_name?.text = contact.name
-        text_receiver_user_name?.isVisible = !contact.name.isNullOrEmpty()
-        text_receiver_user_address?.text = contact.soloAddress
+        binding.textReceiverUserName.text = contact.name
+        binding.textReceiverUserName.isVisible = !contact.name.isNullOrEmpty()
+        binding.textReceiverUserAddress.text = contact.soloAddress
     }
 
     companion object {

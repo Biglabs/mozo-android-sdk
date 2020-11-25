@@ -43,8 +43,7 @@ class MozoAuth private constructor() {
     private val mComponentCallbacks: ComponentCallbacks by lazy {
         object : ComponentCallbacks {
             override fun onLowMemory() {}
-            override fun onConfigurationChanged(newConfig: Configuration?) {
-                newConfig ?: return
+            override fun onConfigurationChanged(newConfig: Configuration) {
                 val symbol = MozoSDK.getInstance().profileViewModel
                         .exchangeRateLiveData.value?.token?.currencySymbol
                         ?: Constant.DEFAULT_CURRENCY_SYMBOL
@@ -122,7 +121,7 @@ class MozoAuth private constructor() {
     private var signedInCallbackJob: Job? = null
     private fun onSignedInBeforeWallet() {
         signedInCallbackJob?.cancel()
-        signedInCallbackJob = GlobalScope.launch(Dispatchers.Main) {
+        signedInCallbackJob = MainScope().launch {
             delay(2000) // 2s
             mAuthListeners.forEach { l -> l.onSignedIn() }
             signedInCallbackJob = null
@@ -142,7 +141,7 @@ class MozoAuth private constructor() {
         authStateManager.clearSession()
 
         walletService.clear()
-        GlobalScope.launch { mozoDB.clear() }
+        mozoDB.clear()
 
         MozoSocketClient.disconnect()
         onAuthorizeChanged(MessageEvent.Auth())

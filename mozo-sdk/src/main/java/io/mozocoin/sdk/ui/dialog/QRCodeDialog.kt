@@ -3,16 +3,15 @@ package io.mozocoin.sdk.ui.dialog
 import android.content.Context
 import android.os.Bundle
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.databinding.DialogQrCodeBinding
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
-import kotlinx.android.synthetic.main.dialog_qr_code.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import io.mozocoin.sdk.utils.dimen
+import kotlinx.coroutines.*
 
 internal class QRCodeDialog(context: Context, val value: String) : BaseDialog(context) {
 
+    private lateinit var binding: DialogQrCodeBinding
     private var generateQRJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,17 +19,19 @@ internal class QRCodeDialog(context: Context, val value: String) : BaseDialog(co
         if (value.isEmpty()) dismiss()
 
         window?.setBackgroundDrawableResource(R.drawable.mozo_bg_dialog)
-        setContentView(R.layout.dialog_qr_code)
+
+        binding = DialogQrCodeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         generateQRJob = GlobalScope.launch {
-            val size = context.resources.getDimensionPixelSize(R.dimen.mozo_qr_large_size)
+            val size = context.dimen(R.dimen.mozo_qr_large_size)
             val qrImage = Support.generateQRCode(value, size)
-            launch(Dispatchers.Main) {
-                image_qr_code?.setImageBitmap(qrImage)
+            withContext(Dispatchers.Main) {
+                binding.imageQrCode.setImageBitmap(qrImage)
             }
         }
 
-        button_close?.click { dismiss() }
+        binding.buttonClose.click { dismiss() }
     }
 
     override fun onStop() {

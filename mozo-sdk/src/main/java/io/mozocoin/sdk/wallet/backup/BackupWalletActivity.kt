@@ -1,6 +1,5 @@
 package io.mozocoin.sdk.wallet.backup
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
@@ -14,6 +13,8 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.databinding.ViewWalletConfirmPhrasesBinding
+import io.mozocoin.sdk.databinding.ViewWalletDisplayPhrasesBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
@@ -21,16 +22,17 @@ import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.hideKeyboard
 import io.mozocoin.sdk.utils.showKeyboard
 import io.mozocoin.sdk.utils.visible
-import kotlinx.android.synthetic.main.view_wallet_confirm_phrases.*
-import kotlinx.android.synthetic.main.view_wallet_display_phrases.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.web3j.crypto.MnemonicUtils
 import kotlin.random.Random
 
 internal class BackupWalletActivity : BaseActivity() {
+
+    private lateinit var bindingConfirm: ViewWalletConfirmPhrasesBinding
+    private lateinit var bindingDisplay: ViewWalletDisplayPhrasesBinding
 
     private val allWords = mutableListOf<String>()
     private var randomIndex: MutableList<Int>? = null
@@ -99,7 +101,7 @@ internal class BackupWalletActivity : BaseActivity() {
         }
     }
 
-    private fun displaySeedWords() = GlobalScope.launch(Dispatchers.Main) {
+    private fun displaySeedWords() = MainScope().launch {
         val words = MozoWallet.getInstance().getWallet()?.let {
             val phrase = it.mnemonicPhrases()?.toMutableList()
             it.lock()
@@ -116,8 +118,9 @@ internal class BackupWalletActivity : BaseActivity() {
         randomWord[2] = words[randomIndex!![2]]
         randomWord[3] = words[randomIndex!![3]]
 
-        setContentView(R.layout.view_wallet_display_phrases)
-        toolbar_mozo_display_phrases?.apply {
+        bindingDisplay = ViewWalletDisplayPhrasesBinding.inflate(layoutInflater)
+        setContentView(bindingDisplay.root)
+        bindingDisplay.toolbarMozoDisplayPhrases.apply {
             showBackButton(true)
             onBackPress = {
                 EventBus.getDefault().post(MessageEvent.CloseActivities())
@@ -125,45 +128,41 @@ internal class BackupWalletActivity : BaseActivity() {
             showCloseButton(false)
         }
 
-        seed_view.adapter = SeedWordAdapter(words)
-        txt_warning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
+        bindingDisplay.seedView.adapter = SeedWordAdapter(words)
+        bindingDisplay.txtWarning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
             setSpan(ImageSpan(this@BackupWalletActivity, R.drawable.ic_warning),
                     0,
                     1,
                     Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         }
 
-        button_stored_confirm.click {
+        bindingDisplay.buttonStoredConfirm.click {
             it.isSelected = !it.isSelected
-            button_continue.isEnabled = it.isSelected
+            bindingDisplay.buttonContinue.isEnabled = it.isSelected
         }
 
-        button_continue.click {
+        bindingDisplay.buttonContinue.click {
             startVerifySeedWords()
         }
     }
 
     private fun startVerifySeedWords() {
-        setContentView(R.layout.view_wallet_confirm_phrases)
+        bindingConfirm = ViewWalletConfirmPhrasesBinding.inflate(layoutInflater)
+        setContentView(bindingConfirm.root)
 
         allWords.addAll(MnemonicUtils.getWords() ?: listOf())
 
-        initWidget()
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun initWidget() {
         randomIndex ?: return
-        txt_index_1.text = "${randomIndex!![0] + 1}"
-        txt_index_2.text = "${randomIndex!![1] + 1}"
-        txt_index_3.text = "${randomIndex!![2] + 1}"
-        txt_index_4.text = "${randomIndex!![3] + 1}"
+        bindingConfirm.txtIndex1.text = "${randomIndex!![0] + 1}"
+        bindingConfirm.txtIndex2.text = "${randomIndex!![1] + 1}"
+        bindingConfirm.txtIndex3.text = "${randomIndex!![2] + 1}"
+        bindingConfirm.txtIndex4.text = "${randomIndex!![3] + 1}"
 
         val edits = listOf(
-                edit_verify_seed_1,
-                edit_verify_seed_2,
-                edit_verify_seed_3,
-                edit_verify_seed_4
+                bindingConfirm.editVerifySeed1,
+                bindingConfirm.editVerifySeed2,
+                bindingConfirm.editVerifySeed3,
+                bindingConfirm.editVerifySeed4
         )
 
         edits.forEach { edit ->
@@ -188,26 +187,26 @@ internal class BackupWalletActivity : BaseActivity() {
             }
         }
 
-        lo_content.click {
+        bindingConfirm.loContent.click {
             currentFocus?.clearFocus()
             currentFocus?.hideKeyboard()
         }
 
         currentFocus?.showKeyboard()
 
-        button_finish.click {
-            if (lo_success.isVisible)
+        bindingConfirm.buttonFinish.click {
+            if (bindingConfirm.loSuccess.isVisible)
                 return@click finish()
 
             if (!validWords())
                 return@click MessageDialog.show(this,
                         getString(R.string.mozo_backup_confirm_failed))
 
-            button_finish.text = getString(R.string.mozo_button_got_it)
-            toolbar_mozo.showCloseButton(false)
+            bindingConfirm.buttonFinish.text = getString(R.string.mozo_button_got_it)
+            bindingConfirm.toolbarMozo.showCloseButton(false)
             it.hideKeyboard()
             //TODO call API
-            lo_success.visible()
+            bindingConfirm.loSuccess.visible()
         }
     }
 
@@ -228,10 +227,10 @@ internal class BackupWalletActivity : BaseActivity() {
     }
 
     private fun validWords(): Boolean {
-        return edit_verify_seed_1.text.toString() == randomWord[0]
-                && edit_verify_seed_2.text.toString() == randomWord[1]
-                && edit_verify_seed_3.text.toString() == randomWord[2]
-                && edit_verify_seed_4.text.toString() == randomWord[3]
+        return bindingConfirm.editVerifySeed1.text.toString() == randomWord[0]
+                && bindingConfirm.editVerifySeed2.text.toString() == randomWord[1]
+                && bindingConfirm.editVerifySeed3.text.toString() == randomWord[2]
+                && bindingConfirm.editVerifySeed4.text.toString() == randomWord[3]
     }
 
     companion object {

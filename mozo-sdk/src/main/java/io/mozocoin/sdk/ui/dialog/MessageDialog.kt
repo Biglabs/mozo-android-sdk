@@ -5,26 +5,27 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import androidx.annotation.StringRes
-import io.mozocoin.sdk.R
+import io.mozocoin.sdk.databinding.DialogMessageBinding
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.string
-import kotlinx.android.synthetic.main.dialog_message.*
 
 class MessageDialog(context: Context, val message: CharSequence) : BaseDialog(context) {
 
+    private lateinit var binding: DialogMessageBinding
     private var buttonText: String? = null
     private var buttonAction: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_message)
+        binding = DialogMessageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        dialog_msg_content?.text = message
+        binding.dialogMsgContent.text = message
 
         buttonText?.let {
-            button_close?.text = it
+            binding.buttonClose.text = it
         }
-        button_close?.click {
+        binding.buttonClose.click {
             dismiss()
             buttonAction?.invoke()
         }

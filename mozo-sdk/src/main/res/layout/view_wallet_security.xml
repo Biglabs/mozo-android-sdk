@@ -66,11 +66,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sub_title_pin" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_correct_pin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_check_green"
             android:drawablePadding="6dp"
             android:gravity="center"
             android:includeFontPadding="false"
@@ -78,17 +77,17 @@
             android:textColor="@color/mozo_color_correct"
             android:textSize="12sp"
             android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_check_green"
             app:layout_constraintBottom_toTopOf="@id/input_pin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_content_pin"
             tools:visibility="visible" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_incorrect_pin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_error"
             android:drawablePadding="6dp"
             android:gravity="center"
             android:includeFontPadding="false"
@@ -96,6 +95,7 @@
             android:textColor="@color/mozo_color_error"
             android:textSize="12sp"
             android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_error"
             app:layout_constraintBottom_toTopOf="@id/input_pin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

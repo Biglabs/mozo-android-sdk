@@ -14,22 +14,23 @@ import androidx.core.view.postDelayed
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewbinding.ViewBinding
 import io.mozocoin.sdk.MozoTodoList
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.TodoType
 import io.mozocoin.sdk.common.model.Todo
 import io.mozocoin.sdk.common.model.TodoSettings
+import io.mozocoin.sdk.databinding.ActivityTodoBinding
+import io.mozocoin.sdk.databinding.ItemTodoBinding
+import io.mozocoin.sdk.databinding.ItemTodoHeaderBinding
 import io.mozocoin.sdk.utils.*
 import io.mozocoin.sdk.wallet.ChangePinActivity
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.activity_todo.*
-import kotlinx.android.synthetic.main.item_todo.*
-import kotlinx.android.synthetic.main.item_todo_header.*
 
 internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener, MozoTodoList.TodoFinishListener {
 
+    private lateinit var binding: ActivityTodoBinding
     private val todoAdapter by lazy {
-        TodoAdapter(todo_recycler_empty)
+        TodoAdapter(layoutInflater, binding.todoRecyclerEmpty)
     }
 
     override fun onAttachedToWindow() {
@@ -39,35 +40,36 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_todo)
-        setSupportActionBar(toolbar)
+        binding = ActivityTodoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             setDisplayShowHomeEnabled(false)
             setDisplayHomeAsUpEnabled(false)
         }
 
-        todo_recycler_refresh?.apply {
+        binding.todoRecyclerRefresh.apply {
             mozoSetup()
             setOnRefreshListener(this@TodoActivity)
         }
 
-        todo_recycler?.apply {
+        binding.todoRecycler.apply {
             setHasFixedSize(true)
             adapter = todoAdapter
         }
 
         /**
-         * Initialize Mozo Todo Service
+         * Initialize Mozo TodoList Service
          */
         MozoTodoList.getInstance()
     }
 
     override fun onResume() {
         super.onResume()
-        todo_recycler_refresh?.isRefreshing = true
+        binding.todoRecyclerRefresh.isRefreshing = true
         registerReceiver(onBluetoothStateChangedListener, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
 
-        todo_recycler?.postDelayed(1000) {
+        binding.todoRecycler.postDelayed(1000) {
             MozoTodoList.getInstance().fetchData(this, todoDataCallback)
         }
     }
@@ -94,7 +96,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         todoAdapter.todoSettings = settings
         todoAdapter.updateData(data.toMutableList())
 
-        todo_recycler_refresh?.isRefreshing = false
+        binding.todoRecyclerRefresh.isRefreshing = false
     }
 
     private val onBluetoothStateChangedListener = object : BroadcastReceiver() {
@@ -105,7 +107,10 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         }
     }
 
-    class TodoAdapter(private val emptyView: View?) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
+    class TodoAdapter(
+            private val layoutInflater: LayoutInflater,
+            private val emptyView: View?
+            ) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
         var todoSettings: TodoSettings? = null
         private val data: MutableList<Todo> = mutableListOf()
 
@@ -127,8 +132,8 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder = when (viewType) {
-            TYPE_HEADER -> TodoHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_todo_header, parent, false))
-            else -> TodoItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_todo, parent, false))
+            TYPE_HEADER -> TodoHeaderViewHolder(ItemTodoHeaderBinding.inflate(layoutInflater, parent, false))
+            else -> TodoItemViewHolder(ItemTodoBinding.inflate(layoutInflater, parent, false))
         }
 
         override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
@@ -138,27 +143,27 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
             }
         }
 
-        inner class TodoHeaderViewHolder(override val containerView: View) : TodoViewHolder(containerView) {
+        inner class TodoHeaderViewHolder(override val binding: ItemTodoHeaderBinding) : TodoViewHolder(binding) {
             override fun bind(d: Todo?) {
                 val count = itemCount - 1
                 val unsolved = if (count > 0) "($count)" else ""
-                item_todo_total_unsolved?.text = itemView.context.getString(R.string.mozo_todo_unsolved, unsolved)
+                binding.itemTodoTotalUnsolved.text = itemView.context.getString(R.string.mozo_todo_unsolved, unsolved)
             }
         }
 
-        inner class TodoItemViewHolder(override val containerView: View) : TodoViewHolder(containerView) {
+        inner class TodoItemViewHolder(override val binding: ItemTodoBinding) : TodoViewHolder(binding) {
             override fun bind(d: Todo?) {
                 d ?: return
 
                 val color = todoSettings?.colors?.get(d.severity) ?: "#969696"
-                item_todo_container?.setBorderColor(Color.parseColor(color))
-                item_todo_container_mask?.click {
+                binding.itemTodoContainer.setBorderColor(Color.parseColor(color))
+                binding.itemTodoContainerMask.click {
                     handleItemClick(d)
                 }
 
                 TodoType.find(d.id)?.let {
-                    item_todo_title?.setText(it.title)
-                    item_todo_action?.setText(it.action)
+                    binding.itemTodoTitle.setText(it.title)
+                    binding.itemTodoAction.setText(it.action)
                 }
             }
 
@@ -189,7 +194,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
             }
         }
 
-        abstract class TodoViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+        abstract class TodoViewHolder(open val binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
             abstract fun bind(d: Todo?)
         }
 

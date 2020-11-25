@@ -6,12 +6,8 @@
 
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/barcode_scanner_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:zxing_preview_scaling_strategy="centerCrop"
         app:zxing_use_texture_view="true" />
 
@@ -28,14 +24,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_back_arrow"
             android:drawablePadding="7dp"
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="@string/mozo_button_back"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            app:drawableStartCompat="@drawable/ic_back_arrow" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,16 +2,18 @@ package com.biglabs.mozo.example.shopper
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.biglabs.mozo.example.shopper.databinding.ActivityDemoSignMessageBinding
 import io.mozocoin.sdk.MozoTx
-import kotlinx.android.synthetic.main.activity_demo_sign_message.*
 
 class DemoSignMessageActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDemoSignMessageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_demo_sign_message)
+        binding = ActivityDemoSignMessageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        button_sign.setOnClickListener {
+        binding.buttonSign.setOnClickListener {
             /*
             MozoTx.getInstance().signMessage(this, input_to_sign.text.toString()) { message, signature, publicKey ->
                 text_result.text = StringBuilder()
@@ -25,7 +27,11 @@ class DemoSignMessageActivity : AppCompatActivity() {
                         .append(publicKey)
             }
             */
-            MozoTx.getInstance().signMessages(this, input_to_sign.text.toString(), input_to_sign.text.toString()) { result ->
+            MozoTx.getInstance().signMessages(
+                    this,
+                    binding.inputToSign.text.toString(),
+                    binding.inputToSign.text.toString()
+            ) { result ->
 
                 val stringBuilder = StringBuilder()
                 result.mapIndexed { index, value ->
@@ -39,7 +45,7 @@ class DemoSignMessageActivity : AppCompatActivity() {
                             .append(value.third)
                             .append("\n\n")
                 }
-                text_result.text = stringBuilder
+                binding.textResult.text = stringBuilder
             }
         }
     }

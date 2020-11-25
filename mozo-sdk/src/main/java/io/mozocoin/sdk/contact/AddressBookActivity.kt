@@ -7,20 +7,19 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.model.Contact
+import io.mozocoin.sdk.databinding.ActivityAddressBookBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.activity_address_book.*
 import kotlinx.coroutines.*
 
 internal class AddressBookActivity : BaseActivity() {
-
+    private lateinit var binding: ActivityAddressBookBinding
     private val contacts: ArrayList<Contact> = arrayListOf()
     private val contactsBackup: ArrayList<Contact> = arrayListOf()
     private val onItemClick = { contact: Contact ->
@@ -41,21 +40,21 @@ internal class AddressBookActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_address_book)
+        binding = ActivityAddressBookBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         onNewIntent(intent)
 
-        input_search?.apply {
+        binding.inputSearch.apply {
             onTextChanged {
-                button_clear.visibility = if (it?.length ?: 0 == 0) View.GONE else View.VISIBLE
+                binding.buttonClear.visibility = if (it?.length ?: 0 == 0) View.GONE else View.VISIBLE
                 mAdapter.isShowSyncContactsUI = (it?.length ?: 0) == 0
                 searchByName(it.toString())
             }
         }
 
-        button_clear.click { input_search.setText("") }
+        binding.buttonClear.click { binding.inputSearch.setText("") }
 
-        address_book_tabs?.apply {
+        binding.addressBookTabs.apply {
             //isVisible = !MozoSDK.isRetailerApp
             setOnCheckedChangeListener { group, _ ->
                 group.hideKeyboard()
@@ -63,33 +62,33 @@ internal class AddressBookActivity : BaseActivity() {
             }
         }
 
-        address_book_tab_user.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.addressBookTabUser.setOnCheckedChangeListener { buttonView, isChecked ->
             buttonView.typeface = if (isChecked) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         }
-        address_book_tab_store.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.addressBookTabStore.setOnCheckedChangeListener { buttonView, isChecked ->
             buttonView.typeface = if (isChecked) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         }
 
-        list_contacts?.apply {
+        binding.listContacts.apply {
             setHasFixedSize(true)
             itemAnimator = DefaultItemAnimator()
             adapter = mAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    address_book_top_bar_hover.isSelected = recyclerView.canScrollVertically(-1)
+                    binding.addressBookTopBarHover.isSelected = recyclerView.canScrollVertically(-1)
                 }
             })
             onLetterScrollListener = {
                 try {
                     val position = mAdapter.getSectionPosition(it)
-                    (list_contacts.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+                    (binding.listContacts.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
                 } catch (e: Exception) {
 
                 }
             }
         }
 
-        list_contacts_refresh?.apply {
+        binding.listContactsRefresh.apply {
             mozoSetup()
             isRefreshing = true
             setOnRefreshListener(::refresh)
@@ -103,7 +102,7 @@ internal class AddressBookActivity : BaseActivity() {
 
         isStartForResult = intent?.getBooleanExtra(FLAG_START_FOR_RESULT, isStartForResult)
                 ?: isStartForResult
-        address_book_toolbar?.apply {
+        binding.addressBookToolbar.apply {
             setTitle(if (isStartForResult) R.string.mozo_address_book_pick_title else R.string.mozo_address_book_title)
             showBackButton(isStartForResult)
         }
@@ -111,9 +110,9 @@ internal class AddressBookActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this, Observer {
+        MozoSDK.getInstance().contactViewModel.usersLiveData.observe(this) {
             loadData()
-        })
+        }
     }
 
     override fun onPause() {
@@ -122,31 +121,31 @@ internal class AddressBookActivity : BaseActivity() {
     }
 
     private fun refresh() {
-        if (input_search.length() == 0) {
-            when (address_book_tabs?.checkedRadioButtonId ?: R.id.address_book_tab_user) {
+        if (binding.inputSearch.length() == 0) {
+            when (binding.addressBookTabs.checkedRadioButtonId) {
                 R.id.address_book_tab_user -> {
                     MozoSDK.getInstance().contactViewModel.fetchUser(this) {
-                        list_contacts_refresh?.isRefreshing = false
+                        binding.listContactsRefresh.isRefreshing = false
                         loadData()
                     }
                 }
                 R.id.address_book_tab_store -> {
                     MozoSDK.getInstance().contactViewModel.fetchStore(this) {
-                        list_contacts_refresh?.isRefreshing = false
+                        binding.listContactsRefresh.isRefreshing = false
                         loadData()
                     }
                 }
             }
         } else
-            list_contacts_refresh?.isRefreshing = false
+            binding.listContactsRefresh.isRefreshing = false
     }
 
     private fun loadData() {
         contacts.clear()
         contactsBackup.clear()
-        view_empty_state.gone()
+        binding.viewEmptyState.gone()
 
-        when (address_book_tabs?.checkedRadioButtonId ?: R.id.address_book_tab_user) {
+        when (binding.addressBookTabs.checkedRadioButtonId) {
             R.id.address_book_tab_user -> {
                 contacts.addAll(MozoSDK.getInstance().contactViewModel.users())
                 contactsBackup.addAll(MozoSDK.getInstance().contactViewModel.users())
@@ -157,8 +156,8 @@ internal class AddressBookActivity : BaseActivity() {
             }
         }
 
-        list_contacts_refresh.isRefreshing = false
-        mAdapter.mEmptyView = list_contacts_empty_view
+        binding.listContactsRefresh.isRefreshing = false
+        mAdapter.mEmptyView = binding.listContactsEmptyView
         mAdapter.notifyData(true, showEmptyView = true)
     }
 
@@ -173,7 +172,7 @@ internal class AddressBookActivity : BaseActivity() {
                 (it.name ?: "").contains(name, ignoreCase = true)
             })
             withContext(Dispatchers.Main) {
-                if (contacts.isEmpty() && name.isNotEmpty()) view_empty_state.visible() else view_empty_state.gone()
+                if (contacts.isEmpty() && name.isNotEmpty()) binding.viewEmptyState.visible() else binding.viewEmptyState.gone()
                 mAdapter.notifyData(true, showEmptyView = false)
             }
         }

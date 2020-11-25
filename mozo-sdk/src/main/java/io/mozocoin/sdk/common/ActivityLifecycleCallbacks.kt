@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
     private var customTabsHelper: CustomTabsHelper? = null
 
-    override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         customTabsHelper = CustomTabsHelper()
     }
 
@@ -43,15 +43,15 @@ class ActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
         }
     }
 
-    override fun onActivityStarted(activity: Activity?) {
+    override fun onActivityStarted(activity: Activity) {
     }
 
-    override fun onActivityDestroyed(activity: Activity?) {
+    override fun onActivityDestroyed(activity: Activity) {
     }
 
-    override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
     }
 
-    override fun onActivityStopped(activity: Activity?) {
+    override fun onActivityStopped(activity: Activity) {
     }
 }

@@ -1,24 +1,22 @@
 package io.mozocoin.sdk.ui
 
-import android.os.Bundle
-import io.mozocoin.sdk.R
-import io.mozocoin.sdk.utils.click
 import com.journeyapps.barcodescanner.CaptureActivity
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
-import kotlinx.android.synthetic.main.view_qr_code_scanner.*
+import io.mozocoin.sdk.databinding.ViewQrCodeScannerBinding
+import io.mozocoin.sdk.utils.click
 
 class ScannerQRActivity : CaptureActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.view_qr_code_scanner)
-        super.onCreate(savedInstanceState)
-
-        button_back.click {
-            onBackPressed()
-        }
-    }
+    private lateinit var binding: ViewQrCodeScannerBinding
 
     override fun initializeContent(): DecoratedBarcodeView {
-        return findViewById(R.id.barcode_scanner_view)
+        binding = ViewQrCodeScannerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.buttonBack.click {
+            onBackPressed()
+        }
+
+        return binding.barcodeScannerView
     }
 }
