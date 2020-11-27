@@ -125,7 +125,9 @@ class MozoWalletFragment : Fragment() {
         mPadding[1] = top
         mPadding[2] = right
         mPadding[3] = bottom
-        binding.rootContainer.updatePadding(left, top, right, bottom)
+        if (_binding != null) {
+            binding.rootContainer.updatePadding(left, top, right, bottom)
+        }
     }
 
     companion object {
