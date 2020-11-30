@@ -21,6 +21,7 @@ import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.UserCancelException
+import io.mozocoin.sdk.utils.logAsInfo
 import kotlinx.coroutines.*
 import net.openid.appauth.AuthorizationException
 import org.greenrobot.eventbus.EventBus
@@ -107,8 +108,9 @@ class MozoAuth private constructor() {
             expirationTime.timeInMillis = authStateManager.current.accessTokenExpirationTime ?: 0
             expirationTime.add(Calendar.DAY_OF_MONTH, -2)
 
+            "Token Expiration Time ${expirationTime.time}".logAsInfo()
             if (Calendar.getInstance().after(expirationTime)) {
-                MozoTokenService.newInstance().refreshToken {
+                MozoTokenService.instance().refreshToken {
                     onAuthorizeChanged(MessageEvent.Auth())
                 }
             } else onAuthorizeChanged(MessageEvent.Auth())
@@ -237,7 +239,7 @@ class MozoAuth private constructor() {
     }
 
     fun checkSession(context: Context, callback: (isExpired: Boolean) -> Unit) {
-        val tokenService = MozoTokenService.newInstance()
+        val tokenService = MozoTokenService.instance()
         tokenService.checkSession(context, { isExpired ->
 
             if (isExpired) {

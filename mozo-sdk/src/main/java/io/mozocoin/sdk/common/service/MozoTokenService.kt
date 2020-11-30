@@ -2,8 +2,8 @@ package io.mozocoin.sdk.common.service
 
 import android.app.Activity
 import android.content.Context
+import com.google.gson.JsonObject
 import io.mozocoin.sdk.BuildConfig
-import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
@@ -20,7 +20,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Url
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -31,6 +34,24 @@ internal class MozoTokenService private constructor() {
 
     private val mAPIs: KeyCloakAPIs by lazy { createService() }
 
+    private fun token() = authStateManager.current.accessToken
+
+    fun reportToken() {
+        val token = token() ?: return
+        if (token.isEmpty()) return
+        MainScope().launch {
+            val obj = JsonObject()
+            obj.addProperty("token", token)
+            mAPIs.reportToken(obj).enqueue(object : Callback<Any> {
+                override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                }
+
+                override fun onFailure(call: Call<Any>, t: Throwable) {
+                }
+            })
+        }
+    }
+
     fun refreshToken(callback: ((token: String?) -> Unit)?) {
         try {
             mAuthService.performTokenRequest(
@@ -38,6 +59,7 @@ internal class MozoTokenService private constructor() {
                     authStateManager.current.clientAuthentication
             ) { response, ex ->
                 authStateManager.updateAfterTokenResponse(response, ex)
+                reportToken()
 
                 response?.run {
                     "Refresh token successful: $accessToken".logAsInfo()
@@ -85,7 +107,7 @@ internal class MozoTokenService private constructor() {
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor {
-                    val accessToken = MozoAuth.getInstance().getAccessToken()
+                    val accessToken = token()
                     val original = it.request()
                     val request = original.newBuilder()
                             .header("Authorization", "Bearer $accessToken")
@@ -108,13 +130,28 @@ internal class MozoTokenService private constructor() {
     }
 
     private interface KeyCloakAPIs {
+        /**
+         * Report Token
+         */
+        @POST
+        fun reportToken(
+                @Body info: JsonObject,
+                @Url url: String = "https://${Support.domainAPI()}/store/api/public/tokenHistory/addTokenHistory"
+        ): Call<Any>
+
         @GET("auth/realms/mozo/protocol/openid-connect/userinfo")
         fun getUserInfo(): Call<Any>
     }
 
     companion object {
-        fun newInstance() = synchronized(this) {
-            return@synchronized MozoTokenService()
-        }
+        @Volatile
+        private var instance: MozoTokenService? = null
+
+        @JvmStatic
+        fun instance(): MozoTokenService =
+                instance ?: synchronized(this) {
+                    instance = MozoTokenService()
+                    instance!!
+                }
     }
 }

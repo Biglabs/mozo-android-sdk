@@ -18,6 +18,7 @@ import io.mozocoin.sdk.common.ActivityLifecycleCallbacks
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.ConnectionService
+import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.MaintenanceActivity
 import io.mozocoin.sdk.ui.UpdateRequiredActivity
 import io.mozocoin.sdk.utils.Support
@@ -98,6 +99,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 isRetailerApp = useForBusiness
                 isInternalApps = Support.isInternalApps(context)
                 instance = MozoSDK(context.applicationContext)
+
+                /**
+                 * Report token
+                 */
+                MozoTokenService.instance().reportToken()
 
                 // Preload custom tabs service for improved performance
                 if (context is Application) {
