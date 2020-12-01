@@ -20,6 +20,7 @@ import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.dialog.MessageDialog
+import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.logAsInfo
 import kotlinx.coroutines.*
@@ -139,6 +140,8 @@ class MozoAuth private constructor() {
     fun signOut() = signOut(false)
 
     internal fun signOut(silent: Boolean = false) {
+        Support.logStackTrace()
+
         MessageDialog.dismiss()
         authStateManager.clearSession()
 

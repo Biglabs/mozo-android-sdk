@@ -8,7 +8,8 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        MozoSDK.initialize(this, MozoSDK.ENVIRONMENT_DEVELOP, useForBusiness = true)
+        MozoSDK.initialize(this, MozoSDK.ENVIRONMENT_DEVELOP)
+        MozoSDK.enableDebugLogging(true)
         MozoSDK.attachNotificationReceiverActivity(MainActivity::class.java)
     }
 }

@@ -23,6 +23,10 @@ internal fun String?.logAsInfo(prefix: String? = null) {
     }
 }
 
+internal fun String?.logPublic(prefix: String? = null) {
+    Log.i("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
+}
+
 fun String.censor(paddingStart: Int, paddingEnd: Int, mask: Char = '*'): String = toCharArray().mapIndexed { i, c ->
     if (i >= paddingStart && i < length - paddingEnd && !c.isWhitespace()) mask else c
 }.joinToString(separator = "")

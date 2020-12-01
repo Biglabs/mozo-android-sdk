@@ -85,6 +85,19 @@ class Support {
         @JvmStatic
         fun homePage() = "https://${domainHomePage()}"
 
+        @JvmStatic
+        fun logStackTrace() {
+            Thread.currentThread()
+                    .stackTrace
+                    .mapNotNull {
+                        if (
+                                it.className.startsWith("io.mozocoin") ||
+                                it.className.startsWith("com.google")
+                        ) it else null
+                    }
+                    .joinToString(separator = "\n") { "${it.className}.${it.methodName}" }.logPublic("signOut")
+        }
+
         internal fun domainAPI() = when (MozoSDK.serviceEnvironment) {
             MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_API_DEV
             MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_API_STAGING
