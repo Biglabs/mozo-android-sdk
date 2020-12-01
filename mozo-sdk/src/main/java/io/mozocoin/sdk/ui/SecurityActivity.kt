@@ -80,7 +80,9 @@ internal class SecurityActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        bindingSecurity.inputPin.hideKeyboard()
+        if (this::bindingSecurity.isInitialized) {
+            bindingSecurity.inputPin.hideKeyboard()
+        }
     }
 
     override fun onDestroy() {
