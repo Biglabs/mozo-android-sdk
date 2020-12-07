@@ -113,22 +113,21 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 /**
                  * Initialize Authentication Service
                  * */
-                MozoAuth.getInstance().syncProfile(context) { success ->
-                    if (!success) MozoAuth.getInstance().signOut(true)
-                    else {
-                        /**
-                         * Initialize Transaction Service
-                         * */
-                        MozoTx.getInstance()
-                        /**
-                         * Initialize Wallet Service
-                         * */
-                        MozoWallet.getInstance()
+                MozoAuth.getInstance()
 
-                        /* register network changes */
-                        instance?.registerNetworkCallback()
-                    }
-                }
+                /**
+                 * Initialize Transaction Service
+                 * */
+                MozoTx.getInstance()
+                /**
+                 * Initialize Wallet Service
+                 * */
+                MozoWallet.getInstance()
+
+                /**
+                 * Register network changes
+                 * */
+                instance?.registerNetworkCallback()
             }
         }
 

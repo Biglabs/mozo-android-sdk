@@ -22,7 +22,7 @@ import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
-import io.mozocoin.sdk.utils.logAsInfo
+import io.mozocoin.sdk.utils.logPublic
 import kotlinx.coroutines.*
 import net.openid.appauth.AuthorizationException
 import org.greenrobot.eventbus.EventBus
@@ -109,7 +109,7 @@ class MozoAuth private constructor() {
             expirationTime.timeInMillis = authStateManager.current.accessTokenExpirationTime ?: 0
             expirationTime.add(Calendar.DAY_OF_MONTH, -2)
 
-            "Token Expiration Time ${expirationTime.time}".logAsInfo()
+            "Token Expiration Time ${expirationTime.time}".logPublic()
             if (Calendar.getInstance().after(expirationTime)) {
                 MozoTokenService.instance().refreshToken {
                     onAuthorizeChanged(MessageEvent.Auth())
@@ -168,7 +168,13 @@ class MozoAuth private constructor() {
         }
     }
 
-    fun getAccessToken() = authStateManager.current.accessToken
+    fun getAccessToken(): String? {
+        val token = authStateManager.current.accessToken
+        if (token.isNullOrEmpty()) {
+            "Access token is NULL or empty".logPublic()
+        }
+        return token
+    }
 
     /**
      * Get pin_secret from token
