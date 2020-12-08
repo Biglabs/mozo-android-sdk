@@ -1,11 +1,14 @@
 package io.mozocoin.sdk.utils
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import androidx.core.text.set
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,6 +22,13 @@ import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.ExchangeRateData
 import io.mozocoin.sdk.common.model.ExchangeRateInfo
 import io.mozocoin.sdk.ui.ScannerQRActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.tinylog.Logger
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -96,6 +106,34 @@ class Support {
                         ) it else null
                     }
                     .joinToString(separator = "\n") { "${it.className}.${it.methodName}" }.logPublic("signOut")
+        }
+
+        @JvmStatic
+        fun writeLog(content: String?) = GlobalScope.launch(Dispatchers.IO) {
+            content ?: return@launch
+            Logger.info(content, "")
+
+            if (ActivityCompat.checkSelfPermission(MozoSDK.getInstance().context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                val today = SimpleDateFormat("yyMMMd", Locale.US).format(Date())
+                val file = File("sdcard/Mozo/${today}-${MozoSDK.getInstance().context.packageName}.log")
+                if (!file.exists()) {
+                    try {
+                        file.parentFile?.mkdirs()
+                        file.createNewFile()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                try {
+                    val buf = BufferedWriter(FileWriter(file, true))
+                    buf.append(Date().toString().plus(": $content"))
+                    buf.newLine()
+                    buf.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
         }
 
         internal fun domainAPI() = when (MozoSDK.serviceEnvironment) {

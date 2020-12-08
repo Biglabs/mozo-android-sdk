@@ -39,14 +39,17 @@ internal class MozoTokenService private constructor() {
     fun reportToken() {
         val token = token() ?: return
         if (token.isEmpty()) return
+        "Report token $token".logAsInfo()
         MainScope().launch {
             val obj = JsonObject()
             obj.addProperty("token", token)
             mAPIs.reportToken(obj).enqueue(object : Callback<Any> {
                 override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                    "Report token isSuccessful: ${response.isSuccessful}".logAsInfo()
                 }
 
                 override fun onFailure(call: Call<Any>, t: Throwable) {
+                    "Report token onFailure: ${t.localizedMessage}".logAsInfo()
                 }
             })
         }
@@ -71,7 +74,7 @@ internal class MozoTokenService private constructor() {
                 callback?.invoke(response?.accessToken)
             }
         } catch (ex: Exception) {
-            "Fail to refresh token: ${ex.message}".logAsError()
+            "Refresh token got EXCEPTION: ${ex.message}".logAsError()
             callback?.invoke(null)
         }
     }

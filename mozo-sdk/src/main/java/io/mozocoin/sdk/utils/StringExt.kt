@@ -14,6 +14,7 @@ internal fun String?.logAsError(prefix: String? = null) {
         Log.e("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
         Log.e("MozoSDK", " ")
     }
+    Support.writeLog((if (prefix != null) "$prefix: " else "") + this)
 }
 
 internal fun String?.logAsInfo(prefix: String? = null) {
@@ -21,10 +22,12 @@ internal fun String?.logAsInfo(prefix: String? = null) {
         Log.i("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
         Log.i("MozoSDK", " ")
     }
+    Support.writeLog((if (prefix != null) "$prefix: " else "") + this)
 }
 
 internal fun String?.logPublic(prefix: String? = null) {
     Log.i("MozoSDK", (if (prefix != null) "$prefix: " else "") + this)
+    Support.writeLog((if (prefix != null) "$prefix: " else "") + this)
 }
 
 fun String.censor(paddingStart: Int, paddingEnd: Int, mask: Char = '*'): String = toCharArray().mapIndexed { i, c ->
