@@ -195,7 +195,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
         fetchDataJobHandler?.cancel()
         fetchDataJobHandler = GlobalScope.launch {
             delay(1000)
-            if (!isAdded || activity == null) return@launch
+            if (!isAdded || activity == null || _binding == null) return@launch
             if (context == null || currentAddress == null) return@launch
 
             MozoAPIsService.getInstance().getTransactionHistory(requireContext(), currentAddress!!,

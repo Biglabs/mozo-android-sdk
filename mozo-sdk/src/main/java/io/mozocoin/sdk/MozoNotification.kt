@@ -261,7 +261,7 @@ class MozoNotification private constructor() {
         @JvmStatic
         fun prepareNotification(context: Context, message: BroadcastDataContent): Notification {
             val isSendType = message.from.equals(
-                    MozoWallet.getInstance().getAddress() ?: "",
+                    MozoSDK.getInstance().profileViewModel.getProfile()?.walletInfo?.offchainAddress,
                     ignoreCase = true
             )
 
