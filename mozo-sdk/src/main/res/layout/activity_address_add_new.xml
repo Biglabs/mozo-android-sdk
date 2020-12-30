@@ -150,7 +150,6 @@
             style="@style/MozoButtonStyle.Floating"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:background="@drawable/mozo_dr_btn_no_radius"
             android:enabled="false"
             android:text="@string/mozo_button_save"
             app:layout_constraintBottom_toBottomOf="parent"

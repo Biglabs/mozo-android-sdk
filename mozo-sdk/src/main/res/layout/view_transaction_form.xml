@@ -447,7 +447,6 @@
         style="@style/MozoButtonStyle.Floating"
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
-        android:background="@drawable/mozo_dr_btn_no_radius"
         android:enabled="false"
         android:text="@string/mozo_button_continue" />
 

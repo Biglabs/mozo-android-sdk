@@ -25,7 +25,6 @@ import io.mozocoin.sdk.ui.ScannerQRActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.tinylog.Logger
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -111,7 +110,6 @@ class Support {
         @JvmStatic
         fun writeLog(content: String?) = GlobalScope.launch(Dispatchers.IO) {
             content ?: return@launch
-            Logger.info(content, "")
 
             if (ActivityCompat.checkSelfPermission(MozoSDK.getInstance().context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 val today = SimpleDateFormat("yyMMMd", Locale.US).format(Date())

@@ -21,7 +21,7 @@
         android:id="@+id/image_detail_receiver"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:contentDescription="@string/zxing_app_name"
+        android:contentDescription="@string/mozo_transfer_receiver_address"
         android:src="@drawable/ic_receiver"
         app:layout_constraintBottom_toBottomOf="@id/lo_content"
         app:layout_constraintStart_toStartOf="@id/image_tx_type"
