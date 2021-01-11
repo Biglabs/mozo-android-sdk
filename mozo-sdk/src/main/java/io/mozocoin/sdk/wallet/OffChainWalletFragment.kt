@@ -3,7 +3,9 @@ package io.mozocoin.sdk.wallet
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
@@ -22,15 +24,17 @@ import io.mozocoin.sdk.common.model.BalanceInfo
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.FragmentMozoWalletOffBinding
 import io.mozocoin.sdk.transaction.TransactionDetailsActivity
 import io.mozocoin.sdk.transaction.TransactionHistoryRecyclerAdapter
 import io.mozocoin.sdk.transaction.payment.PaymentRequestActivity
 import io.mozocoin.sdk.ui.dialog.QRCodeDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.fragment_mozo_wallet_off.*
 import kotlinx.coroutines.*
 
-internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_off), SwipeRefreshLayout.OnRefreshListener {
+internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+    private var _binding: FragmentMozoWalletOffBinding? = null
+    private val binding get() = _binding!!
     private val histories = arrayListOf<TransactionHistory>()
     private val onItemClick = { history: TransactionHistory ->
         if (context != null) {
@@ -41,7 +45,9 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
     private var buttonPaymentRequest = true
     private var buttonSend = true
 
-    private var historyAdapter = TransactionHistoryRecyclerAdapter(histories, onItemClick, null)
+    private val historyAdapter: TransactionHistoryRecyclerAdapter by lazy {
+        TransactionHistoryRecyclerAdapter(layoutInflater, histories, onItemClick, null)
+    }
     private var currentAddress: String? = null
     private var fetchDataJob: Job? = null
     private var fetchDataJobHandler: Job? = null
@@ -49,36 +55,41 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
 
     private var mOnChainBalanceInfo: BalanceInfo? = null
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentMozoWalletOffBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        wallet_fragment_off_swipe?.apply {
+        binding.walletFragmentOffSwipe.apply {
             mozoSetup()
             setOnRefreshListener(this@OffChainWalletFragment)
         }
-        wallet_fragment_btn_payment_request?.apply {
+        binding.walletFragmentBtnPaymentRequest.apply {
             visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
             click {
                 if (context != null) PaymentRequestActivity.start(requireContext())
             }
         }
-        wallet_fragment_btn_send?.apply {
+        binding.walletFragmentBtnSend.apply {
             visibility = if (buttonSend) View.VISIBLE else View.GONE
             click {
                 MozoTx.getInstance().transfer()
             }
         }
-        wallet_fragment_btn_view_all?.click {
+        binding.walletFragmentBtnViewAll.click {
             MozoTx.getInstance().openTransactionHistory(it.context)
         }
-        wallet_fragment_qr_image?.click {
-            QRCodeDialog.show(context ?: return@click, currentAddress ?: return@click)
+        binding.walletFragmentQrImage.click {
+            QRCodeDialog.show(it.context, currentAddress ?: return@click)
         }
-        wallet_fragment_address?.click {
+        binding.walletFragmentAddress.click {
             it.copyWithToast()
         }
 
-        wallet_info_detected_on_chain?.click {
+        binding.walletInfoDetectedOnChain.click {
             val lastTxHash = SharedPrefsUtils.getLastTxConvertOnChainInOffChain()
             if (lastTxHash.isNullOrEmpty()) {
                 ConvertOnInOffActivity.start(
@@ -91,7 +102,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
             }
         }
 
-        wallet_fragment_history_recycler?.apply {
+        binding.walletFragmentHistoryRecycler.apply {
             setHasFixedSize(false)
             adapter = historyAdapter
         }
@@ -107,7 +118,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
 
     override fun onResume() {
         super.onResume()
-        wallet_info_detected_on_chain?.gone()
+        binding.walletInfoDetectedOnChain.gone()
         if (MozoAuth.getInstance().isSignedIn()) {
             view?.postDelayed(250) {
                 MozoSDK.getInstance().profileViewModel.run {
@@ -131,6 +142,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
         fetchDataJob?.cancel()
         fetchDataJobHandler?.cancel()
         generateQRJob?.cancel()
+        _binding = null
     }
 
     override fun onRefresh() {
@@ -143,7 +155,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
             currentAddress = it.walletInfo!!.offchainAddress
             historyAdapter.address = currentAddress
 
-            wallet_fragment_address?.text = currentAddress
+            binding.walletFragmentAddress.text = currentAddress
 
             fetchData()
 
@@ -160,9 +172,9 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
             historyAdapter.address = null
             historyAdapter.notifyData()
 
-            wallet_fragment_address?.text = null
+            binding.walletFragmentAddress.text = null
             generateQRJob?.cancel()
-            wallet_fragment_qr_image?.setImageDrawable(null)
+            binding.walletFragmentQrImage.setImageDrawable(null)
         }
     }
 
@@ -183,15 +195,15 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
         fetchDataJobHandler?.cancel()
         fetchDataJobHandler = GlobalScope.launch {
             delay(1000)
-            if (!isAdded || activity == null) return@launch
+            if (!isAdded || activity == null || _binding == null) return@launch
             if (context == null || currentAddress == null) return@launch
 
             MozoAPIsService.getInstance().getTransactionHistory(requireContext(), currentAddress!!,
                     page = Constant.PAGING_START_INDEX,
                     size = 10,
                     callback = { data, _ ->
-                        wallet_fragment_off_swipe?.isRefreshing = false
-                        historyAdapter.mEmptyView = wallet_fragment_history_empty_view
+                        binding.walletFragmentOffSwipe.isRefreshing = false
+                        historyAdapter.mEmptyView = binding.walletFragmentHistoryEmptyView
 
                         if (data?.items == null) {
                             historyAdapter.setCanLoadMore(false)
@@ -212,7 +224,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
                                 fetchDataJob = null
                                 historyAdapter.setCanLoadMore(false)
                                 historyAdapter.notifyData()
-                                wallet_fragment_history_recycler?.scheduleLayoutAnimation()
+                                binding.walletFragmentHistoryRecycler.scheduleLayoutAnimation()
                             }
                         }
                     },
@@ -224,18 +236,18 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
             MozoAPIsService.getInstance().getOnChainBalanceInOffChain(requireContext(), currentAddress!!, { data, _ ->
                 data ?: return@getOnChainBalanceInOffChain
 
-                wallet_info_detected_on_chain?.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
+                binding.walletInfoDetectedOnChain.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
                 mOnChainBalanceInfo = data.balanceOfTokenOnchain
 
                 when {
                     !data.convertToMozoXOnchain -> {
-                        wallet_info_detected_on_chain?.text = HtmlCompat.fromHtml(
+                        binding.walletInfoDetectedOnChain.text = HtmlCompat.fromHtml(
                                 getString(R.string.mozo_convert_on_in_off_converting),
                                 FROM_HTML_MODE_LEGACY
                         )
                     }
                     data.detectedOnchain -> {
-                        wallet_info_detected_on_chain?.text = HtmlCompat.fromHtml(getString(
+                        binding.walletInfoDetectedOnChain.text = HtmlCompat.fromHtml(getString(
                                 R.string.mozo_convert_on_in_off_detected,
                                 data.balanceOfTokenOnchain?.balanceNonDecimal()?.displayString()
                         ), FROM_HTML_MODE_LEGACY)
@@ -256,7 +268,7 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
                 resources.dp2Px(128f).toInt()
         )
         withContext(Dispatchers.Main) {
-            wallet_fragment_qr_image?.setImageBitmap(qrImage)
+            binding.walletFragmentQrImage.setImageBitmap(qrImage)
         }
         generateQRJob = null
     }
@@ -264,13 +276,13 @@ internal class OffChainWalletFragment : Fragment(R.layout.fragment_mozo_wallet_o
     @Suppress("unused")
     fun showPaymentRequestButton(display: Boolean) {
         buttonPaymentRequest = display
-        wallet_fragment_btn_payment_request?.visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
+        binding.walletFragmentBtnPaymentRequest.visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
     }
 
     @Suppress("unused")
     fun showSendButton(display: Boolean) {
         buttonSend = display
-        wallet_fragment_btn_send?.visibility = if (buttonSend) View.VISIBLE else View.GONE
+        binding.walletFragmentBtnSend.visibility = if (buttonSend) View.VISIBLE else View.GONE
     }
 
     companion object {

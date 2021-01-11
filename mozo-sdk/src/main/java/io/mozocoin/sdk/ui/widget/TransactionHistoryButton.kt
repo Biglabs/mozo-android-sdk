@@ -6,7 +6,6 @@ import android.view.View
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.R
-import io.mozocoin.sdk.transaction.TransactionHistoryActivity
 
 internal class TransactionHistoryButton : BaseButton {
 

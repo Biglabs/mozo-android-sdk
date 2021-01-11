@@ -26,11 +26,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/convert_broadcast_toolbar">
 
-        <include layout="@layout/activity_convert_broadcast_confirm" />
+        <include
+            android:id="@+id/flip_page_confirm"
+            layout="@layout/activity_convert_broadcast_confirm" />
 
-        <include layout="@layout/activity_convert_broadcast_submit" />
+        <include
+            android:id="@+id/flip_page_submit"
+            layout="@layout/activity_convert_broadcast_submit" />
 
-        <include layout="@layout/activity_convert_broadcast_result" />
+        <include
+            android:id="@+id/flip_page_result"
+            layout="@layout/activity_convert_broadcast_result" />
     </ViewFlipper>
 
     <FrameLayout

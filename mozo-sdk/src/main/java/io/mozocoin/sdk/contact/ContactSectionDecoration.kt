@@ -5,6 +5,8 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import androidx.recyclerview.widget.RecyclerView
 import io.mozocoin.sdk.common.Constant
+import kotlin.math.max
+import kotlin.math.min
 
 internal class ContactSectionDecoration(
         private var letterBarWidth: Int,
@@ -35,7 +37,7 @@ internal class ContactSectionDecoration(
 
     fun getLetter(y: Float): String {
         val yPosition = (y - letterBarMarginTop).toInt()
-        val index = Math.min(Math.max(yPosition / lettersBarTextLineHeight, 0), Constant.getAlphabets().size - 1)
+        val index = min(max(yPosition / lettersBarTextLineHeight, 0), Constant.getAlphabets().size - 1)
         return Constant.getAlphabets()[index].toString()
     }
 }

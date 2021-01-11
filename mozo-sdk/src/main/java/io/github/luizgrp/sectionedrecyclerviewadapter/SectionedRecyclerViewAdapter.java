@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 import static io.github.luizgrp.sectionedrecyclerviewadapter.Section.State;
 
 /**
@@ -40,8 +42,9 @@ public class SectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         sectionViewTypeNumbers = new LinkedHashMap<>();
     }
 
+    @NotNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
 
         for (Map.Entry<String, Integer> entry : sectionViewTypeNumbers.entrySet()) {

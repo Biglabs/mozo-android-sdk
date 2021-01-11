@@ -69,7 +69,7 @@
     <string name="mozo_button_done">Xong</string>
     <string name="mozo_button_finish">Hoàn tất</string>
     <string name="mozo_button_got_it">Tôi đã hiểu</string>
-    <string name="mozo_button_scan_qr_code">Quét QR Code</string>
+    <string name="mozo_button_scan_qr_code">Quét mã QR</string>
     <string name="mozo_button_scan">Quét</string>
     <string name="mozo_button_show_qr_code">Phóng to QR Code</string>
     <string name="mozo_button_send">Gửi</string>

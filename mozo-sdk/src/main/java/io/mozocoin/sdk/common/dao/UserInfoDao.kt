@@ -1,6 +1,9 @@
 package io.mozocoin.sdk.common.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import io.mozocoin.sdk.common.model.UserInfo
 
 @Dao

@@ -5,8 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.mozocoin.sdk.common.WalletHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 internal class ResetPinViewModel : ViewModel() {
@@ -14,7 +13,7 @@ internal class ResetPinViewModel : ViewModel() {
 
     fun getData() = walletLiveData.value
 
-    fun setData(walletHelper: WalletHelper?) = GlobalScope.launch(Dispatchers.Main) {
+    fun setData(walletHelper: WalletHelper?) = MainScope().launch {
         walletLiveData.value = walletHelper
     }
 

@@ -151,14 +151,15 @@ fun Context.openTab(url: String) {
 }
 
 fun Context.openAppInStore() {
+    val appId = packageName.removeSuffix(".debug")
     val intent = Intent(Intent.ACTION_VIEW).apply {
-        data = Uri.parse("market://details?id=$packageName")
+        data = Uri.parse("market://details?id=$appId")
     }
 
     if (intent.resolveActivity(packageManager) != null) {
         startActivity(intent)
     } else {
-        openTab("https://play.google.com/store/apps/details?id=$packageName")
+        openTab("https://play.google.com/store/apps/details?id=$appId")
     }
 }
 

@@ -3,11 +3,11 @@ package io.mozocoin.sdk.wallet.reset
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntRange
+import androidx.core.view.postDelayed
 import androidx.core.view.setPadding
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.R
@@ -16,14 +16,15 @@ import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.common.model.WalletInfo
 import io.mozocoin.sdk.common.service.ConnectionService
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.FragmentResetEnterPinBinding
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
-import kotlinx.android.synthetic.main.view_message_progress_status.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 
 internal class EnterPinFragment : ResetPinBaseFragment() {
 
+    private var _binding: FragmentResetEnterPinBinding? = null
+    private val binding get() = _binding!!
     private var mInteractionListener: InteractionListener? = null
     private var pinLength: Int = 0
     private var mPinEntering: String = ""
@@ -36,12 +37,14 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
         pinLength = context.getInteger(R.integer.security_pin_length)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_reset_enter_pin, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentResetEnterPinBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        reset_pin_enter_pin_input?.apply {
+        binding.resetPinEnterPinInput.apply {
             onBackPress { activity?.onBackPressed() }
             setMaxLength(pinLength)
             onTextChanged {
@@ -59,7 +62,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                             submit()
                         }
                         else -> {
-                            reset_pin_enter_pin_input?.text = null
+                            binding.resetPinEnterPinInput.text = null
                             showPinInputWrongUI()
                         }
                     }
@@ -75,7 +78,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        Handler().postDelayed({
+        _binding?.root?.postDelayed(500) {
             /* Prevent crash when back pressed during working */
             if (!isAdded || isRemoving) return@postDelayed
 
@@ -87,7 +90,12 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                     visible()
                 }
             }
-        }, 500)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onCloseClicked() {
@@ -98,40 +106,40 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
 
     private fun resetInputUI() {
         mPinEntering = ""
-        reset_pin_enter_pin_header?.setText(R.string.mozo_pin_reset_header_create)
-        reset_pin_enter_pin_sub_content?.setText(R.string.mozo_pin_content)
-        reset_pin_enter_pin_input?.text = null
-        text_correct_pin?.gone()
-        text_incorrect_pin?.gone()
+        binding.resetPinEnterPinHeader.setText(R.string.mozo_pin_reset_header_create)
+        binding.resetPinEnterPinSubContent.setText(R.string.mozo_pin_content)
+        binding.resetPinEnterPinInput.text = null
+        binding.textCorrectPin.gone()
+        binding.textIncorrectPin.gone()
         mInteractionListener?.hideToolbarActions(left = true, right = false)
     }
 
     private fun showConfirmUI() {
-        reset_pin_enter_pin_header?.setText(R.string.mozo_pin_confirm_sub_title)
-        reset_pin_enter_pin_sub_content?.setText(R.string.mozo_pin_confirm_content)
-        reset_pin_enter_pin_input?.text = null
+        binding.resetPinEnterPinHeader.setText(R.string.mozo_pin_confirm_sub_title)
+        binding.resetPinEnterPinSubContent.setText(R.string.mozo_pin_confirm_content)
+        binding.resetPinEnterPinInput.text = null
     }
 
     private fun showPinInputCorrectUI() {
-        text_correct_pin?.visible()
-        text_incorrect_pin?.gone()
+        binding.textCorrectPin.visible()
+        binding.textIncorrectPin.gone()
     }
 
     private fun showPinInputWrongUI() {
-        text_correct_pin?.gone()
-        text_incorrect_pin?.visible()
+        binding.textCorrectPin.gone()
+        binding.textIncorrectPin.visible()
     }
 
     private fun hidePinInputWrongUI() {
-        text_incorrect_pin?.gone()
+        binding.textIncorrectPin.gone()
     }
 
     private fun submit() = MainScope().launch {
         delay(700)
 
-        reset_pin_enter_pin_input?.isEnabled = false
-        reset_pin_loading_view?.visible()
-        reset_pin_message_view?.gone()
+        binding.resetPinEnterPinInput.isEnabled = false
+        binding.resetPinLoadingView.visible()
+        binding.resetPinMessageView.root.gone()
         mInteractionListener?.hideToolbarActions(left = true, right = true)
 
         val data = mInteractionListener?.getResetPinModel()?.getData()
@@ -188,7 +196,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                 resetInputUI()
                 activity?.onBackPressed()
             }
-            view_message_icon?.setPadding(0)
+            binding.resetPinMessageView.viewMessageIcon.setPadding(0)
             mInteractionListener?.let {
                 it.hideToolbarActions(left = true, right = false)
                 it.getCloseButton()?.apply {
@@ -207,7 +215,7 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                     buttonClickCallback = {
                         activity?.finish()
                     }
-                    view_message_icon?.setPadding(resources.dp2Px(16f).toInt())
+                    binding.resetPinMessageView.viewMessageIcon.setPadding(resources.dp2Px(16f).toInt())
                     mInteractionListener?.hideToolbarActions(left = true, right = true)
                 }
                 MESSAGE_ERROR_NETWORK -> {
@@ -216,11 +224,11 @@ internal class EnterPinFragment : ResetPinBaseFragment() {
                 }
             }
 
-            view_message_icon?.setImageResource(icon)
-            view_message_title?.setText(title)
-            view_message_retry_btn?.setText(buttonText)
-            view_message_retry_btn?.click(buttonClickCallback)
-            reset_pin_message_view?.visible()
+            binding.resetPinMessageView.viewMessageIcon.setImageResource(icon)
+            binding.resetPinMessageView.viewMessageTitle.setText(title)
+            binding.resetPinMessageView.viewMessageRetryBtn.setText(buttonText)
+            binding.resetPinMessageView.viewMessageRetryBtn.click(buttonClickCallback)
+            binding.resetPinMessageView.root.visible()
         }
     }
 

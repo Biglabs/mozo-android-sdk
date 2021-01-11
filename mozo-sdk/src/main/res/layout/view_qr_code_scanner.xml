@@ -6,14 +6,83 @@
 
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/barcode_scanner_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_framing_rect_height="240dp"
+        app:zxing_framing_rect_width="240dp"
+        app:zxing_preview_scaling_strategy="centerCrop"
+        app:zxing_use_texture_view="false" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mozo_screen_padding"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="@dimen/mozo_screen_padding"
+        android:gravity="center"
+        android:text="@string/mozo_button_scan_qr_code"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:layout_width="260dp"
+        android:layout_height="260dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:zxing_preview_scaling_strategy="centerCrop"
-        app:zxing_use_texture_view="true" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--TOP LEFT-->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="5dp"
+            android:background="@android:color/white" />
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="40dp"
+            android:background="@android:color/white" />
+
+        <!--TOP RIGHT-->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="5dp"
+            android:layout_gravity="end"
+            android:background="@android:color/white" />
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:background="@android:color/white" />
+
+        <!--BOTTOM LEFT-->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="5dp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/white" />
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/white" />
+
+        <!--BOTTOM RIGHT-->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="5dp"
+            android:layout_gravity="bottom|end"
+            android:background="@android:color/white" />
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom|end"
+            android:background="@android:color/white" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/button_back"
@@ -28,14 +97,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_back_arrow"
             android:drawablePadding="7dp"
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="@string/mozo_button_back"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            app:drawableStartCompat="@drawable/ic_back_arrow" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

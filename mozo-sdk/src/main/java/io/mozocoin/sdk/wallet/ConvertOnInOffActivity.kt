@@ -15,14 +15,14 @@ import io.mozocoin.sdk.common.model.BalanceInfo
 import io.mozocoin.sdk.common.model.ConvertRequest
 import io.mozocoin.sdk.common.model.GasInfo
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.ActivityConvertOnInOffBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.activity_convert_on_in_off.*
 import java.math.BigDecimal
 
 internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
-
+    private lateinit var binding: ActivityConvertOnInOffBinding
     private var mGasInfo: GasInfo? = null
     private var mGasPrice: BigDecimal = BigDecimal.ZERO
 
@@ -32,7 +32,8 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_convert_on_in_off)
+        binding = ActivityConvertOnInOffBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (!intent.hasExtra(KEY_CONVERT_ADDRESS) || !intent.hasExtra(KEY_CONVERT_BALANCE)) {
             finish()
@@ -42,14 +43,14 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
         mAddress = intent.getStringExtra(KEY_CONVERT_ADDRESS)
         mBalanceOfOnchain = intent.getParcelableExtra(KEY_CONVERT_BALANCE)
 
-        convert_on_chain_swipe_refresh?.apply {
+        binding.convertOnChainSwipeRefresh.apply {
             mozoSetup()
             setOnRefreshListener(this@ConvertOnInOffActivity)
         }
-        convert_on_chain_amount.text = mBalanceOfOnchain?.balanceNonDecimal().displayString()
-        convert_on_chain_amount_rate?.text = MozoWallet.getInstance().amountInCurrency(mBalanceOfOnchain?.balance.safe())
+        binding.convertOnChainAmount.text = mBalanceOfOnchain?.balanceNonDecimal().displayString()
+        binding.convertOnChainAmountRate.text = MozoWallet.getInstance().amountInCurrency(mBalanceOfOnchain?.balance.safe())
 
-        convert_gas_price_seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.convertGasPriceSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 mGasInfo ?: return
                 mGasPrice = BigDecimal((progress / 100.0) * (mGasInfo!!.fast - mGasInfo!!.low) + mGasInfo!!.low)
@@ -64,7 +65,7 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
             }
         })
 
-        button_continue.click {
+        binding.buttonContinue.click {
             ConvertBroadcastActivity.start(
                     this,
                     prepareRequestData() ?: return@click,
@@ -72,7 +73,7 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
             )
         }
 
-        button_read_more.click {
+        binding.buttonReadMore.click {
             //openTab("https://kb.myetherwallet.com/gas/what-is-gas-ethereum.html")
         }
 
@@ -92,14 +93,14 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
             }
 
             mGasInfo = data
-            convert_gas_limit?.text = data.gasLimit.displayString()
+            binding.convertGasLimit.text = data.gasLimit.displayString()
 
             val normalPercent = (data.average.toFloat() - data.low) / (data.fast.toFloat() - data.low) * 100
 
-            val params = convert_gas_price_seek_normal?.layoutParams as ConstraintLayout.LayoutParams
+            val params = binding.convertGasPriceSeekNormal.layoutParams as ConstraintLayout.LayoutParams
             params.horizontalBias = normalPercent / 100
-            convert_gas_price_seek_normal?.layoutParams = params
-            convert_gas_price_seek?.progress = 100
+            binding.convertGasPriceSeekNormal.layoutParams = params
+            binding.convertGasPriceSeek.progress = 100
 
             mGasPrice = BigDecimal(data.fast)
             fetchBalanceData()
@@ -115,7 +116,7 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
             data ?: return@getEthBalanceInOffChain
 
             mBalanceOfEthInWei = data.balanceOfETH?.balance ?: return@getEthBalanceInOffChain
-            convert_on_chain_eth_balance?.apply {
+            binding.convertOnChainEthBalance.apply {
                 if (mBalanceOfEthInWei <= BigDecimal.ZERO) {
                     setBackgroundResource(R.drawable.mozo_dr_hint_error)
                     isSelected = true
@@ -125,7 +126,7 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
                             data.estimateFeeInEth().displayString()
                     ), HtmlCompat.FROM_HTML_MODE_LEGACY)
 
-                    button_continue?.isEnabled = false
+                    binding.buttonContinue.isEnabled = false
                 } else {
                     setBackgroundResource(R.drawable.mozo_dr_btn_detected_on_chain)
                     isSelected = false
@@ -134,7 +135,7 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
                             data.balanceOfETH.balanceNonDecimal().displayString()
                     ), HtmlCompat.FROM_HTML_MODE_LEGACY)
 
-                    button_continue?.isEnabled = true
+                    binding.buttonContinue.isEnabled = true
                 }
                 isVisible = true
             }
@@ -143,26 +144,26 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
     }
 
     private fun updateGasPriceUI() {
-        convert_gas_price?.text = mGasPrice.displayString()
+        binding.convertGasPrice.text = mGasPrice.displayString()
 
-        convert_gas_price_seek_slow.highlight(false)
-        convert_gas_price_seek_normal.highlight(false)
-        convert_gas_price_seek_fast.highlight(false)
-        when (TransferSpeed.calculate(convert_gas_price_seek?.progress ?: 0)) {
+        binding.convertGasPriceSeekSlow.highlight(false)
+        binding.convertGasPriceSeekNormal.highlight(false)
+        binding.convertGasPriceSeekFast.highlight(false)
+        when (TransferSpeed.calculate(binding.convertGasPriceSeek.progress)) {
             TransferSpeed.SLOW -> {
-                convert_gas_price_seek_slow.highlight(true)
+                binding.convertGasPriceSeekSlow.highlight(true)
             }
             TransferSpeed.NORMAL -> {
-                convert_gas_price_seek_normal.highlight(true)
+                binding.convertGasPriceSeekNormal.highlight(true)
             }
             TransferSpeed.FAST -> {
-                convert_gas_price_seek_fast.highlight(true)
+                binding.convertGasPriceSeekFast.highlight(true)
             }
         }
     }
 
     private fun showLoading(show: Boolean) {
-        convert_on_chain_swipe_refresh?.isRefreshing = show
+        binding.convertOnChainSwipeRefresh.isRefreshing = show
     }
 
     private fun prepareRequestData(): ConvertRequest? {
@@ -184,7 +185,7 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
                 gasPrice,
                 address,
                 amount,
-                convert_gas_price_seek?.progress ?: 0
+                binding.convertGasPriceSeek.progress
         )
     }
 

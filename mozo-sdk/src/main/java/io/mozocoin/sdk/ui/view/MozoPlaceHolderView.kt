@@ -3,21 +3,23 @@ package io.mozocoin.sdk.ui.view
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.databinding.ViewMozoPlaceHolderBinding
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.color
 import io.mozocoin.sdk.utils.dp2Px
-import kotlinx.android.synthetic.main.view_mozo_place_holder.view.*
 
 class MozoPlaceHolderView : LinearLayout {
+
+    private val binding: ViewMozoPlaceHolderBinding
 
     constructor(context: Context) : this(context, null, 0)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
-        View.inflate(context, R.layout.view_mozo_place_holder, this)
+        binding = ViewMozoPlaceHolderBinding.inflate(LayoutInflater.from(context), this, true)
 
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.MozoPlaceHolderView, defStyle, 0)
         try {
@@ -46,7 +48,7 @@ class MozoPlaceHolderView : LinearLayout {
     }
 
     private fun updateUI() {
-        place_holder_icon?.apply {
+        binding.placeHolderIcon.apply {
             setImageDrawable(icon)
 
             val params = layoutParams
@@ -55,24 +57,24 @@ class MozoPlaceHolderView : LinearLayout {
             layoutParams = params
         }
 
-        place_holder_title?.apply {
+        binding.placeHolderTitle.apply {
             text = title
             setTextColor(titleColor)
         }
 
-        place_holder_content?.apply {
+        binding.placeHolderContent.apply {
             text = content
             setTextColor(contentColor)
         }
 
-        place_holder_primary_button?.apply {
+        binding.placeHolderPrimaryButton.apply {
             isEnabled = primaryButtonEnable
             text = primaryButtonText
             isVisible = primaryButtonVisible && !primaryButtonText.isNullOrEmpty()
             click { onPrimaryClicked?.invoke() }
         }
 
-        place_holder_second_button?.apply {
+        binding.placeHolderSecondButton.apply {
             isEnabled = secondButtonEnable
             text = secondButtonText
             isVisible = secondButtonVisible && !secondButtonText.isNullOrEmpty()

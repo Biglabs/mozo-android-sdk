@@ -7,7 +7,6 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.utils.click
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_contact_cta.*
 
 internal class ContactCTASection(
         private val onUpdateContact: (() -> Unit)? = null
@@ -32,7 +31,7 @@ internal class ContactCTASection(
 //            holder.itemView.click { itemClick?.invoke(contact) }
 //            holder.bind(contact)
 
-            holder.button_update_contact?.click {
+            holder.itemView.findViewById<View>(R.id.button_update_contact)?.click {
                 onUpdateContact?.invoke()
             }
         }

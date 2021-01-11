@@ -18,6 +18,7 @@ import io.mozocoin.sdk.common.ActivityLifecycleCallbacks
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.ConnectionService
+import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.MaintenanceActivity
 import io.mozocoin.sdk.ui.UpdateRequiredActivity
 import io.mozocoin.sdk.utils.Support
@@ -99,6 +100,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 isInternalApps = Support.isInternalApps(context)
                 instance = MozoSDK(context.applicationContext)
 
+                /**
+                 * Report token
+                 */
+                MozoTokenService.instance().reportToken()
+
                 // Preload custom tabs service for improved performance
                 if (context is Application) {
                     context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
@@ -107,22 +113,21 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 /**
                  * Initialize Authentication Service
                  * */
-                MozoAuth.getInstance().syncProfile(context) { success ->
-                    if (!success) MozoAuth.getInstance().signOut(true)
-                    else {
-                        /**
-                         * Initialize Transaction Service
-                         * */
-                        MozoTx.getInstance()
-                        /**
-                         * Initialize Wallet Service
-                         * */
-                        MozoWallet.getInstance()
+                MozoAuth.getInstance()
 
-                        /* register network changes */
-                        instance?.registerNetworkCallback()
-                    }
-                }
+                /**
+                 * Initialize Transaction Service
+                 * */
+                MozoTx.getInstance()
+                /**
+                 * Initialize Wallet Service
+                 * */
+                MozoWallet.getInstance()
+
+                /**
+                 * Register network changes
+                 * */
+                instance?.registerNetworkCallback()
             }
         }
 

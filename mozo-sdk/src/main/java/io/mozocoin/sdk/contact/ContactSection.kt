@@ -1,17 +1,16 @@
 package io.mozocoin.sdk.contact
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
+import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.utils.click
-import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
-import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_contact.*
-import kotlinx.android.synthetic.main.item_contact_header.*
 
 internal class ContactSection(
         private val title: String,
@@ -45,18 +44,22 @@ internal class ContactSection(
 
     class HeaderViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(header: String) {
-            item_header.text = header
+            itemView.findViewById<TextView>(R.id.item_header).text = header
         }
     }
 
     class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(contact: Contact) {
-            item_title.text = contact.name
-            item_physical_address.text = contact.physicalAddress
-            item_physical_address.isVisible = contact.isStore
-            item_content.text = contact.soloAddress
-            item_phone.text = contact.phoneNo
-            item_phone.isGone = contact.phoneNo.isNullOrEmpty()
+            itemView.findViewById<TextView>(R.id.item_title).text = contact.name
+            itemView.findViewById<TextView>(R.id.item_physical_address).apply {
+                text = contact.physicalAddress
+                isVisible = contact.isStore
+            }
+            itemView.findViewById<TextView>(R.id.item_content).text = contact.soloAddress
+            itemView.findViewById<TextView>(R.id.item_phone).apply {
+                text = contact.phoneNo
+                isGone = contact.phoneNo.isNullOrEmpty()
+            }
         }
     }
 }

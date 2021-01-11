@@ -8,37 +8,36 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.ErrorCode
 import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.service.MozoAPIsService
+import io.mozocoin.sdk.databinding.ActivityAddressAddNewBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.activity_address_add_new.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.*
 
 internal class AddressAddActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityAddressAddNewBinding
     private val mozoService by lazy { MozoAPIsService.getInstance() }
 
     private var mShowMessageDuration = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_address_add_new)
+        binding = ActivityAddressAddNewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         mShowMessageDuration = getInteger(R.integer.security_pin_show_msg_duration).toLong()
 
-        text_contact_address?.text = intent.getStringExtra(FLAG_ADDRESS)
+        binding.textContactAddress.text = intent.getStringExtra(FLAG_ADDRESS)
 
-        input_contact_name?.onTextChanged {
-            button_save?.isEnabled = (input_contact_name?.length() ?: 0) > 0
+        binding.inputContactName.onTextChanged {
+            binding.buttonSave.isEnabled = binding.inputContactName.length() > 0
         }
 
-        button_save?.click { executeSaveContact() }
-        container?.click {
-            input_contact_name?.hideKeyboard()
+        binding.buttonSave.click { executeSaveContact() }
+        binding.container.click {
+            binding.inputContactName.hideKeyboard()
         }
     }
 
@@ -46,9 +45,9 @@ internal class AddressAddActivity : BaseActivity() {
         showLoading()
         val contact = Contact(
                 id = 0,
-                name = input_contact_name?.text.toString().trim(),
+                name = binding.inputContactName.text.toString().trim(),
                 physicalAddress = null,
-                soloAddress = text_contact_address?.text.toString()
+                soloAddress = binding.textContactAddress.text.toString()
         )
 
         mozoService.saveContact(this, contact) { data, errorCode ->
@@ -62,10 +61,10 @@ internal class AddressAddActivity : BaseActivity() {
         }
     }
 
-    private fun showDoneMsg() = GlobalScope.launch(Dispatchers.Main) {
-        input_contact_name.isEnabled = false
-        loading_container.hide()
-        text_msg_saved.visible()
+    private fun showDoneMsg() = MainScope().launch {
+        binding.inputContactName.isEnabled = false
+        binding.loadingContainer.hide()
+        binding.textMsgSaved.visible()
         MozoSDK.getInstance().contactViewModel.fetchData(this@AddressAddActivity)
 
         delay(mShowMessageDuration)
@@ -73,18 +72,18 @@ internal class AddressAddActivity : BaseActivity() {
     }
 
     private fun showLoading() {
-        input_contact_name.hideKeyboard()
-        button_save.isEnabled = false
-        loading_container.show()
-        text_msg_saved.gone()
+        binding.inputContactName.hideKeyboard()
+        binding.buttonSave.isEnabled = false
+        binding.loadingContainer.show()
+        binding.textMsgSaved.gone()
     }
 
     private fun hideLoading() {
-        input_contact_name.requestFocus()
-        input_contact_name.showKeyboard()
-        button_save.isEnabled = true
-        loading_container.hide()
-        text_msg_saved.gone()
+        binding.inputContactName.requestFocus()
+        binding.inputContactName.showKeyboard()
+        binding.buttonSave.isEnabled = true
+        binding.loadingContainer.hide()
+        binding.textMsgSaved.gone()
     }
 
     companion object {

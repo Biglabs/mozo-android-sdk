@@ -2,7 +2,7 @@ package io.mozocoin.sdk.common.model
 
 import android.os.Parcelable
 import androidx.room.Ignore
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
 @Parcelize

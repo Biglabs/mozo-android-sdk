@@ -3,46 +3,49 @@ package io.mozocoin.sdk.wallet.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
+import androidx.core.view.postDelayed
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.databinding.ActivityCreateWalletBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.visible
-import kotlinx.android.synthetic.main.activity_create_wallet.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 internal class CreateWalletActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityCreateWalletBinding
     private var isInProgress = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_wallet)
+        binding = ActivityCreateWalletBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        button_create_auto?.isSelected = true
-        button_create_auto?.click {
+        binding.buttonCreateAuto.isSelected = true
+        binding.buttonCreateAuto.click {
             it.isSelected = true
-            button_create_manual?.isSelected = false
+            binding.buttonCreateManual.isSelected = false
         }
 
-        button_create_manual?.click {
+        binding.buttonCreateManual.click {
             it.isSelected = true
-            button_create_auto?.isSelected = false
+            binding.buttonCreateAuto.isSelected = false
         }
 
-        button_continue?.click {
-            when (button_create_manual?.isSelected) {
+        binding.buttonContinue.click {
+            when (binding.buttonCreateManual.isSelected) {
                 true -> {
                     SecurityActivity.start(this, SecurityActivity.KEY_CREATE_PIN, KEY_CREATE_WALLET_MANUAL)
 
@@ -60,15 +63,19 @@ internal class CreateWalletActivity : BaseActivity() {
                 object : ClickableSpan() {
                     override fun onClick(widget: View) {
                         EventBus.getDefault().post(MessageEvent.CloseActivities())
-                        Handler().postDelayed({ MozoAuth.getInstance().signOut() }, 1000)
+                        widget.postDelayed(1000) {
+                            MozoAuth.getInstance().signOut()
+                        }
                     }
                 },
                 spannable.length - actionText.length,
                 spannable.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-        create_wallet_have_other_account_hint?.text = spannable
-        create_wallet_have_other_account_hint?.movementMethod = LinkMovementMethod.getInstance()
+        binding.createWalletHaveOtherAccountHint.apply {
+            text = spannable
+            movementMethod = LinkMovementMethod.getInstance()
+        }
     }
 
     override fun onDestroy() {
@@ -90,8 +97,8 @@ internal class CreateWalletActivity : BaseActivity() {
     }
 
     private fun showCreatingUI() {
-        toolbar_mozo?.showCloseButton(false)
-        create_wallet_loading?.visible()
+        binding.toolbarMozo.showCloseButton(false)
+        binding.createWalletLoading.visible()
     }
 
     private fun doCreateWallet() = GlobalScope.launch {

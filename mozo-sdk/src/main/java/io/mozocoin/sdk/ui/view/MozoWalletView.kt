@@ -1,16 +1,16 @@
 package io.mozocoin.sdk.ui.view
 
-import androidx.lifecycle.Observer
 import android.content.Context
-import androidx.annotation.IntDef
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.IntDef
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.doOnLayout
+import androidx.lifecycle.Observer
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
@@ -18,10 +18,7 @@ import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.ui.dialog.QRCodeDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MozoWalletView : ConstraintLayout {
 
@@ -204,7 +201,7 @@ class MozoWalletView : ConstraintLayout {
 
     private fun getQRImage() = GlobalScope.launch {
         val qrImage = Support.generateQRCode(mAddress!!, sizeOfQRImage)
-        launch(Dispatchers.Main) {
+        withContext(Dispatchers.Main) {
             imageAddressQRView?.setImageBitmap(qrImage)
         }
         generateQRJob = null

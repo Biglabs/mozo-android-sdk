@@ -38,8 +38,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
 import io.mozocoin.sdk.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -510,7 +509,7 @@ internal class PinEntryEditText : AppCompatEditText {
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             onBackPress?.let {
-                GlobalScope.launch(Dispatchers.Main) { it() }
+                MainScope().launch { it() }
             }
             return true
         }

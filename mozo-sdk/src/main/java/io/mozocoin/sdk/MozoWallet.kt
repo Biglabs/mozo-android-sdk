@@ -333,7 +333,7 @@ class MozoWallet private constructor() {
         mBalanceChangedListeners?.remove(listener)
     }
 
-    internal fun invokeBalanceChanged() = GlobalScope.launch(Dispatchers.Main) {
+    internal fun invokeBalanceChanged() = MainScope().launch {
         if (mBalanceChangedListeners.isNullOrEmpty()) return@launch
 
         val balance = MozoSDK.getInstance().profileViewModel.getBalance()?.balanceNonDecimal()

@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -18,17 +20,19 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.model.PaymentRequest
 import io.mozocoin.sdk.contact.AddressBookActivity
+import io.mozocoin.sdk.databinding.FragmentPaymentSendBinding
 import io.mozocoin.sdk.transaction.ContactSuggestionAdapter
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.fragment_payment_send.*
 import kotlinx.coroutines.*
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
 import java.util.*
 
-class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
+class PaymentRequestSendFragment : Fragment() {
 
+    private var _binding: FragmentPaymentSendBinding? = null
+    private val binding get() = _binding!!
     private var mListener: PaymentRequestInteractionListener? = null
     private var generateQRJob: Job? = null
     private var amountBigDecimal = BigDecimal.ZERO
@@ -43,9 +47,14 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
         }
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentPaymentSendBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mPhoneContactUtils = PhoneContactUtils(output_receiver_address) {
+        mPhoneContactUtils = PhoneContactUtils(binding.outputReceiverAddress) {
             selectedContact = it
             showContactInfoUI()
         }
@@ -60,33 +69,29 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
             val size = view.context.resources.dp2Px(177f).toInt()
             val qrImage = Support.generateQRCode(content, size)
             withContext(Dispatchers.Main) {
-                payment_request_qr_image?.setImageBitmap(qrImage)
+                binding.paymentRequestQrImage.setImageBitmap(qrImage)
             }
         }
 
         amountBigDecimal = amount.toBigDecimal()
-        payment_request_amount.text = amountBigDecimal.displayString()
+        binding.paymentRequestAmount.text = amountBigDecimal.displayString()
 
-        output_receiver_address.onTextChanged {
-            updateSubmitButton()
-        }
-
-        output_receiver_address?.apply {
+        binding.outputReceiverAddress.apply {
             onTextChanged {
                 hideErrorAddressUI()
                 updateSubmitButton()
             }
 
             onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-                output_receiver_address_label?.isSelected = hasFocus
-                output_receiver_address_underline?.isSelected = hasFocus
-                if (hasFocus && output_receiver_address?.length() ?: 0 > 0)
-                    output_receiver_address?.showDropDown()
+                binding.outputReceiverAddressLabel.isSelected = hasFocus
+                binding.outputReceiverAddressUnderline.isSelected = hasFocus
+                if (hasFocus && binding.outputReceiverAddress.length() > 0)
+                    binding.outputReceiverAddress.showDropDown()
             }
 
             setOnClickListener {
-                if (output_receiver_address?.length() ?: 0 > 0)
-                    output_receiver_address?.showDropDown()
+                if (binding.outputReceiverAddress.length() > 0)
+                    binding.outputReceiverAddress.showDropDown()
             }
 
             threshold = 1
@@ -94,9 +99,11 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
                 (adapter.getItem(position) as? Contact)?.let {
                     selectedContact = it
                     showContactInfoUI()
-                    output_receiver_address?.text = null
-                    output_receiver_address?.clearFocus()
-                    output_receiver_address?.hideKeyboard()
+                    binding.outputReceiverAddress.apply {
+                        text = null
+                        clearFocus()
+                        hideKeyboard()
+                    }
                 }
             }
             setAdapter(ContactSuggestionAdapter(
@@ -106,15 +113,15 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
             ))
         }
 
-        button_scan_qr.click {
+        binding.buttonScanQr.click {
             Support.scanQRCode(this@PaymentRequestSendFragment)
         }
 
-        button_address_book.click {
+        binding.buttonAddressBook.click {
             AddressBookActivity.startForResult(this, KEY_PICK_ADDRESS)
         }
 
-        button_send.click {
+        binding.buttonSend.click {
             if (!validateInput()) {
                 showErrorAddressUI()
                 return@click
@@ -123,7 +130,7 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
             mListener?.onSendRequestClicked(
                     amount,
                     (selectedContact?.soloAddress
-                            ?: output_receiver_address.text.toString()).toLowerCase(Locale.getDefault()),
+                            ?: binding.outputReceiverAddress.text.toString()).toLowerCase(Locale.getDefault()),
                     PaymentRequest(content = content)
             )
         }
@@ -132,7 +139,7 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
                 viewLifecycleOwner,
                 Observer {
                     it ?: return@Observer
-                    payment_request_rate.text = MozoSDK.getInstance().profileViewModel
+                    binding.paymentRequestRate.text = MozoSDK.getInstance().profileViewModel
                             .formatCurrencyDisplay(
                                     amountBigDecimal.multiply(it.rate),
                                     true
@@ -158,14 +165,14 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
 
                         showInputUI()
                         if (selectedContact == null) {
-                            output_receiver_address?.setText(it)
-                            output_receiver_address?.dismissDropDown()
+                            binding.outputReceiverAddress.setText(it)
+                            binding.outputReceiverAddress.dismissDropDown()
                             validateInput(true)
                         } else
                             showContactInfoUI()
                         updateSubmitButton()
                     } else if (context != null) {
-                        MessageDialog.show(context!!, R.string.mozo_dialog_error_scan_invalid_msg)
+                        MessageDialog.show(requireContext(), R.string.mozo_dialog_error_scan_invalid_msg)
                     }
                 }
             }
@@ -180,6 +187,7 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
     override fun onDestroyView() {
         mPhoneContactUtils = null
         super.onDestroyView()
+        _binding = null
     }
 
     private fun showContactInfoUI() {
@@ -187,21 +195,21 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
         updateSubmitButton()
 
         selectedContact?.run {
-            output_receiver_address?.visibility = View.INVISIBLE
-            output_receiver_address?.hideKeyboard()
-            output_receiver_address_underline?.visibility = View.INVISIBLE
-            button_scan_qr?.visibility = View.INVISIBLE
+            binding.outputReceiverAddress.visibility = View.INVISIBLE
+            binding.outputReceiverAddress.hideKeyboard()
+            binding.outputReceiverAddressUnderline.visibility = View.INVISIBLE
+            binding.buttonScanQr.visibility = View.INVISIBLE
 
-            output_receiver_address_user?.visible()
-            output_receiver_icon?.setImageResource(if (isStore) R.drawable.ic_store else R.drawable.ic_receiver)
-            text_receiver_phone?.text = if (isStore) physicalAddress else phoneNo
-            text_receiver_phone?.isVisible = text_receiver_phone?.length() ?: 0 > 0
+            binding.outputReceiverAddressUser.visible()
+            binding.outputReceiverIcon.setImageResource(if (isStore) R.drawable.ic_store else R.drawable.ic_receiver)
+            binding.textReceiverPhone.text = if (isStore) physicalAddress else phoneNo
+            binding.textReceiverPhone.isVisible = binding.textReceiverPhone.length() > 0
 
-            text_receiver_user_name?.text = name
-            text_receiver_user_name?.isVisible = !name.isNullOrEmpty()
-            text_receiver_user_address?.text = soloAddress
+            binding.textReceiverUserName.text = name
+            binding.textReceiverUserName.isVisible = !name.isNullOrEmpty()
+            binding.textReceiverUserAddress.text = soloAddress
 
-            button_clear?.apply {
+            binding.buttonClear.apply {
                 visible()
                 click {
                     selectedContact = null
@@ -213,30 +221,31 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
     }
 
     private fun showInputUI() {
-        output_receiver_address.visible()
-
-        output_receiver_address_underline?.visible()
-        button_scan_qr?.visible()
-        output_receiver_address_user?.gone()
+        visible(
+                binding.outputReceiverAddress,
+                binding.outputReceiverAddressUnderline,
+                binding.buttonScanQr
+        )
+        binding.outputReceiverAddressUser.gone()
     }
 
     private fun updateSubmitButton() {
-        button_send.isEnabled = selectedContact != null || output_receiver_address.length() > 0
+        binding.buttonSend.isEnabled = selectedContact != null || binding.outputReceiverAddress.length() > 0
     }
 
     @SuppressLint("SetTextI18n")
     private fun validateInput(fromScan: Boolean = false): Boolean {
         var isValidAddress = true
-        val address = selectedContact?.soloAddress ?: output_receiver_address.text.toString()
+        val address = selectedContact?.soloAddress ?: binding.outputReceiverAddress.text.toString()
         if (!WalletUtils.isValidAddress(address)) {
-            if (fromScan) output_receiver_address.text = null
+            if (fromScan) binding.outputReceiverAddress.text = null
             showErrorAddressUI(fromScan)
             isValidAddress = false
         }
 
         if (fromScan) return isValidAddress
 
-        if (!isValidAddress && context != null) mPhoneContactUtils?.validatePhone(context!!, address)?.let {
+        if (!isValidAddress && context != null) mPhoneContactUtils?.validatePhone(requireContext(), address)?.let {
             if (it > 0) showErrorAddressUI(false, it)
         }
 
@@ -245,21 +254,21 @@ class PaymentRequestSendFragment : Fragment(R.layout.fragment_payment_send) {
 
     private fun showErrorAddressUI(fromScan: Boolean = false, @StringRes errorId: Int = R.string.mozo_transfer_receiver_address_error) {
         val errorColor = context?.color(R.color.mozo_color_error) ?: return
-        output_receiver_address_label?.setTextColor(errorColor)
-        output_receiver_address_underline?.setBackgroundColor(errorColor)
-        output_receiver_address_error_msg?.visible()
-        output_receiver_address_error_msg?.setText(
+        binding.outputReceiverAddressLabel.setTextColor(errorColor)
+        binding.outputReceiverAddressUnderline.setBackgroundColor(errorColor)
+        binding.outputReceiverAddressErrorMsg.visible()
+        binding.outputReceiverAddressErrorMsg.setText(
                 if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
         )
     }
 
     private fun hideErrorAddressUI() {
-        output_receiver_address_label?.setTextColor(
+        binding.outputReceiverAddressLabel.setTextColor(
                 ContextCompat.getColorStateList(context ?: return,
                         R.color.mozo_color_input_focus)
         )
-        output_receiver_address_underline?.setBackgroundResource(R.drawable.mozo_color_line_focus)
-        output_receiver_address_error_msg?.gone()
+        binding.outputReceiverAddressUnderline.setBackgroundResource(R.drawable.mozo_color_line_focus)
+        binding.outputReceiverAddressErrorMsg.gone()
     }
 
     companion object {

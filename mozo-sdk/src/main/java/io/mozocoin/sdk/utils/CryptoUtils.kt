@@ -33,7 +33,7 @@ class CryptoUtils {
 
         @JvmStatic
         @Throws(Throwable::class)
-        fun encrypt(value: String, password: String): String? {
+        fun encrypt(value: String, password: String): String {
             return Base64.encodeToString(AES256JNCryptor().encryptData(
                     value.toByteArray(),
                     password.toCharArray()
@@ -42,7 +42,7 @@ class CryptoUtils {
 
         @JvmStatic
         @Throws(Throwable::class)
-        fun decrypt(value: String, password: String): String? {
+        fun decrypt(value: String, password: String): String {
             return String(
                     AES256JNCryptor().decryptData(
                             Base64.decode(

@@ -20,7 +20,10 @@ import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.dialog.MessageDialog
+import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
+import io.mozocoin.sdk.utils.logAsInfo
+import io.mozocoin.sdk.utils.logPublic
 import kotlinx.coroutines.*
 import net.openid.appauth.AuthorizationException
 import org.greenrobot.eventbus.EventBus
@@ -43,8 +46,7 @@ class MozoAuth private constructor() {
     private val mComponentCallbacks: ComponentCallbacks by lazy {
         object : ComponentCallbacks {
             override fun onLowMemory() {}
-            override fun onConfigurationChanged(newConfig: Configuration?) {
-                newConfig ?: return
+            override fun onConfigurationChanged(newConfig: Configuration) {
                 val symbol = MozoSDK.getInstance().profileViewModel
                         .exchangeRateLiveData.value?.token?.currencySymbol
                         ?: Constant.DEFAULT_CURRENCY_SYMBOL
@@ -106,10 +108,14 @@ class MozoAuth private constructor() {
         if (isSignedIn() && authStateManager.current.accessTokenExpirationTime ?: 0 > 0) {
             val expirationTime = Calendar.getInstance()
             expirationTime.timeInMillis = authStateManager.current.accessTokenExpirationTime ?: 0
+
+            val expireAt = expirationTime.time
             expirationTime.add(Calendar.DAY_OF_MONTH, -2)
 
+            "Access Token expire at: $expireAt\nWill be refresh at: ${expirationTime.time}".logPublic()
+
             if (Calendar.getInstance().after(expirationTime)) {
-                MozoTokenService.newInstance().refreshToken {
+                MozoTokenService.instance().refreshToken {
                     onAuthorizeChanged(MessageEvent.Auth())
                 }
             } else onAuthorizeChanged(MessageEvent.Auth())
@@ -122,7 +128,7 @@ class MozoAuth private constructor() {
     private var signedInCallbackJob: Job? = null
     private fun onSignedInBeforeWallet() {
         signedInCallbackJob?.cancel()
-        signedInCallbackJob = GlobalScope.launch(Dispatchers.Main) {
+        signedInCallbackJob = MainScope().launch {
             delay(2000) // 2s
             mAuthListeners.forEach { l -> l.onSignedIn() }
             signedInCallbackJob = null
@@ -138,11 +144,13 @@ class MozoAuth private constructor() {
     fun signOut() = signOut(false)
 
     internal fun signOut(silent: Boolean = false) {
+        Support.logStackTrace()
+
         MessageDialog.dismiss()
         authStateManager.clearSession()
 
         walletService.clear()
-        GlobalScope.launch { mozoDB.clear() }
+        mozoDB.clear()
 
         MozoSocketClient.disconnect()
         onAuthorizeChanged(MessageEvent.Auth())
@@ -164,7 +172,13 @@ class MozoAuth private constructor() {
         }
     }
 
-    fun getAccessToken() = authStateManager.current.accessToken
+    fun getAccessToken(): String? {
+        val token = authStateManager.current.accessToken
+        if (token.isNullOrEmpty()) {
+            "Access token is NULL or empty".logPublic()
+        }
+        return token
+    }
 
     /**
      * Get pin_secret from token
@@ -238,8 +252,10 @@ class MozoAuth private constructor() {
     }
 
     fun checkSession(context: Context, callback: (isExpired: Boolean) -> Unit) {
-        val tokenService = MozoTokenService.newInstance()
+        val tokenService = MozoTokenService.instance()
+        "Check token via Keycloak: Start".logAsInfo()
         tokenService.checkSession(context, { isExpired ->
+            "Check token via Keycloak: Done, isExpired: $isExpired".logAsInfo()
 
             if (isExpired) {
                 /* Token has expired, try to request the new token */
@@ -249,6 +265,7 @@ class MozoAuth private constructor() {
             } else /* Token is working */
                 callback.invoke(false)
         }, {
+            "Check token via Keycloak: from Retry action".logAsInfo()
             checkSession(context, callback)
         })
     }

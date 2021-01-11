@@ -17,19 +17,17 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.OnLoadMoreListener
 import io.mozocoin.sdk.common.model.TransactionHistory
+import io.mozocoin.sdk.databinding.ItemHistoryBinding
+import io.mozocoin.sdk.databinding.ItemLoadingBinding
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.visible
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_history.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.*
 
 internal class TransactionHistoryRecyclerAdapter(
+        private val layoutInflater: LayoutInflater,
         private val histories: List<TransactionHistory>,
         private val itemClick: ((history: TransactionHistory) -> Unit)? = null,
         private val loadMoreListener: OnLoadMoreListener? = null
@@ -71,20 +69,8 @@ internal class TransactionHistoryRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_ITEM) {
-            ItemViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                            R.layout.item_history,
-                            parent,
-                            false
-                    )
-            )
-        } else LoadingViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                        R.layout.item_loading,
-                        parent,
-                        false
-                )
-        )
+            ItemViewHolder(ItemHistoryBinding.inflate(layoutInflater, parent, false))
+        } else LoadingViewHolder(ItemLoadingBinding.inflate(layoutInflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -124,7 +110,7 @@ internal class TransactionHistoryRecyclerAdapter(
                 else -> null
             }
 
-            launch(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
                 dataFilterJob = null
                 notifyDataSetChanged()
             }
@@ -145,51 +131,51 @@ internal class TransactionHistoryRecyclerAdapter(
         notifyDataSetChanged()
     }
 
-    private class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    private class ItemViewHolder(private val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(history: TransactionHistory, isSentType: Boolean, dateTime: String, lastItem: Boolean) {
 
             val amountSign: String
             val amountColor: Int
 
             if (isSentType) {
-                item_history_type.setText(R.string.mozo_view_text_tx_sent)
+                binding.itemHistoryType.setText(R.string.mozo_view_text_tx_sent)
                 amountSign = "-"
                 amountColor = R.color.mozo_color_title
-                item_history_type_icon.setBackgroundResource(R.drawable.mozo_bg_icon_send)
-                item_history_type_icon.rotation = 0f
+                binding.itemHistoryTypeIcon.setBackgroundResource(R.drawable.mozo_bg_icon_send)
+                binding.itemHistoryTypeIcon.rotation = 0f
             } else {
-                item_history_type.setText(R.string.mozo_view_text_tx_received)
+                binding.itemHistoryType.setText(R.string.mozo_view_text_tx_received)
                 amountSign = "+"
                 amountColor = R.color.mozo_color_primary
-                item_history_type_icon.setBackgroundResource(R.drawable.mozo_bg_icon_received)
-                item_history_type_icon.rotation = 180f
+                binding.itemHistoryTypeIcon.setBackgroundResource(R.drawable.mozo_bg_icon_received)
+                binding.itemHistoryTypeIcon.rotation = 180f
             }
 
-            item_history_amount.text = String.format(Locale.US, "%s%s", amountSign, history.amountDisplay())
-            item_history_amount.setTextColor(ContextCompat.getColor(itemView.context, amountColor))
+            binding.itemHistoryAmount.text = String.format(Locale.US, "%s%s", amountSign, history.amountDisplay())
+            binding.itemHistoryAmount.setTextColor(ContextCompat.getColor(itemView.context, amountColor))
 
-            item_history_time.text = dateTime
+            binding.itemHistoryTime.text = dateTime
             val name = if (history.contactName.isNullOrEmpty()) {
-                item_history_address?.ellipsize = TextUtils.TruncateAt.MIDDLE
+                binding.itemHistoryAddress.ellipsize = TextUtils.TruncateAt.MIDDLE
                 if (isSentType) history.addressTo else history.addressFrom
             } else {
-                item_history_address?.ellipsize = TextUtils.TruncateAt.END
+                binding.itemHistoryAddress.ellipsize = TextUtils.TruncateAt.END
                 history.contactName
             } ?: ""
-            item_history_address?.text = SpannableString(containerView.context
+            binding.itemHistoryAddress.text = SpannableString(itemView.context
                     .getString(if (isSentType) R.string.mozo_notify_content_to else R.string.mozo_notify_content_from, name)).apply {
                 val start = indexOf(name, ignoreCase = true)
                 set(start..start + name.length, StyleSpan(BOLD))
             }
 
             if (lastItem)
-                item_divider.gone()
+                binding.itemDivider.gone()
             else
-                item_divider.visible()
+                binding.itemDivider.visible()
         }
     }
 
-    class LoadingViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer
+    class LoadingViewHolder(binding: ItemLoadingBinding) : RecyclerView.ViewHolder(binding.root)
 
     companion object {
         @Retention(AnnotationRetention.SOURCE)

@@ -35,6 +35,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
+        android:id="@+id/fragment_reset_enter_pin"
         layout="@layout/fragment_reset_enter_pin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

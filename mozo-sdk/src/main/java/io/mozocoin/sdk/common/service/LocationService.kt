@@ -87,11 +87,11 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
         }
     }
 
-    override fun onLocationChanged(location: Location?) {
+    override fun onLocationChanged(location: Location) {
         /**
          * from LocationManager
          */
-        location?.run {
+        location.run {
             mListener?.invoke(this)
         }
     }
@@ -99,10 +99,10 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
     }
 
-    override fun onProviderEnabled(provider: String?) {
+    override fun onProviderEnabled(provider: String) {
     }
 
-    override fun onProviderDisabled(provider: String?) {
+    override fun onProviderDisabled(provider: String) {
     }
 
     fun setListener(listener: (location: Location) -> Unit) {

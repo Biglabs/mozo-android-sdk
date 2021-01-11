@@ -7,15 +7,14 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.databinding.ActivityChangePinBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.*
-import kotlinx.android.synthetic.main.activity_change_pin.*
-import kotlinx.android.synthetic.main.fragment_reset_enter_pin.*
-import kotlinx.android.synthetic.main.view_message_progress_status.view.*
 import kotlinx.coroutines.*
 
 internal class ChangePinActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityChangePinBinding
     private var mInputStep = STEP_INPUT_CURRENT
     private var lastInputPin: CharSequence? = null
 
@@ -44,7 +43,7 @@ internal class ChangePinActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (change_pin_loading_view?.isVisible == true) return
+        if (binding.changePinLoadingView.isVisible) return
         super.onBackPressed()
     }
 
@@ -64,7 +63,6 @@ internal class ChangePinActivity : BaseActivity() {
                     return@getWallet
                 }
 
-                setContentView(R.layout.activity_change_pin)
                 initUI()
                 if (wallet.isUnlocked()) {
                     showPinInputNewUI()
@@ -74,11 +72,13 @@ internal class ChangePinActivity : BaseActivity() {
     }
 
     private fun initUI() {
-        reset_pin_enter_pin_input?.apply {
+        binding = ActivityChangePinBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.apply {
             onBackPress { finish() }
             onTextChanged {
-                text_incorrect_pin?.gone()
-                if (it?.length != reset_pin_enter_pin_input?.getMaxLength()) return@onTextChanged
+                binding.fragmentResetEnterPin.textIncorrectPin.gone()
+                if (it?.length != getMaxLength()) return@onTextChanged
 
                 when (mInputStep) {
                     STEP_INPUT_CURRENT -> {
@@ -94,7 +94,7 @@ internal class ChangePinActivity : BaseActivity() {
                         showPinInputConfirmUI()
                     }
                     STEP_INPUT_CONFIRM -> {
-                        if (lastInputPin?.toString()?.equals(it?.toString()) == true)
+                        if (lastInputPin?.toString()?.equals(it.toString()) == true)
                             doChangePin()
                         else
                             showErrorMsg()
@@ -104,76 +104,76 @@ internal class ChangePinActivity : BaseActivity() {
         }
     }
 
-    private fun showPinInputUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showPinInputUI() = MainScope().launch {
         delay(200)
         mInputStep = STEP_INPUT_CURRENT
-        reset_pin_enter_pin_header?.setText(R.string.mozo_pin_change_sub_enter_current)
-        reset_pin_enter_pin_input?.text = null
-        reset_pin_enter_pin_input?.focus()
+        binding.fragmentResetEnterPin.resetPinEnterPinHeader.setText(R.string.mozo_pin_change_sub_enter_current)
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.text = null
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.focus()
     }
 
-    private fun showPinInputNewUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showPinInputNewUI() = MainScope().launch {
         delay(200)
         mInputStep = STEP_INPUT_NEW
         lastInputPin = null
         hideLoadingUI()
-        reset_pin_enter_pin_header?.setText(R.string.mozo_pin_reset_header_create)
-        reset_pin_enter_pin_input?.text = null
-        reset_pin_enter_pin_input?.focus()
+        binding.fragmentResetEnterPin.resetPinEnterPinHeader.setText(R.string.mozo_pin_reset_header_create)
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.text = null
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.focus()
     }
 
-    private fun showPinInputConfirmUI() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showPinInputConfirmUI() = MainScope().launch {
         delay(200)
         mInputStep = STEP_INPUT_CONFIRM
-        reset_pin_enter_pin_header?.setText(R.string.mozo_pin_change_sub_confirm_new)
-        reset_pin_enter_pin_sub_content?.setText(R.string.mozo_pin_change_confirm_content)
-        reset_pin_enter_pin_input?.text = null
-        reset_pin_enter_pin_input?.focus()
+        binding.fragmentResetEnterPin.resetPinEnterPinHeader.setText(R.string.mozo_pin_change_sub_confirm_new)
+        binding.fragmentResetEnterPin.resetPinEnterPinSubContent.setText(R.string.mozo_pin_change_confirm_content)
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.text = null
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.focus()
     }
 
     private fun showLoadingUI() {
-        text_correct_pin?.gone()
-        text_incorrect_pin?.gone()
-        reset_pin_enter_pin_input?.gone()
-        reset_pin_progress?.visible()
+        binding.fragmentResetEnterPin.textCorrectPin.gone()
+        binding.fragmentResetEnterPin.textIncorrectPin.gone()
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.gone()
+        binding.fragmentResetEnterPin.resetPinProgress.visible()
     }
 
     private fun hideLoadingUI() {
-        reset_pin_enter_pin_input?.visible()
-        reset_pin_progress?.gone()
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.visible()
+        binding.fragmentResetEnterPin.resetPinProgress.gone()
     }
 
-    private fun showErrorMsg() = GlobalScope.launch(Dispatchers.Main) {
+    private fun showErrorMsg() = MainScope().launch {
         delay(200)
         hideLoadingUI()
-        reset_pin_enter_pin_input?.text = null
-        reset_pin_enter_pin_input?.focus()
-        text_incorrect_pin?.visible()
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.text = null
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.focus()
+        binding.fragmentResetEnterPin.textIncorrectPin.visible()
     }
 
     private fun showChangePinFailedUI() {
-        change_pin_toolbar?.showCloseButton(true)
-        change_pin_message_view?.apply {
-            this.view_message_icon?.setImageResource(R.drawable.ic_error_general)
-            this.view_message_title?.setText(R.string.mozo_dialog_error_msg)
-            this.view_message_retry_btn?.setText(R.string.mozo_button_try_again)
-            this.view_message_retry_btn?.click {
+        binding.changePinToolbar.showCloseButton(true)
+        binding.changePinMessageView.apply {
+            this.viewMessageIcon.setImageResource(R.drawable.ic_error_general)
+            this.viewMessageTitle.setText(R.string.mozo_dialog_error_msg)
+            this.viewMessageRetryBtn.setText(R.string.mozo_button_try_again)
+            this.viewMessageRetryBtn.click {
                 doChangePin()
             }
-            visible()
+            this.root.visible()
         }
     }
 
     private fun showChangePinSuccessUI() {
-        change_pin_message_view?.apply {
-            this.view_message_icon?.setImageResource(R.drawable.ic_check_green)
-            this.view_message_title?.setText(R.string.mozo_pin_change_success)
-            this.view_message_retry_btn?.setText(R.string.mozo_button_done)
-            this.view_message_retry_btn?.click {
+        binding.changePinMessageView.apply {
+            this.viewMessageIcon.setImageResource(R.drawable.ic_check_green)
+            this.viewMessageTitle.setText(R.string.mozo_pin_change_success)
+            this.viewMessageRetryBtn.setText(R.string.mozo_button_done)
+            this.viewMessageRetryBtn.click {
                 setResult(RESULT_OK)
                 finish()
             }
-            visible()
+            this.root.visible()
         }
     }
 
@@ -189,10 +189,10 @@ internal class ChangePinActivity : BaseActivity() {
 
     private fun doChangePin() {
         lastInputPin ?: return
-        change_pin_toolbar?.showCloseButton(false)
-        change_pin_loading_view?.visible()
-        reset_pin_enter_pin_input?.clearFocus()
-        reset_pin_enter_pin_input?.hideKeyboard()
+        binding.changePinToolbar.showCloseButton(false)
+        binding.changePinLoadingView.visible()
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.clearFocus()
+        binding.fragmentResetEnterPin.resetPinEnterPinInput.hideKeyboard()
 
         GlobalScope.launch {
             val wallet = MozoWallet.getInstance().getWallet()

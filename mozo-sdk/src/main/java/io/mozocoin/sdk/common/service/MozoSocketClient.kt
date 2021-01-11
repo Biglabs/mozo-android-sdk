@@ -139,7 +139,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
         @Synchronized
         fun connect() {
-            MozoTokenService.newInstance().checkSession(MozoSDK.getInstance().context, { isExpired ->
+            MozoTokenService.instance().checkSession(MozoSDK.getInstance().context, { isExpired ->
                 "Check session result: isExpired = $isExpired".logAsInfo(TAG)
                 val accessToken = MozoAuth.getInstance().getAccessToken()
                 if (isExpired || accessToken.isNullOrEmpty()) {

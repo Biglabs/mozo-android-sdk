@@ -3,10 +3,8 @@ package io.mozocoin.sdk.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.ViewGroup
-import android.view.WindowManager
 
 fun Activity.setMatchParent() {
     val attrs = window.attributes
@@ -21,11 +19,7 @@ inline fun <reified T : Any> Activity.launchActivity(
         noinline init: Intent.() -> Unit = {}) {
     val intent = newIntent<T>(this)
     intent.init()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-        startActivityForResult(intent, requestCode, options)
-    } else {
-        startActivityForResult(intent, requestCode)
-    }
+    startActivityForResult(intent, requestCode, options)
 }
 
 inline fun <reified T : Any> Context.launchActivity(
@@ -33,11 +27,7 @@ inline fun <reified T : Any> Context.launchActivity(
         noinline init: Intent.() -> Unit = {}) {
     val intent = newIntent<T>(this)
     intent.init()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-        startActivity(intent, options)
-    } else {
-        startActivity(intent)
-    }
+    startActivity(intent, options)
 }
 
 inline fun <reified T : Any> newIntent(context: Context): Intent =
@@ -49,8 +39,7 @@ fun Activity.adjustFontScale(scale: Float = 1.30f) {
 
         configuration.fontScale = scale
         val metrics = resources.displayMetrics
-        val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        wm.defaultDisplay.getMetrics(metrics)
+        display?.getMetrics(metrics)
         metrics.scaledDensity = configuration.fontScale * metrics.density
         @Suppress("DEPRECATION")
         baseContext.resources.updateConfiguration(configuration, metrics)

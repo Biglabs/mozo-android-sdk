@@ -14,6 +14,7 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
+import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.logAsError
@@ -310,6 +311,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                 clientAuthentication
         ) { tokenResponse, authException ->
             mAuthStateManager.updateAfterTokenResponse(tokenResponse, authException)
+            MozoTokenService.instance().reportToken()
             handleResult(exception = authException)
         }
     }

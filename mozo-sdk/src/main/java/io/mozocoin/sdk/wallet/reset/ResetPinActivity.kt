@@ -1,16 +1,17 @@
 package io.mozocoin.sdk.wallet.reset
 
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.databinding.ActivityResetPinBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.replace
-import kotlinx.android.synthetic.main.activity_reset_pin.*
-import kotlinx.android.synthetic.main.view_toolbar.view.*
 
 internal class ResetPinActivity : BaseActivity(), InteractionListener {
 
+    private lateinit var binding: ActivityResetPinBinding
     private var fragments = arrayOf(
             EnterSeedFragment.newInstance(),
             EnterPinFragment.newInstance()
@@ -24,10 +25,11 @@ internal class ResetPinActivity : BaseActivity(), InteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_reset_pin)
+        binding = ActivityResetPinBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        reset_pin_toolbar?.apply {
-            button_close?.isEnabled = false
+        binding.resetPinToolbar.apply {
+            findViewById<View>(R.id.button_close)?.isEnabled = false
             onBackPress = ::onBackPressed
             onClosePress = {
                 fragments.forEach {
@@ -53,13 +55,13 @@ internal class ResetPinActivity : BaseActivity(), InteractionListener {
         super.onBackPressed()
     }
 
-    override fun getCloseButton(): TextView? = reset_pin_toolbar?.button_close
+    override fun getCloseButton(): TextView? = binding.resetPinToolbar.findViewById(R.id.button_close)
 
     override fun getResetPinModel(): ResetPinViewModel = mModel
 
     override fun hideToolbarActions(left: Boolean, right: Boolean) {
-        reset_pin_toolbar?.showBackButton(!left)
-        reset_pin_toolbar?.showCloseButton(!right)
+        binding.resetPinToolbar.showBackButton(!left)
+        binding.resetPinToolbar.showCloseButton(!right)
     }
 
     override fun requestEnterPin() {

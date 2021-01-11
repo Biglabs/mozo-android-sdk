@@ -4,7 +4,7 @@ import android.os.Parcelable
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.safe
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
 @Parcelize
