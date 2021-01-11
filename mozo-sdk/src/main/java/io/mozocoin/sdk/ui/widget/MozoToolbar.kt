@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.utils.click
@@ -18,11 +19,18 @@ class MozoToolbar : ConstraintLayout {
     private var viewScreenTitle: TextView? = null
     private var viewButtonBack: View? = null
     private var viewButtonClose: TextView? = null
+    private var viewUnderline: View? = null
 
     private var mTitle: String? = null
     private var mShowBack = false
     private var mShowClose = false
     private var mButtonCloseText: String? = null
+    var showUnderline = true
+        set(value) {
+            field = value
+            updateUI()
+        }
+
     private var mPaddingTop = -1
 
     var onBackPress: (() -> Unit)? = null
@@ -37,6 +45,7 @@ class MozoToolbar : ConstraintLayout {
             mShowBack = typeArray.getBoolean(R.styleable.MozoToolbar_buttonBack, mShowBack)
             mShowClose = typeArray.getBoolean(R.styleable.MozoToolbar_buttonClose, mShowClose)
             mButtonCloseText = typeArray.getString(R.styleable.MozoToolbar_buttonCloseText)
+            showUnderline = typeArray.getBoolean(R.styleable.MozoToolbar_showUnderline, showUnderline)
         } finally {
             typeArray.recycle()
         }
@@ -46,6 +55,7 @@ class MozoToolbar : ConstraintLayout {
         viewScreenTitle = this.findViewById(R.id.screen_title)
         viewButtonBack = this.findViewById(R.id.button_back)
         viewButtonClose = this.findViewById(R.id.button_close)
+        viewUnderline = this.findViewById(R.id.underline)
         updateUI()
 
         if (!isInEditMode) {
@@ -84,6 +94,7 @@ class MozoToolbar : ConstraintLayout {
         viewButtonClose?.visibility = if (mShowClose) View.VISIBLE else View.GONE
 
         viewButtonClose?.text = mButtonCloseText ?: context.getString(R.string.mozo_button_cancel)
+        viewUnderline?.isVisible = showUnderline
     }
 
     fun showBackButton(isShow: Boolean) {
