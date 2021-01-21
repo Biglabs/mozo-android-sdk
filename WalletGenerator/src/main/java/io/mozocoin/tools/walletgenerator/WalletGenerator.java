@@ -32,6 +32,7 @@ public class WalletGenerator {
         return key.getPrivKey().toString(16);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void main(String[] args) {
 
         try {
