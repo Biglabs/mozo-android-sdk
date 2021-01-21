@@ -1,2 +1,3 @@
-rootProject.name='MozoSDK'
+rootProject.name = 'MozoSDK'
+include ':WalletGenerator'
 include ':sample', ':mozo-sdk'
