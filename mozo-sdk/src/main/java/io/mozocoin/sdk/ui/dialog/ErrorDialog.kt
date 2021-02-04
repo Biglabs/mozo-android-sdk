@@ -202,6 +202,7 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         }
 
         @JvmStatic
+        @Synchronized
         fun show(context: Context?, @ErrorType type: Int, onRetry: (() -> Unit)? = null) = synchronized(this) {
             if (instance?.identifier != context?.toString()) {
                 dismiss()

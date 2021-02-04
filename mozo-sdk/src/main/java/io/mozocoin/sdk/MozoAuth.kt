@@ -15,10 +15,12 @@ import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.UserInfo
+import io.mozocoin.sdk.common.service.*
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.common.service.MozoDatabase
 import io.mozocoin.sdk.common.service.MozoSocketClient
 import io.mozocoin.sdk.common.service.MozoTokenService
+import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
@@ -136,9 +138,17 @@ class MozoAuth private constructor() {
     }
 
     fun signIn() {
-        initialize()
-        walletService.clear()
-        MozoAuthActivity.signIn(MozoSDK.getInstance().context)
+        if (ConnectionService.isNetworkAvailable) {
+            initialize()
+            walletService.clear()
+            MozoAuthActivity.signIn(MozoSDK.getInstance().context)
+        } else {
+            ErrorDialog.networkError(
+                    MozoSDK.getInstance().remindAnchorView?.context
+                            ?: MozoSDK.getInstance().context,
+                    ::signIn
+            )
+        }
     }
 
     fun signOut() = signOut(false)
@@ -270,8 +280,9 @@ class MozoAuth private constructor() {
         })
     }
 
+    @Synchronized
     internal fun syncProfile(context: Context, callback: ((success: Boolean) -> Unit)? = null) {
-        if (!isSignedIn()) {
+        if (!isSignedIn() || !ConnectionService.isNetworkAvailable) {
             callback?.invoke(false)
             return
         }

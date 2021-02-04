@@ -62,7 +62,7 @@ class ConnectionService : JobService() {
     }
 
     companion object {
-        var isNetworkAvailable: Boolean = false
+        var isNetworkAvailable: Boolean = true
         private var listeners: ArrayList<ConnectionChangedListener>? = null
 
         private fun onNetworkConnectionChanged(isConnected: Boolean, resumeState: Boolean = true) {
