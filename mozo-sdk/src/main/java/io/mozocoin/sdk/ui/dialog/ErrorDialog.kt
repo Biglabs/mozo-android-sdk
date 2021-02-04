@@ -52,10 +52,10 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
     }
 
     override fun cancel() {
-        super.cancel()
         cancelCallback?.onCancel(this)
         EventBus.getDefault().post(MessageEvent.UserCancelErrorDialog())
         ConnectionService.checkNetwork()
+        super.cancel()
     }
 
     override fun dismiss() {
