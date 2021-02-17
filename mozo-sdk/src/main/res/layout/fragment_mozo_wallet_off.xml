@@ -33,6 +33,7 @@
                 android:textSize="13sp"
                 android:visibility="gone"
                 app:drawableSize="10dp"
+                app:drawableTint="@color/mozo_color_primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
