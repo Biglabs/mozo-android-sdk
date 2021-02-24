@@ -29,7 +29,6 @@ import androidx.core.view.doOnNextLayout
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoTx
@@ -309,7 +308,6 @@ fun SwipeRefreshLayout.mozoSetup() {
 fun RecyclerView.mozoSetup(refreshLayout: SwipeRefreshLayout? = null) {
     refreshLayout?.mozoSetup()
     edgeEffectFactory = BounceEdgeEffectFactory()
-    itemAnimator = DefaultItemAnimator()
     setHasFixedSize(true)
 }
 
