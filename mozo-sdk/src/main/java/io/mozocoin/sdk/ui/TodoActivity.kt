@@ -48,13 +48,9 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
             setDisplayHomeAsUpEnabled(false)
         }
 
-        binding.todoRecyclerRefresh.apply {
-            mozoSetup()
-            setOnRefreshListener(this@TodoActivity)
-        }
-
+        binding.todoRecyclerRefresh.setOnRefreshListener(this@TodoActivity)
         binding.todoRecycler.apply {
-            setHasFixedSize(true)
+            mozoSetup(binding.todoRecyclerRefresh)
             adapter = todoAdapter
         }
 

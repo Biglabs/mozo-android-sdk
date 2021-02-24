@@ -48,14 +48,12 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
         }
 
         binding.listHistoryRefresh.apply {
-            mozoSetup()
             setOnRefreshListener(this@TransactionHistoryActivity)
             isRefreshing = true
         }
 
         binding.listHistory.apply {
-            setHasFixedSize(true)
-            itemAnimator = DefaultItemAnimator()
+            mozoSetup(binding.listHistoryRefresh)
             adapter = historyAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

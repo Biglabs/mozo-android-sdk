@@ -7,7 +7,6 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.mozocoin.sdk.MozoSDK
@@ -70,8 +69,7 @@ internal class AddressBookActivity : BaseActivity() {
         }
 
         binding.listContacts.apply {
-            setHasFixedSize(true)
-            itemAnimator = DefaultItemAnimator()
+            mozoSetup(binding.listContactsRefresh)
             adapter = mAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -89,7 +87,6 @@ internal class AddressBookActivity : BaseActivity() {
         }
 
         binding.listContactsRefresh.apply {
-            mozoSetup()
             isRefreshing = true
             setOnRefreshListener(::refresh)
         }
