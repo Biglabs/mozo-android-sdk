@@ -15,10 +15,16 @@ import io.mozocoin.sdk.*
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.ui.MozoWalletFragment
 import io.mozocoin.sdk.ui.SettingsActivity
+import io.mozocoin.sdk.utils.adjustFontScale
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    override fun onAttachedToWindow() {
+        adjustFontScale()
+        super.onAttachedToWindow()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
