@@ -11,6 +11,7 @@ android {
         versionName mozo_sdk_version_name
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "SDK_VERSION", "\"$mozo_sdk_version_name\""
     }
 
     buildTypes {

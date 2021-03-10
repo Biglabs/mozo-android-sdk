@@ -2,6 +2,7 @@ package io.mozocoin.sdk.common.service
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
@@ -529,6 +530,7 @@ internal class MozoAPIsService private constructor() {
                     val request = original.newBuilder()
                             .header("Authorization", "Bearer $accessToken")
                             .header("Content-Type", "application/json")
+                            .header("User-Agent", "MozoSDK/${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.SDK_INT})")
                             .method(original.method, original.body)
                             .build()
                     it.proceed(request)
