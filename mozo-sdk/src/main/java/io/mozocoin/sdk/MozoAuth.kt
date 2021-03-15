@@ -3,7 +3,6 @@ package io.mozocoin.sdk
 import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Handler
 import android.util.Base64
 import io.mozocoin.sdk.authentication.AuthStateListener
 import io.mozocoin.sdk.authentication.AuthStateManager
@@ -16,10 +15,6 @@ import io.mozocoin.sdk.common.WalletHelper
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.common.model.UserInfo
 import io.mozocoin.sdk.common.service.*
-import io.mozocoin.sdk.common.service.MozoAPIsService
-import io.mozocoin.sdk.common.service.MozoDatabase
-import io.mozocoin.sdk.common.service.MozoSocketClient
-import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.dialog.ErrorDialog
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.Support
@@ -38,6 +33,7 @@ import java.util.*
 class MozoAuth private constructor() {
 
     private val mozoDB: MozoDatabase by lazy { MozoDatabase.getInstance(MozoSDK.getInstance().context) }
+    private val mozoAPIs: MozoAPIsService by lazy { MozoAPIsService.getInstance() }
     private val walletService: MozoWallet by lazy { MozoWallet.getInstance() }
 
     private val authStateManager: AuthStateManager by lazy { AuthStateManager.getInstance(MozoSDK.getInstance().context) }
@@ -94,7 +90,10 @@ class MozoAuth private constructor() {
             }
             auth.exception is AuthorizationException
                     && auth.exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code -> {
-                Handler().postDelayed({ signIn() }, 1000)
+                MainScope().launch {
+                    delay(1000)
+                    signIn()
+                }
             }
             else -> {
                 MozoSDK.getInstance().profileViewModel.clear()
@@ -228,7 +227,7 @@ class MozoAuth private constructor() {
             callback: (userInfo: UserInfo?) -> Unit
     ) {
         val finalEmail = if (email.isNullOrEmpty()) null else email
-        MozoAPIsService.getInstance().updateProfile(
+        mozoAPIs.updateProfile(
                 context,
                 Profile(avatarUrl = avatar, fullName = fullName, birthday = birthday, email = finalEmail, gender = gender?.key),
                 { data, _ ->
@@ -286,7 +285,7 @@ class MozoAuth private constructor() {
             callback?.invoke(false)
             return
         }
-        MozoAPIsService.getInstance().getProfile(context, { data, _ ->
+        mozoAPIs.getProfile(context, { data, _ ->
             if (data == null) {
                 callback?.invoke(false)
                 mAuthListeners.forEach { l -> l.onAuthFailed() }
