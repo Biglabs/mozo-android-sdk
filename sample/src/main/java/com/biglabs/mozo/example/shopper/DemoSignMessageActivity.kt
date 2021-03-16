@@ -59,11 +59,10 @@ class DemoSignMessageActivity : AppCompatActivity() {
         super.onResume()
 
         val clipBoardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        clipBoardManager.addPrimaryClipChangedListener {
+        if (binding.inputToSign.length() == 0) {
             val copiedString = clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString()
-            if (binding.inputToSign.length() == 0) {
-                binding.inputToSign.setText(copiedString)
-            }
+            binding.inputToSign.setText(copiedString)
+            binding.textResult.text = ""
         }
     }
 }

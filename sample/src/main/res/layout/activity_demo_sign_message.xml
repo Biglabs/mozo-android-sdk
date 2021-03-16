@@ -9,9 +9,10 @@
     <EditText
         android:id="@+id/input_to_sign"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="To sign"
+        android:layout_height="100dp"
         android:layout_marginTop="20dp"
+        android:background="@drawable/mozo_bg_border_qr_code"
+        android:hint="To sign"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
         tools:ignore="HardcodedText"
