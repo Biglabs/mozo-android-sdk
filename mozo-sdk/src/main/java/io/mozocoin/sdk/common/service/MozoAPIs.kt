@@ -133,6 +133,6 @@ internal interface MozoAPIs {
             @Query("lon") lon: Double
     ): Call<Base<BaseData<Todo>>>
 
-    @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting/v1")
+    @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting/v2")
     fun getTodoSettings(): Call<Base<TodoSettings>>
 }
