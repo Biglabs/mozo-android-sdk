@@ -1,4 +1,4 @@
-package io.mozocoin.tools.walletgenerator;
+package io.mozocoin.tools;
 
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDUtils;
@@ -19,6 +19,7 @@ public class WalletGenerator {
     private static final int FIRST_ADDRESS = 0;
     private static final int SECOND_ADDRESS = 1;
     private static final String DEFAULT_PIN = "123456";
+    private static final int NUMBER_OF_WALLET = 10;
 
     private static String getAddressPrivateKey(int derived, String mnemonic) throws UnreadableWalletException {
         if (derived < 0) {
@@ -36,18 +37,18 @@ public class WalletGenerator {
     public static void main(String[] args) {
 
         try {
-            File file = new File("WalletGenerator/output");
+            File file = new File("tools/output");
             file.mkdirs();
-            FileWriter myWriter = new FileWriter("WalletGenerator/output/1001Wallets.csv");
+            FileWriter myWriter = new FileWriter("tools/output/1001Wallets.csv");
             myWriter.write("STT,Offchain Wallet,Onchain Wallet,PIN,Seed Phrase,Encrypt Seed Phrase = PIN + Seed Phrase");
 
             System.out.println("WALLET GENERATOR");
-            for (int i = 0; i <= 2; i++) {
+            for (int i = 0; i < NUMBER_OF_WALLET; i++) {
                 String mnemonic = MnemonicUtils.generateMnemonic(
                         new SecureRandom().generateSeed(16)
                 );
 
-                System.out.println("Seed Phrase " + i + ": " + mnemonic);
+                System.out.println("Seed Phrase " + (i + 1) + ": " + mnemonic);
 
                 String encryptSeedPhrase = java.util.Base64.getEncoder().encodeToString(
                         new AES256JNCryptor().encryptData(
@@ -75,7 +76,7 @@ public class WalletGenerator {
 
 
             myWriter.close();
-            System.out.println("Write 1001 wallets! DONE");
+            System.out.println("Write " + NUMBER_OF_WALLET + " wallet(s)! DONE");
 
         } catch (Exception e) {
             e.printStackTrace();
