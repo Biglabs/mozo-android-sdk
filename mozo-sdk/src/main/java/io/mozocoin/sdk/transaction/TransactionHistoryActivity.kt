@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoSDK
@@ -48,14 +47,12 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
         }
 
         binding.listHistoryRefresh.apply {
-            mozoSetup()
             setOnRefreshListener(this@TransactionHistoryActivity)
             isRefreshing = true
         }
 
         binding.listHistory.apply {
-            setHasFixedSize(true)
-            itemAnimator = DefaultItemAnimator()
+            mozoSetup(binding.listHistoryRefresh)
             adapter = historyAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

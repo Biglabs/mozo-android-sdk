@@ -39,7 +39,6 @@ fun Activity.adjustFontScale(scale: Float = 1.30f) {
 
         configuration.fontScale = scale
         val metrics = resources.displayMetrics
-        display?.getMetrics(metrics)
         metrics.scaledDensity = configuration.fontScale * metrics.density
         @Suppress("DEPRECATION")
         baseContext.resources.updateConfiguration(configuration, metrics)

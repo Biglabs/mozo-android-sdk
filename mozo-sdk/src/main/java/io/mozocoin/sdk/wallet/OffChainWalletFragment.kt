@@ -234,6 +234,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
              * Detect Onchain MozoX inside Offchain Wallet Address
              * */
             MozoAPIsService.getInstance().getOnChainBalanceInOffChain(requireContext(), currentAddress!!, { data, _ ->
+                _binding ?: return@getOnChainBalanceInOffChain
                 data ?: return@getOnChainBalanceInOffChain
 
                 binding.walletInfoDetectedOnChain.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
@@ -268,6 +269,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                 resources.dp2Px(128f).toInt()
         )
         withContext(Dispatchers.Main) {
+            _binding ?: return@withContext
             binding.walletFragmentQrImage.setImageBitmap(qrImage)
         }
         generateQRJob = null

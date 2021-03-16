@@ -12,6 +12,12 @@ internal interface MozoAPIs {
     fun checkSystemStatus(): Call<Base<Status>>
 
     /**
+     * Common APIs
+     */
+    @GET("${MozoAPIsService.APIS_STORE}/common/v1/countries")
+    fun getCountries(): Call<Base<BaseData<CountryCode>>>
+
+    /**
      * Contact APIs
      */
     @GET("${MozoAPIsService.APIS_STORE}/v2/contacts")
@@ -41,9 +47,6 @@ internal interface MozoAPIs {
 
     @PUT("${MozoAPIsService.APIS_STORE}/user-profile")
     fun updateProfile(@Body profile: Profile): Call<Base<Profile>>
-
-    @PUT("${MozoAPIsService.APIS_STORE}/user-profile/exchange-info")
-    fun saveExchangeInfo(exchangeInfo: Profile): Call<Base<Profile>>
 
     @PUT("${MozoAPIsService.APIS_STORE}/user-profile/settings")
     fun saveSettings(notificationThreshold: Int = 0): Call<Base<Profile>>
@@ -130,11 +133,6 @@ internal interface MozoAPIs {
             @Query("lon") lon: Double
     ): Call<Base<BaseData<Todo>>>
 
-    @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting/v1")
+    @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting/v2")
     fun getTodoSettings(): Call<Base<TodoSettings>>
-
-    /**
-     */
-    @GET("${MozoAPIsService.APIS_STORE}/common/countries")
-    fun getCountries(): Call<Base<BaseData<CountryCode>>>
 }

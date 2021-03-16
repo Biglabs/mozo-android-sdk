@@ -19,6 +19,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.math.BigDecimal
+import java.util.*
 
 @Suppress("unused")
 class MozoWallet private constructor() {
@@ -73,6 +74,9 @@ class MozoWallet private constructor() {
 
     fun getDecimal() = MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.value?.decimal
             ?: Constant.DEFAULT_DECIMAL
+
+    fun getCurrency(): String = MozoSDK.getInstance().profileViewModel.exchangeRateLiveData.value?.token?.currency
+            ?: Currency.getInstance(Locale.getDefault()).currencyCode
 
     fun amountInCurrency(amount: BigDecimal) = MozoSDK.getInstance().profileViewModel.calculateAmountInCurrency(amount)
 

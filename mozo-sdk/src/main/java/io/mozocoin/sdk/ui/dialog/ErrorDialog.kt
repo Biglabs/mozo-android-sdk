@@ -52,10 +52,10 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
     }
 
     override fun cancel() {
-        super.cancel()
         cancelCallback?.onCancel(this)
         EventBus.getDefault().post(MessageEvent.UserCancelErrorDialog())
         ConnectionService.checkNetwork()
+        super.cancel()
     }
 
     override fun dismiss() {
@@ -202,6 +202,7 @@ class ErrorDialog(context: Context, private val argument: Bundle) : BaseDialog(c
         }
 
         @JvmStatic
+        @Synchronized
         fun show(context: Context?, @ErrorType type: Int, onRetry: (() -> Unit)? = null) = synchronized(this) {
             if (instance?.identifier != context?.toString()) {
                 dismiss()

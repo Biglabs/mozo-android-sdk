@@ -40,14 +40,9 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.paymentRequestSwipeRefresh.apply {
-            mozoSetup()
-            setOnRefreshListener(this@PaymentTabListFragment)
-        }
-
+        binding.paymentRequestSwipeRefresh.setOnRefreshListener(this@PaymentTabListFragment)
         binding.paymentRequestRecycler.apply {
-            setHasFixedSize(true)
-            itemAnimator = DefaultItemAnimator()
+            mozoSetup(binding.paymentRequestSwipeRefresh)
             adapter = mAdapter
         }
 

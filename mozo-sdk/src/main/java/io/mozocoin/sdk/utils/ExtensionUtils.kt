@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package io.mozocoin.sdk.utils
 
 import android.app.Activity
@@ -19,6 +21,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -26,6 +29,7 @@ import androidx.core.view.doOnNextLayout
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.R
@@ -116,9 +120,12 @@ fun Context.openTab(url: String) {
         finalUrl = "https://".plus(finalUrl)
     }
 
+    val colorParams = CustomTabColorSchemeParams.Builder()
+            .setToolbarColor(color(R.color.mozo_color_primary))
+            .build()
     val customTabsIntent = CustomTabsIntent.Builder()
             .setShowTitle(true)
-            .setToolbarColor(color(R.color.mozo_color_primary))
+            .setDefaultColorSchemeParams(colorParams)
             .build()
 
     //to be used if Custom Tabs is not available
@@ -296,6 +303,12 @@ fun SwipeRefreshLayout.mozoSetup() {
 //    val offset = resources.getDimensionPixelSize(R.dimen.mozo_refresh_progress_offset)
 //    setProgressViewOffset(true, progressViewStartOffset + offset, progressViewEndOffset + offset / 3)
     setColorSchemeResources(R.color.mozo_color_primary)
+}
+
+fun RecyclerView.mozoSetup(refreshLayout: SwipeRefreshLayout? = null) {
+    refreshLayout?.mozoSetup()
+    edgeEffectFactory = BounceEdgeEffectFactory()
+    setHasFixedSize(true)
 }
 
 fun BigDecimal.trailingZeros(scale: Int): BigDecimal {
