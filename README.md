@@ -1,5 +1,5 @@
 # Mozo Android SDK
-[ ![Download](https://api.bintray.com/packages/mozocoin/MozoSDK/mozo-sdk/images/download.svg) ](https://bintray.com/mozocoin/MozoSDK/mozo-sdk/_latestVersion) [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
+[ ![Download](https://api.bintray.com/packages/mozocoin/MozoSDK/mozo-sdk/images/download.svg) ](https://bintray.com/mozocoin/MozoSDK/mozo-sdk/_latestVersion) <img alt="Android version" src="https://img.shields.io/badge/Android-21+-brightgreen"/> <img alt="Kotlin version" src="https://img.shields.io/badge/Kotlin-1.4.31-blue"/>
 
 MozoSDK for Android by MozoX Pte. Ltd.
 For more information please see [the website][1].
