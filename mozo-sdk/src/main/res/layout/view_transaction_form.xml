@@ -114,8 +114,6 @@
             android:lines="1"
             android:nextFocusRight="@id/output_amount"
             android:nextFocusDown="@id/output_amount"
-            android:paddingStart="0dp"
-            android:paddingEnd="70dp"
             android:textColor="@color/mozo_color_text_main"
             android:textColorHint="@color/mozo_color_un_active"
             android:textSize="14sp"
@@ -125,23 +123,6 @@
             app:layout_goneMarginEnd="@dimen/mozo_screen_margin"
             tools:targetApi="o"
             tools:text="0x97309d360C015695cf50892f035E516ccA1898F0" />
-
-        <io.mozocoin.sdk.ui.view.MozoIconTextView
-            android:id="@+id/button_scan_qr"
-            style="@style/MozoWalletInfoButtonText"
-            android:layout_height="0dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:drawableStart="@drawable/ic_action_scan"
-            android:drawablePadding="6dp"
-            android:focusable="true"
-            android:paddingStart="5dp"
-            android:paddingEnd="@dimen/mozo_screen_margin"
-            android:text="@string/mozo_button_scan"
-            app:drawableSize="18dp"
-            app:layout_constraintBottom_toBottomOf="@+id/output_receiver_address"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/output_receiver_address" />
 
         <View
             android:id="@+id/output_receiver_address_underline"
@@ -290,6 +271,23 @@
             app:layout_constraintTop_toBottomOf="@id/output_receiver_address_barrier"
             app:layout_goneMarginEnd="0dp" />
 
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:id="@+id/button_scan_qr"
+            style="@style/MozoWalletInfoButtonText"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:drawableStart="@drawable/ic_action_scan"
+            android:drawablePadding="6dp"
+            android:focusable="true"
+            android:paddingStart="10dp"
+            android:paddingEnd="@dimen/mozo_screen_margin"
+            android:text="@string/mozo_button_scan"
+            app:drawableSize="18dp"
+            app:layout_constraintBottom_toBottomOf="@id/button_address_book"
+            app:layout_constraintStart_toEndOf="@id/button_address_book"
+            app:layout_constraintTop_toTopOf="@id/button_address_book" />
+
         <View
             android:id="@+id/confirmation_state_separator"
             android:layout_width="0dp"
@@ -394,19 +392,23 @@
             app:layout_constraintTop_toBottomOf="@id/output_amount_label"
             tools:visibility="visible">
 
-            <io.mozocoin.sdk.ui.view.MozoIconTextView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:srcCompat="@drawable/ic_mozo_offchain" />
+
+            <TextView
                 android:id="@+id/text_preview_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
+                android:layout_marginStart="7dp"
                 android:layout_marginEnd="7dp"
-                android:drawablePadding="7dp"
+                android:gravity="center_vertical"
                 android:includeFontPadding="false"
-                android:minWidth="80dp"
+                android:minWidth="50dp"
                 android:textColor="@color/mozo_color_title"
                 android:textSize="25sp"
                 android:textStyle="bold"
-                app:drawableSize="30dp"
-                app:drawableStartCompat="@drawable/ic_mozo_offchain"
                 tools:text="50" />
 
             <TextView
