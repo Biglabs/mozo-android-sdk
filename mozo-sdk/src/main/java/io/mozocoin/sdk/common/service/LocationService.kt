@@ -6,6 +6,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import com.google.android.gms.location.*
 import io.mozocoin.sdk.utils.isLocationPermissionGranted
 import io.mozocoin.sdk.utils.logAsError
@@ -38,12 +39,12 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
 
                 fusedLocationProvider.removeLocationUpdates(this)
                 fusedLocationProvider.requestLocationUpdates(
-                        LocationRequest()
+                        LocationRequest.create()
                                 .setInterval(REQUEST_INTERVAL)
                                 .setFastestInterval(REQUEST_INTERVAL)
                                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY),
                         this,
-                        null
+                        Looper.getMainLooper()
                 )
             } else fetchNetworkLocation()
         }

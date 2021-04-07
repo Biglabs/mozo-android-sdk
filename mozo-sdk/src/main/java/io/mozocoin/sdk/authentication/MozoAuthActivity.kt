@@ -212,7 +212,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
         val extras = Bundle()
         extras.putBinder(CustomTabsIntent.EXTRA_SESSION, null)
-        extras.putBoolean(CustomTabsIntent.EXTRA_DEFAULT_SHARE_MENU_ITEM, false)
+        extras.putInt(CustomTabsIntent.EXTRA_SHARE_STATE, CustomTabsIntent.SHARE_STATE_OFF)
         extras.putParcelableArrayList(CustomTabsIntent.EXTRA_MENU_ITEMS, null)
         customTabs.intent.putExtras(extras)
 
