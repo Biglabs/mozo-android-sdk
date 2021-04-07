@@ -126,7 +126,6 @@
     <string name="mozo_create_wallet_auto_section">지갑 자동 만들기</string>
     <string name="mozo_create_wallet_auto_explain">당신의 복구 문구* 및 보안 PIN을 자동적으로 생성되어 시스템에 저장됩니다.</string>
     <string name="mozo_create_wallet_manual_section">지갑 직접 만들기</string>
-    <string name="mozo_create_wallet_manual_explain">당신이 만든 복구 문구 및 보안 PIN을 백업해야 합니다.</string>
     <string name="mozo_create_wallet_hint_explain_title">*복구 문구는 무엇입니까?</string>
     <string name="mozo_create_wallet_hint_explain">복구 문구는 전자 지갑 보안을 위한 임의 글자 세트입니다. 전자 지갑 분실이나 PIN을 잊어버릴 경우, 자기 전자 지갑을 복구하거나 PIN을 재설정하기 위해 이 글자들을 꼭 써 놓아야 합니다.</string>
     <string name="mozo_create_wallet_creating">당신의 Mozo 지갑 만드는 중…</string>
