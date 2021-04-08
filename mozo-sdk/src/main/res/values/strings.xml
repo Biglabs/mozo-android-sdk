@@ -131,7 +131,7 @@
     <string name="mozo_create_wallet_auto_section">Create Wallet Automatically</string>
     <string name="mozo_create_wallet_auto_explain">Your Recovery Phrase* and security PIN will be auto generated and remembered by our system.</string>
     <string name="mozo_create_wallet_manual_section">Create Wallet Manually</string>
-    <string name="mozo_create_wallet_manual_explain">Please back up your Recovery Phrase by clicking on \"Setting\" and \"Back up wallet\" menu</string>
+    <string name="mozo_create_wallet_manual_explain">Please back up your Recovery Phrase by clicking on \"Settings\" and \"Backup Wallet\" menu</string>
     <string name="mozo_create_wallet_hint_explain_title">*What are Recovery Phrase?</string>
     <string name="mozo_create_wallet_hint_explain">Recovery Phrase are random set of words used to secure your digital wallet. You should write down these words in order so that in the event you lose your digital wallet of forget your PIN, you can recover your wallet and/or reset your PIN.</string>
     <string name="mozo_create_wallet_creating">Creating your Mozo wallet…</string>
@@ -185,8 +185,8 @@
     <string name="mozo_notify_title_promo_purchased">Shopper purchased promotion</string>
     <string name="mozo_notify_title_covid_warning">Covid-19 Warning!</string>
     <string name="mozo_notify_content_covid_warning">There are %d new Covid warning zones near you.</string>
-    <string name="mozo_notify_title_lucky_draw">Bạn đã trúng thưởng!</string>
-    <string name="mozo_notify_content_lucky_draw">Chúc mừng bạn đã nhận được phần thưởng từ chương trình quay số may mắn của Mozo.</string>
+    <string name="mozo_notify_title_lucky_draw">Congratulations!</string>
+    <string name="mozo_notify_content_lucky_draw">You received a gift from Mozo\'s lucky draw</string>
     <string name="mozo_notify_content_from">From %s</string>
     <string name="mozo_notify_content_to">To %s</string>
     <string name="mozo_notify_content_invited">%s joined Mozo</string>

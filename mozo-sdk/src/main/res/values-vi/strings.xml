@@ -126,7 +126,7 @@
     <string name="mozo_create_wallet_auto_section">Tạo ví tự động</string>
     <string name="mozo_create_wallet_auto_explain">Cụm từ khôi phục* và mã PIN được tự động tạo và ghi nhớ bởi hệ thống.</string>
     <string name="mozo_create_wallet_manual_section">Tạo ví do bạn điều khiển</string>
-    <string name="mozo_create_wallet_manual_explain">Vui lòng sao lưu \"Cụm từ khôi phục\" của bạn bằng cách nhấp vào menu \"Thiết lập\" và \"Sao lưu ví\"</string>
+    <string name="mozo_create_wallet_manual_explain">Vui lòng sao lưu \"Cụm từ khôi phục\" của bạn bằng cách nhấp vào menu \"Cài đặt\" và \"Sao lưu ví\"</string>
     <string name="mozo_create_wallet_hint_explain_title">*Cụm từ khôi phục là gì?</string>
     <string name="mozo_create_wallet_hint_explain">Cụm từ khôi phục là một tập các từ được phát sinh ngẫu nhiên bởi thuật toán. Bạn phải ghi lại những từ này phòng trường hợp mất thiết bị hoặc quên mã PIN, bạn có thể dùng nó để phục hồi ví hoặc tạo PIN mới.</string>
     <string name="mozo_create_wallet_creating">Đang tạo ví Mozo…</string>
@@ -178,8 +178,8 @@
     <string name="mozo_notify_title_promo_purchased">Khách hàng đã mua khuyến mãi</string>
     <string name="mozo_notify_title_covid_warning">Cảnh báo Covid-19!</string>
     <string name="mozo_notify_content_covid_warning">Có %d vùng cảnh báo Covid-19 mới ở gần bạn.</string>
-    <string name="mozo_notify_title_lucky_draw">Bạn đã trúng thưởng!</string>
-    <string name="mozo_notify_content_lucky_draw">Chúc mừng bạn đã nhận được phần thưởng từ chương trình quay số may mắn của Mozo.</string>
+    <string name="mozo_notify_title_lucky_draw">Chúc mừng bạn!</string>
+    <string name="mozo_notify_content_lucky_draw">Nhận được phần thưởng từ chương trình quay số may mắn của Mozo.</string>
     <string name="mozo_notify_content_from">Từ %s</string>
     <string name="mozo_notify_content_to">Đến %s</string>
     <string name="mozo_notify_content_invited">%s đã tham gia Mozo</string>
