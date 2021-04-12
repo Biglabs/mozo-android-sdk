@@ -34,7 +34,6 @@ import kotlinx.coroutines.*
 
 internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var _binding: FragmentMozoWalletOffBinding? = null
-    private val binding get() = _binding!!
     private val histories = arrayListOf<TransactionHistory>()
     private val onItemClick = { history: TransactionHistory ->
         if (context != null) {
@@ -57,12 +56,12 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMozoWalletOffBinding.inflate(inflater, container, false)
-        return binding.root
+        return _binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val binding = _binding ?: return
         binding.walletFragmentOffSwipe.apply {
             mozoSetup()
             setOnRefreshListener(this@OffChainWalletFragment)
@@ -118,7 +117,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
 
     override fun onResume() {
         super.onResume()
-        binding.walletInfoDetectedOnChain.gone()
+        _binding?.walletInfoDetectedOnChain?.gone()
         if (MozoAuth.getInstance().isSignedIn()) {
             view?.postDelayed(250) {
                 MozoSDK.getInstance().profileViewModel.run {
@@ -155,7 +154,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             currentAddress = it.walletInfo!!.offchainAddress
             historyAdapter.address = currentAddress
 
-            binding.walletFragmentAddress.text = currentAddress
+            _binding?.walletFragmentAddress?.text = currentAddress
 
             fetchData()
 
@@ -172,9 +171,9 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             historyAdapter.address = null
             historyAdapter.notifyData()
 
-            binding.walletFragmentAddress.text = null
+            _binding?.walletFragmentAddress?.text = null
             generateQRJob?.cancel()
-            binding.walletFragmentQrImage.setImageDrawable(null)
+            _binding?.walletFragmentQrImage?.setImageDrawable(null)
         }
     }
 
@@ -202,8 +201,8 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                     page = Constant.PAGING_START_INDEX,
                     size = 10,
                     callback = { data, _ ->
-                        binding.walletFragmentOffSwipe.isRefreshing = false
-                        historyAdapter.mEmptyView = binding.walletFragmentHistoryEmptyView
+                        _binding?.walletFragmentOffSwipe?.isRefreshing = false
+                        historyAdapter.mEmptyView = _binding?.walletFragmentHistoryEmptyView
 
                         if (data?.items == null) {
                             historyAdapter.setCanLoadMore(false)
@@ -224,7 +223,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                                 fetchDataJob = null
                                 historyAdapter.setCanLoadMore(false)
                                 historyAdapter.notifyData()
-                                binding.walletFragmentHistoryRecycler.scheduleLayoutAnimation()
+                                _binding?.walletFragmentHistoryRecycler?.scheduleLayoutAnimation()
                             }
                         }
                     },
@@ -237,18 +236,18 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                 _binding ?: return@getOnChainBalanceInOffChain
                 data ?: return@getOnChainBalanceInOffChain
 
-                binding.walletInfoDetectedOnChain.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
+                _binding?.walletInfoDetectedOnChain?.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
                 mOnChainBalanceInfo = data.balanceOfTokenOnchain
 
                 when {
                     !data.convertToMozoXOnchain -> {
-                        binding.walletInfoDetectedOnChain.text = HtmlCompat.fromHtml(
+                        _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(
                                 getString(R.string.mozo_convert_on_in_off_converting),
                                 FROM_HTML_MODE_LEGACY
                         )
                     }
                     data.detectedOnchain -> {
-                        binding.walletInfoDetectedOnChain.text = HtmlCompat.fromHtml(getString(
+                        _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(getString(
                                 R.string.mozo_convert_on_in_off_detected,
                                 data.balanceOfTokenOnchain?.balanceNonDecimal()?.displayString()
                         ), FROM_HTML_MODE_LEGACY)
@@ -270,7 +269,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
         )
         withContext(Dispatchers.Main) {
             _binding ?: return@withContext
-            binding.walletFragmentQrImage.setImageBitmap(qrImage)
+            _binding?.walletFragmentQrImage?.setImageBitmap(qrImage)
         }
         generateQRJob = null
     }
@@ -278,13 +277,13 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     @Suppress("unused")
     fun showPaymentRequestButton(display: Boolean) {
         buttonPaymentRequest = display
-        binding.walletFragmentBtnPaymentRequest.visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
+        _binding?.walletFragmentBtnPaymentRequest?.visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
     }
 
     @Suppress("unused")
     fun showSendButton(display: Boolean) {
         buttonSend = display
-        binding.walletFragmentBtnSend.visibility = if (buttonSend) View.VISIBLE else View.GONE
+        _binding?.walletFragmentBtnSend?.visibility = if (buttonSend) View.VISIBLE else View.GONE
     }
 
     companion object {
