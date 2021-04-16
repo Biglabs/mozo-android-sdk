@@ -156,17 +156,8 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
                 binding.itemTodoContainerMask.click {
                     handleItemClick(d)
                 }
-
-                when (val type = d.type()) {
-                    TodoType.CUSTOM -> {
-                        binding.itemTodoTitle.text = d.data?.customTitle
-                        binding.itemTodoAction.text = d.data?.customAction
-                    }
-                    else -> {
-                        binding.itemTodoTitle.setText(type.title)
-                        binding.itemTodoAction.setText(type.action)
-                    }
-                }
+                binding.itemTodoTitle.text = d.displayTitle(itemView.context)
+                binding.itemTodoAction.text = d.displayAction(itemView.context)
             }
 
             private fun handleItemClick(todo: Todo) {
