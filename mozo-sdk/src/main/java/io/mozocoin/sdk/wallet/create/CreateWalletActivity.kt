@@ -39,12 +39,18 @@ internal class CreateWalletActivity : BaseActivity() {
             binding.buttonCreateManual.isSelected = false
         }
 
+        /**
+         * Disable create Wallet manually
+         * @see https://vinatechnology.atlassian.net/browse/MOZOX-3
         binding.buttonCreateManual.click {
-            it.isSelected = true
-            binding.buttonCreateAuto.isSelected = false
+        it.isSelected = true
+        binding.buttonCreateAuto.isSelected = false
         }
-
+         */
         binding.buttonContinue.click {
+            showCreatingUI()
+            doCreateWallet()
+            /**
             when (binding.buttonCreateManual.isSelected) {
                 true -> {
                     SecurityActivity.start(this, SecurityActivity.KEY_CREATE_PIN, KEY_CREATE_WALLET_MANUAL)
@@ -55,6 +61,7 @@ internal class CreateWalletActivity : BaseActivity() {
                     doCreateWallet()
                 }
             }
+            */
         }
 
         val actionText = getString(R.string.mozo_button_logout_short)

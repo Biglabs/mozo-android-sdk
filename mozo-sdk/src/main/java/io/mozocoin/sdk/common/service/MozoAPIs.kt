@@ -3,6 +3,7 @@ package io.mozocoin.sdk.common.service
 import io.mozocoin.sdk.common.model.*
 import retrofit2.Call
 import retrofit2.http.*
+import java.util.*
 
 internal interface MozoAPIs {
     /**
@@ -130,7 +131,8 @@ internal interface MozoAPIs {
     fun getTodoList4Shopper(
             @Query("blueToothOff") isBluetoothOff: Boolean,
             @Query("lat") lat: Double,
-            @Query("lon") lon: Double
+            @Query("lon") lon: Double,
+            @Query("locale") locale: String = Locale.getDefault().toLanguageTag()
     ): Call<Base<BaseData<Todo>>>
 
     @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting/v2")

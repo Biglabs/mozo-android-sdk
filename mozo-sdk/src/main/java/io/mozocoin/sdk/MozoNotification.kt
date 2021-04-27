@@ -6,16 +6,15 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import androidx.core.graphics.drawable.toBitmap
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.google.gson.Gson
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.OnNotificationReceiveListener
@@ -93,14 +92,15 @@ class MozoNotification private constructor() {
         }
 
         message.imageId?.let {
-            getBitmap(context, it) { bm ->
-                singleNotify.setLargeIcon(bm)
-                singleNotify.setStyle(
-                        NotificationCompat.BigPictureStyle()
-                                .bigPicture(bm)
-                                .bigLargeIcon(null)
-                )
-
+            getImage(context, it) { drawable ->
+                drawable?.toBitmap()?.let { bm ->
+                    singleNotify.setLargeIcon(bm)
+                    singleNotify.setStyle(
+                            NotificationCompat.BigPictureStyle()
+                                    .bigPicture(bm)
+                                    .bigLargeIcon(null)
+                    )
+                }
                 NotificationManagerCompat.from(context).notify(id, singleNotify.build())
             }
         }
@@ -158,20 +158,21 @@ class MozoNotification private constructor() {
         }
     }
 
-    private fun getBitmap(context: Context, imageID: String, completion: ((Bitmap?) -> Unit)? = null) {
+    private fun getImage(context: Context, imageID: String, completion: ((Drawable?) -> Unit)? = null) {
         val url = "https://${Support.domainImage()}/api/public/$imageID"
-        Glide.with(context)
-                .asBitmap()
-                .load(url)
-                .timeout(10000)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        completion?.invoke(resource)
-                    }
-                })
+        val request = ImageRequest.Builder(context)
+                .data(url)
+                .target(
+                        onSuccess = { result ->
+                            // Handle the successful result.
+                            completion?.invoke(result)
+                        },
+                        onError = { _ ->
+                            completion?.invoke(null)
+                        }
+                )
+                .build()
+        context.imageLoader.enqueue(request)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

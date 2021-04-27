@@ -31,6 +31,7 @@ enum class TransferSpeed(@StringRes val display: Int) {
 }
 
 enum class TodoType(@StringRes val title: Int, @StringRes val action: Int) {
+    CUSTOM(0, 0),
     AIRDROP_NEARBY(R.string.mozo_notify_to_do_airdrop_nearby, R.string.mozo_notify_to_do_airdrop_nearby_action),
     AIRDROP_EXPIRED(R.string.mozo_notify_to_do_airdrop_expire, R.string.mozo_notify_to_do_airdrop_expire_action),
     AIRDROP_EMPTY(R.string.mozo_notify_to_do_airdrop_empty, R.string.mozo_notify_to_do_airdrop_empty_action),

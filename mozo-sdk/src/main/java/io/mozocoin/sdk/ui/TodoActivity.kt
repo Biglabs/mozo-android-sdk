@@ -106,7 +106,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
     class TodoAdapter(
             private val layoutInflater: LayoutInflater,
             private val emptyView: View?
-            ) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
+    ) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
         var todoSettings: TodoSettings? = null
         private val data: MutableList<Todo> = mutableListOf()
 
@@ -156,11 +156,8 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
                 binding.itemTodoContainerMask.click {
                     handleItemClick(d)
                 }
-
-                TodoType.find(d.id)?.let {
-                    binding.itemTodoTitle.setText(it.title)
-                    binding.itemTodoAction.setText(it.action)
-                }
+                binding.itemTodoTitle.text = d.displayTitle(itemView.context)
+                binding.itemTodoAction.text = d.displayAction(itemView.context)
             }
 
             private fun handleItemClick(todo: Todo) {
