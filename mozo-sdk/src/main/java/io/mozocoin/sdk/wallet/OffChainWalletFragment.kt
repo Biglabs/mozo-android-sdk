@@ -7,9 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.text.HtmlCompat
-import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
-import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -54,7 +51,11 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
 
     private var mOnChainBalanceInfo: BalanceInfo? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentMozoWalletOffBinding.inflate(inflater, container, false)
         return _binding!!.root
     }
@@ -92,9 +93,9 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             val lastTxHash = SharedPrefsUtils.getLastTxConvertOnChainInOffChain()
             if (lastTxHash.isNullOrEmpty()) {
                 ConvertOnInOffActivity.start(
-                        it.context,
-                        currentAddress ?: return@click,
-                        mOnChainBalanceInfo ?: return@click
+                    it.context,
+                    currentAddress ?: return@click,
+                    mOnChainBalanceInfo ?: return@click
                 )
             } else {
                 ConvertBroadcastActivity.start(it.context, lastTxHash)
@@ -110,7 +111,10 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
         val typedArray = resources.obtainAttributes(attrs, R.styleable.MozoWalletFragment)
-        buttonPaymentRequest = typedArray.getBoolean(R.styleable.MozoWalletFragment_buttonPaymentRequest, buttonPaymentRequest)
+        buttonPaymentRequest = typedArray.getBoolean(
+            R.styleable.MozoWalletFragment_buttonPaymentRequest,
+            buttonPaymentRequest
+        )
         buttonSend = typedArray.getBoolean(R.styleable.MozoWalletFragment_buttonSend, buttonSend)
         typedArray.recycle()
     }
@@ -121,7 +125,10 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
         if (MozoAuth.getInstance().isSignedIn()) {
             view?.postDelayed(250) {
                 MozoSDK.getInstance().profileViewModel.run {
-                    profileLiveData.observe(this@OffChainWalletFragment.viewLifecycleOwner, profileObserver)
+                    profileLiveData.observe(
+                        this@OffChainWalletFragment.viewLifecycleOwner,
+                        profileObserver
+                    )
                     balanceAndRateLiveData.observeForever(balanceAndRateObserver)
                 }
             }
@@ -197,75 +204,82 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             if (!isAdded || activity == null || _binding == null) return@launch
             if (context == null || currentAddress == null) return@launch
 
-            MozoAPIsService.getInstance().getTransactionHistory(requireContext(), currentAddress!!,
-                    page = Constant.PAGING_START_INDEX,
-                    size = 10,
-                    callback = { data, _ ->
-                        _binding?.walletFragmentOffSwipe?.isRefreshing = false
-                        historyAdapter.mEmptyView = _binding?.walletFragmentHistoryEmptyView
+            MozoAPIsService.getInstance().getTransactionHistory(
+                requireContext(), currentAddress!!,
+                page = Constant.PAGING_START_INDEX,
+                size = 10,
+                callback = { data, _ ->
+                    _binding?.walletFragmentOffSwipe?.isRefreshing = false
+                    historyAdapter.mEmptyView = _binding?.walletFragmentHistoryEmptyView
 
-                        if (data?.items == null) {
+                    if (data?.items == null) {
+                        historyAdapter.setCanLoadMore(false)
+                        historyAdapter.notifyData()
+                        return@getTransactionHistory
+                    }
+
+                    fetchDataJob = GlobalScope.launch {
+                        histories.clear()
+                        histories.addAll(data.items!!.map {
+                            it.apply {
+                                contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
+                                    if (it.type(currentAddress)) it.addressTo else it.addressFrom
+                                )?.name
+                            }
+                        })
+                        withContext(Dispatchers.Main) {
+                            fetchDataJob = null
                             historyAdapter.setCanLoadMore(false)
                             historyAdapter.notifyData()
-                            return@getTransactionHistory
+                            _binding?.walletFragmentHistoryRecycler?.scheduleLayoutAnimation()
                         }
-
-                        fetchDataJob = GlobalScope.launch {
-                            histories.clear()
-                            histories.addAll(data.items!!.map {
-                                it.apply {
-                                    contactName = MozoSDK.getInstance().contactViewModel.findByAddress(
-                                            if (it.type(currentAddress)) it.addressTo else it.addressFrom
-                                    )?.name
-                                }
-                            })
-                            withContext(Dispatchers.Main) {
-                                fetchDataJob = null
-                                historyAdapter.setCanLoadMore(false)
-                                historyAdapter.notifyData()
-                                _binding?.walletFragmentHistoryRecycler?.scheduleLayoutAnimation()
-                            }
-                        }
-                    },
-                    retry = this@OffChainWalletFragment::fetchData)
+                    }
+                },
+                retry = this@OffChainWalletFragment::fetchData
+            )
 
             /**
              * Detect Onchain MozoX inside Offchain Wallet Address
              * */
+            /**
+             * Disable Detect On-chain feature for now
+             * Wednesday, May 5, 2021 5:28:23 PM GMT+07:00
+             *
             MozoAPIsService.getInstance().getOnChainBalanceInOffChain(requireContext(), currentAddress!!, { data, _ ->
-                _binding ?: return@getOnChainBalanceInOffChain
-                data ?: return@getOnChainBalanceInOffChain
+            _binding ?: return@getOnChainBalanceInOffChain
+            data ?: return@getOnChainBalanceInOffChain
 
-                _binding?.walletInfoDetectedOnChain?.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
-                mOnChainBalanceInfo = data.balanceOfTokenOnchain
+            _binding?.walletInfoDetectedOnChain?.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
+            mOnChainBalanceInfo = data.balanceOfTokenOnchain
 
-                when {
-                    !data.convertToMozoXOnchain -> {
-                        _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(
-                                getString(R.string.mozo_convert_on_in_off_converting),
-                                FROM_HTML_MODE_LEGACY
-                        )
-                    }
-                    data.detectedOnchain -> {
-                        _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(getString(
-                                R.string.mozo_convert_on_in_off_detected,
-                                data.balanceOfTokenOnchain?.balanceNonDecimal()?.displayString()
-                        ), FROM_HTML_MODE_LEGACY)
-                    }
-                }
+            when {
+            !data.convertToMozoXOnchain -> {
+            _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(
+            getString(R.string.mozo_convert_on_in_off_converting),
+            FROM_HTML_MODE_LEGACY
+            )
+            }
+            data.detectedOnchain -> {
+            _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(getString(
+            R.string.mozo_convert_on_in_off_detected,
+            data.balanceOfTokenOnchain?.balanceNonDecimal()?.displayString()
+            ), FROM_HTML_MODE_LEGACY)
+            }
+            }
 
-                if (data.convertToMozoXOnchain) {
-                    SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(null, null)
-                }
+            if (data.convertToMozoXOnchain) {
+            SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(null, null)
+            }
 
             }, this@OffChainWalletFragment::fetchData)
+             */
         }
     }
 
     private fun generateQRImage() = GlobalScope.launch {
         val qrImage = Support.generateQRCode(
-                currentAddress ?: return@launch,
-                resources.dp2Px(128f).toInt()
+            currentAddress ?: return@launch,
+            resources.dp2Px(128f).toInt()
         )
         withContext(Dispatchers.Main) {
             _binding ?: return@withContext
@@ -277,7 +291,8 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     @Suppress("unused")
     fun showPaymentRequestButton(display: Boolean) {
         buttonPaymentRequest = display
-        _binding?.walletFragmentBtnPaymentRequest?.visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
+        _binding?.walletFragmentBtnPaymentRequest?.visibility =
+            if (buttonPaymentRequest) View.VISIBLE else View.GONE
     }
 
     @Suppress("unused")
