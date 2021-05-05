@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 android {
-    compileSdkVersion compile_sdk_version
+    compileSdkVersion COMPILE_VERSION
     defaultConfig {
         applicationId "com.biglabs.mozo.example.shopper"
-        minSdkVersion min_sdk_version
-        targetSdkVersion target_sdk_version
+        minSdkVersion MIN_VERSION
+        targetSdkVersion TARGET_VERSION
         versionCode 2
         versionName "2.0"
     }
@@ -42,7 +42,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':mozo-sdk')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION"
     implementation 'androidx.arch.core:core-runtime:2.1.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'com.google.android.material:material:1.3.0'
