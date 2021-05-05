@@ -5,7 +5,7 @@ on:
     # We'll run this workflow when a new GitHub release is created
     types: [released]
 
-job:
+jobs:
   publish:
     name: Release build and publish
     runs-on: ubuntu-latest
