@@ -1,17 +1,27 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+}
+
+ext {
+    PUBLISH_ARTIFACT_ID = 'mozo-sdk'
+    PUBLISH_GROUP_ID = 'io.mozocoin'
+    PUBLISH_VERSION = '0.2.4-beta05'
+    PUBLISH_DESCRIPTION = 'MozoSDK for Android'
+    PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
+}
 
 android {
-    compileSdkVersion compile_sdk_version
+    compileSdkVersion COMPILE_VERSION
     defaultConfig {
-        minSdkVersion min_sdk_version
-        targetSdkVersion target_sdk_version
-        versionName mozo_sdk_version_name
+        minSdkVersion MIN_VERSION
+        targetSdkVersion TARGET_VERSION
+        versionName PUBLISH_VERSION
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "SDK_VERSION", "\"$mozo_sdk_version_name\""
+        buildConfigField "String", "SDK_VERSION", "\"$PUBLISH_VERSION\""
     }
 
     buildTypes {
@@ -63,12 +73,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
-    implementation 'com.google.android:flexbox:2.0.1'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.material:material:1.3.0'
 
     // Kotlin X
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_x_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_x_version"
 
@@ -96,4 +105,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
-apply from: 'publish.gradle'
+apply from: "${rootDir}/scripts/publish-module.gradle"

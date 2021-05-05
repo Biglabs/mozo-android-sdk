@@ -1,5 +1,5 @@
 # Mozo Android SDK
-[ ![Download](https://api.bintray.com/packages/mozocoin/MozoSDK/mozo-sdk/images/download.svg) ](https://bintray.com/mozocoin/MozoSDK/mozo-sdk/_latestVersion) 
+[ ![Download](https://img.shields.io/badge/maven%20central-0.2.4-blue) ](https://search.maven.org/search?q=mozo-sdk)
 [ ![Android min version](https://img.shields.io/badge/Android-21+-brightgreen) ](#)
 [ ![Kotlin version](https://img.shields.io/badge/Kotlin-1.4.31-blue) ](#)
 
@@ -14,9 +14,7 @@ allprojects {
     repositories {
         // ...
 
-        maven {
-            url  "https://dl.bintray.com/mozocoin/MozoSDK"
-        }
+        mavenCentral()
     }
 }
 ```
@@ -24,7 +22,7 @@ allprojects {
 * Add this library as a dependency in your `app/build.gradle` file.
 <pre>
 dependencies {
-    implementation 'io.mozocoin:mozo-sdk:<a href="https://bintray.com/mozocoin/MozoSDK/mozo-sdk/_latestVersion" title="Latest version">LATEST_VERSION</a>'
+    implementation 'io.mozocoin:mozo-sdk:<a href="https://search.maven.org/search?q=mozo-sdk" title="Latest version">LATEST_VERSION</a>'
 }
 </pre>
 
