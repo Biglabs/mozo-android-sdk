@@ -14,7 +14,7 @@ data class Todo(
             data?.customTitle
         }
         else -> {
-            context.getString(type.title)
+            data?.customTitle ?: context.getString(type.title)
         }
     }
 
@@ -23,7 +23,7 @@ data class Todo(
             data?.customAction
         }
         else -> {
-            context.getString(type.action)
+            data?.customAction ?: context.getString(type.action)
         }
     }
 
