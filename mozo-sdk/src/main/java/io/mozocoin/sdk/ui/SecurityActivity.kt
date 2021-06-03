@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.core.view.postDelayed
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.databinding.ViewWalletAutoPinNoticeBinding
 import io.mozocoin.sdk.databinding.ViewWalletConfirmPhrasesBinding
@@ -230,7 +231,7 @@ internal class SecurityActivity : BaseActivity() {
             isShowAutoPinNotice = !it.isSelected
         }
 
-        bindingPin.root.postDelayed(10000) {
+        bindingPin.root.postDelayed(Constant.AUTO_PIN_WAITING_TIMER) {
             SharedPrefsUtils.setShowAutoPinNotice(isShowAutoPinNotice)
             executeAutoPin()
         }
