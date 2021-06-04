@@ -8,7 +8,7 @@ plugins {
 ext {
     PUBLISH_ARTIFACT_ID = 'mozo-sdk'
     PUBLISH_GROUP_ID = 'io.mozocoin'
-    PUBLISH_VERSION = '0.2.4-beta09'
+    PUBLISH_VERSION = '0.2.4-beta10'
     PUBLISH_DESCRIPTION = 'MozoSDK for Android'
     PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
 }
@@ -89,7 +89,11 @@ dependencies {
     implementation("com.google.guava:guava:30.1-android")
     implementation 'org.bitcoinj:bitcoinj-core:0.15.3'
     implementation 'org.cryptonode.jncryptor:jncryptor:1.2.0'
-    implementation 'org.web3j:core:4.6.0-android'
+    implementation("org.web3j:core:4.6.0-android") {
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+    }
+    // To prevent Polymorphic Typing issue in FasterXML jackson-databind
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
 
     // Other
     api 'com.journeyapps:zxing-android-embedded:4.1.0'
