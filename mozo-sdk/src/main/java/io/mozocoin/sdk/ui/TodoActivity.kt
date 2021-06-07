@@ -116,7 +116,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
 
             data.clear()
             data.addAll(newData)
-            emptyView?.visibility = if (itemCount == 0) View.VISIBLE else View.GONE
+            emptyView?.visibility = if (data.size == 0) View.VISIBLE else View.GONE
             diffResult.dispatchUpdatesTo(this)
         }
 
