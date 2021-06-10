@@ -70,6 +70,8 @@ internal class TransactionFormActivity : BaseActivity() {
         bindingForm = ViewTransactionFormBinding.inflate(layoutInflater)
         bindingSent = ViewTransactionSentBinding.inflate(layoutInflater)
         setContentView(bindingForm.root)
+        bindingForm.outputAmountRate.alpha = if (Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
+        bindingForm.textPreviewRate.alpha = if (Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
 
         MozoSDK.getInstance().contactViewModel.fetchData(this)
         mPhoneContactUtils = PhoneContactUtils(bindingForm.outputReceiverAddress) {
@@ -243,8 +245,6 @@ internal class TransactionFormActivity : BaseActivity() {
             bindingForm.outputAmountLabel.isSelected = hasFocus
             bindingForm.outputAmountUnderline.isSelected = hasFocus
         }
-        bindingForm.outputAmountRate.alpha = if (Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
-        bindingForm.textPreviewRate.alpha = if (Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
 
         bindingForm.transferToolbar.onBackPress = { onBackPressed() }
         bindingForm.buttonAddressBook.click { AddressBookActivity.startForResult(this, KEY_PICK_ADDRESS) }
@@ -295,13 +295,13 @@ internal class TransactionFormActivity : BaseActivity() {
     private fun showInputUI() {
         bindingForm.outputReceiverAddress.isEnabled = true
         bindingForm.outputAmount.isEnabled = true
+        bindingForm.outputAmountRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
         visible(
                 bindingForm.outputReceiverAddress,
                 bindingForm.outputReceiverAddressUnderline,
                 bindingForm.buttonAddressBook,
                 bindingForm.buttonScanQr,
                 bindingForm.outputAmount,
-                bindingForm.outputAmountRate,
                 bindingForm.outputAmountUnderline
         )
         gone(
@@ -389,6 +389,7 @@ internal class TransactionFormActivity : BaseActivity() {
                     userContactsObserver
             )
             setContentView(bindingSent.root)
+            bindingSent.textPreviewRateSent.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
 
             bindingSent.transferCompletedTitle.setText(R.string.mozo_transfer_action_complete)
             bindingSent.textPreviewAmountSent.text = history.amountDisplay()

@@ -88,7 +88,7 @@ class MozoWalletView : ConstraintLayout {
         textAddressView = find(R.id.mozo_wallet_address)
         textBalanceView = find(R.id.mozo_wallet_balance_value)
         textCurrencyBalanceView = find(R.id.mozo_wallet_currency_balance)
-        textCurrencyBalanceView?.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+        textCurrencyBalanceView?.alpha = if (Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
         imageAddressQRView = find(R.id.mozo_wallet_qr_image)
         buttonShowQRCode = find(R.id.mozo_wallet_qr_image_button)
 

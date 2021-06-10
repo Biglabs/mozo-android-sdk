@@ -52,7 +52,7 @@ internal class ContactRecyclerAdapter(
          */
         val otherContact = arrayListOf<Contact>()
         contacts.map { c ->
-            if (c.name.isNullOrEmpty() || c.name[0].toUpperCase() < 'A' || c.name[0].toUpperCase() > 'Z') {
+            if (c.name.isNullOrEmpty() || c.name[0].uppercaseChar() < 'A' || c.name[0].uppercaseChar() > 'Z') {
                 if (Locale.getDefault().language == Locale.KOREA.language && OrderingByKorean.isKorean(c.name?.getOrNull(0)))
                     return@map
 

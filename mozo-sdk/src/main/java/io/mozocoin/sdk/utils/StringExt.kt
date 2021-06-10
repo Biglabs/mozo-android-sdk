@@ -66,7 +66,8 @@ fun String.isNumeric(): Boolean {
     return matches(p)
 }
 
-fun String.equalsIgnoreCase(other: String?) = this.toLowerCase(Locale.getDefault()).contentEquals(other.safe().toLowerCase(Locale.getDefault()))
+fun String.equalsIgnoreCase(other: String?) = this.lowercase(Locale.getDefault())
+    .contentEquals(other.safe().lowercase(Locale.getDefault()))
 
 fun String?.safe() = this ?: ""
 

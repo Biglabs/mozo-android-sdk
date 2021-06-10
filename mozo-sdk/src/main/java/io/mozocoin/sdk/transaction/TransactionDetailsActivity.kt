@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.PaymentRequest
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.contact.AddressAddActivity
@@ -43,7 +44,7 @@ internal class TransactionDetailsActivity : BaseActivity() {
 
         binding = ViewTransactionDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        binding.textDetailAmountRateSide.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
         when {
             mHistory != null -> {
                 mAmount = mHistory!!.amountInDecimal()

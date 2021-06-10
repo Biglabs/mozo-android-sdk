@@ -17,6 +17,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.model.PaymentRequest
 import io.mozocoin.sdk.contact.AddressBookActivity
@@ -54,6 +55,8 @@ class PaymentRequestSendFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.paymentRequestRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+
         mPhoneContactUtils = PhoneContactUtils(binding.outputReceiverAddress) {
             selectedContact = it
             showContactInfoUI()
@@ -129,8 +132,10 @@ class PaymentRequestSendFragment : Fragment() {
 
             mListener?.onSendRequestClicked(
                     amount,
-                    (selectedContact?.soloAddress
-                            ?: binding.outputReceiverAddress.text.toString()).toLowerCase(Locale.getDefault()),
+                (selectedContact?.soloAddress
+                                        ?: binding.outputReceiverAddress.text.toString()).lowercase(
+                    Locale.getDefault()
+                ),
                     PaymentRequest(content = content)
             )
         }

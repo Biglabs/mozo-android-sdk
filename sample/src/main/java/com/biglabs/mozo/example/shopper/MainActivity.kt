@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleNotification(intent: Intent?) {
         intent?.let {
-            MozoNotification.openDetails(this, it)
+            MozoNotification.handleAction(this, it)
         }
     }
 
