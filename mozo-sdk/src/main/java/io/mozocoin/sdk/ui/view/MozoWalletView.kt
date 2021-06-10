@@ -10,10 +10,12 @@ import android.widget.TextView
 import androidx.annotation.IntDef
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.doOnLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.Profile
 import io.mozocoin.sdk.ui.dialog.QRCodeDialog
@@ -86,6 +88,7 @@ class MozoWalletView : ConstraintLayout {
         textAddressView = find(R.id.mozo_wallet_address)
         textBalanceView = find(R.id.mozo_wallet_balance_value)
         textCurrencyBalanceView = find(R.id.mozo_wallet_currency_balance)
+        textCurrencyBalanceView?.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
         imageAddressQRView = find(R.id.mozo_wallet_qr_image)
         buttonShowQRCode = find(R.id.mozo_wallet_qr_image_button)
 

@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import io.mozocoin.sdk.MozoWallet
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.databinding.FragmentPaymentCreateBinding
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.onAmountInputChanged
@@ -34,29 +36,27 @@ class PaymentTabCreateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initUI()
+        binding.outputAmount.onAmountInputChanged(
+            textChanged = {
+                if (it.isNullOrEmpty()) {
+                    binding.outputAmountRate.text = ""
+                    return@onAmountInputChanged
+                }
+
+            },
+            amountChanged = {
+                mInputAmount = it
+                binding.outputAmountRate.text = MozoWallet.getInstance().amountInCurrency(mInputAmount)
+
+                updateSubmitButton()
+            }
+        )
+
+        binding.outputAmountRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
 
         binding.buttonSubmit.click {
             mListener?.onCreateRequestClicked(mInputAmount.toString())
         }
-    }
-
-    private fun initUI() {
-        binding.outputAmount.onAmountInputChanged(
-                textChanged = {
-                    if (it.isNullOrEmpty()) {
-                        binding.outputAmountRate.text = ""
-                        return@onAmountInputChanged
-                    }
-
-                },
-                amountChanged = {
-                    mInputAmount = it
-                    binding.outputAmountRate.text = MozoWallet.getInstance().amountInCurrency(mInputAmount)
-
-                    updateSubmitButton()
-                }
-        )
     }
 
     private fun updateSubmitButton() {

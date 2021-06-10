@@ -7,6 +7,7 @@ class Constant {
         const val PAGING_START_INDEX = 0
         const val PAGING_SIZE = 100
         const val LIST_VISIBLE_THRESHOLD = 10
+        const val SHOW_MOZO_EQUIVALENT_CURRENCY = false
 
         const val STATUS_SUCCESS = "SUCCESS"
         const val STATUS_FAILED = "FAILED"

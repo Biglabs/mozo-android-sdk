@@ -161,17 +161,13 @@
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/lo_success"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@android:color/white"
                 android:clickable="true"
                 android:focusable="false"
                 android:visibility="gone"
                 app:constraint_referenced_ids="img_check,txt_describe"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="KeyboardInaccessibleWidget" />
 
             <io.mozocoin.sdk.ui.view.MozoIconTextView

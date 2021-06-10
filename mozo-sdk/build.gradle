@@ -8,7 +8,7 @@ plugins {
 ext {
     PUBLISH_ARTIFACT_ID = 'mozo-sdk'
     PUBLISH_GROUP_ID = 'io.mozocoin'
-    PUBLISH_VERSION = '0.2.4-beta11'
+    PUBLISH_VERSION = '0.2.4-beta12'
     PUBLISH_DESCRIPTION = 'MozoSDK for Android'
     PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
 }
@@ -101,7 +101,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'org.java-websocket:Java-WebSocket:1.5.1'
     api 'io.michaelrocks:libphonenumber-android:8.12.22'
-    api 'io.coil-kt:coil:1.2.0'
+    api 'io.coil-kt:coil:1.2.2'
 
     // test
     testImplementation 'junit:junit:4.13.2'

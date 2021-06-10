@@ -69,6 +69,7 @@ internal class ConvertOnChainActivity : BaseActivity() {
                 }
             }
         }
+        binding.inputConvertAmountRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
 
         binding.convertGasPriceSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {

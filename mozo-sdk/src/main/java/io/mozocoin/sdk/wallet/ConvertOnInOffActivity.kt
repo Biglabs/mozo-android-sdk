@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.TransferSpeed
 import io.mozocoin.sdk.common.model.BalanceInfo
 import io.mozocoin.sdk.common.model.ConvertRequest
@@ -49,6 +50,7 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
         }
         binding.convertOnChainAmount.text = mBalanceOfOnchain?.balanceNonDecimal().displayString()
         binding.convertOnChainAmountRate.text = MozoWallet.getInstance().amountInCurrency(mBalanceOfOnchain?.balance.safe())
+        binding.convertOnChainAmountRate.alpha = if(Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
 
         binding.convertGasPriceSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
