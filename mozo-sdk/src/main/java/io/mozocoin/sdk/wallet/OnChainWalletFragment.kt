@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -11,6 +12,7 @@ import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.Profile
@@ -72,6 +74,8 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         binding.walletFragmentOnConvert.click {
             ConvertOnChainActivity.start(context ?: return@click)
         }
+
+        binding.walletFragmentOnTokenCurrency.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
     }
 
     override fun onResume() {

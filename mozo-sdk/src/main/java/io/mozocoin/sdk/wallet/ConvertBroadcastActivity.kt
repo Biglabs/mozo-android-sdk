@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.TransferSpeed
 import io.mozocoin.sdk.common.model.ConvertRequest
@@ -44,6 +45,11 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         }
         binding = ActivityConvertBroadcastBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.flipPageConfirm.convertAmountOnChainRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+        binding.flipPageConfirm.convertAmountOffChainRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+        binding.flipPageResult.convertBroadcastResultAmountRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+
         updateUI()
 
         binding.flipPageConfirm.buttonConfirm.click {

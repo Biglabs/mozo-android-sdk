@@ -15,6 +15,7 @@ import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.model.Contact
 import io.mozocoin.sdk.common.model.TransactionHistory
@@ -242,6 +243,8 @@ internal class TransactionFormActivity : BaseActivity() {
             bindingForm.outputAmountLabel.isSelected = hasFocus
             bindingForm.outputAmountUnderline.isSelected = hasFocus
         }
+        bindingForm.outputAmountRate.alpha = if (Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
+        bindingForm.textPreviewRate.alpha = if (Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
 
         bindingForm.transferToolbar.onBackPress = { onBackPressed() }
         bindingForm.buttonAddressBook.click { AddressBookActivity.startForResult(this, KEY_PICK_ADDRESS) }

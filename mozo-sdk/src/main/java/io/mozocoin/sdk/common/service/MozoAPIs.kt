@@ -43,7 +43,7 @@ internal interface MozoAPIs {
     /**
      * Profile APIs
      */
-    @GET("${MozoAPIsService.APIS_STORE}/user-profile")
+    @GET("${MozoAPIsService.APIS_STORE}/user-profile/v1")
     fun getProfile(): Call<Base<Profile>>
 
     @PUT("${MozoAPIsService.APIS_STORE}/user-profile")
