@@ -50,7 +50,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                         /* Save notification to local storage */
                         // MozoNotification.save(broadcast)
 
-                        when (broadcast.event.toLowerCase(Locale.getDefault())) {
+                        when (broadcast.event.lowercase(Locale.getDefault())) {
                             /* Reload balance */
                             Constant.NOTIFY_EVENT_AIRDROP_INVITE -> {
                                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context)

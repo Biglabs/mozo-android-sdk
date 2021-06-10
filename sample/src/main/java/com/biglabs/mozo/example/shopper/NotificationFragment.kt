@@ -27,7 +27,7 @@ class NotificationFragment : Fragment() {
                 notifications[index] = it
                 adapter.notifyDataSetChanged()
             }
-            MozoNotification.openDetails(requireContext(), notification)
+            MozoNotification.handleAction(requireContext(), notification)
         }
     }
     private var notifications = arrayListOf<Notification>()

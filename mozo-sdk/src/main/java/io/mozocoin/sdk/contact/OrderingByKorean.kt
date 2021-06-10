@@ -13,8 +13,8 @@ object OrderingByKorean {
         get() = Comparator { left, right -> compare(left, right) }
 
     private fun compare(l: String, r: String): Int {
-        val left = l.toUpperCase(Locale.getDefault()).replace(" ", "")
-        val right = r.toUpperCase(Locale.getDefault()).replace(" ", "")
+        val left = l.uppercase(Locale.getDefault()).replace(" ", "")
+        val right = r.uppercase(Locale.getDefault()).replace(" ", "")
 
         val minLen = min(left.length, right.length)
 

@@ -300,8 +300,10 @@ class MozoAuth private constructor() {
                 return@getProfile
             }
 
+
+
             GlobalScope.launch {
-                doSaveUserInfoAsync(data).await()
+                doSaveUserInfoAsync(data)
                 MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
                     if (
                             it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
@@ -332,7 +334,7 @@ class MozoAuth private constructor() {
             GlobalScope.launch {
                 mozoDB.profile().save(profile)
                 /* save User info first */
-                doSaveUserInfoAsync(profile).await()
+                doSaveUserInfoAsync(profile)
 
                 MozoSDK.getInstance().profileViewModel.updateProfile(context, profile)
 
@@ -349,7 +351,7 @@ class MozoAuth private constructor() {
                     profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
                     mozoDB.profile().save(profile)
                     /* save User info first */
-                    doSaveUserInfoAsync(profile).await()
+                    doSaveUserInfoAsync(profile)
 
                     MozoSDK.getInstance().profileViewModel.updateProfile(context, profile)
                 }
@@ -360,7 +362,7 @@ class MozoAuth private constructor() {
         }
     }
 
-    private fun doSaveUserInfoAsync(profile: Profile) = GlobalScope.async {
+    private suspend fun doSaveUserInfoAsync(profile: Profile): UserInfo {
         mozoDB.userInfo().deleteAll()
 
         val userInfo = UserInfo(
@@ -375,7 +377,7 @@ class MozoAuth private constructor() {
         mozoDB.userInfo().save(userInfo)
         MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
 
-        return@async userInfo
+        return userInfo
     }
 
 

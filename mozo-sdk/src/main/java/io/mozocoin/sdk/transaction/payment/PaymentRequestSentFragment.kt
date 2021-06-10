@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.databinding.FragmentPaymentSentBinding
 import io.mozocoin.sdk.utils.displayString
 import io.mozocoin.sdk.utils.gone
@@ -25,6 +26,7 @@ class PaymentRequestSentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.paymentRequestRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
 
         /*payment_request_address.text = MozoSDK.getInstance()
                 .contactViewModel

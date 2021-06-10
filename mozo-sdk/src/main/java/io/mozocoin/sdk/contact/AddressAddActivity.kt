@@ -91,7 +91,7 @@ internal class AddressAddActivity : BaseActivity() {
 
         fun start(context: Context, address: String?) {
             Intent(context, AddressAddActivity::class.java).apply {
-                putExtra(FLAG_ADDRESS, address?.toLowerCase(Locale.getDefault()))
+                putExtra(FLAG_ADDRESS, address?.lowercase(Locale.getDefault()))
                 context.startActivity(this)
             }
         }

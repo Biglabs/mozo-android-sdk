@@ -41,7 +41,7 @@ class MozoNotification private constructor() {
 
     private var mShowGroupNotifyJob: Job? = null
 
-    internal fun showNotification(message: BroadcastDataContent) = GlobalScope.launch {
+    internal fun showNotification(message: BroadcastDataContent) = MainScope().launch {
         notifyActivityClass ?: return@launch
 
         val context = MozoSDK.getInstance().context
@@ -49,45 +49,49 @@ class MozoNotification private constructor() {
         val notificationGroup = NotificationGroup.getKey(message)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-                !notificationChannelExists(message.event ?: return@launch)) {
-            createChannel(message.event).join()
+            !notificationChannelExists(message.event ?: return@launch)
+        ) {
+            createChannel(message.event)
         }
 
         val intentUniqueId = (System.currentTimeMillis() and 0xfffffff).toInt()
         val pendingIntent = PendingIntent.getActivity(
-                context,
-                intentUniqueId,
-                prepareDataIntent(notification, message),
-                PendingIntent.FLAG_UPDATE_CURRENT
+            context,
+            intentUniqueId,
+            prepareDataIntent(notification, message),
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            else PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val singleNotify =
-                NotificationCompat.Builder(context, message.event ?: return@launch).apply {
-                    color = context.color(R.color.mozo_color_primary)
-                    setSmallIcon(R.drawable.ic_mozo_notification)
-                    setContentTitle(notification.titleDisplay())
-                    setContentText(notification.contentDisplay())
-                    setAutoCancel(true)
-                    setDefaults(android.app.Notification.DEFAULT_ALL)
-                    setContentIntent(pendingIntent)
 
-                    if (notification.type != Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
-                        setLargeIcon(context.bitmap(notification.icon()))
-                        setGroup(notificationGroup.name)
-                        extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
-                        extras.putString(EXTRAS_ITEM_DATA, notification.raw)
-                    }
+        val singleNotify =
+            NotificationCompat.Builder(context, message.event ?: return@launch).apply {
+                color = context.color(R.color.mozo_color_primary)
+                setSmallIcon(R.drawable.ic_mozo_notification)
+                setContentTitle(notification.titleDisplay())
+                setContentText(notification.contentDisplay())
+                setAutoCancel(true)
+                setDefaults(android.app.Notification.DEFAULT_ALL)
+                setContentIntent(pendingIntent)
+
+                if (notification.type != Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
+                    setLargeIcon(context.bitmap(notification.icon()))
+                    setGroup(notificationGroup.name)
+                    extras.putString(EXTRAS_ITEM_AMOUNT, message.amount?.toString())
+                    extras.putString(EXTRAS_ITEM_DATA, notification.raw)
                 }
+            }
 
         val id = atomicInteger.incrementAndGet()
         NotificationManagerCompat.from(context).notify(id, singleNotify.build())
 
         if (notification.type != Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
             return@launch doGroupNotificationDelayed(
-                    context,
-                    message,
-                    notification,
-                    notificationGroup,
-                    pendingIntent
+                context,
+                message,
+                notification,
+                notificationGroup,
+                pendingIntent
             )
         }
 
@@ -96,9 +100,9 @@ class MozoNotification private constructor() {
                 drawable?.toBitmap()?.let { bm ->
                     singleNotify.setLargeIcon(bm)
                     singleNotify.setStyle(
-                            NotificationCompat.BigPictureStyle()
-                                    .bigPicture(bm)
-                                    .bigLargeIcon(null)
+                        NotificationCompat.BigPictureStyle()
+                            .bigPicture(bm)
+                            .bigLargeIcon(null)
                     )
                 }
                 NotificationManagerCompat.from(context).notify(id, singleNotify.build())
@@ -107,11 +111,11 @@ class MozoNotification private constructor() {
     }
 
     private fun doGroupNotificationDelayed(
-            context: Context,
-            message: BroadcastDataContent,
-            notify: Notification,
-            notifyGroup: NotificationGroup,
-            pendingIntent: PendingIntent
+        context: Context,
+        message: BroadcastDataContent,
+        notify: Notification,
+        notifyGroup: NotificationGroup,
+        pendingIntent: PendingIntent
     ) {
 
         mShowGroupNotifyJob?.cancel()
@@ -119,78 +123,84 @@ class MozoNotification private constructor() {
             delay(2000)
 
             val group = NotificationCompat.Builder(context, message.event ?: return@launch)
-                    .apply {
-                        val line = TextUtils.concat(notify.titleDisplay(), " ", notify.contentDisplay())
-                        val items = NotificationGroup.getItems(context, notificationManager, message)
-                        val title = NotificationGroup.getContentTitle(
-                                context,
-                                message,
-                                count = items?.size ?: 0
-                        ) ?: line
-                        val totalText = NotificationGroup.getContentText(
-                                context,
-                                notificationManager,
-                                notifyGroup
-                        ) ?: line
+                .apply {
+                    val line = TextUtils.concat(notify.titleDisplay(), " ", notify.contentDisplay())
+                    val items = NotificationGroup.getItems(context, notificationManager, message)
+                    val title = NotificationGroup.getContentTitle(
+                        context,
+                        message,
+                        count = items?.size ?: 0
+                    ) ?: line
+                    val totalText = NotificationGroup.getContentText(
+                        context,
+                        notificationManager,
+                        notifyGroup
+                    ) ?: line
 
-                        setStyle(NotificationCompat.InboxStyle().run {
-                            items?.forEach { addLine(it) }
-                                    ?: addLine(line)
-                            setBigContentTitle(title)
-                        })
+                    setStyle(NotificationCompat.InboxStyle().run {
+                        items?.forEach { addLine(it) }
+                            ?: addLine(line)
+                        setBigContentTitle(title)
+                    })
 
-                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M)
-                            setContentIntent(pendingIntent)
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M)
+                        setContentIntent(pendingIntent)
 
-                        color = context.color(R.color.mozo_color_primary)
-                        setAutoCancel(true)
-                        setContentTitle(title)
-                        setDefaults(android.app.Notification.DEFAULT_ALL)
-                        setGroup(notifyGroup.name)
-                        setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
-                        setGroupSummary(true)
-                        setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
-                        setNumber(items?.size ?: 0)
-                        setSmallIcon(R.drawable.ic_mozo_notification)
-                        setSubText(totalText)
-                    }
+                    color = context.color(R.color.mozo_color_primary)
+                    setAutoCancel(true)
+                    setContentTitle(title)
+                    setDefaults(android.app.Notification.DEFAULT_ALL)
+                    setGroup(notifyGroup.name)
+                    setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                    setGroupSummary(true)
+                    setLargeIcon(context.bitmap(NotificationGroup.getIcon(message.event)))
+                    setNumber(items?.size ?: 0)
+                    setSmallIcon(R.drawable.ic_mozo_notification)
+                    setSubText(totalText)
+                }
             NotificationManagerCompat.from(context).notify(notifyGroup.id, group.build())
         }
     }
 
-    private fun getImage(context: Context, imageID: String, completion: ((Drawable?) -> Unit)? = null) {
+    private fun getImage(
+        context: Context,
+        imageID: String,
+        completion: ((Drawable?) -> Unit)? = null
+    ) {
         val url = "https://${Support.domainImage()}/api/public/$imageID"
         val request = ImageRequest.Builder(context)
-                .data(url)
-                .target(
-                        onSuccess = { result ->
-                            // Handle the successful result.
-                            completion?.invoke(result)
-                        },
-                        onError = { _ ->
-                            completion?.invoke(null)
-                        }
-                )
-                .build()
+            .data(url)
+            .target(
+                onSuccess = { result ->
+                    // Handle the successful result.
+                    completion?.invoke(result)
+                },
+                onError = { _ ->
+                    completion?.invoke(null)
+                }
+            )
+            .build()
         context.imageLoader.enqueue(request)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel(channel: String) = MainScope().launch {
+    private suspend fun createChannel(channel: String) = coroutineScope {
         var channelName = channel.split("_")[0]
         channelName =
-                channelName.substring(0, 1).toUpperCase(Locale.getDefault()) + channelName.substring(1)
+            channelName.substring(0, 1).uppercase(Locale.getDefault()) + channelName.substring(1)
 
         val notificationChannel =
-                NotificationChannel(channel, channelName, NotificationManager.IMPORTANCE_HIGH)
+            NotificationChannel(channel, channelName, NotificationManager.IMPORTANCE_HIGH)
         notificationChannel.setShowBadge(true)
         notificationChannel.lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
         notificationManager.createNotificationChannel(notificationChannel)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun notificationChannelExists(channelId: String): Boolean = notificationManager.getNotificationChannel(
-            channelId) != null
+    private fun notificationChannelExists(channelId: String): Boolean =
+        notificationManager.getNotificationChannel(
+            channelId
+        ) != null
 
 
     companion object {
@@ -210,31 +220,34 @@ class MozoNotification private constructor() {
 
         internal fun shouldShowNotification(event: String?) = (if (MozoSDK.isRetailerApp)
             arrayOf(
-                    Constant.NOTIFY_EVENT_AIRDROPPED,
-                    Constant.NOTIFY_EVENT_AIRDROP_INVITE,
-                    Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
-                    Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
-                    Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER,
-                    Constant.NOTIFY_EVENT_BALANCE_CHANGED,
-                    Constant.NOTIFY_EVENT_CUSTOMER_CAME,
-                    Constant.NOTIFY_EVENT_PROMO_PURCHASED,
-                    Constant.NOTIFY_EVENT_GROUP_BROADCAST
+                Constant.NOTIFY_EVENT_AIRDROPPED,
+                Constant.NOTIFY_EVENT_AIRDROP_INVITE,
+                Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
+                Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
+                Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER,
+                Constant.NOTIFY_EVENT_BALANCE_CHANGED,
+                Constant.NOTIFY_EVENT_CUSTOMER_CAME,
+                Constant.NOTIFY_EVENT_PROMO_PURCHASED,
+                Constant.NOTIFY_EVENT_GROUP_BROADCAST
             ) else
             arrayOf(
-                    Constant.NOTIFY_EVENT_AIRDROPPED,
-                    Constant.NOTIFY_EVENT_AIRDROP_INVITE,
-                    Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
-                    Constant.NOTIFY_EVENT_BALANCE_CHANGED,
-                    Constant.NOTIFY_EVENT_PROMO_USED,
-                    Constant.NOTIFY_EVENT_GROUP_BROADCAST,
-                    Constant.NOTIFY_EVENT_WARNING_COVID,
-                    Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD
-            )).contains(event?.toLowerCase(Locale.ROOT)) && MozoSDK.shouldShowNotification
+                Constant.NOTIFY_EVENT_AIRDROPPED,
+                Constant.NOTIFY_EVENT_AIRDROP_INVITE,
+                Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
+                Constant.NOTIFY_EVENT_BALANCE_CHANGED,
+                Constant.NOTIFY_EVENT_PROMO_USED,
+                Constant.NOTIFY_EVENT_GROUP_BROADCAST,
+                Constant.NOTIFY_EVENT_WARNING_COVID,
+                Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD
+            )).contains(event?.lowercase(Locale.ROOT)) && MozoSDK.shouldShowNotification
 
         @Synchronized
-        internal fun prepareDataIntent(message: Notification, broadcastContent: BroadcastDataContent): Intent = Intent(
-                MozoSDK.getInstance().context,
-                getInstance().notifyActivityClass
+        internal fun prepareDataIntent(
+            message: Notification,
+            broadcastContent: BroadcastDataContent
+        ): Intent = Intent(
+            MozoSDK.getInstance().context,
+            getInstance().notifyActivityClass
         ).apply {
             putExtra(KEY_DATA, Gson().toJson(message))
             if (message.type == Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD) {
@@ -262,8 +275,8 @@ class MozoNotification private constructor() {
         @JvmStatic
         fun prepareNotification(context: Context, message: BroadcastDataContent): Notification {
             val isSendType = message.from.equals(
-                    MozoSDK.getInstance().profileViewModel.getProfile()?.walletInfo?.offchainAddress,
-                    ignoreCase = true
+                MozoSDK.getInstance().profileViewModel.getProfile()?.walletInfo?.offchainAddress,
+                ignoreCase = true
             )
 
             var title = ""
@@ -272,13 +285,13 @@ class MozoNotification private constructor() {
 
             } else if (message.amount != null) {
                 title = context.getString(
-                        when (message.event ?: "") {
-                            Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
-                            Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
-                            Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER -> R.string.mozo_notify_title_airdrop_bonus
-                            else -> if (isSendType) R.string.mozo_notify_title_sent else R.string.mozo_notify_title_received
-                        },
-                        Support.toAmountNonDecimal(message.amount, message.decimal).displayString()
+                    when (message.event ?: "") {
+                        Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
+                        Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
+                        Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER -> R.string.mozo_notify_title_airdrop_bonus
+                        else -> if (isSendType) R.string.mozo_notify_title_sent else R.string.mozo_notify_title_received
+                    },
+                    Support.toAmountNonDecimal(message.amount, message.decimal).displayString()
                 )
             }
 
@@ -287,7 +300,7 @@ class MozoNotification private constructor() {
             when (message.event ?: "") {
                 Constant.NOTIFY_EVENT_AIRDROPPED -> {
                     content =
-                            context.getString(R.string.mozo_notify_content_from, message.storeName)
+                        context.getString(R.string.mozo_notify_content_from, message.storeName)
                 }
                 Constant.NOTIFY_EVENT_AIRDROP_INVITE -> {
                     val phone = message.phoneNo?.censor(3, 4) ?: ""
@@ -304,9 +317,9 @@ class MozoNotification private constructor() {
                 }
                 Constant.NOTIFY_EVENT_CUSTOMER_CAME -> {
                     title = context.resources.getQuantityString(
-                            if (message.isComeIn) R.plurals.mozo_notify_title_come_in
-                            else R.plurals.mozo_notify_title_leave,
-                            1
+                        if (message.isComeIn) R.plurals.mozo_notify_title_come_in
+                        else R.plurals.mozo_notify_title_leave,
+                        1
                     )
                     message.phoneNo?.let {
                         content = it.censor(3, 4)
@@ -314,8 +327,10 @@ class MozoNotification private constructor() {
                 }
                 Constant.NOTIFY_EVENT_PROMO_USED -> {
                     title = context.getString(R.string.mozo_notify_title_promo_used)
-                    content = context.getString(R.string.mozo_notify_title_promo_used_content,
-                            message.storeName)
+                    content = context.getString(
+                        R.string.mozo_notify_title_promo_used_content,
+                        message.storeName
+                    )
                 }
                 Constant.NOTIFY_EVENT_PROMO_PURCHASED -> {
                     title = context.getString(R.string.mozo_notify_title_promo_purchased)
@@ -327,7 +342,10 @@ class MozoNotification private constructor() {
                 }
                 Constant.NOTIFY_EVENT_WARNING_COVID -> {
                     title = context.getString(R.string.mozo_notify_title_covid_warning)
-                    content = context.getString(R.string.mozo_notify_content_covid_warning, message.numNewWarningZone)
+                    content = context.getString(
+                        R.string.mozo_notify_content_covid_warning,
+                        message.numNewWarningZone
+                    )
                 }
                 Constant.NOTIFY_EVENT_LUCKY_DRAW_AWARD -> {
                     title = context.getString(R.string.mozo_notify_title_lucky_draw)
@@ -337,17 +355,19 @@ class MozoNotification private constructor() {
                     val address = if (isSendType) message.to else message.from
                     val contact = MozoWallet.getInstance().findContact(address)
                     content = context.getString(
-                            if (isSendType) R.string.mozo_notify_content_to else R.string.mozo_notify_content_from,
-                            contact?.name ?: address
+                        if (isSendType) R.string.mozo_notify_content_to else R.string.mozo_notify_content_from,
+                        contact?.name ?: address
                     )
                 }
             }
-            return Notification(isSend = isSendType,
-                    title = title,
-                    content = content,
-                    type = message.event
-                            ?: "",
-                    time = message.time).apply {
+            return Notification(
+                isSend = isSendType,
+                title = title,
+                content = content,
+                type = message.event
+                    ?: "",
+                time = message.time
+            ).apply {
                 raw = Gson().toJson(message)
             }
         }
@@ -359,12 +379,12 @@ class MozoNotification private constructor() {
             }
             GlobalScope.launch {
                 val itemId = MozoDatabase.getInstance(MozoSDK.getInstance().context)
-                        .notifications()
-                        .save(prepareNotification(MozoSDK.getInstance().context, data))
+                    .notifications()
+                    .save(prepareNotification(MozoSDK.getInstance().context, data))
 
                 val result = MozoDatabase.getInstance(MozoSDK.getInstance().context)
-                        .notifications()
-                        .get(itemId)
+                    .notifications()
+                    .get(itemId)
 
                 withContext(Dispatchers.Main) {
                     getInstance().onNotificationReceiveListener?.onReceived(result)
@@ -373,36 +393,39 @@ class MozoNotification private constructor() {
         }
 
         @Synchronized
-        internal fun openDetails(context: Context, data: String) {
-            try {
-                Gson().run {
+        internal fun handleAction(context: Context, data: String): Boolean {
+            return try {
+                val rawData = Gson().run {
                     if (data.contains("raw", ignoreCase = true)) {
-                        fromJson(fromJson(data, Notification::class.java).raw,
-                                BroadcastDataContent::class.java)
+                        fromJson(
+                            fromJson(data, Notification::class.java).raw,
+                            BroadcastDataContent::class.java
+                        )
                     } else {
                         fromJson(data, BroadcastDataContent::class.java)
                     }
                 }
-            } catch (e: Exception) {
-                null
-            }?.let {
-                when (it.event) {
+                when (rawData.event) {
                     Constant.NOTIFY_EVENT_AIRDROPPED,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                         val txHistory = TransactionHistory(
-                                blockHeight = 0L,
-                                fees = 0.0,
-                                amount = it.amount.safe(),
-                                addressFrom = it.from,
-                                addressTo = it.to,
-                                symbol = it.symbol,
-                                decimal = it.decimal,
-                                time = it.time / 1000L,
-                                txStatus = Constant.STATUS_SUCCESS
+                            blockHeight = 0L,
+                            fees = 0.0,
+                            amount = rawData.amount.safe(),
+                            addressFrom = rawData.from,
+                            addressTo = rawData.to,
+                            symbol = rawData.symbol,
+                            decimal = rawData.decimal,
+                            time = rawData.time / 1000L,
+                            txStatus = Constant.STATUS_SUCCESS
                         )
                         TransactionDetailsActivity.start(context, txHistory)
+                        true
                     }
+                    else -> false
                 }
+            } catch (e: Exception) {
+                false
             }
         }
 
@@ -410,7 +433,7 @@ class MozoNotification private constructor() {
         fun getAll(callback: (notifications: List<Notification>) -> Unit) {
             GlobalScope.launch {
                 val result =
-                        MozoDatabase.getInstance(MozoSDK.getInstance().context).notifications().getAll()
+                    MozoDatabase.getInstance(MozoSDK.getInstance().context).notifications().getAll()
                 withContext(Dispatchers.Main) { callback.invoke(result) }
             }
         }
@@ -440,8 +463,8 @@ class MozoNotification private constructor() {
             GlobalScope.launch {
                 notification.read = true
                 MozoDatabase.getInstance(MozoSDK.getInstance().context)
-                        .notifications()
-                        .updateRead(notification)
+                    .notifications()
+                    .updateRead(notification)
                 withContext(Dispatchers.Main) { callback.invoke(notification) }
             }
         }
@@ -451,29 +474,31 @@ class MozoNotification private constructor() {
         fun markAllAsRead(callback: (notifications: List<Notification>) -> Unit) {
             GlobalScope.launch {
                 val result = MozoDatabase.getInstance(MozoSDK.getInstance().context)
-                        .notifications()
-                        .getAll()
-                        .map {
-                            it.apply { read = true }
-                        }
+                    .notifications()
+                    .getAll()
+                    .map {
+                        it.apply { read = true }
+                    }
                 MozoDatabase.getInstance(MozoSDK.getInstance().context)
-                        .notifications()
-                        .updateRead(*result.toTypedArray())
+                    .notifications()
+                    .updateRead(*result.toTypedArray())
                 withContext(Dispatchers.Main) { callback.invoke(result) }
             }
         }
 
         @JvmStatic
-        fun openDetails(context: Context, intent: Intent) {
+        fun handleAction(context: Context, intent: Intent): Boolean {
             intent.getStringExtra(KEY_DATA)?.let {
-                openDetails(context, it)
+                return handleAction(context, it)
             }
+
+            return false
         }
 
         @JvmStatic
-        fun openDetails(context: Context, notification: Notification) {
-            notification.raw ?: return
-            openDetails(context, notification.raw!!)
+        fun handleAction(context: Context, notification: Notification): Boolean {
+            notification.raw ?: return false
+            return handleAction(context, notification.raw!!)
         }
     }
 }
