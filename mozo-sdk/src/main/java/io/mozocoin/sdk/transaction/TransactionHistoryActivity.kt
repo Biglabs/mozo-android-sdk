@@ -107,7 +107,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
                     }
 
                     fetchDataJob?.cancel()
-                    fetchDataJob = GlobalScope.launch {
+                    fetchDataJob = MozoSDK.scope.launch {
                         if (currentPage <= Constant.PAGING_START_INDEX) histories.clear()
                         histories.addAll(data.items!!.map {
                             it.apply {

@@ -177,7 +177,7 @@ internal class ChangePinActivity : BaseActivity() {
         }
     }
 
-    private fun verifyCurrentPin(callback: (Boolean) -> Unit) = GlobalScope.launch {
+    private fun verifyCurrentPin(callback: (Boolean) -> Unit) = MozoSDK.scope.launch {
         if (lastInputPin.isNullOrEmpty()) {
             withContext(Dispatchers.Main) { callback.invoke(false) }
         }
@@ -194,7 +194,7 @@ internal class ChangePinActivity : BaseActivity() {
         binding.fragmentResetEnterPin.resetPinEnterPinInput.clearFocus()
         binding.fragmentResetEnterPin.resetPinEnterPinInput.hideKeyboard()
 
-        GlobalScope.launch {
+        MozoSDK.scope.launch {
             val wallet = MozoWallet.getInstance().getWallet()
             if (wallet?.isUnlocked() == true) {
                 wallet.changePin(lastInputPin.toString())

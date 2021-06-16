@@ -16,7 +16,6 @@ import io.mozocoin.sdk.utils.CryptoUtils
 import io.mozocoin.sdk.utils.logAsInfo
 import io.mozocoin.sdk.utils.safe
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
@@ -144,7 +143,7 @@ class MozoTx private constructor() {
                 && callbackToSign != null
                 && SecurityActivity.isNeedCallbackForSign(event.requestCode)
         ) {
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 val wallet = MozoWallet.getInstance().getWallet()?.decrypt(event.pin)
                 "My Wallet: ${wallet.toString()}".logAsInfo(TAG)
                 val credentials = if (isOnChainMessageSigning) wallet?.buildOnChainCredentials() else wallet?.buildOffChainCredentials()

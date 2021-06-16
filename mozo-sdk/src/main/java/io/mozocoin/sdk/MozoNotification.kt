@@ -175,7 +175,7 @@ class MozoNotification private constructor() {
                     // Handle the successful result.
                     completion?.invoke(result)
                 },
-                onError = { _ ->
+                onError = {
                     completion?.invoke(null)
                 }
             )
@@ -377,7 +377,7 @@ class MozoNotification private constructor() {
             if (!shouldShowNotification(data.event)) {
                 return
             }
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 val itemId = MozoDatabase.getInstance(MozoSDK.getInstance().context)
                     .notifications()
                     .save(prepareNotification(MozoSDK.getInstance().context, data))
@@ -431,7 +431,7 @@ class MozoNotification private constructor() {
 
         @JvmStatic
         fun getAll(callback: (notifications: List<Notification>) -> Unit) {
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 val result =
                     MozoDatabase.getInstance(MozoSDK.getInstance().context).notifications().getAll()
                 withContext(Dispatchers.Main) { callback.invoke(result) }
@@ -460,7 +460,7 @@ class MozoNotification private constructor() {
         @Synchronized
         @JvmStatic
         fun markAsRead(notification: Notification, callback: (notification: Notification) -> Unit) {
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 notification.read = true
                 MozoDatabase.getInstance(MozoSDK.getInstance().context)
                     .notifications()
@@ -472,7 +472,7 @@ class MozoNotification private constructor() {
         @Synchronized
         @JvmStatic
         fun markAllAsRead(callback: (notifications: List<Notification>) -> Unit) {
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 val result = MozoDatabase.getInstance(MozoSDK.getInstance().context)
                     .notifications()
                     .getAll()
@@ -491,7 +491,6 @@ class MozoNotification private constructor() {
             intent.getStringExtra(KEY_DATA)?.let {
                 return handleAction(context, it)
             }
-
             return false
         }
 

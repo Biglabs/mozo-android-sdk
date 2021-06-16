@@ -201,7 +201,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     private fun fetchData() {
         fetchDataJob?.cancel()
         fetchDataJobHandler?.cancel()
-        fetchDataJobHandler = GlobalScope.launch {
+        fetchDataJobHandler = MozoSDK.scope.launch {
             delay(1000)
             if (!isAdded || activity == null || _binding == null) return@launch
             if (context == null || currentAddress == null) return@launch
@@ -220,7 +220,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                         return@getTransactionHistory
                     }
 
-                    fetchDataJob = GlobalScope.launch {
+                    fetchDataJob = MozoSDK.scope.launch {
                         histories.clear()
                         histories.addAll(data.items!!.map {
                             it.apply {
@@ -278,7 +278,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
         }
     }
 
-    private fun generateQRImage() = GlobalScope.launch {
+    private fun generateQRImage() = MozoSDK.scope.launch {
         val qrImage = Support.generateQRCode(
             currentAddress ?: return@launch,
             resources.dp2Px(128f).toInt()

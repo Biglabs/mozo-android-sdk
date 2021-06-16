@@ -464,7 +464,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 null
             } else /* PENDING */ {
                 updateTxStatusJob?.cancel()
-                GlobalScope.launch {
+                MozoSDK.scope.launch {
                     delay(1500)
                     updateTxStatus()
                 }

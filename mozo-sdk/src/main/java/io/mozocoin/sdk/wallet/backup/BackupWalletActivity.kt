@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.isVisible
 import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
@@ -66,7 +67,7 @@ internal class BackupWalletActivity : BaseActivity() {
                     finish()
                     return
                 }
-                GlobalScope.launch {
+                MozoSDK.scope.launch {
                     val pin = data?.getStringExtra(SecurityActivity.KEY_DATA)
                     if (pin.isNullOrEmpty()) {
                         finish()

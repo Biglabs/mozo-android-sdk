@@ -248,7 +248,7 @@ class MozoAuth private constructor() {
                     )
                     callback.invoke(userInfo)
 
-                    GlobalScope.launch {
+                    MozoSDK.scope.launch {
                         /* save User info first */
                         mozoDB.userInfo().deleteAll()
                         mozoDB.userInfo().save(userInfo)
@@ -302,7 +302,7 @@ class MozoAuth private constructor() {
 
 
 
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 doSaveUserInfoAsync(data)
                 MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
                     if (
@@ -331,7 +331,7 @@ class MozoAuth private constructor() {
             /**
              * Skip initialize Wallet for Internal apps
              */
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 mozoDB.profile().save(profile)
                 /* save User info first */
                 doSaveUserInfoAsync(profile)
@@ -345,7 +345,7 @@ class MozoAuth private constructor() {
             return
         }
         MozoWallet.getInstance().initWallet(context, profile, walletHelper) {
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 if (it) {
                     /* update local profile to match with server profile */
                     profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }

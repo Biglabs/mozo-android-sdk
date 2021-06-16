@@ -136,7 +136,7 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         generateQRJob = generateQRImage()
     }
 
-    private fun generateQRImage() = GlobalScope.launch {
+    private fun generateQRImage() = MozoSDK.scope.launch {
         val qrImage = Support.generateQRCode(
                 wallet?.onchainAddress ?: return@launch,
                 resources.dp2Px(128f).toInt()

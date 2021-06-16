@@ -68,7 +68,7 @@ class PaymentRequestSendFragment : Fragment() {
         amount ?: return
 
         val content = "mozox:$myAddress?amount=$amount"
-        generateQRJob = GlobalScope.launch {
+        generateQRJob = MozoSDK.scope.launch {
             val size = view.context.resources.dp2Px(177f).toInt()
             val qrImage = Support.generateQRCode(content, size)
             withContext(Dispatchers.Main) {

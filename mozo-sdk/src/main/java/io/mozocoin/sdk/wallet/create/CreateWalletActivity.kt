@@ -10,6 +10,7 @@ import android.text.style.ClickableSpan
 import android.view.View
 import androidx.core.view.postDelayed
 import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
@@ -108,7 +109,7 @@ internal class CreateWalletActivity : BaseActivity() {
         binding.createWalletLoading.visible()
     }
 
-    private fun doCreateWallet() = GlobalScope.launch {
+    private fun doCreateWallet() = MozoSDK.scope.launch {
         MozoWallet.getInstance().getWallet(true)?.encrypt()
         MozoWallet.getInstance().executeSaveWallet(this@CreateWalletActivity, null) {
             isInProgress = false

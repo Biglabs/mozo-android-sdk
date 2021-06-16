@@ -140,7 +140,7 @@ internal class TransactionDetailsActivity : BaseActivity() {
 
     private fun displayContact() {
         findContactJob?.cancel()
-        findContactJob = GlobalScope.launch {
+        findContactJob = MozoSDK.scope.launch {
             val contact = MozoSDK.getInstance().contactViewModel.findByAddress(targetAddress)
             withContext(Dispatchers.Main) {
                 val isContact = contact != null

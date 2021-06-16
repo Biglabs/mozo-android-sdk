@@ -11,6 +11,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.core.view.postDelayed
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
@@ -415,7 +416,7 @@ internal class SecurityActivity : BaseActivity() {
     }
 
     private fun submitForResult() {
-        GlobalScope.launch {
+        MozoSDK.scope.launch {
             delay(500)
             showLoadingUI().join()
 
@@ -465,7 +466,7 @@ internal class SecurityActivity : BaseActivity() {
         }
     }
 
-    private fun finishResult(callback: () -> Unit) = GlobalScope.launch {
+    private fun finishResult(callback: () -> Unit) = MozoSDK.scope.launch {
         EventBus.getDefault().post(MessageEvent.Pin(mPIN, mRequestCode))
         withContext(Dispatchers.Main) {
             callback.invoke()
