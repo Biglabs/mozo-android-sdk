@@ -108,7 +108,7 @@ class Support {
         }
 
         @JvmStatic
-        fun writeLog(content: String?) = GlobalScope.launch(Dispatchers.IO) {
+        fun writeLog(content: String?) = MozoSDK.scope.launch(Dispatchers.IO) {
             content ?: return@launch
 
             if (ActivityCompat.checkSelfPermission(MozoSDK.getInstance().context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {

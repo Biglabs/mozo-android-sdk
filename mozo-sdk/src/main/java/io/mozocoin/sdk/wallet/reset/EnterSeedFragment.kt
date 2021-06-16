@@ -11,6 +11,7 @@ import android.widget.EditText
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.postDelayed
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
@@ -116,7 +117,7 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
 
     private fun checkSingleInput(v: EditText) {
         val seed = v.text.toString()
-        verifyJob = GlobalScope.launch {
+        verifyJob = MozoSDK.scope.launch {
             val word = MnemonicUtils.getWords().firstOrNull { it.equals(seed, true) }
             withContext(Dispatchers.Main) {
                 v.isActivated = !word.isNullOrEmpty()
@@ -131,7 +132,7 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
 
         mInputView?.forEachIndexed { index, v ->
             val seed = v.text.toString()
-            verifyJob = GlobalScope.launch {
+            verifyJob = MozoSDK.scope.launch {
                 val word = MnemonicUtils.getWords().firstOrNull { it.equals(seed, true) }
                 if (word.isNullOrEmpty()) hasIncorrectWord = true
                 withContext(Dispatchers.Main) {
@@ -156,7 +157,7 @@ internal class EnterSeedFragment : ResetPinBaseFragment() {
 
         val mnemonic = mInputView?.map { it.text.toString().trim() }?.joinToString(separator = " ") { s -> s }
         if (!mnemonic.isNullOrEmpty() && MnemonicUtils.validateMnemonic(mnemonic)) {
-            verifyJob = GlobalScope.launch {
+            verifyJob = MozoSDK.scope.launch {
                 val wallet = WalletHelper(mnemonic)
                 val isCorrectWallet = wallet.buildWalletInfo().offchainAddress
                         .equals(MozoWallet.getInstance().getAddress(), ignoreCase = true)

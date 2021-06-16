@@ -9,7 +9,6 @@ import io.mozocoin.sdk.common.model.BroadcastData
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.logAsInfo
 import io.mozocoin.sdk.utils.md5
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,7 +20,10 @@ import java.util.*
 import javax.net.ssl.SSLParameters
 import kotlin.math.pow
 
-internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSocketClient(uri, header) {
+internal class MozoSocketClient(
+    uri: URI,
+    header: Map<String, String>
+) : WebSocketClient(uri, header) {
 
     override fun onOpen(serverHandshake: ServerHandshake?) {
         "open [status: ${serverHandshake?.httpStatus}, url: $uri]".logAsInfo(TAG)
@@ -30,7 +32,6 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
 
     override fun onMessage(s: String?) {
         "message $s".logAsInfo(TAG)
-
 
         s?.run {
             if (equals("1|X", ignoreCase = true)) {
@@ -148,30 +149,31 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
                 }
 
                 initializeJob?.cancel()
-                initializeJob = GlobalScope.launch {
+                initializeJob = MozoSDK.scope.launch {
                     delay(500)
 
                     disconnect().join()
 
-                    val channel = if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
+                    val channel =
+                        if (MozoSDK.isRetailerApp) Constant.SOCKET_CHANNEL_RETAILER else Constant.SOCKET_CHANNEL_SHOPPER
                     val userId = MozoSDK.getInstance().profileViewModel.getProfile()?.userId
                     val uuid = StringBuilder()
-                            .append(sessionUUID)
-                            .append("-")
-                            .append(userId)
-                            .append("-")
-                            .append(channel).toString().md5()
+                        .append(sessionUUID)
+                        .append("-")
+                        .append(userId)
+                        .append("-")
+                        .append(channel).toString().md5()
 
                     instance = MozoSocketClient(
-                            URI("wss://${Support.domainSocket()}/websocket/user/$uuid/$channel"),
-                            mutableMapOf(
-                                    "Authorization" to "bearer $accessToken",
-                                    "Content-Type" to "application/json",
-                                    "X-atmo-protocol" to "true",
-                                    "X-Atmosphere-Framework" to "2.3.3-javascript",
-                                    "X-Atmosphere-tracking-id" to "0",
-                                    "X-Atmosphere-Transport" to "websocket"
-                            )
+                        URI("wss://${Support.domainSocket()}/websocket/user/$uuid/$channel"),
+                        mutableMapOf(
+                            "Authorization" to "bearer $accessToken",
+                            "Content-Type" to "application/json",
+                            "X-atmo-protocol" to "true",
+                            "X-Atmosphere-Framework" to "2.3.3-javascript",
+                            "X-Atmosphere-tracking-id" to "0",
+                            "X-Atmosphere-Transport" to "websocket"
+                        )
                     )
                     try {
                         if (instance?.isOpen == false)
@@ -184,7 +186,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         }
 
         @JvmStatic
-        fun disconnect() = GlobalScope.launch {
+        fun disconnect() = MozoSDK.scope.launch {
             try {
                 isDoDisconnect = true
                 instance?.closeBlocking()
@@ -197,7 +199,7 @@ internal class MozoSocketClient(uri: URI, header: Map<String, String>) : WebSock
         private fun doRetryConnect() {
             "start retry connect".logAsInfo(TAG)
             retryConnectJob?.cancel()
-            retryConnectJob = GlobalScope.launch {
+            retryConnectJob = MozoSDK.scope.launch {
                 delay(retryConnectTime)
                 "retry connect time: $retryConnectTime".logAsInfo(TAG)
                 retryConnectTime *= 2

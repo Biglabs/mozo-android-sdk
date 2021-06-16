@@ -13,6 +13,7 @@ import androidx.core.text.set
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.OnLoadMoreListener
@@ -103,7 +104,7 @@ internal class TransactionHistoryRecyclerAdapter(
 
     fun filter(@FilterMode mode: Int) {
         stopFilter()
-        dataFilterJob = GlobalScope.launch {
+        dataFilterJob = MozoSDK.scope.launch {
             dataFilter = when (mode) {
                 FILTER_RECEIVED -> histories.filter { !it.type(address) }
                 FILTER_SENT -> histories.filter { it.type(address) }

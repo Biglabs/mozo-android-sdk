@@ -23,6 +23,8 @@ import io.mozocoin.sdk.ui.MaintenanceActivity
 import io.mozocoin.sdk.ui.UpdateRequiredActivity
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.launchActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -37,6 +39,10 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
     internal val contactViewModel: ViewModels.ContactViewModel by lazy {
         ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
                 .get(ViewModels.ContactViewModel::class.java)
+    }
+
+    private val scope: CoroutineScope by lazy {
+        CoroutineScope(Dispatchers.Default)
     }
 
     internal var ignoreInternetErrActivities: ArrayList<Class<out Activity>>? = null
@@ -90,6 +96,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @Volatile
         internal var shouldShowNotification = true
+
+        @Volatile
+        internal var scope = getInstance().scope
 
         @JvmStatic
         @Synchronized

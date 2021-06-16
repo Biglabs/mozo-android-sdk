@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.model.ContactInfoDTO
 import io.mozocoin.sdk.common.model.ImportContactRequestDTO
@@ -107,7 +108,7 @@ internal class ImportContactsActivity : BaseActivity() {
         }
     }
 
-    private fun getPhones(completion: (MutableList<ContactInfoDTO>) -> Unit) = GlobalScope.launch {
+    private fun getPhones(completion: (MutableList<ContactInfoDTO>) -> Unit) = MozoSDK.scope.launch {
         val phonesCursor = contentResolver.query(
                 ContactsContract.Contacts.CONTENT_URI,
                 arrayOf(_ID, DISPLAY_NAME),

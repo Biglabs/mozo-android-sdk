@@ -87,7 +87,7 @@ internal class MozoAuthActivity : FragmentActivity() {
      * Initializes the authorization service configuration if necessary, either from the local
      * static values or by retrieving an OpenID discovery document.
      */
-    private fun initializeAppAuth() = GlobalScope.launch {
+    private fun initializeAppAuth() = MozoSDK.scope.launch {
         mAuthRequest.set(null)
         mAuthIntent.set(null)
 
@@ -318,7 +318,7 @@ internal class MozoAuthActivity : FragmentActivity() {
 
     private fun handleResult(exception: Exception? = null) {
         handleJob?.cancel()
-        handleJob = GlobalScope.launch {
+        handleJob = MozoSDK.scope.launch {
             if (exception == null) {
                 MozoAuth.getInstance().syncProfile(this@MozoAuthActivity) {
                     if (it) finishAuth(null)

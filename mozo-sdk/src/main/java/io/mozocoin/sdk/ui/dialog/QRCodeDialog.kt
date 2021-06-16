@@ -2,6 +2,7 @@ package io.mozocoin.sdk.ui.dialog
 
 import android.content.Context
 import android.os.Bundle
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.databinding.DialogQrCodeBinding
 import io.mozocoin.sdk.utils.Support
@@ -23,7 +24,7 @@ internal class QRCodeDialog(context: Context, val value: String) : BaseDialog(co
         binding = DialogQrCodeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        generateQRJob = GlobalScope.launch {
+        generateQRJob = MozoSDK.scope.launch {
             val size = context.dimen(R.dimen.mozo_qr_large_size)
             val qrImage = Support.generateQRCode(value, size)
             withContext(Dispatchers.Main) {

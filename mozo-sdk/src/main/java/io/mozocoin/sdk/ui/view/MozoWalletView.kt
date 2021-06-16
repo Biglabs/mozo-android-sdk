@@ -202,7 +202,7 @@ class MozoWalletView : ConstraintLayout {
         }
     }
 
-    private fun getQRImage() = GlobalScope.launch {
+    private fun getQRImage() = MozoSDK.scope.launch {
         val qrImage = Support.generateQRCode(mAddress!!, sizeOfQRImage)
         withContext(Dispatchers.Main) {
             imageAddressQRView?.setImageBitmap(qrImage)

@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.common.dao.NotificationDao
 import io.mozocoin.sdk.common.dao.ProfileDao
 import io.mozocoin.sdk.common.dao.UserInfoDao
@@ -25,7 +26,7 @@ internal abstract class MozoDatabase : RoomDatabase() {
 
     fun clear() {
         instance ?: return
-        GlobalScope.launch(Dispatchers.IO) {
+        MozoSDK.scope.launch(Dispatchers.IO) {
             if (isOpen) {
                 userInfo().deleteAll()
                 notifications().deleteAll()

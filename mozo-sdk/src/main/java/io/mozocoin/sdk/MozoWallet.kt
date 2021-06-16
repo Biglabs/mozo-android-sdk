@@ -38,7 +38,7 @@ class MozoWallet private constructor() {
     init {
         MozoSDK.getInstance().profileViewModel.profileLiveData.observeForever {
             this.mProfile = it
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 mWallet = WalletHelper.initWithWalletInfo(it?.walletInfo, mWallet)
             }
         }
@@ -107,7 +107,7 @@ class MozoWallet private constructor() {
             return
         }
 
-        GlobalScope.launch {
+        MozoSDK.scope.launch {
             mWallet = walletHelper ?: WalletHelper.initWithWalletInfo(profile.walletInfo)
             val flag = if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
                 /* Local wallet is existing but no private Key */
@@ -137,7 +137,7 @@ class MozoWallet private constructor() {
         mReady4WalletCheckingJob?.cancel()
 
         if (!MozoSDK.isReadyForWallet && mReady4WalletCheckingDelayed < MAX_DELAY_TIME) {
-            mReady4WalletCheckingJob = GlobalScope.launch {
+            mReady4WalletCheckingJob = MozoSDK.scope.launch {
                 delay(1000)
 
                 mReady4WalletCheckingDelayed += 1000
@@ -223,7 +223,7 @@ class MozoWallet private constructor() {
             callback?.invoke(true)
     }
 
-    internal fun validatePinAsync(pin: String) = GlobalScope.async {
+    internal fun validatePinAsync(pin: String) = MozoSDK.scope.async {
         if (mWallet == null) {
             mWallet = WalletHelper.initWithWalletInfo(mProfile?.walletInfo)
         }
@@ -292,7 +292,7 @@ class MozoWallet private constructor() {
     }
 
     internal fun getWallet(callback: (WalletHelper?) -> Unit) {
-        GlobalScope.launch {
+        MozoSDK.scope.launch {
             var timeOut = 0
             while (mWallet == null) {
                 if (timeOut >= 15) break

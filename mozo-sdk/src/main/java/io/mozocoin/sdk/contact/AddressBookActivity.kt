@@ -160,7 +160,7 @@ internal class AddressBookActivity : BaseActivity() {
 
     private fun searchByName(name: String) {
         searchJob?.cancel()
-        searchJob = GlobalScope.launch {
+        searchJob = MozoSDK.scope.launch {
 
             delay(250)
 

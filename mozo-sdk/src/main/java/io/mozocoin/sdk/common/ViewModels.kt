@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.mozocoin.sdk.MozoAuth
+import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.common.model.*
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.common.service.MozoDatabase
@@ -48,7 +49,7 @@ internal object ViewModels {
                 return
             }
 
-            GlobalScope.launch {
+            MozoSDK.scope.launch {
                 val profile = withContext(Dispatchers.IO) {
                     if (userId != null) MozoDatabase.getInstance(context).profile().get(userId)
                     else MozoDatabase.getInstance(context).profile().getCurrentUserProfile()
