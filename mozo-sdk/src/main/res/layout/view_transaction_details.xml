@@ -103,6 +103,15 @@
             tools:text="0x97309d3698ALKJLKJLJKFLDJEL:KJF:LS:SKLEFA1898F0C41" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/lo_content_mask"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toBottomOf="@id/lo_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/lo_content" />
+
     <TextView
         android:id="@+id/text_detail_status"
         android:layout_width="wrap_content"
