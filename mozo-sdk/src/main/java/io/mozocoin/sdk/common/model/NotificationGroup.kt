@@ -105,7 +105,7 @@ enum class NotificationGroup(val id: Int) {
         fun getContentTitle(context: Context, message: BroadcastDataContent, count: Int) = when (getKey(message)) {
             CUSTOMER_COME_IN -> context.resources.getQuantityString(R.plurals.mozo_notify_title_come_in, count)
             CUSTOMER_COME_OUT -> context.resources.getQuantityString(R.plurals.mozo_notify_title_leave, count)
-            INVITE -> context.getString(R.string.mozo_notify_content_invited_group)
+            INVITE -> context.getString(R.string.mozo_notify_title_invited_group)
             else -> null
         }
 
