@@ -7,9 +7,11 @@ import android.widget.Button
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import io.mozocoin.sdk.MozoSDK
+import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.model.PaymentRequest
 import io.mozocoin.sdk.common.model.TransactionHistory
 import io.mozocoin.sdk.contact.AddressAddActivity
@@ -18,6 +20,7 @@ import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
+import org.greenrobot.eventbus.EventBus
 import java.math.BigDecimal
 
 internal class TransactionDetailsActivity : BaseActivity() {
@@ -155,20 +158,37 @@ internal class TransactionDetailsActivity : BaseActivity() {
                         isContact && !isStore && !contact?.phoneNo.isNullOrEmpty()
                 binding.textDetailStoreAddress.isVisible = isContact && isStore
 
-                if (contact != null) {
+                if (isContact) {
                     binding.imageDetailReceiver.setImageResource(
                             if (isStore) R.drawable.ic_store
                             else R.drawable.ic_receiver
                     )
-                    binding.textDetailReceiverName.text = contact.name
-                    binding.textDetailStoreAddress.text = contact.physicalAddress
-                    binding.textDetailReceiverPhone.text = contact.phoneNo
+                    binding.textDetailReceiverName.text = contact?.name
+                    binding.textDetailStoreAddress.text = contact?.physicalAddress
+                    binding.textDetailReceiverPhone.text = contact?.phoneNo
 
                 } else binding.buttonSaveAddress.click {
                     AddressAddActivity.start(this@TransactionDetailsActivity, targetAddress)
                 }
+                /**
+                 * Setup contact action handler
+                 */
+                setupContactAction(isStore, contact?.storeId)
             }
             findContactJob = null
+        }
+    }
+
+    private fun setupContactAction(isStore: Boolean, id: Long?) {
+        if (isStore && id != null) {
+            binding.loContentMask.click {
+                EventBus.getDefault().post(MessageEvent.CloseActivities())
+                MozoTx.getInstance().listeners.forEach {
+                    it.openContactDetails(id)
+                }
+            }
+        } else {
+            binding.loContentMask.setOnClickListener(null)
         }
     }
 

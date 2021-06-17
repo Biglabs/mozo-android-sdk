@@ -117,10 +117,12 @@ class MozoTodoList private constructor() {
         todoFinishListeners.clear()
     }
 
+    @Suppress("unused")
     fun addListener(l: TodoInteractListener) {
         listeners.add(l)
     }
 
+    @Suppress("unused")
     fun removeListener(l: TodoInteractListener) {
         listeners.remove(l)
     }
