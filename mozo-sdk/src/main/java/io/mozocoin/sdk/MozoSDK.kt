@@ -41,10 +41,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 .get(ViewModels.ContactViewModel::class.java)
     }
 
-    private val scope: CoroutineScope by lazy {
-        CoroutineScope(Dispatchers.Default)
-    }
-
     internal var ignoreInternetErrActivities: ArrayList<Class<out Activity>>? = null
 
     internal var remindAnchorView: View? = null
@@ -97,8 +93,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @Volatile
         internal var shouldShowNotification = true
 
-        @Volatile
-        internal var scope = getInstance().scope
+        internal val scope: CoroutineScope by lazy {
+            CoroutineScope(Dispatchers.Default)
+        }
 
         @JvmStatic
         @Synchronized
