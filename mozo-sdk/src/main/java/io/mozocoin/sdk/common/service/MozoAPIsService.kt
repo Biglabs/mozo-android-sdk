@@ -531,7 +531,10 @@ internal class MozoAPIsService private constructor() {
                     val request = original.newBuilder()
                             .header("Authorization", "Bearer $accessToken")
                             .header("Content-Type", "application/json")
-                            .header("User-Agent", "MozoSDK/${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.SDK_INT})")
+                            .header(
+                                "User-Agent",
+                                "MozoSDK/${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.SDK_INT}) ${MozoSDK.hostName}"
+                            )
                             .method(original.method, original.body)
                             .build()
                     it.proceed(request)
