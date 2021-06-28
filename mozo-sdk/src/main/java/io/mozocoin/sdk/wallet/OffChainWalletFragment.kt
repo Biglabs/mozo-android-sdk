@@ -43,7 +43,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     private var buttonSend = true
 
     private val historyAdapter: TransactionHistoryRecyclerAdapter by lazy {
-        TransactionHistoryRecyclerAdapter(layoutInflater, histories, onItemClick, null)
+        TransactionHistoryRecyclerAdapter(layoutInflater, onItemClick, null)
     }
     private var currentAddress: String? = null
     private var fetchDataJob: Job? = null
@@ -104,6 +104,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             }
         }
 
+        historyAdapter.emptyView = binding.walletFragmentHistoryEmptyView
         binding.walletFragmentHistoryRecycler.apply {
             setHasFixedSize(false)
             adapter = historyAdapter
@@ -178,7 +179,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             currentAddress = null
             histories.clear()
             historyAdapter.address = null
-            historyAdapter.notifyData()
+            historyAdapter.setData(mutableListOf())
 
             _binding?.walletFragmentAddress?.text = null
             generateQRJob?.cancel()
@@ -209,14 +210,12 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             MozoAPIsService.getInstance().getTransactionHistory(
                 requireContext(), currentAddress!!,
                 page = Constant.PAGING_START_INDEX,
-                size = 10,
                 callback = { data, _ ->
                     _binding?.walletFragmentOffSwipe?.isRefreshing = false
-                    historyAdapter.mEmptyView = _binding?.walletFragmentHistoryEmptyView
 
                     if (data?.items == null) {
                         historyAdapter.setCanLoadMore(false)
-                        historyAdapter.notifyData()
+                        historyAdapter.setData(mutableListOf())
                         return@getTransactionHistory
                     }
 
@@ -232,8 +231,8 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                         withContext(Dispatchers.Main) {
                             fetchDataJob = null
                             historyAdapter.setCanLoadMore(false)
-                            historyAdapter.notifyData()
-                            _binding?.walletFragmentHistoryRecycler?.scheduleLayoutAnimation()
+                            historyAdapter.setData(histories)
+//                            _binding?.walletFragmentHistoryRecycler?.scheduleLayoutAnimation()
                         }
                     }
                 },

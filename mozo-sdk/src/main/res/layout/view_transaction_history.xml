@@ -14,9 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/mozo_transaction_history_title"
-        tools:background="#5ccc"
-        tools:layout_height="84dp" />
+        app:title="@string/mozo_transaction_history_title" />
 
     <RadioGroup
         android:id="@+id/history_filter_group"

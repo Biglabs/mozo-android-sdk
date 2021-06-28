@@ -91,6 +91,9 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         internal var isEnableDebugLogging = false
 
         @Volatile
+        internal var hostName = ""
+
+        @Volatile
         internal var shouldShowNotification = true
 
         internal val scope: CoroutineScope by lazy {
@@ -101,6 +104,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @Synchronized
         fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_STAGING, useForBusiness: Boolean = false) {
             if (instance == null) {
+                hostName = context.packageName
                 serviceEnvironment = environment
                 isRetailerApp = useForBusiness
                 isInternalApps = Support.isInternalApps(context)

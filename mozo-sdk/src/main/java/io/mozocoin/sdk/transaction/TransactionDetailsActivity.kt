@@ -118,7 +118,11 @@ internal class TransactionDetailsActivity : BaseActivity() {
         if (sendType) {
             binding.textDetailReceiver.setText(R.string.mozo_view_text_to)
             binding.imageTxType.setBackgroundResource(R.drawable.mozo_bg_icon_send)
-
+            if(mHistory?.addressFrom == mHistory?.addressTo) {
+                binding.imageTxType.setImageResource(R.drawable.ic_action_transfer_myself)
+            } else {
+                binding.imageTxType.setImageResource(R.drawable.ic_action_send)
+            }
         } else {
             binding.textDetailReceiver.setText(R.string.mozo_view_text_from)
             binding.imageTxType.setBackgroundResource(R.drawable.mozo_bg_icon_received)

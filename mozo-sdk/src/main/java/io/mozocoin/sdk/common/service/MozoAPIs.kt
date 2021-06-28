@@ -80,16 +80,28 @@ internal interface MozoAPIs {
     fun sendTx(@Body request: TransactionResponse): Call<Base<TransactionResponse>>
 
     @GET("${MozoAPIsService.APIS_STORE}/solo/contract/solo-token/txhistory/{address}")
-    fun getTransactionHistory(@Path("address") address: String, @Query("page") page: Int, @Query("size") size: Int): Call<Base<BaseData<TransactionHistory>>>
+    fun getTransactionHistory(
+        @Path("address") address: String,
+        @Query("isReceive") isReceive: Boolean? = null,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Call<Base<BaseData<TransactionHistory>>>
 
     @GET("${MozoAPIsService.APIS_SOLOMON}/eth/solo/txs/{hash}/status")
     fun getTxStatus(@Path("hash") hash: String): Call<Base<TransactionStatus>>
 
     @GET("${MozoAPIsService.APIS_STORE}/payment-request")
-    fun getPaymentRequests(@Query("page") page: Int, @Query("size") size: Int, @Query("sort") sort: String = "timeInSec,desc"): Call<Base<BaseData<PaymentRequest>>>
+    fun getPaymentRequests(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String = "timeInSec,desc"
+    ): Call<Base<BaseData<PaymentRequest>>>
 
     @POST("${MozoAPIsService.APIS_STORE}/payment-request/{address}")
-    fun sendPaymentRequest(@Path("address") address: String, @Body request: PaymentRequest): Call<Base<PaymentRequest>>
+    fun sendPaymentRequest(
+        @Path("address") address: String,
+        @Body request: PaymentRequest
+    ): Call<Base<PaymentRequest>>
 
     @DELETE("${MozoAPIsService.APIS_STORE}/payment-request/{id}")
     fun deletePaymentRequest(@Path("id") id: Long): Call<Base<Any>>
@@ -129,10 +141,10 @@ internal interface MozoAPIs {
      */
     @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListShopper")
     fun getTodoList4Shopper(
-            @Query("blueToothOff") isBluetoothOff: Boolean,
-            @Query("lat") lat: Double,
-            @Query("lon") lon: Double,
-            @Query("locale") locale: String = Locale.getDefault().toLanguageTag()
+        @Query("blueToothOff") isBluetoothOff: Boolean,
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
+        @Query("locale") locale: String = Locale.getDefault().toLanguageTag()
     ): Call<Base<BaseData<Todo>>>
 
     @GET("${MozoAPIsService.APIS_STORE}/shopper/getTodoListSetting/v2")
