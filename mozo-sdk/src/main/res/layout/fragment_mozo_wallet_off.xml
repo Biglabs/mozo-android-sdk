@@ -213,6 +213,8 @@
                 android:id="@+id/wallet_fragment_history_empty_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_padding"
+                android:layout_marginEnd="@dimen/mozo_screen_padding"
                 android:text="@string/mozo_transaction_history_empty"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/wallet_fragment_history_recycler"

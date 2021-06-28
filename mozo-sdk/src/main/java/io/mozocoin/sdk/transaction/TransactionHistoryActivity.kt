@@ -3,7 +3,6 @@ package io.mozocoin.sdk.transaction
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,37 +19,51 @@ import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.mozoSetup
 import kotlinx.coroutines.*
 
-internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener,
+    SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: ViewTransactionHistoryBinding
-    private val histories = arrayListOf<TransactionHistory>()
     private val onItemClick = { history: TransactionHistory ->
         TransactionDetailsActivity.start(this@TransactionHistoryActivity, history)
     }
     private val historyAdapter: TransactionHistoryRecyclerAdapter by lazy {
-        TransactionHistoryRecyclerAdapter(layoutInflater, histories, onItemClick, this)
+        TransactionHistoryRecyclerAdapter(layoutInflater, onItemClick, this)
     }
 
-    private var currentAddress: String? = null
-    private var currentPage = Constant.PAGING_START_INDEX
-    private var loadFirstPage = true
-
+    private val historiesAll = mutableListOf<TransactionHistory>()
+    private val historiesReceived = mutableListOf<TransactionHistory>()
+    private val historiesSent = mutableListOf<TransactionHistory>()
+    private var pageAll = Constant.PAGING_START_INDEX
+    private var pageReceived = Constant.PAGING_START_INDEX
+    private var pageSent = Constant.PAGING_START_INDEX
+    private var currentPage: Int
+        get() = when (currentFilter) {
+            R.id.history_filter_received -> pageReceived
+            R.id.history_filter_sent -> pageSent
+            else -> pageAll
+        }
+        set(value) {
+            when (currentFilter) {
+                R.id.history_filter_received -> pageReceived = value
+                R.id.history_filter_sent -> pageSent = value
+                else -> pageAll = value
+            }
+        }
     private var fetchDataJob: Job? = null
+    private var currentAddress: String? = null
+    private var currentFilter: Int = R.id.history_filter_all
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ViewTransactionHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        MozoSDK.getInstance().profileViewModel.run {
-            profileLiveData.observe(this@TransactionHistoryActivity, profileObserver)
-        }
-
         binding.listHistoryRefresh.apply {
             setOnRefreshListener(this@TransactionHistoryActivity)
             isRefreshing = true
         }
 
+        historyAdapter.emptyView = binding.listHistoryEmptyView
         binding.listHistory.apply {
             mozoSetup(binding.listHistoryRefresh)
             adapter = historyAdapter
@@ -61,23 +74,32 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
             })
         }
 
-        binding.historyFilterGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.history_filter_all -> historyAdapter.filter(TransactionHistoryRecyclerAdapter.FILTER_ALL)
-                R.id.history_filter_received -> historyAdapter.filter(TransactionHistoryRecyclerAdapter.FILTER_RECEIVED)
-                R.id.history_filter_sent -> historyAdapter.filter(TransactionHistoryRecyclerAdapter.FILTER_SENT)
+        binding.historyFilterGroup.setOnCheckedChangeListener { _, checked ->
+            currentFilter = checked
+            historyAdapter.showReceived = checked == R.id.history_filter_received
+            val collection = historyCollection()
+            if (collection.isEmpty()) {
+                fetchData()
+            } else {
+                historyAdapter.setData(collection)
             }
         }
 
         binding.listHistoryEmptyView.onPrimaryClicked = {
             onBackPressed()
         }
+
+        /**
+         * Waiting for profile and load data
+         */
+        MozoSDK.getInstance().profileViewModel.run {
+            profileLiveData.observe(this@TransactionHistoryActivity, profileObserver)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         fetchDataJob?.cancel()
-        historyAdapter.stopFilter()
         MozoSDK.getInstance().profileViewModel.run {
             profileLiveData.removeObservers(this@TransactionHistoryActivity)
         }
@@ -86,53 +108,65 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener, 
     private val profileObserver = Observer<Profile?> {
         currentAddress = it?.walletInfo?.offchainAddress
         historyAdapter.address = currentAddress
-        if (!loadFirstPage && currentPage == Constant.PAGING_START_INDEX) {
+        if (currentPage == Constant.PAGING_START_INDEX) {
             fetchData()
         }
     }
 
     private fun fetchData() {
+        val isReceived: Boolean? = when (currentFilter) {
+            R.id.history_filter_received -> true
+            R.id.history_filter_sent -> false
+            else -> null
+        }
         MozoAPIsService.getInstance().getTransactionHistory(
-                this,
-                currentAddress ?: return,
-                page = currentPage,
-                callback = { data, _ ->
-                    binding.listHistoryRefresh.isRefreshing = false
-                    binding.listHistoryEmptyView.isVisible = data?.items.isNullOrEmpty()
+            this,
+            currentAddress ?: return,
+            isReceived,
+            page = currentPage,
+            callback = { data, _ ->
+                binding.listHistoryRefresh.isRefreshing = false
 
-                    if (data?.items == null) {
-                        historyAdapter.setCanLoadMore(false)
-                        historyAdapter.notifyData()
-                        return@getTransactionHistory
-                    }
+                if (data?.items == null) {
+                    historyAdapter.setCanLoadMore(false)
+                    historyAdapter.setData(mutableListOf())
+                    return@getTransactionHistory
+                }
 
-                    fetchDataJob?.cancel()
-                    fetchDataJob = MozoSDK.scope.launch {
-                        if (currentPage <= Constant.PAGING_START_INDEX) histories.clear()
-                        histories.addAll(data.items!!.map {
-                            it.apply {
-                                contactName = MozoWallet.getInstance().findContact(it, currentAddress)?.name
-                            }
-                        })
-                        withContext(Dispatchers.Main) {
-                            historyAdapter.setCanLoadMore(data.items!!.size == Constant.PAGING_SIZE)
-                            historyAdapter.notifyData()
-//                          list_history?.scheduleLayoutAnimation()
+                fetchDataJob?.cancel()
+                fetchDataJob = MozoSDK.scope.launch {
+                    val collection = historyCollection()
+                    if (currentPage <= Constant.PAGING_START_INDEX) collection.clear()
+                    collection.addAll(data.items!!.map {
+                        it.apply {
+                            contactName =
+                                MozoWallet.getInstance().findContact(it, currentAddress)?.name
                         }
+                    })
+                    withContext(Dispatchers.Main) {
+                        historyAdapter.setCanLoadMore(data.items!!.size == Constant.PAGING_SIZE)
+                        historyAdapter.setData(collection)
                     }
-                },
-                retry = this::fetchData)
+                }
+            },
+            retry = this::fetchData
+        )
     }
 
     override fun onLoadMore() {
-        if (loadFirstPage) loadFirstPage = false
-        else currentPage++
+        currentPage++
         fetchData()
     }
 
     override fun onRefresh() {
         currentPage = Constant.PAGING_START_INDEX
         fetchData()
+    }
+
+    private fun historyCollection() = when (currentFilter) {
+        R.id.history_filter_received -> historiesReceived
+        R.id.history_filter_sent -> historiesSent
+        else -> historiesAll
     }
 
     companion object {

@@ -264,13 +264,14 @@ internal class MozoAPIsService private constructor() {
     fun getTransactionHistory(
             context: Context,
             address: String,
+            isReceive: Boolean? = null,
             page: Int = Constant.PAGING_START_INDEX,
             size: Int = Constant.PAGING_SIZE,
             callback: ((data: BaseData<TransactionHistory>?, errorCode: String?) -> Unit)? = null,
             retry: (() -> Unit)? = null
     ) {
         MainScope().launch {
-            execute(context, mozoAPIs.getTransactionHistory(address, page, size), callback, retry)
+            execute(context, mozoAPIs.getTransactionHistory(address, isReceive, page, size), callback, retry)
         }
     }
 
