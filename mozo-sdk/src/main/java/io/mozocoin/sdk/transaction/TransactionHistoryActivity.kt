@@ -76,7 +76,8 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener,
 
         binding.historyFilterGroup.setOnCheckedChangeListener { _, checked ->
             currentFilter = checked
-            historyAdapter.showReceived = checked == R.id.history_filter_received
+            historyAdapter.showReceived = if (checked == R.id.history_filter_all) null
+            else checked == R.id.history_filter_received
             val collection = historyCollection()
             if (collection.isEmpty()) {
                 fetchData()
@@ -141,6 +142,7 @@ internal class TransactionHistoryActivity : BaseActivity(), OnLoadMoreListener,
                         it.apply {
                             contactName =
                                 MozoWallet.getInstance().findContact(it, currentAddress)?.name
+                            filter = currentFilter
                         }
                     })
                     withContext(Dispatchers.Main) {

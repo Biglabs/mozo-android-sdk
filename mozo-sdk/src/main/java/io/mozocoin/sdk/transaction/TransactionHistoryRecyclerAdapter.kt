@@ -139,7 +139,7 @@ internal class TransactionHistoryRecyclerAdapter(
                 amountColor = R.color.mozo_color_title
                 binding.itemHistoryTypeIcon.setBackgroundResource(R.drawable.mozo_bg_icon_send)
                 binding.itemHistoryTypeIcon.rotation = 0f
-                if(history.addressFrom == history.addressTo) {
+                if(showReceived == null && history.addressFrom == history.addressTo) {
                     binding.itemHistoryTypeIcon.setImageResource(R.drawable.ic_action_transfer_myself)
                 } else {
                     binding.itemHistoryTypeIcon.setImageResource(R.drawable.ic_action_send)

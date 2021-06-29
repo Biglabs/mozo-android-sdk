@@ -8,7 +8,7 @@ plugins {
 ext {
     PUBLISH_ARTIFACT_ID = 'mozo-sdk'
     PUBLISH_GROUP_ID = 'io.mozocoin'
-    PUBLISH_VERSION = '0.2.4-beta18'
+    PUBLISH_VERSION = '0.2.4-beta19'
     PUBLISH_DESCRIPTION = 'MozoSDK for Android'
     PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
 }

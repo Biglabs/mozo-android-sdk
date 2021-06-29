@@ -98,7 +98,10 @@ internal class TransactionDetailsActivity : BaseActivity() {
         when {
             mHistory != null -> {
                 sendType = mHistory!!.type(myAddress)
-                binding.textDetailStatus.setText(if (sendType) R.string.mozo_view_text_tx_sent else R.string.mozo_view_text_tx_received)
+                binding.textDetailStatus.setText(
+                    if (mHistory?.filter == R.id.history_filter_received || !sendType) R.string.mozo_view_text_tx_received
+                    else R.string.mozo_view_text_tx_sent
+                )
                 targetAddress = if (sendType) mHistory!!.addressTo else mHistory!!.addressFrom
 
                 detailTime = mHistory!!.time * 1000L
@@ -115,18 +118,18 @@ internal class TransactionDetailsActivity : BaseActivity() {
                 }
             }
         }
-        if (sendType) {
+        if (mHistory?.filter == R.id.history_filter_received || !sendType) {
+            binding.textDetailReceiver.setText(R.string.mozo_view_text_from)
+            binding.imageTxType.setBackgroundResource(R.drawable.mozo_bg_icon_received)
+            binding.imageTxType.rotation = 180f
+        } else {
             binding.textDetailReceiver.setText(R.string.mozo_view_text_to)
             binding.imageTxType.setBackgroundResource(R.drawable.mozo_bg_icon_send)
-            if(mHistory?.addressFrom == mHistory?.addressTo) {
+            if(mHistory?.filter == R.id.history_filter_all && mHistory?.addressFrom == mHistory?.addressTo) {
                 binding.imageTxType.setImageResource(R.drawable.ic_action_transfer_myself)
             } else {
                 binding.imageTxType.setImageResource(R.drawable.ic_action_send)
             }
-        } else {
-            binding.textDetailReceiver.setText(R.string.mozo_view_text_from)
-            binding.imageTxType.setBackgroundResource(R.drawable.mozo_bg_icon_received)
-            binding.imageTxType.rotation = 180f
         }
 
         binding.textDetailReceiverWalletAddress.text = targetAddress
