@@ -3,7 +3,7 @@ buildscript {
         COMPILE_VERSION = 30
         TARGET_VERSION = 30
         MIN_VERSION = 21
-        KOTLIN_VERSION = '1.5.10'
+        KOTLIN_VERSION = '1.5.20'
     }
 
     repositories {

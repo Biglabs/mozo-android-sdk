@@ -25,7 +25,8 @@ data class TransactionHistory(
     var time: Long,
     var topUpReason: String? = null,
     var txHash: String? = null,
-    var txStatus: String? = null
+    var txStatus: String? = null,
+    var filter: Int = 0
 ) : Parcelable {
 
     @Ignore
@@ -57,6 +58,7 @@ data class TransactionHistory(
                     && oldList[oldItemPosition].addressTo == newList[newItemPosition].addressTo
                     && oldList[oldItemPosition].time == newList[newItemPosition].time
                     && oldList[oldItemPosition].txStatus == newList[newItemPosition].txStatus
+                    && oldList[oldItemPosition].filter == newList[newItemPosition].filter
 
         override fun getChangePayload(
             oldItemPosition: Int,
