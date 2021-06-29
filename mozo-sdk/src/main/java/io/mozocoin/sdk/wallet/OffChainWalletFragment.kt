@@ -212,6 +212,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                 page = Constant.PAGING_START_INDEX,
                 callback = { data, _ ->
                     _binding?.walletFragmentOffSwipe?.isRefreshing = false
+                    _binding?.walletFragmentTxLoading?.gone()
 
                     if (data?.items == null) {
                         historyAdapter.setCanLoadMore(false)
