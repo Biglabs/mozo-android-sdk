@@ -136,9 +136,7 @@ fun Context.openTab(url: String) {
             }
 
             val intent = Intent(Intent.ACTION_VIEW, uri)
-            if (intent.resolveActivity(context.packageManager) != null)
-                context.startActivity(intent)
-            else "No activity found".logAsError()
+            ContextCompat.startActivity(context, intent, null)
         }
     }
 
