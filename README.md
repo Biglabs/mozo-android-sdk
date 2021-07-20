@@ -1,5 +1,5 @@
 # Mozo Android SDK
-[ ![Download](https://img.shields.io/badge/maven%20central-0.2.4-blue) ](https://search.maven.org/search?q=mozo-sdk)
+[![Maven Central](https://img.shields.io/maven-central/v/io.mozocoin/mozo-sdk.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.mozocoin%22%20AND%20a:%22mozo-sdk%22)
 [ ![Android min version](https://img.shields.io/badge/Android-21+-brightgreen) ](#)
 [ ![Kotlin version](https://img.shields.io/badge/Kotlin-1.4.31-blue) ](#)
 
