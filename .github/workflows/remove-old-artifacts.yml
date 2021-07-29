@@ -4,8 +4,7 @@ on:
   push:
     branches:
     - master
-    - release/*
-    - hotfix/*
+    - develop
 
 jobs:
   remove-old-artifacts:
