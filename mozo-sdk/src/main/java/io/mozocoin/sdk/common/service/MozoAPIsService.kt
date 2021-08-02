@@ -559,6 +559,7 @@ internal class MozoAPIsService private constructor() {
 
         const val APIS_SOLOMON = "solomon/api/app"
         const val APIS_STORE = "store/api/app"
+        const val APIS_SCAN = "mozoscan/api/app"
 
         @Volatile
         private var instance: MozoAPIsService? = null

@@ -79,7 +79,7 @@ internal interface MozoAPIs {
     @POST("${MozoAPIsService.APIS_STORE}/solo/contract/solo-token/send-signed-tx")
     fun sendTx(@Body request: TransactionResponse): Call<Base<TransactionResponse>>
 
-    @GET("${MozoAPIsService.APIS_STORE}/solo/contract/solo-token/txhistory/{address}")
+    @GET("${MozoAPIsService.APIS_SCAN}/solo/contract/solo-token/txhistory/{address}")
     fun getTransactionHistory(
         @Path("address") address: String,
         @Query("isReceive") isReceive: Boolean? = null,
