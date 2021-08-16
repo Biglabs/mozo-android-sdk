@@ -23,7 +23,6 @@ import io.mozocoin.sdk.common.model.ExchangeRateData
 import io.mozocoin.sdk.common.model.ExchangeRateInfo
 import io.mozocoin.sdk.ui.ScannerQRActivity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.BufferedWriter
 import java.io.File
