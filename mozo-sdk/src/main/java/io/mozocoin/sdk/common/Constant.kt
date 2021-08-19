@@ -47,8 +47,8 @@ class Constant {
         internal const val DOMAIN_AUTH_PRODUCTION = "login.mozocoin.io"
 
         internal const val DOMAIN_SOCKET_DEV = "noti.cng.mozotoken.com"
-        internal const val DOMAIN_SOCKET_STAGING = "staging.noti.mozotoken.com"
-        internal const val DOMAIN_SOCKET_PRODUCTION = "noti.mozotoken.com"
+        internal const val DOMAIN_SOCKET_STAGING = "staging.noti.mozocoin.io"
+        internal const val DOMAIN_SOCKET_PRODUCTION = "noti.mozocoin.io"
 
         internal const val DOMAIN_ETHER_SCAN_DEV = "ropsten.etherscan.io"
         internal const val DOMAIN_ETHER_SCAN_STAGING = "ropsten.etherscan.io"
