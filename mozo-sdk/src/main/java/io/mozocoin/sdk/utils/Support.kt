@@ -24,6 +24,7 @@ import io.mozocoin.sdk.common.model.ExchangeRateInfo
 import io.mozocoin.sdk.ui.ScannerQRActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -38,40 +39,45 @@ class Support {
         @JvmStatic
         fun scanQRCode(activity: Activity) {
             IntentIntegrator(activity)
-                    .setCaptureActivity(ScannerQRActivity::class.java)
-                    .setBeepEnabled(true)
-                    .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-                    .setPrompt("")
-                    .initiateScan()
+                .setCaptureActivity(ScannerQRActivity::class.java)
+                .setBeepEnabled(true)
+                .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+                .setPrompt("")
+                .initiateScan()
         }
 
         @JvmStatic
         fun scanQRCode(fragment: Fragment) {
             IntentIntegrator.forSupportFragment(fragment)
-                    .setCaptureActivity(ScannerQRActivity::class.java)
-                    .setBeepEnabled(true)
-                    .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-                    .setPrompt("")
-                    .initiateScan()
+                .setCaptureActivity(ScannerQRActivity::class.java)
+                .setBeepEnabled(true)
+                .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+                .setPrompt("")
+                .initiateScan()
         }
 
         @JvmStatic
-        fun generateQRCode(str: String, size: Int): Bitmap = BarcodeEncoder().encodeBitmap(
-                str,
-                BarcodeFormat.QR_CODE,
-                size,
-                size,
-                hashMapOf(
+        suspend fun generateQRCode(str: String, size: Int): Bitmap =
+            withContext(Dispatchers.Unconfined) {
+                BarcodeEncoder().encodeBitmap(
+                    str,
+                    BarcodeFormat.QR_CODE,
+                    size,
+                    size,
+                    hashMapOf(
                         EncodeHintType.CHARACTER_SET to "UTF-8",
                         EncodeHintType.MARGIN to 0
+                    )
                 )
-        )
+            }
 
         @JvmStatic
-        fun toAmountNonDecimal(amount: BigDecimal, decimal: Int): BigDecimal = toAmountNonDecimal(amount, decimal.toDouble())
+        fun toAmountNonDecimal(amount: BigDecimal, decimal: Int): BigDecimal =
+            toAmountNonDecimal(amount, decimal.toDouble())
 
         @JvmStatic
-        fun toAmountNonDecimal(amount: BigDecimal, decimal: Double): BigDecimal = amount.divide(10.0.pow(decimal).toBigDecimal())
+        fun toAmountNonDecimal(amount: BigDecimal, decimal: Double): BigDecimal =
+            amount.divide(10.0.pow(decimal).toBigDecimal())
 
         @JvmStatic
         fun parsePaymentRequest(content: String): Array<String> {
@@ -96,23 +102,29 @@ class Support {
         @JvmStatic
         fun logStackTrace() {
             Thread.currentThread()
-                    .stackTrace
-                    .mapNotNull {
-                        if (
-                                it.className.startsWith("io.mozocoin") ||
-                                it.className.startsWith("com.google")
-                        ) it else null
-                    }
-                    .joinToString(separator = "\n") { "${it.className}.${it.methodName}" }.logPublic("signOut")
+                .stackTrace
+                .mapNotNull {
+                    if (
+                        it.className.startsWith("io.mozocoin") ||
+                        it.className.startsWith("com.google")
+                    ) it else null
+                }
+                .joinToString(separator = "\n") { "${it.className}.${it.methodName}" }
+                .logPublic("signOut")
         }
 
         @JvmStatic
         fun writeLog(content: String?) = MozoSDK.scope.launch(Dispatchers.IO) {
             content ?: return@launch
 
-            if (ActivityCompat.checkSelfPermission(MozoSDK.getInstance().context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(
+                    MozoSDK.getInstance().context,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 val today = SimpleDateFormat("yyMMMd", Locale.US).format(Date())
-                val file = File("sdcard/Mozo/${today}-${MozoSDK.getInstance().context.packageName}.log")
+                val file =
+                    File("sdcard/Mozo/${today}-${MozoSDK.getInstance().context.packageName}.log")
                 if (!file.exists()) {
                     try {
                         file.parentFile?.mkdirs()
@@ -170,14 +182,34 @@ class Support {
         }
 
         internal fun getDefaultCurrency() = ExchangeRateData(
-                ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, SharedPrefsUtils.getDefaultCurrencyRate()),
-                ExchangeRateInfo(Constant.DEFAULT_CURRENCY, Constant.DEFAULT_CURRENCY_SYMBOL, BigDecimal.ZERO)
+            ExchangeRateInfo(
+                Constant.DEFAULT_CURRENCY,
+                Constant.DEFAULT_CURRENCY_SYMBOL,
+                SharedPrefsUtils.getDefaultCurrencyRate()
+            ),
+            ExchangeRateInfo(
+                Constant.DEFAULT_CURRENCY,
+                Constant.DEFAULT_CURRENCY_SYMBOL,
+                BigDecimal.ZERO
+            )
         )
 
-        internal fun formatSpendableText(view: TextView?, balanceDisplay: String, isOnchain: Boolean = false) {
+        internal fun formatSpendableText(
+            view: TextView?,
+            balanceDisplay: String,
+            isOnchain: Boolean = false
+        ) {
             view ?: return
-            view.text = SpannableString(view.context.getString(R.string.mozo_transfer_spendable, balanceDisplay) + (if (isOnchain) " Onchain" else "")).apply {
-                set(indexOfFirst { it.isDigit() }..length, ForegroundColorSpan(view.context.color(R.color.mozo_color_primary)))
+            view.text = SpannableString(
+                view.context.getString(
+                    R.string.mozo_transfer_spendable,
+                    balanceDisplay
+                ) + (if (isOnchain) " Onchain" else "")
+            ).apply {
+                set(
+                    indexOfFirst { it.isDigit() }..length,
+                    ForegroundColorSpan(view.context.color(R.color.mozo_color_primary))
+                )
             }
             view.isVisible = true
         }
