@@ -177,9 +177,10 @@
         <item quantity="one">Customer departed</item>
         <item quantity="other">Customers departed</item>
     </plurals>
-    <string name="mozo_notify_title_received">Received %s Mozo</string>
-    <string name="mozo_notify_title_sent">Sent %s Mozo</string>
-    <string name="mozo_notify_title_airdrop_bonus">You got %s Bonus Mozo</string>
+    <string name="mozo_notify_title_received">Received [%s Mozo]</string>
+    <string name="mozo_notify_title_sent">Sent [%s Mozo]</string>
+    <string name="mozo_notify_title_airdrop_bonus">You got [%s Bonus Mozo]</string>
+    <string name="mozo_notify_title_airdrop_back">You got [%s Mozo] back</string>
     <string name="mozo_notify_title_promo_used">Promotion used</string>
     <string name="mozo_notify_title_promo_used_content">At %s</string>
     <string name="mozo_notify_title_promo_purchased">Shopper purchased promotion</string>
@@ -200,6 +201,7 @@
     <string name="mozo_notify_content_sent_group">Total: %s Mozo</string>
     <string name="mozo_notify_content_received_group">Total: %s Mozo</string>
     <string name="mozo_notify_content_invited_group">Total Friends have joined: %d</string>
+    <string name="mozo_notify_content_token_back">For redeemed promotion at %s</string>
 
     <string name="mozo_notify_warning_internet">Your internet connection has a problem 😔</string>
     <string name="mozo_notify_warning_action">Go to Settings →</string>

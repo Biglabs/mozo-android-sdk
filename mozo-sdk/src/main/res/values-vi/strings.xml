@@ -170,9 +170,10 @@
     <plurals name="mozo_notify_title_leave">
         <item quantity="other">Khách đã rời khỏi</item>
     </plurals>
-    <string name="mozo_notify_title_received">Đã nhận %s Mozo</string>
-    <string name="mozo_notify_title_sent">Đã gửi %s Mozo</string>
-    <string name="mozo_notify_title_airdrop_bonus">Bạn được thưởng %s Mozo</string>
+    <string name="mozo_notify_title_received">Đã nhận [%s Mozo]</string>
+    <string name="mozo_notify_title_sent">Đã gửi [%s Mozo]</string>
+    <string name="mozo_notify_title_airdrop_bonus">Bạn được thưởng [%s Mozo]</string>
+    <string name="mozo_notify_title_airdrop_back">Bạn được nhận lại [%s Mozo]</string>
     <string name="mozo_notify_title_promo_used">Khuyến mãi đã sử dụng</string>
     <string name="mozo_notify_title_promo_used_content">Tại %s</string>
     <string name="mozo_notify_title_promo_purchased">Khách hàng đã mua khuyến mãi</string>
@@ -193,6 +194,7 @@
     <string name="mozo_notify_content_sent_group">Tổng: %s Mozo</string>
     <string name="mozo_notify_content_received_group">Tổng: %s Mozo</string>
     <string name="mozo_notify_content_invited_group">Đã có %d người tham gia MozoX</string>
+    <string name="mozo_notify_content_token_back">Khi đổi thưởng tại %s</string>
 
     <string name="mozo_notify_warning_internet">Kết nối internet có vấn đề 😔</string>
     <string name="mozo_notify_warning_action">Thiết lập →</string>
