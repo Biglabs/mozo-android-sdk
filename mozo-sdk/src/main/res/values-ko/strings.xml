@@ -170,9 +170,9 @@
     <plurals name="mozo_notify_title_leave">
         <item quantity="other">고객이 출발했습니다.</item>
     </plurals>
-    <string name="mozo_notify_title_received">Mozo %s 를 받았습니다.</string>
-    <string name="mozo_notify_title_sent">Mozo %s 를 보냈습니다.</string>
-    <string name="mozo_notify_title_airdrop_bonus">%s 개 보너스 Mozo를 가지고 있습니다.</string>
+    <string name="mozo_notify_title_received">[Mozo %s 를] 받았습니다.</string>
+    <string name="mozo_notify_title_sent">[Mozo %s 를] 보냈습니다.</string>
+    <string name="mozo_notify_title_airdrop_bonus">[%s 개 보너스 Mozo를] 가지고 있습니다.</string>
     <string name="mozo_notify_title_promo_used">사용한 프로모션</string>
     <string name="mozo_notify_title_promo_used_content">%s에</string>
     <string name="mozo_notify_title_promo_purchased">프로모션을 구매한 구매자</string>

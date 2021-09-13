@@ -221,6 +221,7 @@ class MozoNotification private constructor() {
         internal fun shouldShowNotification(event: String?) = (if (MozoSDK.isRetailerApp)
             arrayOf(
                 Constant.NOTIFY_EVENT_AIRDROPPED,
+                Constant.NOTIFY_EVENT_AIRDROP_TOKEN_BACK,
                 Constant.NOTIFY_EVENT_AIRDROP_INVITE,
                 Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
                 Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
@@ -232,6 +233,7 @@ class MozoNotification private constructor() {
             ) else
             arrayOf(
                 Constant.NOTIFY_EVENT_AIRDROPPED,
+                Constant.NOTIFY_EVENT_AIRDROP_TOKEN_BACK,
                 Constant.NOTIFY_EVENT_AIRDROP_INVITE,
                 Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
                 Constant.NOTIFY_EVENT_BALANCE_CHANGED,
@@ -258,7 +260,8 @@ class MozoNotification private constructor() {
         }
 
         internal fun getNotificationIcon(type: String?) = when (type ?: "") {
-            Constant.NOTIFY_EVENT_AIRDROPPED -> R.drawable.im_notification_airdrop
+            Constant.NOTIFY_EVENT_AIRDROPPED,
+            Constant.NOTIFY_EVENT_AIRDROP_TOKEN_BACK -> R.drawable.im_notification_airdrop
             Constant.NOTIFY_EVENT_AIRDROP_INVITE -> R.drawable.im_notification_airdrop_invite
             Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
             Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
@@ -289,6 +292,7 @@ class MozoNotification private constructor() {
                         Constant.NOTIFY_EVENT_AIRDROP_FOUNDER,
                         Constant.NOTIFY_EVENT_AIRDROP_SIGN_UP,
                         Constant.NOTIFY_EVENT_AIRDROP_TOP_RETAILER -> R.string.mozo_notify_title_airdrop_bonus
+                        Constant.NOTIFY_EVENT_AIRDROP_TOKEN_BACK -> R.string.mozo_notify_title_airdrop_back
                         else -> if (isSendType) R.string.mozo_notify_title_sent else R.string.mozo_notify_title_received
                     },
                     Support.toAmountNonDecimal(message.amount, message.decimal).displayString()
@@ -301,6 +305,13 @@ class MozoNotification private constructor() {
                 Constant.NOTIFY_EVENT_AIRDROPPED -> {
                     content =
                         context.getString(R.string.mozo_notify_content_from, message.storeName)
+                }
+                Constant.NOTIFY_EVENT_AIRDROP_TOKEN_BACK -> {
+                    content =
+                        context.getString(
+                            R.string.mozo_notify_content_token_back,
+                            message.storeName
+                        )
                 }
                 Constant.NOTIFY_EVENT_AIRDROP_INVITE -> {
                     val phone = message.phoneNo?.censor(3, 4) ?: ""
@@ -407,6 +418,7 @@ class MozoNotification private constructor() {
                 }
                 when (rawData.event) {
                     Constant.NOTIFY_EVENT_AIRDROPPED,
+                    Constant.NOTIFY_EVENT_AIRDROP_TOKEN_BACK,
                     Constant.NOTIFY_EVENT_BALANCE_CHANGED -> {
                         val txHistory = TransactionHistory(
                             blockHeight = 0L,

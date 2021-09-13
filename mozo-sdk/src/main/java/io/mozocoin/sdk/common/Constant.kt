@@ -13,6 +13,7 @@ class Constant {
         const val STATUS_FAILED = "FAILED"
 
         const val NOTIFY_EVENT_AIRDROPPED = "airdropped"
+        const val NOTIFY_EVENT_AIRDROP_TOKEN_BACK = "promo_airdropped"
         const val NOTIFY_EVENT_AIRDROP_INVITE = "airdrop_invite"
         const val NOTIFY_EVENT_AIRDROP_FOUNDER = "airdrop_founder"
         const val NOTIFY_EVENT_AIRDROP_SIGN_UP = "airdrop_signup"
