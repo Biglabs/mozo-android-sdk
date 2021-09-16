@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
@@ -243,38 +245,37 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             /**
              * Detect Onchain MozoX inside Offchain Wallet Address
              * */
-            /**
-             * Disable Detect On-chain feature for now
-             * Wednesday, May 5, 2021 5:28:23 PM GMT+07:00
-             *
-            MozoAPIsService.getInstance().getOnChainBalanceInOffChain(requireContext(), currentAddress!!, { data, _ ->
-            _binding ?: return@getOnChainBalanceInOffChain
-            data ?: return@getOnChainBalanceInOffChain
+            MozoAPIsService.getInstance()
+                .getOnChainBalanceInOffChain(requireContext(), currentAddress!!, { data, _ ->
+                    _binding ?: return@getOnChainBalanceInOffChain
+                    data ?: return@getOnChainBalanceInOffChain
 
-            _binding?.walletInfoDetectedOnChain?.isVisible = data.detectedOnchain || !data.convertToMozoXOnchain
-            mOnChainBalanceInfo = data.balanceOfTokenOnchain
+                    _binding?.walletInfoDetectedOnChain?.isVisible =
+                        data.detectedOnchain || !data.convertToMozoXOnchain
+                    mOnChainBalanceInfo = data.balanceOfTokenOnchain
 
-            when {
-            !data.convertToMozoXOnchain -> {
-            _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(
-            getString(R.string.mozo_convert_on_in_off_converting),
-            FROM_HTML_MODE_LEGACY
-            )
-            }
-            data.detectedOnchain -> {
-            _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(getString(
-            R.string.mozo_convert_on_in_off_detected,
-            data.balanceOfTokenOnchain?.balanceNonDecimal()?.displayString()
-            ), FROM_HTML_MODE_LEGACY)
-            }
-            }
+                    when {
+                        !data.convertToMozoXOnchain -> {
+                            _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(
+                                getString(R.string.mozo_convert_on_in_off_converting),
+                                FROM_HTML_MODE_LEGACY
+                            )
+                        }
+                        data.detectedOnchain -> {
+                            _binding?.walletInfoDetectedOnChain?.text = HtmlCompat.fromHtml(
+                                getString(
+                                    R.string.mozo_convert_on_in_off_detected,
+                                    data.balanceOfTokenOnchain?.balanceNonDecimal()?.displayString()
+                                ), FROM_HTML_MODE_LEGACY
+                            )
+                        }
+                    }
 
-            if (data.convertToMozoXOnchain) {
-            SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(null, null)
-            }
+                    if (data.convertToMozoXOnchain) {
+                        SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(null, null)
+                    }
 
-            }, this@OffChainWalletFragment::fetchData)
-             */
+                }, this@OffChainWalletFragment::fetchData)
         }
     }
 
