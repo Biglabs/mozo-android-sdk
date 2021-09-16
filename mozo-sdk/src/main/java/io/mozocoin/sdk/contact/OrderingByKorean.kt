@@ -23,10 +23,21 @@ object OrderingByKorean {
             val rightChar = right[i]
 
             if (leftChar != rightChar) {
-                return if (isKoreanAndEnglish(leftChar, rightChar) || isKoreanAndNumber(leftChar, rightChar)
-                        || isEnglishAndNumber(leftChar, rightChar) || isKoreanAndSpecial(leftChar, rightChar)) {
+                return if (isKoreanAndEnglish(leftChar, rightChar) || isKoreanAndNumber(
+                        leftChar,
+                        rightChar
+                    )
+                    || isEnglishAndNumber(leftChar, rightChar) || isKoreanAndSpecial(
+                        leftChar,
+                        rightChar
+                    )
+                ) {
                     (leftChar - rightChar) * REVERSE
-                } else if (isEnglishAndSpecial(leftChar, rightChar) || isNumberAndSpecial(leftChar, rightChar)) {
+                } else if (isEnglishAndSpecial(leftChar, rightChar) || isNumberAndSpecial(
+                        leftChar,
+                        rightChar
+                    )
+                ) {
                     if (isEnglish(leftChar) || isNumber(leftChar)) {
                         LEFT_FIRST
                     } else {
@@ -66,27 +77,27 @@ object OrderingByKorean {
     }
 
     private fun isEnglish(ch: Char): Boolean {
-        return ch.toInt() >= 'A'.toInt() && ch.toInt() <= 'Z'.toInt() || ch.toInt() >= 'a'.toInt() && ch.toInt() <= 'z'.toInt()
+        return ch.code >= 'A'.code && ch.code <= 'Z'.code || ch.code >= 'a'.code && ch.code <= 'z'.code
     }
 
     fun isKorean(ch: Char?): Boolean {
         if (ch == null)
             return false
 
-        return ch.toInt() >= Integer.parseInt("AC00", 16) && ch.toInt() <= Integer.parseInt("D7A3", 16)
+        return ch.code >= Integer.parseInt("AC00", 16) && ch.code <= Integer.parseInt("D7A3", 16)
     }
 
     private fun isNumber(ch: Char): Boolean {
-        return ch.toInt() >= '0'.toInt() && ch.toInt() <= '9'.toInt()
+        return ch.code >= '0'.code && ch.code <= '9'.code
     }
 
     private fun isSpecial(ch: Char): Boolean {
-        return (ch.toInt() >= '!'.toInt() && ch.toInt() <= '/'.toInt() // !"#$%&'()*+,-./
+        return (ch.code >= '!'.code && ch.code <= '/'.code // !"#$%&'()*+,-./
 
-                || ch.toInt() >= ':'.toInt() && ch.toInt() <= '@'.toInt() //:;<=>?@
+                || ch.code >= ':'.code && ch.code <= '@'.code //:;<=>?@
 
-                || ch.toInt() >= '['.toInt() && ch.toInt() <= '`'.toInt() //[\]^_`
+                || ch.code >= '['.code && ch.code <= '`'.code //[\]^_`
 
-                || ch.toInt() >= '{'.toInt() && ch.toInt() <= '~'.toInt()) //{|}~
+                || ch.code >= '{'.code && ch.code <= '~'.code) //{|}~
     }
 }
