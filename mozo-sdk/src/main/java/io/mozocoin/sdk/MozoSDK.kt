@@ -163,7 +163,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @JvmStatic
         fun contactZalo(context: Context) {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://zalo.me/428563224447178063")))
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://zalo.me/4501855982660092369")))
         }
 
         @JvmStatic

@@ -12,7 +12,7 @@ object KoreanChar {
     private val COMPAT_CHOSEONG_MAP = intArrayOf(0x3131, 0x3132, 0x3134, 0x3137, 0x3138, 0x3139, 0x3141, 0x3142, 0x3143, 0x3145, 0x3146, 0x3147, 0x3148, 0x3149, 0x314A, 0x314B, 0x314C, 0x314D, 0x314E)
 
     private fun isSyllable(c: Char): Boolean {
-        return c.toInt() in HANGUL_SYLLABLES_BASE until HANGUL_SYLLABLES_END
+        return c.code in HANGUL_SYLLABLES_BASE until HANGUL_SYLLABLES_END
     }
 
     fun getCompatChoseong(value: Char?): Char {
@@ -24,7 +24,7 @@ object KoreanChar {
     }
 
     private fun getChoseongIndex(syllable: Char): Int {
-        val syllableIndex = syllable.toInt() - HANGUL_SYLLABLES_BASE
+        val syllableIndex = syllable.code - HANGUL_SYLLABLES_BASE
         return syllableIndex / (JUNGSEONG_COUNT * JONGSEONG_COUNT)
     }
 }
