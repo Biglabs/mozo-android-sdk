@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        COMPILE_VERSION = 30
-        TARGET_VERSION = 30
+        COMPILE_VERSION = 31
+        TARGET_VERSION = 31
         MIN_VERSION = 21
         KOTLIN_VERSION = '1.5.31'
 
