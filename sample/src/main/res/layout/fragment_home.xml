@@ -14,6 +14,11 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <io.mozocoin.sdk.ui.widget.LoginButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" />
+
         <io.mozocoin.sdk.ui.widget.TransactionHistoryButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -22,10 +27,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp" />
-
-        <io.mozocoin.sdk.ui.widget.LoginButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="match_parent"
