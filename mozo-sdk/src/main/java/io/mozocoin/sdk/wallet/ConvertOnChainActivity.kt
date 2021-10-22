@@ -198,7 +198,7 @@ internal class ConvertOnChainActivity : BaseActivity() {
                 wallet?.onchainAddress != null
         ) {
             val gasLimit = mGasInfo?.gasLimit.safe()
-            val finalAmount = MozoTx.getInstance().amountWithDecimal(amount)
+            val finalAmount = MozoTx.instance().amountWithDecimal(amount)
             return ConvertRequest(
                     wallet?.onchainAddress!!,
                     gasLimit,

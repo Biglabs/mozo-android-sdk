@@ -258,7 +258,7 @@ fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
 fun EditText.onAmountInputChanged(textChanged: ((String?) -> Unit)? = null, amountChanged: (BigDecimal) -> Unit) {
     inputType = InputType.TYPE_CLASS_NUMBER
     keyListener = DigitsKeyListener.getInstance("0123456789.,")
-    filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, MozoTx.getInstance().mozoDecimal().toInt()))
+    filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, MozoTx.instance().mozoDecimal().toInt()))
 
     onTextChanged {
         textChanged?.invoke(it?.toString())

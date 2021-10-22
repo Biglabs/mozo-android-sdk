@@ -19,7 +19,7 @@ class DemoSignMessageActivity : AppCompatActivity() {
 
         binding.buttonSign.setOnClickListener {
 
-            MozoTx.getInstance().signMessages(
+            MozoTx.instance().signMessages(
                     this,
                     binding.inputToSign.text.toString()
             ) { result ->

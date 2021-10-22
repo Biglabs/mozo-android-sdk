@@ -190,7 +190,7 @@ internal class TransactionDetailsActivity : BaseActivity() {
         if (isStore && id != null) {
             binding.loContentMask.click {
                 EventBus.getDefault().post(MessageEvent.CloseActivities())
-                MozoTx.getInstance().listeners.forEach {
+                MozoTx.instance().listeners.forEach {
                     it.openContactDetails(id)
                 }
             }

@@ -80,7 +80,7 @@ internal class ConvertBroadcastActivity : BaseActivity() {
     private fun updateUI() {
         if (!lastTxHash.isNullOrEmpty()) {
             val amountInDecimal = SharedPrefsUtils.getLastAmountConvertOnChainInOffChain()?.toBigDecimal().safe()
-            val amount = MozoTx.getInstance().amountNonDecimal(amountInDecimal)
+            val amount = MozoTx.instance().amountNonDecimal(amountInDecimal)
             binding.flipPageResult.convertBroadcastResultAmount.text = amount.displayString()
             binding.flipPageResult.convertBroadcastResultAmountRate.text = MozoWallet.getInstance().amountInCurrency(amount)
 
@@ -90,7 +90,7 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         convertRequest ?: return
 
         updateContainerUI(FLOW_STEP_CONFIRM)
-        val amount = MozoTx.getInstance().amountNonDecimal(convertRequest!!.value)
+        val amount = MozoTx.instance().amountNonDecimal(convertRequest!!.value)
         val amountDisplay = amount.displayString()
         val amountCurrency = MozoWallet.getInstance().amountInCurrency(amount)
         binding.flipPageConfirm.convertAmountOnChain.text = amountDisplay
@@ -133,9 +133,9 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         }
 
         if (isOnChain) {
-            MozoTx.getInstance().signOnChainMessage(this, data.toSign.first(), onReceiveMessage)
+            MozoTx.instance().signOnChainMessage(this, data.toSign.first(), onReceiveMessage)
         } else {
-            MozoTx.getInstance().signMessage(this, data.toSign.first(), onReceiveMessage)
+            MozoTx.instance().signMessage(this, data.toSign.first(), onReceiveMessage)
         }
     }
 

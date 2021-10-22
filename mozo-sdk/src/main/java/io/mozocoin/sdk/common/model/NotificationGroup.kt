@@ -70,7 +70,7 @@ enum class NotificationGroup(val id: Int) {
                     totalAmount = totalAmount.plus(it.toBigDecimalOrNull().safe())
                 }
             }
-            totalAmount = MozoTx.getInstance().amountNonDecimal(totalAmount)
+            totalAmount = MozoTx.instance().amountNonDecimal(totalAmount)
 
             val totalNotice = extras?.size ?: 0
             return when (notificationGroup) {

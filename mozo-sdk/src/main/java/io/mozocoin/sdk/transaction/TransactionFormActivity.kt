@@ -144,7 +144,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 ?: bindingForm.outputReceiverAddress.text.toString()
 
         showLoading()
-        MozoTx.getInstance()
+        MozoTx.instance()
                 .createTransaction(this, address, mInputAmount.toString()) { response, doRetry ->
                     if (doRetry) {
                         showLoading()
@@ -152,7 +152,7 @@ internal class TransactionFormActivity : BaseActivity() {
                     } else {
                         hideLoading()
                         history.addressTo = address
-                        history.amount = MozoTx.getInstance().amountWithDecimal(mInputAmount)
+                        history.amount = MozoTx.instance().amountWithDecimal(mInputAmount)
                         history.time = Calendar.getInstance().timeInMillis / 1000L
                         showResultUI(response)
                     }
@@ -260,7 +260,7 @@ internal class TransactionFormActivity : BaseActivity() {
                         MozoWallet.getInstance().getAddress() -> {
                             MessageDialog.show(it.context, R.string.mozo_transfer_err_send_to_own_wallet)
                         }
-                        else -> MozoTx.getInstance().verifyAddress(it.context, output) { isValid ->
+                        else -> MozoTx.instance().verifyAddress(it.context, output) { isValid ->
                             if (isValid) showConfirmationUI()
                         }
                     }
@@ -444,7 +444,7 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun updateTxStatus() {
-        MozoTx.getInstance().getTransactionStatus(this, history.txHash ?: return) {
+        MozoTx.instance().getTransactionStatus(this, history.txHash ?: return) {
             when {
                 it.isSuccess() -> {
                     bindingSent.transferCompletedTitle.setText(R.string.mozo_transfer_send_complete)

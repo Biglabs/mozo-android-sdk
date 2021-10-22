@@ -27,7 +27,7 @@ internal class TransferButton : BaseButton {
     }
 
     private fun doTransfer() {
-        MozoTx.getInstance().transfer()
+        MozoTx.instance().transfer()
     }
 
     override fun onClick(view: View) {

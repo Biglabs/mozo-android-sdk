@@ -27,7 +27,7 @@ internal class TransactionHistoryButton : BaseButton {
     }
 
     private fun doOpenTxHistory() {
-        MozoTx.getInstance().openTransactionHistory(context)
+        MozoTx.instance().openTransactionHistory(context)
     }
 
     override fun onClick(view: View) {

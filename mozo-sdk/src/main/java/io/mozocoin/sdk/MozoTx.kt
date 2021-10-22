@@ -293,7 +293,7 @@ class MozoTx private constructor() {
         private var instance: MozoTx? = null
 
         @JvmStatic
-        fun getInstance() = instance ?: synchronized(this) {
+        fun instance() = instance ?: synchronized(this) {
             instance = MozoTx()
             return@synchronized instance!!
         }

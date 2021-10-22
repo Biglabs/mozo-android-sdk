@@ -99,7 +99,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
         binding.walletFragmentBtnSend.apply {
             visibility = if (buttonSend) View.VISIBLE else View.GONE
             click {
-                MozoTx.getInstance().transfer()
+                MozoTx.instance().transfer()
             }
         }
         binding.walletFragmentOffConvert.click {
@@ -112,7 +112,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                 }, null)
         }
         binding.walletFragmentBtnViewAll.click {
-            MozoTx.getInstance().openTransactionHistory(it.context)
+            MozoTx.instance().openTransactionHistory(it.context)
         }
 
         historyAdapter.emptyView = binding.walletFragmentHistoryEmptyView
