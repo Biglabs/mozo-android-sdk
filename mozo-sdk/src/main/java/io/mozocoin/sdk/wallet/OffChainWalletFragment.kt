@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.text.HtmlCompat
-import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
@@ -253,8 +251,10 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             )
 
             /**
-             * Detect Onchain MozoX inside Offchain Wallet Address
+             * Detect OnChain MozoX inside Offchain Wallet Address
+             * unnecessary for now, view MozoX in OnChain tab
              * */
+            /*
             MozoAPIsService.getInstance()
                 .getOnChainBalanceInOffChain(requireContext(), currentAddress!!, { data, _ ->
                     _binding ?: return@getOnChainBalanceInOffChain
@@ -286,6 +286,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                     }
 
                 }, this@OffChainWalletFragment::fetchData)
+             */
         }
     }
 
