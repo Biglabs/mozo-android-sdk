@@ -103,7 +103,7 @@
 
                 <ImageView
                     android:id="@+id/wallet_fragment_qr_image"
-                    android:layout_width="85dp"
+                    android:layout_width="90dp"
                     android:layout_height="0dp"
                     android:layout_marginTop="@dimen/mozo_screen_margin"
                     android:layout_marginEnd="@dimen/mozo_screen_margin"

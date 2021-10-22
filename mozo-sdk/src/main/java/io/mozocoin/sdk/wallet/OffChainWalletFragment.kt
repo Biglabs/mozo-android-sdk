@@ -109,7 +109,8 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                 currentAddress ?: return@click, { data, errorCode ->
 
 
-                }, null)
+                }, null
+            )
         }
         binding.walletFragmentBtnViewAll.click {
             MozoTx.instance().openTransactionHistory(it.context)

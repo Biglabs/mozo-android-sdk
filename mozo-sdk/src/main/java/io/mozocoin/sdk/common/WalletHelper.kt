@@ -130,7 +130,7 @@ internal class WalletHelper {
         mnemonicEncrypted ?: return false
         return try {
             val raw = CryptoUtils.decrypt(mnemonicEncrypted!!, pin)
-            !raw.isNullOrEmpty() && MnemonicUtils.validateMnemonic(raw)
+            raw.isNotEmpty() && MnemonicUtils.validateMnemonic(raw)
         } catch (ignore: Exception) {
             false
         }
