@@ -15,8 +15,7 @@ public class SignMessages {
     private static final String wallet = "hub razor edge example spike raise skull club tilt current evil rebuild";
 
     private static final String[] toSigns = {
-            "blabla",
-            "haha"
+            "0x3652a3dfe364d9c7a1b6768aecbb8dd16d2ed6af24a4921bb89cb2edb2d96f3e"
     };
 
     public static void main(String[] args) {

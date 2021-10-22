@@ -9,14 +9,13 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/wallet_fragment_tabs"
         android:layout_width="0dp"
-        android:layout_height="?actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@drawable/mozo_dr_tab_bar_line"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@color/mozo_color_primary"
         app:tabIndicatorHeight="4dp"
-        android:visibility="gone"
         app:tabSelectedTextColor="@color/mozo_color_primary"
         app:tabTextAppearance="@style/MozoTabTextStyle"
         app:tabTextColor="@color/mozo_color_title">

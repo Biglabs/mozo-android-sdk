@@ -3,6 +3,7 @@ package io.mozocoin.sdk.common.service
 import android.app.Activity
 import android.content.Context
 import android.os.Build
+import com.google.gson.JsonObject
 import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
@@ -29,6 +30,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 internal class MozoAPIsService private constructor() {
@@ -233,6 +235,26 @@ internal class MozoAPIsService private constructor() {
     ) {
         MainScope().launch {
             execute(context, mozoAPIs.getConvertStatus(txHash), callback, retry)
+        }
+    }
+
+    /**
+     * Convert Off to On
+     */
+    fun prepareConvertOff2On(
+        context: Context,
+        amount: BigDecimal,
+        address: String,
+        callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?,
+        retry: (() -> Unit)? = null
+    ) {
+        MainScope().launch {
+            val obj = JsonObject().apply {
+                addProperty("amount", amount)
+                addProperty("offchainAddress", address)
+                addProperty("onchainAddress", address)
+            }
+            execute(context, mozoAPIs.prepareConvertOff2On(obj), callback, retry)
         }
     }
 

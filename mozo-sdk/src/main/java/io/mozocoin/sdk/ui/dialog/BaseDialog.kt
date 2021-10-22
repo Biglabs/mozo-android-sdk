@@ -24,7 +24,7 @@ open class BaseDialog(private val ctx: Context) : Dialog(ctx) {
         context.resources.getValue(R.dimen.mozo_background_dim_amount, value, true)
 
         window?.apply {
-            setBackgroundDrawableResource(R.drawable.mozo_bg_dialog_error)
+            setBackgroundDrawableResource(R.drawable.mozo_bg_dialog)
             setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
             setGravity(Gravity.CENTER)
             setDimAmount(value.float)

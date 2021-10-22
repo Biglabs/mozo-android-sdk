@@ -52,7 +52,8 @@
     <string name="mozo_button_onchain_wallets">Ví Onchain</string>
     <string name="mozo_button_onchain_how_to_buy">Hướng dẫn thêm MozoX</string>
     <string name="mozo_button_onchain_tx_history">Đi đến <b>Etherscan.io</b></string>
-    <string name="mozo_button_onchain_convert">Chuyển thành điểm thưởng Mozo</string>
+    <string name="mozo_button_convert_2_off">Chuyển thành điểm thưởng Mozo</string>
+    <string name="mozo_button_convert_2_on">Chuyển thành MozoX</string>
     <string name="mozo_button_onchain_converting">Đang xử lý giao dịch…</string>
     <string name="mozo_button_hide_transaction">Ẩn màn hình</string>
     <string name="mozo_button_back_on_chain">Trở về ví Onchain</string>

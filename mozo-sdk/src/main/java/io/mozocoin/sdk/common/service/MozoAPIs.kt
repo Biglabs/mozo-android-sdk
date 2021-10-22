@@ -1,5 +1,6 @@
 package io.mozocoin.sdk.common.service
 
+import com.google.gson.JsonObject
 import io.mozocoin.sdk.common.model.*
 import retrofit2.Call
 import retrofit2.http.*
@@ -135,6 +136,9 @@ internal interface MozoAPIs {
 
     @GET("${MozoAPIsService.APIS_STORE}/onchain/getBalanceETHAndFeeTransferERC20/{address}")
     fun getEthBalanceInOffChain(@Path("address") address: String): Call<Base<BalanceEthData>>
+
+    @POST("${MozoAPIsService.APIS_STORE}/solo/contract/solo-token/solo-token/sold")
+    fun prepareConvertOff2On(@Body request: JsonObject): Call<Base<TransactionResponse>>
 
     /**
      * To-do list APIs

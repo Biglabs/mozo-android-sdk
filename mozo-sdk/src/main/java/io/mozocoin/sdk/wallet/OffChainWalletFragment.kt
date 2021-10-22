@@ -31,6 +31,7 @@ import io.mozocoin.sdk.transaction.payment.PaymentRequestActivity
 import io.mozocoin.sdk.ui.dialog.QRCodeDialog
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
+import java.math.BigDecimal
 
 internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var _binding: FragmentMozoWalletOffBinding? = null
@@ -71,6 +72,24 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             setOnRefreshListener(this@OffChainWalletFragment)
         }
         binding.walletFragmentCurrencyValue.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+        binding.walletFragmentQrImage.click {
+            QRCodeDialog.show(it.context, currentAddress ?: return@click)
+        }
+        binding.walletFragmentAddress.click {
+            it.copyWithToast()
+        }
+        binding.walletInfoDetectedOnChain.click {
+            val lastTxHash = SharedPrefsUtils.getLastTxConvertOnChainInOffChain()
+            if (lastTxHash.isNullOrEmpty()) {
+                ConvertOnInOffActivity.start(
+                    it.context,
+                    currentAddress ?: return@click,
+                    mOnChainBalanceInfo ?: return@click
+                )
+            } else {
+                ConvertBroadcastActivity.start(it.context, lastTxHash)
+            }
+        }
         binding.walletFragmentBtnPaymentRequest.apply {
             visibility = if (buttonPaymentRequest) View.VISIBLE else View.GONE
             click {
@@ -83,27 +102,17 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
                 MozoTx.getInstance().transfer()
             }
         }
+        binding.walletFragmentOffConvert.click {
+            MozoAPIsService.getInstance().prepareConvertOff2On(
+                it.context,
+                BigDecimal.valueOf(1000),
+                currentAddress ?: return@click, { data, errorCode ->
+
+
+                }, null)
+        }
         binding.walletFragmentBtnViewAll.click {
             MozoTx.getInstance().openTransactionHistory(it.context)
-        }
-        binding.walletFragmentQrImage.click {
-            QRCodeDialog.show(it.context, currentAddress ?: return@click)
-        }
-        binding.walletFragmentAddress.click {
-            it.copyWithToast()
-        }
-
-        binding.walletInfoDetectedOnChain.click {
-            val lastTxHash = SharedPrefsUtils.getLastTxConvertOnChainInOffChain()
-            if (lastTxHash.isNullOrEmpty()) {
-                ConvertOnInOffActivity.start(
-                    it.context,
-                    currentAddress ?: return@click,
-                    mOnChainBalanceInfo ?: return@click
-                )
-            } else {
-                ConvertBroadcastActivity.start(it.context, lastTxHash)
-            }
         }
 
         historyAdapter.emptyView = binding.walletFragmentHistoryEmptyView

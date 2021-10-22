@@ -171,7 +171,7 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
             binding.walletFragmentOnConvert.isEnabled = data.convertToMozoXOnchain
             binding.walletFragmentOnConvert.setText(
-                    if (data.convertToMozoXOnchain) R.string.mozo_button_onchain_convert
+                    if (data.convertToMozoXOnchain) R.string.mozo_button_convert_2_off
                     else R.string.mozo_button_onchain_converting
             )
         }, this::fetchData)

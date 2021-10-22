@@ -32,6 +32,7 @@ internal class QRCodeDialog(context: Context, val value: String) : BaseDialog(co
             }
         }
 
+        binding.title.text = value
         binding.buttonClose.click { dismiss() }
     }
 

@@ -52,7 +52,8 @@
     <string name="mozo_button_onchain_wallets">Onchain 지갑</string>
     <string name="mozo_button_onchain_how_to_buy">MozoX를 추가하는 방법은 무엇입니까?</string>
     <string name="mozo_button_onchain_tx_history"><b>Etherscan.io</b>로 이동합니다</string>
-    <string name="mozo_button_onchain_convert">Mozo으로 변환</string>
+    <string name="mozo_button_convert_2_off">Mozo으로 변환</string>
+    <string name="mozo_button_convert_2_on">MozoX으로 변환</string>
     <string name="mozo_button_onchain_converting">보류중인 거래 …</string>
     <string name="mozo_button_hide_transaction">거래 숨기기</string>
     <string name="mozo_button_back_on_chain">Onchain 지갑으로 돌아 가기</string>

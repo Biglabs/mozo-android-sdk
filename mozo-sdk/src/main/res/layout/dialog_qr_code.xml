@@ -25,13 +25,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="42dp"
         android:layout_marginTop="14dp"
+        android:gravity="center"
+        android:lines="1"
         android:text="@string/mozo_view_address_title"
         android:textColor="@color/mozo_color_section_text"
         android:textSize="12sp"
+        app:autoSizeMaxTextSize="12sp"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="@id/image_qr_code"
         app:layout_constraintStart_toStartOf="@id/image_qr_code"
         app:layout_constraintTop_toTopOf="parent" />
