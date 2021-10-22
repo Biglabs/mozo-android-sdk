@@ -56,7 +56,7 @@
     <string name="mozo_button_convert_2_on">MozoX으로 변환</string>
     <string name="mozo_button_onchain_converting">보류중인 거래 …</string>
     <string name="mozo_button_hide_transaction">거래 숨기기</string>
-    <string name="mozo_button_back_on_chain">Onchain 지갑으로 돌아 가기</string>
+    <string name="mozo_button_back_on_chain">지갑으로 돌아 가기</string>
 
     <string name="mozo_button_ok">확인</string>
     <string name="mozo_button_confirm">확인</string>
@@ -100,22 +100,26 @@
     <string name="mozo_backup_confirm_failed">잘못된 복구 문구</string>
 
     <string name="mozo_convert_title">Mozo으로 변환</string>
-    <string name="mozo_convert_amount_hint">Mozo로 변환할 MozoX 수 입력</string>
+    <string name="mozo_convert_amount_hint">변환할 금액을 입력하세요</string>
     <string name="mozo_convert_slow">느리다</string>
     <string name="mozo_convert_normal">정상</string>
     <string name="mozo_convert_fast">빠르다</string>
     <string name="mozo_convert_explain">가스 가격은 가스 단위당(GWEI) 지불하는 금액입니다. <b>TX fee = Txn에서 사용하는 가스 * Gas Price</b> 이며  TX fee는 한 블록 내에 TX를 포함시키기 위하여 광부에게 지급됩니다. 가스 가격이 높을수록 거래는 빠르지 만 가격은 더 비쌉니다.</string>
     <string name="mozo_convert_from_on_chain">Onchain에서</string>
+    <string name="mozo_convert_from_off_chain">Offchain에서</string>
     <string name="mozo_convert_to_off_chain">Offchain으로</string>
+    <string name="mozo_convert_to_on_chain">Onchain으로</string>
     <string name="mozo_convert_submit_broadcast_title">전송 완료</string>
     <string name="mozo_convert_submit_broadcasting_title">거래 전송중…</string>
     <string name="mozo_convert_submit_broadcasting_content">거래를 완료하기 위하여 약 <b>3 분</b> 정도 걸릴 수 있습니다.</string>
     <string name="mozo_convert_submit_hide_explain">이 화면을 숨기면 거래가 <b>완료되거나 실패 할</b> 때 알림을 받게됩니다.</string>
     <string name="mozo_convert_submit_waiting_title">거래 상태를 기다리는 중…</string>
     <string name="mozo_convert_submit_success_title">성공적으로 변환</string>
-    <string name="mozo_convert_submit_success_content"><b>MozoX</b>를 <b>Mozo</b>로 변환하셨습니다</string>
+    <string name="mozo_convert_submit_success_on_2_off"><b>MozoX</b>를 <b>Mozo</b>로 변환하셨습니다</string>
+    <string name="mozo_convert_submit_success_off_2_on"><b>Mozo</b>를 <b>MozoX</b>로 변환하셨습니다</string>
     <string name="mozo_convert_submit_fail_title">변환 실패</string>
-    <string name="mozo_convert_submit_fail_content"><b>MozoX</b>에서 <b>Mozo</b>로 변환을 완료 할 수 없습니다.\n\n잠시 후 다시 시도하십시오.</string>
+    <string name="mozo_convert_submit_fail_on_2_off"><b>MozoX</b>에서 <b>Mozo</b>로 변환을 완료 할 수 없습니다.\n\n잠시 후 다시 시도하십시오.</string>
+    <string name="mozo_convert_submit_fail_off_2_on"><b>Mozo</b>에서 <b>MozoX</b>로 변환을 완료 할 수 없습니다.\n\n잠시 후 다시 시도하십시오.</string>
     <string name="mozo_convert_on_in_off_detected">&lt;b>Onchain 지갑에서 %s MozoX 발견&lt;/b>&lt;br/>이 지갑에 있는 MozoX를 Mozo로 변환하시겠습니까?</string>
     <string name="mozo_convert_on_in_off_converting">&lt;b>Mozo로 변환 중…&lt;/b></string>
     <string name="mozo_convert_on_in_off_warning">ETH 잔액은 &lt;b>%1$s&lt;/b>입니다.&lt;br/>TX 요금을 지불하기 위하여 이 Onchain 지갑 주소로 &lt;b>%2$s ETH&lt;/b>를 전송해야합니다.</string>
@@ -271,7 +275,6 @@
     <string name="mozo_transfer_amount">금액</string>
     <string name="mozo_transfer_amount_hint">보낼 Mozo 금액을 입력하십시오.</string>
     <string name="mozo_transfer_amount_error_not_enough">오류 : 잔액만으로는 충분하지 않습니다.</string>
-    <string name="mozo_transfer_amount_on_chain_not_enough">Onchain 밸런스가 충분하지 않습니다.</string>
     <string name="mozo_transfer_amount_eth_not_enough">ETH 밸런스가 충분하지 않습니다.</string>
     <string name="mozo_transfer_amount_error_too_low">오류 : 금액이 너무 적습니다. 유효한 금액을 입력하십시오.</string>
     <string name="mozo_transfer_amount_error">오류 : 십진수로 값을 입력하십시오.</string>

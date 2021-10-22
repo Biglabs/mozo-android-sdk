@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
@@ -101,14 +100,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             }
         }
         binding.walletFragmentOffConvert.click {
-            MozoAPIsService.getInstance().prepareConvertOff2On(
-                it.context,
-                BigDecimal.valueOf(1000),
-                currentAddress ?: return@click, { data, errorCode ->
-
-
-                }, null
-            )
+            ConvertActivity.startForOff2On(it.context)
         }
         binding.walletFragmentBtnViewAll.click {
             MozoTx.instance().openTransactionHistory(it.context)
@@ -183,8 +175,8 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
         } else {
 
             /* Clear last information */
-            view?.find<TextView>(R.id.wallet_fragment_balance_value)?.text = null
-            view?.find<TextView>(R.id.wallet_fragment_currency_value)?.text = null
+            _binding?.walletFragmentBalanceValue?.text = null
+            _binding?.walletFragmentCurrencyValue?.text = null
 
             currentAddress = null
             histories.clear()
@@ -198,14 +190,15 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
     }
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
-        it?.run {
-            view?.find<TextView>(R.id.wallet_fragment_balance_value)?.apply {
-                text = if (realValues) balanceNonDecimal.displayString() else null
-            }
-            view?.find<TextView>(R.id.wallet_fragment_currency_value)?.apply {
-                text = if (realValues) balanceNonDecimalInCurrencyDisplay else null
-            }
-        }
+        it ?: return@Observer
+        _binding?.walletFragmentBalanceValue?.text =
+            if (it.realValues) it.balanceNonDecimal.displayString() else null
+        _binding?.walletFragmentCurrencyValue?.text =
+            if (it.realValues) it.balanceNonDecimalInCurrencyDisplay else null
+
+        val isNoBalance = it.balanceNonDecimal == BigDecimal.ZERO
+        _binding?.walletFragmentBtnSend?.isEnabled = !isNoBalance
+        _binding?.walletFragmentOffConvert?.isEnabled = !isNoBalance
     }
 
     @Synchronized

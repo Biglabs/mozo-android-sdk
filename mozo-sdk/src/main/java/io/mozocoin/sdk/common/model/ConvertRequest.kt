@@ -12,5 +12,6 @@ data class ConvertRequest(
         val gasPrice: BigDecimal,
         val toAddress: String,
         val value: BigDecimal,
-        @Ignore @Transient var gasPriceProgress: Int = 0
+        @Ignore @Transient var gasPriceProgress: Int = 0,
+        @Ignore @Transient var on2Off: Boolean = true
 ) : Parcelable

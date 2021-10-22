@@ -41,7 +41,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="50dp"
         android:gravity="center"
-        android:text="@string/mozo_convert_submit_success_content"
+        android:text="@string/mozo_convert_submit_success_on_2_off"
         android:textColor="@color/mozo_color_text_main"
         android:textSize="@dimen/mozo_text_size"
         app:layout_constraintEnd_toEndOf="parent"

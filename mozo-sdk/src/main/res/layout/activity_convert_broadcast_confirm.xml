@@ -18,6 +18,7 @@
         app:srcCompat="@drawable/ic_action_sync" />
 
     <TextView
+        android:id="@+id/convert_head_line"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="75dp"
@@ -44,6 +45,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/convert_from_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
@@ -93,6 +95,7 @@
         app:tint="@color/mozo_color_title" />
 
     <TextView
+        android:id="@+id/convert_to_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
@@ -146,6 +149,7 @@
         app:layout_constraintTop_toBottomOf="@id/line_top" />
 
     <TextView
+        android:id="@+id/gas_limit_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
@@ -170,6 +174,7 @@
         tools:text="4,000" />
 
     <View
+        android:id="@+id/gas_limit_line"
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_marginStart="@dimen/mozo_screen_margin"
@@ -181,6 +186,7 @@
         app:layout_constraintTop_toBottomOf="@id/convert_gas_limit" />
 
     <TextView
+        android:id="@+id/gas_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
@@ -205,6 +211,7 @@
         tools:text="4,000" />
 
     <TextView
+        android:id="@+id/gas_gwei"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -216,6 +223,7 @@
         tools:ignore="HardcodedText" />
 
     <View
+        android:id="@+id/gas_line"
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_marginStart="@dimen/mozo_screen_margin"
@@ -236,6 +244,14 @@
         app:layout_constraintBaseline_toBaselineOf="@id/convert_gas_price"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="@string/mozo_convert_fast" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/gas_group"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:constraint_referenced_ids="gas_limit_label,convert_gas_limit,gas_limit_line,gas_label,convert_gas_price,gas_gwei,gas_line,convert_gas_price_speed"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/button_confirm"

@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true">
 
     <io.mozocoin.sdk.ui.widget.MozoToolbar
-        android:id="@+id/convert_on_chain_toolbar"
+        android:id="@+id/convert_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:buttonClose="true"
@@ -23,14 +23,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/convert_on_chain_toolbar">
+        app:layout_constraintTop_toBottomOf="@id/convert_toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/scroll_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:paddingBottom="100dp">
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/input_group"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:constraint_referenced_ids="output_amount_label,input_convert_amount,input_convert_icon,output_amount_underline,output_amount_spendable" />
 
             <TextView
                 android:id="@+id/output_amount_label"
@@ -72,6 +79,7 @@
                 tools:targetApi="o" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/input_convert_icon"
                 android:layout_width="24dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="10.5dp"

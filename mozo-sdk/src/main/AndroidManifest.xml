@@ -120,7 +120,7 @@
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
-            android:name=".wallet.ConvertOnChainActivity"
+            android:name=".wallet.ConvertActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask"

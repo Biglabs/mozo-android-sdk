@@ -136,7 +136,11 @@ internal class WalletHelper {
         }
     }
 
-    fun buildWalletInfo() = WalletInfo(mnemonicEncrypted, offChainAddress, onChainAddress, pinEncrypted)
+    /**
+     * Keep the OnChain address the same as OffChain address
+     * to make easy to use for users
+     */
+    fun buildWalletInfo() = WalletInfo(mnemonicEncrypted, offChainAddress, offChainAddress, pinEncrypted)
 
     fun buildOffChainCredentials() = if (isUnlocked() && !offChainPrivateKey.isNullOrEmpty())
         Credentials.create(offChainPrivateKey)

@@ -75,7 +75,7 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
 
         binding.walletFragmentOnConvert.click {
-            ConvertOnChainActivity.start(context ?: return@click)
+            ConvertActivity.startForOn2Off(it.context)
         }
 
         binding.walletFragmentOnTokenCurrency.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
@@ -133,11 +133,7 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun prepareAddress() {
         if (onChainAddress.isNullOrEmpty()) {
             val wallet = MozoWallet.getInstance().getWallet()?.buildWalletInfo()
-            /**
-             * Keep the OnChain address the same as OffChain address
-             * to make easy to use for users
-             */
-            onChainAddress = wallet?.offchainAddress
+            onChainAddress = wallet?.onchainAddress
             updateUI()
         }
     }
@@ -187,7 +183,8 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 binding.walletFragmentOnTokenCurrency.text = MozoWallet.getInstance()
                     .amountInCurrency(mBalanceOnChain)
 
-                binding.walletFragmentOnConvert.isEnabled = data.convertToMozoXOnchain
+                binding.walletFragmentOnConvert.isEnabled =
+                    data.convertToMozoXOnchain && mBalanceOnChain > BigDecimal.ZERO
                 binding.walletFragmentOnConvert.setText(
                     if (data.convertToMozoXOnchain) R.string.mozo_button_convert_2_off
                     else R.string.mozo_button_onchain_converting
@@ -204,6 +201,12 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private val profileObserver = Observer<Profile?> {
+        if (onChainAddress != it.walletInfo?.offchainAddress) {
+            /**
+             * Should clear last address to reload a new one
+             */
+            onChainAddress = null
+        }
         onResume()
     }
 

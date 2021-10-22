@@ -13,6 +13,7 @@ import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.TransferSpeed
 import io.mozocoin.sdk.common.model.ConvertRequest
 import io.mozocoin.sdk.common.model.TransactionResponse
+import io.mozocoin.sdk.common.model.TransactionStatus
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.databinding.ActivityConvertBroadcastBinding
 import io.mozocoin.sdk.ui.BaseActivity
@@ -26,6 +27,7 @@ internal class ConvertBroadcastActivity : BaseActivity() {
     private var checkStatusJob: Job? = null
     private var isOnChain = true
     private var isCanBack = true
+    private var isConvertingOn2Off = true
 
     private var lastTxHash: String? = null
 
@@ -37,18 +39,24 @@ internal class ConvertBroadcastActivity : BaseActivity() {
                 convertRequest = intent.getParcelableExtra(KEY_DATA)
                 isOnChain = intent.getBooleanExtra(KEY_CONVERT_ON_CHAIN, isOnChain)
             }
-            intent?.hasExtra(KEY_DATA_TX_HASH) == true -> lastTxHash = intent.getStringExtra(KEY_DATA_TX_HASH)
+            intent?.hasExtra(KEY_DATA_TX_HASH) == true -> lastTxHash =
+                intent.getStringExtra(KEY_DATA_TX_HASH)
             else -> {
                 finish()
                 return
             }
         }
+        isConvertingOn2Off = (convertRequest == null || convertRequest!!.on2Off)
+
         binding = ActivityConvertBroadcastBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.flipPageConfirm.convertAmountOnChainRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
-        binding.flipPageConfirm.convertAmountOffChainRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
-        binding.flipPageResult.convertBroadcastResultAmountRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+        binding.flipPageConfirm.convertAmountOnChainRate.isVisible =
+            Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+        binding.flipPageConfirm.convertAmountOffChainRate.isVisible =
+            Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+        binding.flipPageResult.convertBroadcastResultAmountRate.isVisible =
+            Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
 
         updateUI()
 
@@ -79,17 +87,46 @@ internal class ConvertBroadcastActivity : BaseActivity() {
 
     private fun updateUI() {
         if (!lastTxHash.isNullOrEmpty()) {
-            val amountInDecimal = SharedPrefsUtils.getLastAmountConvertOnChainInOffChain()?.toBigDecimal().safe()
+            val amountInDecimal =
+                SharedPrefsUtils.getLastAmountConvertOnChainInOffChain()?.toBigDecimal().safe()
             val amount = MozoTx.instance().amountNonDecimal(amountInDecimal)
             binding.flipPageResult.convertBroadcastResultAmount.text = amount.displayString()
-            binding.flipPageResult.convertBroadcastResultAmountRate.text = MozoWallet.getInstance().amountInCurrency(amount)
+            binding.flipPageResult.convertBroadcastResultAmountRate.text =
+                MozoWallet.getInstance().amountInCurrency(amount)
 
             checkConvertStatus(lastTxHash)
             return
         }
         convertRequest ?: return
 
+        val convertingTitle = if (isConvertingOn2Off) R.string.mozo_button_convert_2_off
+        else R.string.mozo_button_convert_2_on
+        binding.convertBroadcastToolbar.setTitle(convertingTitle)
+
         updateContainerUI(FLOW_STEP_CONFIRM)
+        binding.flipPageConfirm.convertHeadLine.setText(convertingTitle)
+        binding.flipPageConfirm.convertFromLabel.setText(
+            if (isConvertingOn2Off) R.string.mozo_convert_from_on_chain
+            else R.string.mozo_convert_from_off_chain
+        )
+        binding.flipPageConfirm.convertAmountOnChain.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            if (isConvertingOn2Off) R.drawable.ic_mozo_onchain else R.drawable.ic_mozo_offchain,
+            0,
+            0,
+            0
+        )
+        binding.flipPageConfirm.convertToLabel.setText(
+            if (isConvertingOn2Off) R.string.mozo_convert_to_off_chain
+            else R.string.mozo_convert_to_on_chain
+        )
+        binding.flipPageConfirm.convertAmountOffChain.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            if (isConvertingOn2Off) R.drawable.ic_mozo_offchain else R.drawable.ic_mozo_onchain,
+            0,
+            0,
+            0
+        )
+        binding.flipPageConfirm.gasGroup.isVisible = isConvertingOn2Off
+
         val amount = MozoTx.instance().amountNonDecimal(convertRequest!!.value)
         val amountDisplay = amount.displayString()
         val amountCurrency = MozoWallet.getInstance().amountInCurrency(amount)
@@ -100,9 +137,14 @@ internal class ConvertBroadcastActivity : BaseActivity() {
 
         binding.flipPageResult.convertBroadcastResultAmount.text = amountDisplay
         binding.flipPageResult.convertBroadcastResultAmountRate.text = amountCurrency
+        binding.flipPageResult.convertBroadcastResultAmount.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            if (isConvertingOn2Off) R.drawable.ic_mozo_offchain else R.drawable.ic_mozo_onchain,
+            0, 0, 0
+        )
 
         binding.flipPageConfirm.convertGasLimit.text = convertRequest!!.gasLimit.displayString()
-        binding.flipPageConfirm.convertGasPrice.text = convertRequest!!.gasPrice.toGwei().displayString()
+        binding.flipPageConfirm.convertGasPrice.text =
+            convertRequest!!.gasPrice.toGwei().displayString()
         binding.flipPageConfirm.convertGasPriceSpeed.setText(TransferSpeed.calculate(convertRequest!!.gasPriceProgress).display)
     }
 
@@ -111,17 +153,30 @@ internal class ConvertBroadcastActivity : BaseActivity() {
     }
 
     private fun sendConvertRequest() {
+        convertRequest ?: return
         showLoading(true)
-        MozoAPIsService.getInstance().prepareConvertRequest(
+
+        val callback: (data: TransactionResponse?, errorCode: String?) -> Unit = { data, _ ->
+            showLoading(data != null)
+            if (data != null) signConvertRequest(data)
+        }
+
+        if (convertRequest!!.on2Off) {
+            MozoAPIsService.getInstance().prepareConvertRequest(
                 this,
-                convertRequest ?: return,
-                { data, _ ->
-                    showLoading(data != null)
-                    data ?: return@prepareConvertRequest
-                    signConvertRequest(data)
-                },
+                convertRequest!!,
+                callback,
                 this::sendConvertRequest
-        )
+            )
+        } else {
+            MozoAPIsService.getInstance().prepareConvertOff2On(
+                this,
+                convertRequest!!.value,
+                convertRequest!!.toAddress,
+                callback,
+                this::sendConvertRequest
+            )
+        }
     }
 
     private fun signConvertRequest(data: TransactionResponse) {
@@ -146,21 +201,32 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         checkStatusJob?.cancel()
         isCanBack = false
 
-        MozoAPIsService.getInstance().signConvertRequest(this, response, { data, _ ->
+        val callback: (data: TransactionResponse?, errorCode: String?) -> Unit = { data, _ ->
             if (data == null) {
                 updateContainerUI(FLOW_STEP_CONFIRM)
                 isCanBack = true
-                return@signConvertRequest
-            }
+            } else {
 
-            if (!isOnChain) {
-                SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(data.tx.hash, convertRequest?.value.toString())
+                if (!isOnChain) {
+                    SharedPrefsUtils.setLastInfoConvertOnChainInOffChain(
+                        data.tx.hash,
+                        convertRequest?.value.toString()
+                    )
+                }
+                binding.flipPageSubmit.convertBroadcastSubmitTitle.setText(R.string.mozo_convert_submit_broadcast_title)
+                checkConvertStatus(data.tx.hash)
             }
-            binding.flipPageSubmit.convertBroadcastSubmitTitle.setText(R.string.mozo_convert_submit_broadcast_title)
-            checkConvertStatus(data.tx.hash)
-        }, {
-            submitRequest(response)
-        })
+        }
+
+        if (convertRequest?.on2Off == true) {
+            MozoAPIsService.getInstance().signConvertRequest(this, response, callback, {
+                submitRequest(response)
+            })
+        } else {
+            MozoAPIsService.getInstance().sendTransaction(this, response, callback, {
+                submitRequest(response)
+            })
+        }
     }
 
     private fun checkConvertStatus(hash: String?) {
@@ -171,24 +237,30 @@ internal class ConvertBroadcastActivity : BaseActivity() {
             return
         }
         updateContainerUI(FLOW_STEP_WAITING)
+
+        val callback: (data: TransactionStatus?, errorCode: String?) -> Unit = { data, _ ->
+            if (data != null && (data.isSuccess() || data.isFailed())) {
+                checkStatusJob?.cancel()
+                checkStatusJob = null
+                updateResultUI(data.isSuccess(), data.txHash)
+
+            } else /* PENDING */ {
+                checkConvertStatus(hash)
+            }
+        }
         checkStatusJob = MainScope().launch {
             delay(2000)
 
             binding.flipPageSubmit.convertBroadcastSubmitTitle.setText(R.string.mozo_convert_submit_waiting_title)
-
-            MozoAPIsService.getInstance().getConvertStatus(this@ConvertBroadcastActivity, hash, { data, _ ->
-                data ?: return@getConvertStatus
-                if (data.isSuccess() || data.isFailed()) {
-                    checkStatusJob?.cancel()
-                    checkStatusJob = null
-                    updateResultUI(data.isSuccess(), data.txHash)
-
-                } else /* PENDING */ {
-                    checkConvertStatus(hash)
-                }
-            }, {
-                checkConvertStatus(hash)
-            })
+            if (convertRequest?.on2Off == true) {
+                MozoAPIsService.getInstance()
+                    .getConvertStatus(this@ConvertBroadcastActivity, hash, callback, {
+                        checkConvertStatus(hash)
+                    })
+            } else {
+                MozoAPIsService.getInstance()
+                    .getTxStatus(this@ConvertBroadcastActivity, hash, callback)
+            }
         }
     }
 
@@ -201,10 +273,14 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         if (success) {
             binding.flipPageResult.convertBroadcastResultIcon.setImageResource(R.drawable.ic_send_complete)
             binding.flipPageResult.convertBroadcastResultTitle.setText(R.string.mozo_convert_submit_success_title)
-            binding.flipPageResult.convertBroadcastResultContent.setText(R.string.mozo_convert_submit_success_content)
+            binding.flipPageResult.convertBroadcastResultContent.setText(
+                if (isConvertingOn2Off) R.string.mozo_convert_submit_success_on_2_off
+                else R.string.mozo_convert_submit_success_off_2_on
+            )
             binding.flipPageResult.convertBroadcastResultHash.text = hash
             binding.flipPageResult.convertBroadcastResultHash.click {
-                openTab(StringBuilder("https://")
+                openTab(
+                    StringBuilder("https://")
                         .append(Support.domainEhterscan())
                         .append("/tx/")
                         .append(it.text)
@@ -212,10 +288,17 @@ internal class ConvertBroadcastActivity : BaseActivity() {
                 )
             }
             binding.flipPageResult.convertBroadcastResultAmountGroup.visible()
+            binding.flipPageResult.convertBroadcastResultAmountRate.isVisible =
+                Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+            binding.flipPageResult.convertBroadcastResultHashLabel.isVisible = isConvertingOn2Off
+            binding.flipPageResult.convertBroadcastResultHash.isVisible = isConvertingOn2Off
         } else {
             binding.flipPageResult.convertBroadcastResultIcon.setImageResource(R.drawable.ic_send_failed)
             binding.flipPageResult.convertBroadcastResultTitle.setText(R.string.mozo_convert_submit_fail_title)
-            binding.flipPageResult.convertBroadcastResultContent.setText(R.string.mozo_convert_submit_fail_content)
+            binding.flipPageResult.convertBroadcastResultContent.setText(
+                if (isConvertingOn2Off) R.string.mozo_convert_submit_fail_on_2_off
+                else R.string.mozo_convert_submit_success_off_2_on
+            )
             binding.flipPageResult.convertBroadcastResultAmountGroup.visibility = View.INVISIBLE
         }
     }
@@ -237,16 +320,16 @@ internal class ConvertBroadcastActivity : BaseActivity() {
 
         fun start(context: Context, request: ConvertRequest, isOnChain: Boolean = true) {
             context.startActivity(
-                    Intent(context, ConvertBroadcastActivity::class.java)
-                            .putExtra(KEY_DATA, request)
-                            .putExtra(KEY_CONVERT_ON_CHAIN, isOnChain)
+                Intent(context, ConvertBroadcastActivity::class.java)
+                    .putExtra(KEY_DATA, request)
+                    .putExtra(KEY_CONVERT_ON_CHAIN, isOnChain)
             )
         }
 
         fun start(context: Context, txHash: String) {
             context.startActivity(
-                    Intent(context, ConvertBroadcastActivity::class.java)
-                            .putExtra(KEY_DATA_TX_HASH, txHash)
+                Intent(context, ConvertBroadcastActivity::class.java)
+                    .putExtra(KEY_DATA_TX_HASH, txHash)
             )
         }
     }
