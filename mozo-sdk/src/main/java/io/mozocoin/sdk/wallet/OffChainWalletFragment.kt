@@ -213,6 +213,7 @@ internal class OffChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefresh
             MozoAPIsService.getInstance().getTransactionHistory(
                 requireContext(), currentAddress!!,
                 page = Constant.PAGING_START_INDEX,
+                size = 20,
                 callback = { data, _ ->
                     _binding?.walletFragmentOffSwipe?.isRefreshing = false
                     _binding?.walletFragmentTxLoading?.gone()

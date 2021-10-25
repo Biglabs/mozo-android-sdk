@@ -232,6 +232,13 @@ internal class ConvertActivity : BaseActivity() {
                 MessageDialog.show(this, R.string.mozo_transfer_amount_error_not_enough)
                 return null
             }
+            !isConvertOn2Off && amount > MAX_CONVERT_OFF_2_ON -> {
+                MessageDialog.show(
+                    this,
+                    getString(R.string.mozo_convert_reach_limit, MAX_CONVERT_OFF_2_ON.displayString())
+                )
+                return null
+            }
             isConvertOn2Off && gasPrice > mBalanceOfEthInWei -> {
                 MessageDialog.show(this, R.string.mozo_transfer_amount_eth_not_enough)
                 return null
@@ -259,6 +266,7 @@ internal class ConvertActivity : BaseActivity() {
 
     companion object {
         private const val MODE_ON_2_OFF = "MODE_ON_2_OFF"
+        private val MAX_CONVERT_OFF_2_ON = BigDecimal("50000000")
 
         private fun start(context: Context, isOn2Off: Boolean) =
             Intent(context, ConvertActivity::class.java).apply {
