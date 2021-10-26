@@ -36,6 +36,9 @@ class Constant {
         internal const val DEFAULT_CURRENCY_RATE = 0.000403004625212
         internal const val AUTO_PIN_WAITING_TIMER = 5000L /*5s*/
 
+        internal const val CONVERT_OFF_ON_MIN = "50000"
+        internal const val CONVERT_OFF_ON_MAX = "5000000"
+
         internal const val CURRENCY_SYMBOL_KRW = "₩"
         internal const val CURRENCY_SYMBOL_VND = "₫"
 

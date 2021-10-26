@@ -74,6 +74,7 @@ class MessageDialog(context: Context, val message: CharSequence) : BaseDialog(co
         }
 
         fun show(context: Context, message: CharSequence) = synchronized(this) {
+            dismiss()
             MessageDialog(context, message).show()
         }
 

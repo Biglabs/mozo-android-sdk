@@ -9,6 +9,7 @@ import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.ErrorCode
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.TransferSpeed
 import io.mozocoin.sdk.common.model.ConvertRequest
@@ -17,9 +18,11 @@ import io.mozocoin.sdk.common.model.TransactionStatus
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.databinding.ActivityConvertBroadcastBinding
 import io.mozocoin.sdk.ui.BaseActivity
+import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
+import java.math.BigDecimal
 
 internal class ConvertBroadcastActivity : BaseActivity() {
     private lateinit var binding: ActivityConvertBroadcastBinding
@@ -156,9 +159,18 @@ internal class ConvertBroadcastActivity : BaseActivity() {
         convertRequest ?: return
         showLoading(true)
 
-        val callback: (data: TransactionResponse?, errorCode: String?) -> Unit = { data, _ ->
+        val callback: (data: TransactionResponse?, errorCode: String?) -> Unit = { data, error ->
             showLoading(data != null)
             if (data != null) signConvertRequest(data)
+            else if (error == ErrorCode.ERROR_CONVERT_REACH_LIMIT.key) {
+                MessageDialog.show(
+                    this,
+                    getString(
+                        R.string.error_convert_reach_limit,
+                        BigDecimal(Constant.CONVERT_OFF_ON_MAX).displayString()
+                    )
+                )
+            }
         }
 
         if (convertRequest!!.on2Off) {

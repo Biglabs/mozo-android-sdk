@@ -124,7 +124,7 @@
     <string name="mozo_convert_on_in_off_converting">&lt;b>Đang chuyển đổi thành Mozo…&lt;/b></string>
     <string name="mozo_convert_on_in_off_warning">Số dư ETH: &lt;b>%1$s&lt;/b>&lt;br/>Bạn cần chuyển &lt;b>%2$s ETH&lt;/b> vào ví Onchain này để trả phí giao dịch</string>
     <string name="mozo_convert_on_in_off_eth_balance">Số dư ETH: &lt;b>%s&lt;/b></string>
-    <string name="mozo_convert_reach_limit">Số lượng Mozo tối đa bạn có thể chuyển đổi là %s</string>
+    <string name="mozo_convert_min_limit">Số lượng Mozo tối thiểu có thể chuyển đổi là %s</string>
 
     <string name="mozo_create_wallet_title">Tạo ví Mozo</string>
     <string name="mozo_create_wallet_select_method">Bạn muốn:</string>
