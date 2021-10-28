@@ -276,7 +276,7 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="output_receiver_address_underline,output_receiver_address_user,output_receiver_address_error_msg" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/button_address_book"
         style="@style/MozoWalletInfoButtonText"
         android:layout_height="46dp"
@@ -285,7 +285,6 @@
         android:layout_marginBottom="@dimen/mozo_screen_padding"
         android:background="@drawable/mozo_dr_btn_ripple"
         android:clickable="true"
-        android:drawableStart="@drawable/ic_address_book"
         android:drawablePadding="7dp"
         android:focusable="true"
         android:paddingStart="10dp"
@@ -293,6 +292,7 @@
         android:text="@string/mozo_address_book_pick_btn"
         android:textSize="12sp"
         android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_address_book"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/output_receiver_address_barrier"
         app:layout_goneMarginEnd="0dp" />
