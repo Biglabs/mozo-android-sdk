@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.InputFilter
 import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.text.HtmlCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -205,6 +206,11 @@ internal class ConvertActivity : BaseActivity() {
 
         }, this::fetchData)
 
+        /**
+         * Check the ETH balance that enough for this TX
+         */
+        fetchEstimateTxFee()
+
         if (isConvertOn2Off) {
             MozoAPIsService.getInstance().getOnChainBalance(
                 this,
@@ -236,6 +242,47 @@ internal class ConvertActivity : BaseActivity() {
                 binding.inputConvertAmount.showKeyboard()
             }
         }
+    }
+
+    private fun fetchEstimateTxFee() {
+        val address = if (isConvertOn2Off) wallet?.onchainAddress
+        else wallet?.offchainAddress
+        address ?: return
+        MozoAPIsService.getInstance().getEthBalanceInOffChain(this, address, { data, _ ->
+            data ?: return@getEthBalanceInOffChain
+
+            val missingEthAmount = data.getMissingEthAmount()
+            binding.convertEthBalance.apply {
+                if (missingEthAmount > BigDecimal.ZERO) {
+                    setBackgroundResource(R.drawable.mozo_dr_hint_error)
+                    isSelected = true
+                    text = HtmlCompat.fromHtml(
+                        getString(
+                            R.string.mozo_convert_on_in_off_warning,
+                            data.balanceOfETH?.balanceNonDecimal().displayString(8),
+                            missingEthAmount.displayString(8)
+                        ), HtmlCompat.FROM_HTML_MODE_LEGACY
+                    )
+
+                    binding.buttonContinue.isEnabled = false
+                    binding.inputConvertAmount.isEnabled = false
+                } else {
+                    setBackgroundResource(R.drawable.mozo_dr_btn_detected_on_chain)
+                    isSelected = false
+                    text = HtmlCompat.fromHtml(
+                        getString(
+                            R.string.mozo_convert_on_in_off_eth_balance,
+                            data.balanceOfETH?.balanceNonDecimal().displayString(8)
+                        ), HtmlCompat.FROM_HTML_MODE_LEGACY
+                    )
+
+                    binding.buttonContinue.isEnabled = binding.inputConvertAmount.length() > 0
+                    binding.inputConvertAmount.isEnabled = true
+                }
+                isVisible = true
+            }
+
+        }, this::fetchEstimateTxFee)
     }
 
     private fun prepareRequestData(): ConvertRequest? {

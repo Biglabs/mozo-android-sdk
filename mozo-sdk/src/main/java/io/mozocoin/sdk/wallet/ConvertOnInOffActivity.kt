@@ -49,13 +49,17 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
             setOnRefreshListener(this@ConvertOnInOffActivity)
         }
         binding.convertOnChainAmount.text = mBalanceOfOnchain?.balanceNonDecimal().displayString()
-        binding.convertOnChainAmountRate.text = MozoWallet.getInstance().amountInCurrency(mBalanceOfOnchain?.balance.safe())
-        binding.convertOnChainAmountRate.alpha = if(Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
+        binding.convertOnChainAmountRate.text =
+            MozoWallet.getInstance().amountInCurrency(mBalanceOfOnchain?.balance.safe())
+        binding.convertOnChainAmountRate.alpha =
+            if (Constant.SHOW_MOZO_EQUIVALENT_CURRENCY) 1f else 0f
 
-        binding.convertGasPriceSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.convertGasPriceSeek.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 mGasInfo ?: return
-                mGasPrice = BigDecimal((progress / 100.0) * (mGasInfo!!.fast - mGasInfo!!.low) + mGasInfo!!.low)
+                mGasPrice =
+                    BigDecimal((progress / 100.0) * (mGasInfo!!.fast - mGasInfo!!.low) + mGasInfo!!.low)
                         .setScale(0, BigDecimal.ROUND_HALF_UP)
                 updateGasPriceUI()
             }
@@ -69,9 +73,9 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
 
         binding.buttonContinue.click {
             ConvertBroadcastActivity.start(
-                    this,
-                    prepareRequestData() ?: return@click,
-                    isOnChain = false
+                this,
+                prepareRequestData() ?: return@click,
+                isOnChain = false
             )
         }
 
@@ -97,9 +101,11 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
             mGasInfo = data
             binding.convertGasLimit.text = data.gasLimit.displayString()
 
-            val normalPercent = (data.average.toFloat() - data.low) / (data.fast.toFloat() - data.low) * 100
+            val normalPercent =
+                (data.average.toFloat() - data.low) / (data.fast.toFloat() - data.low) * 100
 
-            val params = binding.convertGasPriceSeekNormal.layoutParams as ConstraintLayout.LayoutParams
+            val params =
+                binding.convertGasPriceSeekNormal.layoutParams as ConstraintLayout.LayoutParams
             params.horizontalBias = normalPercent / 100
             binding.convertGasPriceSeekNormal.layoutParams = params
             binding.convertGasPriceSeek.progress = 100
@@ -118,24 +124,29 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
             data ?: return@getEthBalanceInOffChain
 
             mBalanceOfEthInWei = data.balanceOfETH?.balance ?: return@getEthBalanceInOffChain
+            val missingEthAmount = data.getMissingEthAmount()
             binding.convertOnChainEthBalance.apply {
-                if (mBalanceOfEthInWei <= BigDecimal.ZERO) {
+                if (missingEthAmount > BigDecimal.ZERO) {
                     setBackgroundResource(R.drawable.mozo_dr_hint_error)
                     isSelected = true
-                    text = HtmlCompat.fromHtml(getString(
+                    text = HtmlCompat.fromHtml(
+                        getString(
                             R.string.mozo_convert_on_in_off_warning,
-                            data.balanceOfETH.balanceNonDecimal().displayString(),
-                            data.estimateFeeInEth().displayString()
-                    ), HtmlCompat.FROM_HTML_MODE_LEGACY)
+                            data.balanceOfETH.balanceNonDecimal().displayString(8),
+                            missingEthAmount.displayString(8)
+                        ), HtmlCompat.FROM_HTML_MODE_LEGACY
+                    )
 
                     binding.buttonContinue.isEnabled = false
                 } else {
                     setBackgroundResource(R.drawable.mozo_dr_btn_detected_on_chain)
                     isSelected = false
-                    text = HtmlCompat.fromHtml(getString(
+                    text = HtmlCompat.fromHtml(
+                        getString(
                             R.string.mozo_convert_on_in_off_eth_balance,
                             data.balanceOfETH.balanceNonDecimal().displayString()
-                    ), HtmlCompat.FROM_HTML_MODE_LEGACY)
+                        ), HtmlCompat.FROM_HTML_MODE_LEGACY
+                    )
 
                     binding.buttonContinue.isEnabled = true
                 }
@@ -182,12 +193,12 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
 
         val gasLimit = mGasInfo?.gasLimit.safe()
         return ConvertRequest(
-                address,
-                gasLimit,
-                gasPrice,
-                address,
-                amount,
-                binding.convertGasPriceSeek.progress
+            address,
+            gasLimit,
+            gasPrice,
+            address,
+            amount,
+            binding.convertGasPriceSeek.progress
         )
     }
 
@@ -198,9 +209,9 @@ internal class ConvertOnInOffActivity : BaseActivity(), SwipeRefreshLayout.OnRef
 
         fun start(context: Context, address: String, balance: BalanceInfo) {
             context.startActivity(
-                    Intent(context, ConvertOnInOffActivity::class.java)
-                            .putExtra(KEY_CONVERT_ADDRESS, address)
-                            .putExtra(KEY_CONVERT_BALANCE, balance)
+                Intent(context, ConvertOnInOffActivity::class.java)
+                    .putExtra(KEY_CONVERT_ADDRESS, address)
+                    .putExtra(KEY_CONVERT_BALANCE, balance)
             )
         }
     }

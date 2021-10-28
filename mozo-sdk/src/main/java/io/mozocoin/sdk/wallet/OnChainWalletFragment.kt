@@ -174,7 +174,7 @@ class OnChainWalletFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 data ?: return@getOnChainBalance
 
                 mBalanceETH = data.balanceOfETH?.balanceNonDecimal().safe()
-                binding.walletFragmentEthBalance.text = mBalanceETH.displayString()
+                binding.walletFragmentEthBalance.text = mBalanceETH.displayString(6)
                 binding.walletFragmentEthCurrency.text = MozoSDK.getInstance().profileViewModel
                     .calculateAmountInCurrency(mBalanceETH, false)
 

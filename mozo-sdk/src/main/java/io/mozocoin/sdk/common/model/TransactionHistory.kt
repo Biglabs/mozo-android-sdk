@@ -35,7 +35,7 @@ data class TransactionHistory(
 
     fun amountInDecimal(): BigDecimal = amount.divide(10.0.pow(decimal.toDouble()).toBigDecimal())
 
-    fun amountDisplay(): String = amountInDecimal().displayString(12)
+    fun amountDisplay(): String = amountInDecimal().displayString()
 
     fun type(address: String?): Boolean =
         addressFrom.equals(MY_ADDRESS, ignoreCase = true) || addressFrom.equals(

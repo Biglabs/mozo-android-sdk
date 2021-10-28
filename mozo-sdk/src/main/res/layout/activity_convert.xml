@@ -37,7 +37,21 @@
                 android:id="@+id/input_group"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:constraint_referenced_ids="output_amount_label,input_convert_amount,input_convert_icon,output_amount_underline,output_amount_spendable" />
+                app:constraint_referenced_ids="convert_eth_balance,output_amount_label,input_convert_amount,input_convert_icon,output_amount_underline,output_amount_spendable" />
+
+            <TextView
+                android:id="@+id/convert_eth_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/mozo_screen_margin"
+                android:background="@drawable/mozo_dr_hint_error"
+                android:padding="15dp"
+                android:text="@string/mozo_convert_on_in_off_warning"
+                android:textColor="@color/mozo_warning_text"
+                android:textSize="13sp"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/output_amount_label"
@@ -49,7 +63,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/input_convert_amount"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/convert_eth_balance" />
 
             <EditText
                 android:id="@+id/input_convert_amount"

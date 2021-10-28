@@ -5,11 +5,15 @@ import io.mozocoin.sdk.utils.safe
 import java.math.BigDecimal
 
 data class BalanceEthData(
-        val balanceOfETH: BalanceInfo?,
-        val feeTransferERC20: BigDecimal?
+    val balanceOfETH: BalanceInfo?,
+    val feeTransferERC20: BigDecimal?
 ) {
-    fun estimateFeeInEth() = Support.toAmountNonDecimal(
-            feeTransferERC20.safe(),
-            balanceOfETH?.decimals ?: 0
-    )
+    fun getMissingEthAmount(): BigDecimal {
+        val balance = balanceOfETH?.balance.safe()
+        val missing = feeTransferERC20.safe() - balance
+        return Support.toAmountNonDecimal(
+            missing,
+            balanceOfETH?.decimals ?: 18 //WEI -> ETH
+        )
+    }
 }
