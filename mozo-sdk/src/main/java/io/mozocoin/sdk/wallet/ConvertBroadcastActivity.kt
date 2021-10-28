@@ -184,6 +184,7 @@ internal class ConvertBroadcastActivity : BaseActivity() {
             MozoAPIsService.getInstance().prepareConvertOff2On(
                 this,
                 convertRequest!!.value,
+                convertRequest!!.fromAddress,
                 convertRequest!!.toAddress,
                 callback,
                 this::sendConvertRequest

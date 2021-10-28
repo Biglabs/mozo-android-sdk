@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.google.zxing.integration.android.IntentIntegrator
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.MozoWallet
@@ -63,6 +64,8 @@ internal class ConvertActivity : BaseActivity() {
         if (!isConvertOn2Off) {
             binding.scrollContainer.children.forEach { it.gone() }
             binding.inputGroup.visible()
+            binding.receiveAddressContainer.visible()
+            binding.outputReceiverAddress.setText(wallet?.onchainAddress)
         }
 
         binding.inputConvertAmount.onTextChanged {
@@ -86,6 +89,10 @@ internal class ConvertActivity : BaseActivity() {
             }
         }
         binding.inputConvertAmountRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY
+
+        binding.buttonScanQr.click {
+            Support.scanQRCode(this)
+        }
 
         binding.convertGasPriceSeek.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
@@ -125,6 +132,17 @@ internal class ConvertActivity : BaseActivity() {
         }
 
         fetchData()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != RESULT_OK) return
+        data ?: return
+        IntentIntegrator
+            .parseActivityResult(requestCode, resultCode, data)
+            .contents?.let {
+                binding.outputReceiverAddress.setText(it)
+            }
     }
 
     override fun onResume() {
@@ -245,17 +263,19 @@ internal class ConvertActivity : BaseActivity() {
             }
         }
 
-        if (
-            wallet?.offchainAddress != null &&
-            wallet?.onchainAddress != null
-        ) {
+        val sendAddress = if (isConvertOn2Off) wallet?.onchainAddress
+        else wallet?.offchainAddress
+
+        val receiveAddress = if (isConvertOn2Off) wallet?.offchainAddress
+        else binding.outputReceiverAddress.text.toString()
+        if (!sendAddress.isNullOrEmpty() && !receiveAddress.isNullOrEmpty()) {
             val gasLimit = mGasInfo?.gasLimit.safe()
             val finalAmount = MozoTx.instance().amountWithDecimal(amount)
             return ConvertRequest(
-                wallet?.onchainAddress!!,
+                sendAddress,
                 gasLimit,
                 gasPrice,
-                wallet?.offchainAddress!!,
+                receiveAddress,
                 finalAmount,
                 binding.convertGasPriceSeek.progress,
                 on2Off = isConvertOn2Off

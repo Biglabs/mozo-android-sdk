@@ -244,15 +244,16 @@ internal class MozoAPIsService private constructor() {
     fun prepareConvertOff2On(
         context: Context,
         amount: BigDecimal,
-        address: String,
+        fromAddress: String,
+        toAddress: String,
         callback: ((data: TransactionResponse?, errorCode: String?) -> Unit)?,
         retry: (() -> Unit)? = null
     ) {
         MainScope().launch {
             val obj = JsonObject().apply {
                 addProperty("amount", amount)
-                addProperty("offchainAddress", address)
-                addProperty("onchainAddress", address)
+                addProperty("offchainAddress", fromAddress)
+                addProperty("onchainAddress", toAddress)
             }
             execute(context, mozoAPIs.prepareConvertOff2On(obj), callback, retry)
         }

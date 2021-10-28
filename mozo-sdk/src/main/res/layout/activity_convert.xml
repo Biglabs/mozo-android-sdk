@@ -126,6 +126,72 @@
                 tools:text="@string/mozo_transfer_spendable"
                 tools:visibility="visible" />
 
+            <FrameLayout
+                android:id="@+id/receive_address_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mozo_screen_margin"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="@dimen/mozo_screen_margin"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/input_convert_amount">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mozo_transfer_receiver_address"
+                    android:textColor="@color/mozo_color_input_focus"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/send_state_container" />
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/output_receiver_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:autofillHints="@string/mozo_transfer_receiver_address_hint"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:hint="@string/mozo_transfer_receiver_address_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="textNoSuggestions"
+                    android:lines="1"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="80dp"
+                    android:textColor="@color/mozo_color_text_main"
+                    android:textColorHint="@color/mozo_color_un_active"
+                    android:textSize="14sp"
+                    app:autoSizeMinTextSize="12sp"
+                    app:autoSizeTextType="uniform"
+                    tools:targetApi="o"
+                    tools:text="0x97309d360C015695cf50892f035E516ccA1898F0" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="60dp"
+                    android:background="@drawable/mozo_color_line_focus" />
+
+                <io.mozocoin.sdk.ui.view.MozoIconTextView
+                    android:id="@+id/button_scan_qr"
+                    style="@style/MozoWalletInfoButtonText"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="20dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:drawableStart="@drawable/ic_action_scan"
+                    android:drawablePadding="6dp"
+                    android:focusable="true"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/mozo_button_scan"
+                    app:drawableSize="18dp" />
+            </FrameLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
