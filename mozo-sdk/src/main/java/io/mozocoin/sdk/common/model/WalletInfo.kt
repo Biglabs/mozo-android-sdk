@@ -2,6 +2,7 @@ package io.mozocoin.sdk.common.model
 
 import androidx.room.Ignore
 import com.google.gson.annotations.SerializedName
+import io.mozocoin.sdk.utils.equalsIgnoreCase
 
 @Suppress("SpellCheckingInspection")
 data class WalletInfo constructor(
@@ -18,10 +19,14 @@ data class WalletInfo constructor(
     override fun equals(other: Any?): Boolean {
         if (other is WalletInfo) {
             return encryptSeedPhrase == other.encryptSeedPhrase &&
-                    offchainAddress == other.offchainAddress &&
-                    onchainAddress == other.onchainAddress
+                    offchainAddress?.equalsIgnoreCase(other.offchainAddress) == true &&
+                    !other.onchainAddress.isNullOrEmpty()
+            /**
+             * Should be fully verify this.onchainAddress == other.onchainAddress
+             * but unnecessary for now
+             */
         }
-        return super.equals(other)
+        return false
     }
 
     override fun hashCode(): Int {

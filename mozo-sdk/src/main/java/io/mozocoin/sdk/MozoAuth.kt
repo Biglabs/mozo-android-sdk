@@ -305,11 +305,7 @@ class MozoAuth private constructor() {
             MozoSDK.scope.launch {
                 doSaveUserInfoAsync(data)
                 MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
-                    if (
-                            it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
-                            it?.walletInfo?.offchainAddress?.equals(data.walletInfo?.offchainAddress, ignoreCase = true) == true &&
-                            it.walletInfo?.onchainAddress?.equals(data.walletInfo?.onchainAddress, ignoreCase = true) == true
-                    ) {
+                    if (it?.walletInfo == data.walletInfo) {
                         callback?.invoke(true) // No need recover wallet
                     } else {
                         saveUserInfo(context, data, callback = callback)
