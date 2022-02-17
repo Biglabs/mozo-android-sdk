@@ -1,5 +1,6 @@
 package io.mozocoin.sdk.ui
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -160,10 +161,11 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
                 binding.itemTodoAction.text = d.displayAction(itemView.context)
             }
 
+            @SuppressLint("MissingPermission")
             private fun handleItemClick(todo: Todo) {
                 when (todo.id ?: return) {
                     TodoType.BLUETOOTH_OFF.name -> {
-                        BluetoothAdapter.getDefaultAdapter()?.run {
+                        MozoTodoList.getInstance().bluetoothAdapter.run {
                             if (!isEnabled) enable()
                         }
                     }

@@ -79,11 +79,11 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
         }
     }
 
-    override fun onLocationResult(result: LocationResult?) {
+    override fun onLocationResult(result: LocationResult) {
         /**
          * from FusedLocationProviderClient
          */
-        result?.lastLocation?.run {
+        result.lastLocation.run {
             mListener?.invoke(this)
         }
     }
