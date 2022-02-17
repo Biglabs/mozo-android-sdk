@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewbinding.ViewBinding
 import io.mozocoin.sdk.MozoTodoList
+import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.TodoType
 import io.mozocoin.sdk.common.model.Todo
@@ -180,7 +181,7 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
                         itemView.context.openTab("${Support.homePage()}/retailer-portal/buy-mozo-by-crypto")
                     }
                     TodoType.UNSECURE_WALLET.name -> {
-                        itemView.context.launchActivity<ChangePinActivity> { }
+                        MozoWallet.getInstance().changePin(itemView.context)
                     }
                     else -> MozoTodoList.getInstance().listeners.map { l ->
                         l.onTodoItemClicked(todo.id.safe(), todo.data)

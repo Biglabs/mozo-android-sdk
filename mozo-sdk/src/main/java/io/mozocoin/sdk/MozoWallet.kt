@@ -11,8 +11,10 @@ import io.mozocoin.sdk.contact.AddressBookActivity
 import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.UserCancelException
+import io.mozocoin.sdk.utils.launchActivity
 import io.mozocoin.sdk.utils.logAsInfo
 import io.mozocoin.sdk.utils.string
+import io.mozocoin.sdk.wallet.ChangePinActivity
 import io.mozocoin.sdk.wallet.create.CreateWalletActivity
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
@@ -55,42 +57,57 @@ class MozoWallet private constructor() {
      * @param  callback     The listener to receive balance value
      * @return              The balance of current wallet
      */
-    fun getBalance(fromCache: Boolean = true, callback: (balance: BigDecimal, displayInCurrency: String?) -> Unit) {
+    fun getBalance(
+        fromCache: Boolean = true,
+        callback: (balance: BigDecimal, displayInCurrency: String?) -> Unit
+    ) {
         if (fromCache && MozoSDK.getInstance().profileViewModel.getBalance() != null) {
             callback.invoke(
-                    MozoSDK.getInstance().profileViewModel.getBalance()!!.balanceNonDecimal(),
-                    MozoSDK.getInstance().profileViewModel.getBalanceInCurrencyDisplay()
+                MozoSDK.getInstance().profileViewModel.getBalance()!!.balanceNonDecimal(),
+                MozoSDK.getInstance().profileViewModel.getBalanceInCurrencyDisplay()
             )
             return
         }
 
         MozoSDK.getInstance().profileViewModel.fetchBalance(MozoSDK.getInstance().context) {
             callback.invoke(
-                    it?.balanceNonDecimal() ?: BigDecimal(-1),
-                    MozoSDK.getInstance().profileViewModel.getBalanceInCurrencyDisplay()
+                it?.balanceNonDecimal() ?: BigDecimal(-1),
+                MozoSDK.getInstance().profileViewModel.getBalanceInCurrencyDisplay()
             )
         }
     }
 
     fun getDecimal() = MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.value?.decimal
-            ?: Constant.DEFAULT_DECIMAL
+        ?: Constant.DEFAULT_DECIMAL
 
-    fun getCurrency(): String = MozoSDK.getInstance().profileViewModel.exchangeRateLiveData.value?.token?.currency
+    fun getCurrency(): String =
+        MozoSDK.getInstance().profileViewModel.exchangeRateLiveData.value?.token?.currency
             ?: Currency.getInstance(Locale.getDefault()).currencyCode
 
-    fun amountInCurrency(amount: BigDecimal) = MozoSDK.getInstance().profileViewModel.calculateAmountInCurrency(amount)
+    fun amountInCurrency(amount: BigDecimal) =
+        MozoSDK.getInstance().profileViewModel.calculateAmountInCurrency(amount)
 
     fun openAddressBook() {
         AddressBookActivity.start(MozoSDK.getInstance().context)
     }
 
-    fun findContact(address: String?) = MozoSDK.getInstance().contactViewModel.findByAddress(address)
+    fun findContact(address: String?) =
+        MozoSDK.getInstance().contactViewModel.findByAddress(address)
 
     fun findContact(history: TransactionHistory, address: String?) = findContact(
-            if (history.type(address)) history.addressTo else history.addressFrom
+        if (history.type(address)) history.addressTo else history.addressFrom
     )
 
-    internal fun initWallet(context: Context, profile: Profile /* server */, walletHelper: WalletHelper? = null, callback: ((success: Boolean) -> Unit)? = null) {
+    fun changePin(context: Context) {
+        context.launchActivity<ChangePinActivity> { }
+    }
+
+    internal fun initWallet(
+        context: Context,
+        profile: Profile /* server */,
+        walletHelper: WalletHelper? = null,
+        callback: ((success: Boolean) -> Unit)? = null
+    ) {
         if (profile.walletInfo?.encryptSeedPhrase.isNullOrEmpty()) {
             /* Server wallet is NOT existing, create a new one at local */
             mWallet = WalletHelper.create()
@@ -109,11 +126,12 @@ class MozoWallet private constructor() {
 
         MozoSDK.scope.launch {
             mWallet = walletHelper ?: WalletHelper.initWithWalletInfo(profile.walletInfo)
-            val flag = if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
-                /* Local wallet is existing but no private Key */
-                /* Required input previous PIN */
-                SecurityActivity.KEY_ENTER_PIN
-            } else 0
+            val flag =
+                if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
+                    /* Local wallet is existing but no private Key */
+                    /* Required input previous PIN */
+                    SecurityActivity.KEY_ENTER_PIN
+                } else 0
 
             withContext(Dispatchers.Main) {
                 when {
@@ -133,7 +151,11 @@ class MozoWallet private constructor() {
         }
     }
 
-    internal fun executeSaveWallet(context: Context, pin: String?, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+    internal fun executeSaveWallet(
+        context: Context,
+        pin: String?,
+        callback: ((isSuccess: Boolean) -> Unit)? = null
+    ) {
         mReady4WalletCheckingJob?.cancel()
 
         if (!MozoSDK.isReadyForWallet && mReady4WalletCheckingDelayed < MAX_DELAY_TIME) {
@@ -170,7 +192,11 @@ class MozoWallet private constructor() {
         syncWalletInfo(wallet, context, callback)
     }
 
-    private fun syncWalletInfo(walletInfo: WalletInfo, context: Context, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+    private fun syncWalletInfo(
+        walletInfo: WalletInfo,
+        context: Context,
+        callback: ((isSuccess: Boolean) -> Unit)? = null
+    ) {
         registerEventBus()
         MozoAPIsService.getInstance().saveWallet(context, walletInfo, { data, errorCode ->
             afterSyncWallet(context, data, errorCode, callback)
@@ -179,7 +205,11 @@ class MozoWallet private constructor() {
         })
     }
 
-    internal fun syncWalletAutoToPin(walletInfo: WalletInfo, context: Context, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+    internal fun syncWalletAutoToPin(
+        walletInfo: WalletInfo,
+        context: Context,
+        callback: ((isSuccess: Boolean) -> Unit)? = null
+    ) {
         mProfile!!.apply { this.walletInfo = walletInfo }
         MozoAPIsService.getInstance().saveWalletAutoToPin(context, walletInfo, { data, errorCode ->
             afterSyncWallet(context, data, errorCode, callback)
@@ -188,18 +218,23 @@ class MozoWallet private constructor() {
         })
     }
 
-    private fun afterSyncWallet(context: Context, data: Profile?, errorCode: String?, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+    private fun afterSyncWallet(
+        context: Context,
+        data: Profile?,
+        errorCode: String?,
+        callback: ((isSuccess: Boolean) -> Unit)? = null
+    ) {
         when (errorCode) {
             ErrorCode.ERROR_WALLET_ADDRESS_IN_USED.key,
             ErrorCode.ERROR_WALLET_ADDRESS_EXISTING.key,
             ErrorCode.ERROR_WALLET_DIFFERENT.key -> {
                 MessageDialog(context, context.string(ErrorCode.ERROR_WALLET_DIFFERENT.message))
-                        .setAction(R.string.mozo_button_restore) {
-                            EventBus.getDefault().post(MessageEvent.CloseActivities())
-                            MozoAuth.getInstance().signOut()
-                        }
-                        .cancelable(false)
-                        .show()
+                    .setAction(R.string.mozo_button_restore) {
+                        EventBus.getDefault().post(MessageEvent.CloseActivities())
+                        MozoAuth.getInstance().signOut()
+                    }
+                    .cancelable(false)
+                    .show()
             }
         }
 
@@ -207,7 +242,11 @@ class MozoWallet private constructor() {
         callback?.invoke(isSuccess)
     }
 
-    internal fun syncOnChainWallet(context: Context, pin: String, callback: ((isSuccess: Boolean) -> Unit)? = null) {
+    internal fun syncOnChainWallet(
+        context: Context,
+        pin: String,
+        callback: ((isSuccess: Boolean) -> Unit)? = null
+    ) {
         if (mProfile == null) {
             callback?.invoke(false)
             return
