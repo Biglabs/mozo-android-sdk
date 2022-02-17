@@ -3,14 +3,14 @@ buildscript {
         COMPILE_VERSION = 31
         TARGET_VERSION = 31
         MIN_VERSION = 21
-        KOTLIN_VERSION = '1.5.31'
+        KOTLIN_VERSION = '1.6.10'
 
         /**
          * MozoSDK publication information
          * */
         PUBLISH_ARTIFACT_ID = 'mozo-sdk'
         PUBLISH_GROUP_ID = 'io.mozocoin'
-        PUBLISH_VERSION = '0.2.5-beta01'
+        PUBLISH_VERSION = '0.2.5-beta031'
         PUBLISH_DESCRIPTION = 'MozoSDK for Android'
         PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
     }
@@ -20,7 +20,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     }
 }

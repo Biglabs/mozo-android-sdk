@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -19,7 +20,12 @@ import java.util.concurrent.CountDownLatch
 
 class MozoTodoList private constructor() {
 
-    private val bluetoothAdapter: BluetoothAdapter? by lazy { BluetoothAdapter.getDefaultAdapter() }
+    internal val bluetoothAdapter: BluetoothAdapter by lazy {
+        val bluetoothManager = MozoSDK.getInstance().context.getSystemService(
+            Context.BLUETOOTH_SERVICE
+        ) as BluetoothManager
+        bluetoothManager.adapter
+    }
     private val locationService: LocationService by lazy { LocationService.newInstance(MozoSDK.getInstance().context) }
 
     private var countDownLatch: CountDownLatch? = null
@@ -50,31 +56,31 @@ class MozoTodoList private constructor() {
 
     internal fun fetchTodo() {
         lastActivity ?: return
-        val isBluetoothOff = bluetoothAdapter?.state == BluetoothAdapter.STATE_OFF
-                || bluetoothAdapter?.state == BluetoothAdapter.STATE_TURNING_OFF
+        val isBluetoothOff = bluetoothAdapter.state == BluetoothAdapter.STATE_OFF
+                || bluetoothAdapter.state == BluetoothAdapter.STATE_TURNING_OFF
         MozoAPIsService.getInstance().getTodoList4Shopper(
-                lastActivity!!,
-                isBluetoothOff,
-                currentLocation?.latitude ?: 0.0,
-                currentLocation?.longitude ?: 0.0,
-                { data, _ ->
-                    countDownLatch?.countDown()
-                    todoData = data?.items
+            lastActivity!!,
+            isBluetoothOff,
+            currentLocation?.latitude ?: 0.0,
+            currentLocation?.longitude ?: 0.0,
+            { data, _ ->
+                countDownLatch?.countDown()
+                todoData = data?.items
 
-                    if (todoData != null) {
-                        val itemHighLight = todoData?.maxByOrNull { it.priority ?: 0 }
-                        listeners.forEach {
-                            it.onTodoTotalChanged(
-                                    todoData!!.size,
-                                    if ((itemHighLight?.priority ?: 0) > 0) itemHighLight else null
-                            )
-                        }
+                if (todoData != null) {
+                    val itemHighLight = todoData?.maxByOrNull { it.priority ?: 0 }
+                    listeners.forEach {
+                        it.onTodoTotalChanged(
+                            todoData!!.size,
+                            if ((itemHighLight?.priority ?: 0) > 0) itemHighLight else null
+                        )
                     }
+                }
 
-                    checkCountDown(lastCallback)
-                }, {
-            fetchData(lastActivity!!, lastCallback)
-        })
+                checkCountDown(lastCallback)
+            }, {
+                fetchData(lastActivity!!, lastCallback)
+            })
     }
 
     fun fetchData(activity: Activity, callback: ((TodoSettings, List<Todo>) -> Unit)? = null) {
@@ -86,13 +92,13 @@ class MozoTodoList private constructor() {
 
         fun fetchSettings() {
             MozoAPIsService.getInstance().getTodoSettings(
-                    activity,
-                    { data, _ ->
-                        countDownLatch?.countDown()
-                        todoSettings = data
-                        checkCountDown(callback)
+                activity,
+                { data, _ ->
+                    countDownLatch?.countDown()
+                    todoSettings = data
+                    checkCountDown(callback)
 
-                    }, ::fetchSettings
+                }, ::fetchSettings
             )
         }
 
@@ -127,12 +133,16 @@ class MozoTodoList private constructor() {
         listeners.remove(l)
     }
 
-    internal fun registerTodoFinishListener(listener: TodoFinishListener) {
+    fun registerTodoFinishListener(listener: TodoFinishListener) {
         todoFinishListeners.add(listener)
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             PERMISSIONS_REQUEST_LOCATION -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -143,43 +153,44 @@ class MozoTodoList private constructor() {
         }
     }
 
-    private fun getLocationPermission(activity: Activity) = if (!activity.isLocationPermissionGranted()) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        activity,
-                        Manifest.permission.ACCESS_FINE_LOCATION
+    private fun getLocationPermission(activity: Activity) =
+        if (!activity.isLocationPermissionGranted()) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
                 )
-        ) {
-            /*
-            AlertDialog.Builder(context ?: return)
-                .setTitle(R.string.text_location_permission_title)
-                .setMessage(R.string.text_location_permission_msg)
-                .setNegativeButton(R.string.text_location_permission_not_now, null)
-                .setPositiveButton(R.string.text_location_permission_settings) { _, _ ->
-                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.parse("package:${context!!.packageName}")
-                        startActivity(this)
+            ) {
+                /*
+                AlertDialog.Builder(context ?: return)
+                    .setTitle(R.string.text_location_permission_title)
+                    .setMessage(R.string.text_location_permission_msg)
+                    .setNegativeButton(R.string.text_location_permission_not_now, null)
+                    .setPositiveButton(R.string.text_location_permission_settings) { _, _ ->
+                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.parse("package:${context!!.packageName}")
+                            startActivity(this)
+                        }
                     }
-                }
-                .show()
-            */
-        } else {
-            ActivityCompat.requestPermissions(
+                    .show()
+                */
+            } else {
+                ActivityCompat.requestPermissions(
                     activity,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     PERMISSIONS_REQUEST_LOCATION
-            )
-        }
+                )
+            }
 
-        false
+            false
 
-    } else true
+        } else true
 
     interface TodoInteractListener {
         fun onTodoTotalChanged(total: Int, itemHighLight: Todo?)
         fun onTodoItemClicked(type: String, data: TodoData?)
     }
 
-    internal interface TodoFinishListener {
+    interface TodoFinishListener {
         fun onRequestFinish()
     }
 

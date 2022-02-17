@@ -306,7 +306,7 @@ internal class PinEntryEditText : AppCompatEditText {
         mClickListener = l
     }
 
-    override fun setCustomSelectionActionModeCallback(actionModeCallback: ActionMode.Callback) {
+    override fun setCustomSelectionActionModeCallback(actionModeCallback: ActionMode.Callback?) {
         throw RuntimeException("setCustomSelectionActionModeCallback() not supported.")
     }
 
