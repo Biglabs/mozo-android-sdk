@@ -30,9 +30,9 @@ internal class AddressBookActivity : BaseActivity() {
         }
     }
 
-    private var mAdapter = ContactRecyclerAdapter(contacts, onItemClick, {
+    private var mAdapter = ContactRecyclerAdapter(contacts, onItemClick) {
         launchActivity<ImportContactsActivity>(KEY_REQUEST_IMPORT_CONTACT)
-    })
+    }
 
     private var isStartForResult = false
     private var searchJob: Job? = null
