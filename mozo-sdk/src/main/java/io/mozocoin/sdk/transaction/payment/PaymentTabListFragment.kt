@@ -1,17 +1,13 @@
 package io.mozocoin.sdk.transaction.payment
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.zxing.integration.android.IntentIntegrator
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
 import io.mozocoin.sdk.common.model.PaymentRequest
@@ -33,7 +29,11 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         TransactionDetailsActivity.start(this.requireContext(), requests[it])
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentPaymentListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,29 +54,10 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         ItemTouchHelper(onSwipeToDelete).attachToRecyclerView(binding.paymentRequestRecycler)
 
         binding.buttonScanQr.click {
-            Support.scanQRCode(this)
+            Support.scanQRCode(it.context, ::onScanSuccess)
         }
 
         fetchData()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode != RESULT_OK) return
-        when {
-            data != null -> {
-                IntentIntegrator.parseActivityResult(requestCode, resultCode, data).contents?.let {
-                    val param = Support.parsePaymentRequest(it)
-                    if (param.isNotEmpty()) {
-                        TransactionDetailsActivity.start(
-                                this.requireContext(),
-                                PaymentRequest(content = it)
-                        )
-                    } else {
-                        MessageDialog.show(this.requireContext(), R.string.mozo_dialog_error_scan_invalid_msg)
-                    }
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {
@@ -87,19 +68,20 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
     private fun fetchData() {
         binding.paymentRequestSwipeRefresh.isRefreshing = true
         MozoAPIsService.getInstance().getPaymentRequests(
-                context ?: return,
-                Constant.PAGING_START_INDEX,
-                100, { data, _ ->
-            binding.paymentRequestSwipeRefresh.isRefreshing = false
-            mAdapter.emptyView = binding.paymentRequestEmptyView
-            data ?: return@getPaymentRequests
-            data.items ?: return@getPaymentRequests
+            context ?: return,
+            Constant.PAGING_START_INDEX,
+            100, { data, _ ->
+                binding.paymentRequestSwipeRefresh.isRefreshing = false
+                mAdapter.emptyView = binding.paymentRequestEmptyView
+                data ?: return@getPaymentRequests
+                data.items ?: return@getPaymentRequests
 
-            requests.clear()
-            requests.addAll(data.items!!)
-            mAdapter.notifyDataSetChanged()
+                requests.clear()
+                requests.addAll(data.items!!)
+                mAdapter.notifyDataSetChanged()
 
-        }, this::fetchData)
+            }, this::fetchData
+        )
     }
 
     private fun deleteRequest(position: Int) {
@@ -108,6 +90,18 @@ class PaymentTabListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         requests.removeAt(position)
         mAdapter.notifyItemRemoved(position)
         MozoAPIsService.getInstance().deletePaymentRequest(context ?: return, itemId)
+    }
+
+    private fun onScanSuccess(result: String) {
+        val param = Support.parsePaymentRequest(result)
+        if (param.isNotEmpty()) {
+            TransactionDetailsActivity.start(
+                this.requireContext(),
+                PaymentRequest(content = result)
+            )
+        } else {
+            MessageDialog.show(this.requireContext(), R.string.mozo_dialog_error_scan_invalid_msg)
+        }
     }
 
     override fun onRefresh() {

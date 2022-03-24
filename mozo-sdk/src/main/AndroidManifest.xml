@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="io.mozocoin.sdk">
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -97,7 +99,7 @@
             android:theme="@style/MozoTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
-            android:name=".ui.ScannerQRActivity"
+            android:name=".ui.ScannerActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:screenOrientation="portrait"

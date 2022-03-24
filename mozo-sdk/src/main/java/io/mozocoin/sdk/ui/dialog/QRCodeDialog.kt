@@ -26,7 +26,7 @@ internal class QRCodeDialog(context: Context, val value: String) : BaseDialog(co
 
         generateQRJob = MozoSDK.scope.launch {
             val size = context.dimen(R.dimen.mozo_qr_large_size)
-            val qrImage = Support.generateQRCode(value, size)
+            val qrImage = Support.createQRCode(value, size)
             withContext(Dispatchers.Main) {
                 binding.imageQrCode.setImageBitmap(qrImage)
             }

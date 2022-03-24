@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.annotation.IntDef
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.doOnLayout
-import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
@@ -203,7 +202,7 @@ class MozoWalletView : ConstraintLayout {
     }
 
     private fun getQRImage() = MozoSDK.scope.launch {
-        val qrImage = Support.generateQRCode(mAddress!!, sizeOfQRImage)
+        val qrImage = Support.createQRCode(mAddress!!, sizeOfQRImage)
         withContext(Dispatchers.Main) {
             imageAddressQRView?.setImageBitmap(qrImage)
         }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_common">Something is wrong with your account status. Please try again.</string>
+    <string name="error_camera">Camera is not available</string>
+    <string name="error_camera_permission">App requires permission to access Camera to capture image.\nTap \"%s\" and go to \"Permissions\" to grant permission.</string>
+    <string name="error_camera_action">App Settings</string>
 
     <string name="error_account_deactivated">Your account has been deactivated temporarily. Please sign in with other account or contact us for more information</string>
 
