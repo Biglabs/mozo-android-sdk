@@ -6,17 +6,19 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import androidx.recyclerview.widget.RecyclerView
 
-/** The magnitude of translation distance while the list is over-scrolled. */
-@Suppress("SpellCheckingInspection")
-private const val OVERSCROLL_TRANSLATION_MAGNITUDE = 0.2f
-
-/** The magnitude of translation distance when the list reaches the edge on fling. */
-private const val FLING_TRANSLATION_MAGNITUDE = 0.5f
-
 /**
  * Replace edge effect by a bounce
  */
 class BounceEdgeEffectFactory : RecyclerView.EdgeEffectFactory() {
+
+    companion object {
+        /** The magnitude of translation distance while the list is over-scrolled. */
+        @Suppress("SpellCheckingInspection")
+        private const val OVERSCROLL_TRANSLATION_MAGNITUDE = 0.2f
+
+        /** The magnitude of translation distance when the list reaches the edge on fling. */
+        private const val FLING_TRANSLATION_MAGNITUDE = 0.5f
+    }
 
     override fun createEdgeEffect(recyclerView: RecyclerView, direction: Int): EdgeEffect {
 
@@ -40,7 +42,8 @@ class BounceEdgeEffectFactory : RecyclerView.EdgeEffectFactory() {
 
                 // Translate the recyclerView with the distance
                 val sign = if (direction == DIRECTION_BOTTOM) -1 else 1
-                val translationYDelta = sign * recyclerView.width * deltaDistance * OVERSCROLL_TRANSLATION_MAGNITUDE
+                val translationYDelta =
+                    sign * recyclerView.width * deltaDistance * OVERSCROLL_TRANSLATION_MAGNITUDE
                 recyclerView.translationY += translationYDelta
 
                 translationAnim?.cancel()
@@ -61,7 +64,8 @@ class BounceEdgeEffectFactory : RecyclerView.EdgeEffectFactory() {
                 val sign = if (direction == DIRECTION_BOTTOM) -1 else 1
                 val translationVelocity = sign * velocity * FLING_TRANSLATION_MAGNITUDE
                 translationAnim?.cancel()
-                translationAnim = createAnim().setStartVelocity(translationVelocity)?.also { it.start() }
+                translationAnim =
+                    createAnim().setStartVelocity(translationVelocity)?.also { it.start() }
             }
 
             override fun draw(canvas: Canvas?): Boolean {
@@ -75,11 +79,12 @@ class BounceEdgeEffectFactory : RecyclerView.EdgeEffectFactory() {
             }
 
             private fun createAnim() = SpringAnimation(recyclerView, SpringAnimation.TRANSLATION_Y)
-                    .setSpring(SpringForce()
-                            .setFinalPosition(0f)
-                            .setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY)
-                            .setStiffness(SpringForce.STIFFNESS_LOW)
-                    )
+                .setSpring(
+                    SpringForce()
+                        .setFinalPosition(0f)
+                        .setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY)
+                        .setStiffness(SpringForce.STIFFNESS_LOW)
+                )
 
         }
     }

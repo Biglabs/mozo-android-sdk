@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.google.zxing.integration.android.IntentIntegrator
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.MozoWallet
 import io.mozocoin.sdk.R
@@ -25,7 +24,10 @@ import io.mozocoin.sdk.databinding.FragmentPaymentSendBinding
 import io.mozocoin.sdk.transaction.ContactSuggestionAdapter
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
 import java.util.*
@@ -48,7 +50,11 @@ class PaymentRequestSendFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentPaymentSendBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -70,7 +76,7 @@ class PaymentRequestSendFragment : Fragment() {
         val content = "mozox:$myAddress?amount=$amount"
         generateQRJob = MozoSDK.scope.launch {
             val size = view.context.resources.dp2Px(177f).toInt()
-            val qrImage = Support.generateQRCode(content, size)
+            val qrImage = Support.createQRCode(content, size)
             withContext(Dispatchers.Main) {
                 binding.paymentRequestQrImage.setImageBitmap(qrImage)
             }
@@ -109,15 +115,17 @@ class PaymentRequestSendFragment : Fragment() {
                     }
                 }
             }
-            setAdapter(ContactSuggestionAdapter(
+            setAdapter(
+                ContactSuggestionAdapter(
                     context,
                     MozoSDK.getInstance().contactViewModel.contacts(),
                     mPhoneContactUtils?.onFindInSystemClick
-            ))
+                )
+            )
         }
 
         binding.buttonScanQr.click {
-            Support.scanQRCode(this@PaymentRequestSendFragment)
+            Support.scanQRCode(it.context, ::onScanSuccess)
         }
 
         binding.buttonAddressBook.click {
@@ -131,54 +139,36 @@ class PaymentRequestSendFragment : Fragment() {
             }
 
             mListener?.onSendRequestClicked(
-                    amount,
+                amount,
                 (selectedContact?.soloAddress
-                                        ?: binding.outputReceiverAddress.text.toString()).lowercase(
+                    ?: binding.outputReceiverAddress.text.toString()).lowercase(
                     Locale.getDefault()
                 ),
-                    PaymentRequest(content = content)
+                PaymentRequest(content = content)
             )
         }
 
         MozoSDK.getInstance().profileViewModel.balanceAndRateLiveData.observe(
-                viewLifecycleOwner,
-                Observer {
-                    it ?: return@Observer
-                    binding.paymentRequestRate.text = MozoSDK.getInstance().profileViewModel
-                            .formatCurrencyDisplay(
-                                    amountBigDecimal.multiply(it.rate),
-                                    true
-                            )
-                }
+            viewLifecycleOwner,
+            Observer {
+                it ?: return@Observer
+                binding.paymentRequestRate.text = MozoSDK.getInstance().profileViewModel
+                    .formatCurrencyDisplay(
+                        amountBigDecimal.multiply(it.rate),
+                        true
+                    )
+            }
         )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode != AppCompatActivity.RESULT_OK) return
-        when {
-            requestCode == KEY_PICK_ADDRESS -> {
+        when (requestCode) {
+            KEY_PICK_ADDRESS -> {
                 data?.run {
                     selectedContact = getParcelableExtra(AddressBookActivity.KEY_SELECTED_ADDRESS)
                     showContactInfoUI()
                     updateSubmitButton()
-                }
-            }
-            data != null -> {
-                IntentIntegrator.parseActivityResult(requestCode, resultCode, data).contents?.let {
-                    if (WalletUtils.isValidAddress(it)) {
-                        selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(it)
-
-                        showInputUI()
-                        if (selectedContact == null) {
-                            binding.outputReceiverAddress.setText(it)
-                            binding.outputReceiverAddress.dismissDropDown()
-                            validateInput(true)
-                        } else
-                            showContactInfoUI()
-                        updateSubmitButton()
-                    } else if (context != null) {
-                        MessageDialog.show(requireContext(), R.string.mozo_dialog_error_scan_invalid_msg)
-                    }
                 }
             }
         }
@@ -193,6 +183,23 @@ class PaymentRequestSendFragment : Fragment() {
         mPhoneContactUtils = null
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun onScanSuccess(result: String) {
+        if (WalletUtils.isValidAddress(result)) {
+            selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(result)
+
+            showInputUI()
+            if (selectedContact == null) {
+                binding.outputReceiverAddress.setText(result)
+                binding.outputReceiverAddress.dismissDropDown()
+                validateInput(true)
+            } else
+                showContactInfoUI()
+            updateSubmitButton()
+        } else if (context != null) {
+            MessageDialog.show(requireContext(), R.string.mozo_dialog_error_scan_invalid_msg)
+        }
     }
 
     private fun showContactInfoUI() {
@@ -227,15 +234,16 @@ class PaymentRequestSendFragment : Fragment() {
 
     private fun showInputUI() {
         visible(
-                binding.outputReceiverAddress,
-                binding.outputReceiverAddressUnderline,
-                binding.buttonScanQr
+            binding.outputReceiverAddress,
+            binding.outputReceiverAddressUnderline,
+            binding.buttonScanQr
         )
         binding.outputReceiverAddressUser.gone()
     }
 
     private fun updateSubmitButton() {
-        binding.buttonSend.isEnabled = selectedContact != null || binding.outputReceiverAddress.length() > 0
+        binding.buttonSend.isEnabled =
+            selectedContact != null || binding.outputReceiverAddress.length() > 0
     }
 
     @SuppressLint("SetTextI18n")
@@ -250,27 +258,35 @@ class PaymentRequestSendFragment : Fragment() {
 
         if (fromScan) return isValidAddress
 
-        if (!isValidAddress && context != null) mPhoneContactUtils?.validatePhone(requireContext(), address)?.let {
+        if (!isValidAddress && context != null) mPhoneContactUtils?.validatePhone(
+            requireContext(),
+            address
+        )?.let {
             if (it > 0) showErrorAddressUI(false, it)
         }
 
         return isValidAddress
     }
 
-    private fun showErrorAddressUI(fromScan: Boolean = false, @StringRes errorId: Int = R.string.mozo_transfer_receiver_address_error) {
+    private fun showErrorAddressUI(
+        fromScan: Boolean = false,
+        @StringRes errorId: Int = R.string.mozo_transfer_receiver_address_error
+    ) {
         val errorColor = context?.color(R.color.mozo_color_error) ?: return
         binding.outputReceiverAddressLabel.setTextColor(errorColor)
         binding.outputReceiverAddressUnderline.setBackgroundColor(errorColor)
         binding.outputReceiverAddressErrorMsg.visible()
         binding.outputReceiverAddressErrorMsg.setText(
-                if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
+            if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
         )
     }
 
     private fun hideErrorAddressUI() {
         binding.outputReceiverAddressLabel.setTextColor(
-                ContextCompat.getColorStateList(context ?: return,
-                        R.color.mozo_color_input_focus)
+            ContextCompat.getColorStateList(
+                context ?: return,
+                R.color.mozo_color_input_focus
+            )
         )
         binding.outputReceiverAddressUnderline.setBackgroundResource(R.drawable.mozo_color_line_focus)
         binding.outputReceiverAddressErrorMsg.gone()
