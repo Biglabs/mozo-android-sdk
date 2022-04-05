@@ -3,7 +3,7 @@ buildscript {
         COMPILE_VERSION = 31
         TARGET_VERSION = 31
         MIN_VERSION = 21
-        KOTLIN_VERSION = '1.6.10'
+        KOTLIN_VERSION = '1.6.20'
 
         /**
          * MozoSDK publication information
