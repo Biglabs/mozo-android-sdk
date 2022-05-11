@@ -1,7 +1,7 @@
 # Mozo Android SDK
 [![Maven Central](https://img.shields.io/maven-central/v/io.mozocoin/mozo-sdk.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.mozocoin%22%20AND%20a:%22mozo-sdk%22)
 [ ![Android min version](https://img.shields.io/badge/Android-21+-brightgreen) ](#)
-[ ![Kotlin version](https://img.shields.io/badge/Kotlin-1.4.31-blue) ](#)
+[ ![Kotlin version](https://img.shields.io/badge/Kotlin-1.6.10-blue) ](#)
 
 MozoSDK for Android by MozoX Pte. Ltd.
 For more information please see [the website][1].
@@ -27,18 +27,11 @@ dependencies {
 </pre>
 
 ## Setting up
-* First, in your module Gradle file (usually the `app/build.gradle`), add the `packagingOptions` and `compileOptions` to remove duplicate files and make sure your project compiling by Java 8:
+* First, in your module Gradle file (usually the `app/build.gradle`), add the `compileOptions` to make sure your project compiling by Java 8:
 ```
 apply plugin: 'com.android.application'
 android {
     // ...
-    
-    packagingOptions {
-        exclude 'META-INF/rxjava.properties'
-        exclude 'lib/x86_64/darwin/libscrypt.dylib'
-        exclude 'lib/x86_64/freebsd/libscrypt.so'
-        exclude 'lib/x86_64/linux/libscrypt.so'
-    }
     
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
