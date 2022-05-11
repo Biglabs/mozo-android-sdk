@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 android {
+    namespace 'com.biglabs.mozo.example.shopper'
     compileSdkVersion COMPILE_VERSION
     defaultConfig {
         applicationId "com.biglabs.mozo.example.shopper"
@@ -47,7 +48,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION"
     implementation 'androidx.arch.core:core-runtime:2.1.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
 
 }
