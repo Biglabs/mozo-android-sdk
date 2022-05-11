@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    namespace 'io.mozocoin.sdk'
     compileSdkVersion COMPILE_VERSION
     defaultConfig {
         minSdkVersion MIN_VERSION
@@ -53,7 +54,7 @@ dependencies {
     def retrofit_version = '2.9.0'
     def room_version = '2.4.2'
     def lifecycle_version = '2.4.1'
-    def camera_x_version = '1.1.0-beta02'
+    def camera_x_version = '1.1.0-beta03'
 
     api fileTree(include: ['*.jar'], dir: 'libs')
     // Android X
@@ -71,7 +72,7 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
     implementation 'com.google.android.gms:play-services-location:19.0.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
 
     // Kotlin X
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION"
