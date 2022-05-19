@@ -39,15 +39,15 @@ class Constant {
         internal const val CURRENCY_SYMBOL_KRW = "₩"
         internal const val CURRENCY_SYMBOL_VND = "₫"
 
-        internal const val DOMAIN_API_DEV = "gateway.cng.mozotoken.com"
-        internal const val DOMAIN_API_STAGING = "staging.gateway.mozotoken.com"
-        internal const val DOMAIN_API_PRODUCTION = "gateway.mozotoken.com"
+        internal const val DOMAIN_API_DEV = "gateway.cng.mozocoin.io"
+        internal const val DOMAIN_API_STAGING = "staging.gateway.mozocoin.io"
+        internal const val DOMAIN_API_PRODUCTION = "gateway.mozocoin.io"
 
-        internal const val DOMAIN_AUTH_DEV = "login.cng.mozotoken.com"
+        internal const val DOMAIN_AUTH_DEV = "login.cng.mozocoin.io"
         internal const val DOMAIN_AUTH_STAGING = "staging.login.mozocoin.io"
         internal const val DOMAIN_AUTH_PRODUCTION = "login.mozocoin.io"
 
-        internal const val DOMAIN_SOCKET_DEV = "noti.cng.mozotoken.com"
+        internal const val DOMAIN_SOCKET_DEV = "noti.cng.mozocoin.io"
         internal const val DOMAIN_SOCKET_STAGING = "staging.noti.mozocoin.io"
         internal const val DOMAIN_SOCKET_PRODUCTION = "noti.mozocoin.io"
 
@@ -55,13 +55,13 @@ class Constant {
         internal const val DOMAIN_ETHER_SCAN_STAGING = "ropsten.etherscan.io"
         internal const val DOMAIN_ETHER_SCAN_PRODUCTION = "etherscan.io"
 
-        internal const val DOMAIN_LANDING_PAGE_DEV = "cng.mozotoken.com"
-        internal const val DOMAIN_LANDING_PAGE_STAGING = "staging.mozotoken.com"
-        internal const val DOMAIN_LANDING_PAGE_PRODUCTION = "mozotoken.com"
+        internal const val DOMAIN_LANDING_PAGE_DEV = "cng.mozocoin.io"
+        internal const val DOMAIN_LANDING_PAGE_STAGING = "staging.mozocoin.io"
+        internal const val DOMAIN_LANDING_PAGE_PRODUCTION = "mozocoin.io"
 
-        internal const val DOMAIN_IMAGE_DEV = "image.cng.mozotoken.com"
-        internal const val DOMAIN_IMAGE_STAGING = "staging.image.mozotoken.com"
-        internal const val DOMAIN_IMAGE_PRODUCTION = "image.mozotoken.com"
+        internal const val DOMAIN_IMAGE_DEV = "image.cng.mozocoin.io"
+        internal const val DOMAIN_IMAGE_STAGING = "staging.image.mozocoin.io"
+        internal const val DOMAIN_IMAGE_PRODUCTION = "image.mozocoin.io"
 
         internal const val SOCKET_CHANNEL_SHOPPER = "shopper"
         internal const val SOCKET_CHANNEL_RETAILER = "retailer"
