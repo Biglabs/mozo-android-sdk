@@ -5,7 +5,6 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Bundle
 import android.os.Looper
 import com.google.android.gms.location.*
 import io.mozocoin.sdk.utils.isLocationPermissionGranted
@@ -39,12 +38,12 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
 
                 fusedLocationProvider.removeLocationUpdates(this)
                 fusedLocationProvider.requestLocationUpdates(
-                        LocationRequest.create()
-                                .setInterval(REQUEST_INTERVAL)
-                                .setFastestInterval(REQUEST_INTERVAL)
-                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY),
-                        this,
-                        Looper.getMainLooper()
+                    LocationRequest.create()
+                        .setInterval(REQUEST_INTERVAL)
+                        .setFastestInterval(REQUEST_INTERVAL)
+                        .setPriority(Priority.PRIORITY_HIGH_ACCURACY),
+                    this,
+                    Looper.getMainLooper()
                 )
             } else fetchNetworkLocation()
         }
@@ -68,10 +67,10 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
         if (provider.isNullOrEmpty()) return
         try {
             locationManager.requestLocationUpdates(
-                    provider,
-                    REQUEST_INTERVAL,
-                    0f,
-                    this
+                provider,
+                REQUEST_INTERVAL,
+                0f,
+                this
             )
         } catch (ignore: Exception) {
             ignore.printStackTrace()
@@ -83,7 +82,7 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
         /**
          * from FusedLocationProviderClient
          */
-        result.lastLocation.run {
+        result.lastLocation?.run {
             mListener?.invoke(this)
         }
     }
@@ -97,9 +96,6 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
         }
     }
 
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-    }
-
     override fun onProviderEnabled(provider: String) {
     }
 
@@ -111,6 +107,7 @@ class LocationService(val context: Context) : LocationCallback(), LocationListen
         fetchLocation()
     }
 
+    @SuppressLint("MissingPermission")
     fun clearListener() {
         mListener = null
         fusedLocationProvider.removeLocationUpdates(this)

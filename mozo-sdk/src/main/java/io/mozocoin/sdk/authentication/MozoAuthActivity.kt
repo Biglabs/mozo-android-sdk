@@ -19,7 +19,6 @@ import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.logAsError
 import io.mozocoin.sdk.utils.setMatchParent
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -30,6 +29,7 @@ import net.openid.appauth.browser.VersionRange
 import net.openid.appauth.browser.VersionedBrowserMatcher
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
@@ -91,24 +91,32 @@ internal class MozoAuthActivity : FragmentActivity() {
         mAuthRequest.set(null)
         mAuthIntent.set(null)
 
-        val signInEndPoint = getString(R.string.auth_end_point_authorization, Support.domainAuth()).toUri()
+        val signInEndPoint =
+            getString(R.string.auth_end_point_authorization, Support.domainAuth()).toUri()
         val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
-        mAuthStateManager.replace(AuthState(AuthorizationServiceConfiguration(
-                signInEndPoint,
-                tokenEndpoint
-        )))
+        mAuthStateManager.replace(
+            AuthState(
+                AuthorizationServiceConfiguration(
+                    signInEndPoint,
+                    tokenEndpoint
+                )
+            )
+        )
 
         initializeAuthRequest()
     }
 
     private fun initializeAuthRequest() {
-        val appScheme = getString(R.string.auth_redirect_uri, "com.biglabs.mozosdk.${applicationInfo.packageName}")
+        val appScheme = getString(
+            R.string.auth_redirect_uri,
+            "com.biglabs.mozosdk.${applicationInfo.packageName}"
+        )
         val clientId = getString(
-                when {
-                    MozoSDK.isInternalApps -> R.string.auth_client_id_operation
-                    MozoSDK.isRetailerApp -> R.string.auth_client_id_retailer
-                    else -> R.string.auth_client_id_shopper
-                }
+            when {
+                MozoSDK.isInternalApps -> R.string.auth_client_id_operation
+                MozoSDK.isRetailerApp -> R.string.auth_client_id_retailer
+                else -> R.string.auth_client_id_shopper
+            }
         )
 
         if (mAuthStateManager.current.authorizationServiceConfiguration == null) {
@@ -116,62 +124,67 @@ internal class MozoAuthActivity : FragmentActivity() {
             return
         }
 
-        val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
+        val locale = ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.ENGLISH
         val authRequestBuilder = if (modeSignIn) {
             AuthorizationRequest.Builder(
-                    mAuthStateManager.current.authorizationServiceConfiguration!!,
-                    clientId,
-                    ResponseTypeValues.CODE,
-                    Uri.parse(appScheme)
+                mAuthStateManager.current.authorizationServiceConfiguration!!,
+                clientId,
+                ResponseTypeValues.CODE,
+                Uri.parse(appScheme)
             )
-                    .setPrompt("consent")
-                    .setScope("openid profile phone")
-                    .setAdditionalParameters(
-                            mutableMapOf(
-                                    "kc_locale" to locale.toLanguageTag(),
-                                    "application_type" to "native"
-                            )
+                .setPrompt("consent")
+                .setScope("openid profile phone")
+                .setAdditionalParameters(
+                    mutableMapOf(
+                        "kc_locale" to locale.toLanguageTag(),
+                        "application_type" to "native"
                     )
+                )
 
         } else /* SIGN OUT */ {
             val signInRequest = AuthorizationRequest.Builder(
-                    mAuthStateManager.current.authorizationServiceConfiguration!!,
-                    clientId,
-                    ResponseTypeValues.CODE,
-                    Uri.parse(appScheme)
+                mAuthStateManager.current.authorizationServiceConfiguration!!,
+                clientId,
+                ResponseTypeValues.CODE,
+                Uri.parse(appScheme)
             )
-                    .setPrompt("consent")
-                    .setScope("openid profile phone")
-                    .setAdditionalParameters(
-                            mutableMapOf(
-                                    "kc_locale" to locale.toLanguageTag(),
-                                    "application_type" to "native"
-                            )
+                .setPrompt("consent")
+                .setScope("openid profile phone")
+                .setAdditionalParameters(
+                    mutableMapOf(
+                        "kc_locale" to locale.toLanguageTag(),
+                        "application_type" to "native"
                     )
-                    .build()
+                )
+                .build()
 
             val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
-            val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
+            val tokenEndpoint =
+                getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
             AuthorizationRequest.Builder(
-                    AuthorizationServiceConfiguration(
-                            signOutEndpoint,
-                            tokenEndpoint
-                    ),
-                    clientId,
-                    ResponseTypeValues.CODE,
-                    signInRequest.toUri()
+                AuthorizationServiceConfiguration(
+                    signOutEndpoint,
+                    tokenEndpoint
+                ),
+                clientId,
+                ResponseTypeValues.CODE,
+                signInRequest.toUri()
             )
-                    .setState(signInRequest.state)
-                    .setCodeVerifier(signInRequest.codeVerifier, signInRequest.codeVerifierChallenge, signInRequest.codeVerifierChallengeMethod)
-                    .setNonce(signInRequest.nonce)
-                    .setPrompt("consent")
-                    .setScope("openid profile phone")
-                    .setAdditionalParameters(
-                            mutableMapOf(
-                                    "kc_locale" to locale.toLanguageTag(),
-                                    "application_type" to "native"
-                            )
+                .setState(signInRequest.state)
+                .setCodeVerifier(
+                    signInRequest.codeVerifier,
+                    signInRequest.codeVerifierChallenge,
+                    signInRequest.codeVerifierChallengeMethod
+                )
+                .setNonce(signInRequest.nonce)
+                .setPrompt("consent")
+                .setScope("openid profile phone")
+                .setAdditionalParameters(
+                    mutableMapOf(
+                        "kc_locale" to locale.toLanguageTag(),
+                        "application_type" to "native"
                     )
+                )
         }
 
         mAuthRequest.set(authRequestBuilder.build())
@@ -183,21 +196,23 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun getAuthService(): AuthorizationService {
         return if (mAuthService == null || mAuthService?.isDisposed == true) {
             val appAuthConfig = AppAuthConfiguration.Builder()
-                    .setBrowserMatcher(BrowserBlacklist(
-                            VersionedBrowserMatcher(
-                                    Browsers.SBrowser.PACKAGE_NAME,
-                                    Browsers.SBrowser.SIGNATURE_SET,
-                                    true, // when this browser is used via a custom tab
-                                    VersionRange.atMost("5.3")
-                            ),
-                            VersionedBrowserMatcher(
-                                    Browsers.Chrome.PACKAGE_NAME,
-                                    Browsers.Chrome.SIGNATURE_SET,
-                                    true, // when this browser is used via a custom tab
-                                    VersionRange.atMost("53.0.2785.124")
-                            )
-                    ))
-                    .build()
+                .setBrowserMatcher(
+                    BrowserBlacklist(
+                        VersionedBrowserMatcher(
+                            Browsers.SBrowser.PACKAGE_NAME,
+                            Browsers.SBrowser.SIGNATURE_SET,
+                            true, // when this browser is used via a custom tab
+                            VersionRange.atMost("5.3")
+                        ),
+                        VersionedBrowserMatcher(
+                            Browsers.Chrome.PACKAGE_NAME,
+                            Browsers.Chrome.SIGNATURE_SET,
+                            true, // when this browser is used via a custom tab
+                            VersionRange.atMost("53.0.2785.124")
+                        )
+                    )
+                )
+                .build()
             AuthorizationService(MozoSDK.getInstance().context, appAuthConfig)
 
         } else mAuthService!!
@@ -206,9 +221,9 @@ internal class MozoAuthActivity : FragmentActivity() {
     private fun warmUpBrowser() {
         mAuthIntentLatch = CountDownLatch(1)
         val customTabs = getAuthService().createCustomTabsIntentBuilder(mAuthRequest.get().toUri())
-                .setShowTitle(true)
-                .setInstantAppsEnabled(false)
-                .build()
+            .setShowTitle(true)
+            .setInstantAppsEnabled(false)
+            .build()
 
         val extras = Bundle()
         extras.putBinder(CustomTabsIntent.EXTRA_SESSION, null)
@@ -233,8 +248,8 @@ internal class MozoAuthActivity : FragmentActivity() {
 
         isAuthInProgress = true
         val intent = getAuthService().getAuthorizationRequestIntent(
-                mAuthRequest.get(),
-                mAuthIntent.get()
+            mAuthRequest.get(),
+            mAuthIntent.get()
         )
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -263,7 +278,10 @@ internal class MozoAuthActivity : FragmentActivity() {
                 val dataJson = data.getStringExtra(AuthorizationResponse.EXTRA_RESPONSE)
 
                 if (!modeSignIn && !dataJson.isNullOrEmpty()) {
-                    val appScheme = getString(R.string.auth_redirect_uri, "com.biglabs.mozosdk.${applicationInfo.packageName}")
+                    val appScheme = getString(
+                        R.string.auth_redirect_uri,
+                        "com.biglabs.mozosdk.${applicationInfo.packageName}"
+                    )
 
                     val dataJsonObj = JSONObject(dataJson)
                     (dataJsonObj.get("request") as JSONObject).put("redirectUri", appScheme)
@@ -307,8 +325,8 @@ internal class MozoAuthActivity : FragmentActivity() {
         }
 
         getAuthService().performTokenRequest(
-                response.createTokenExchangeRequest(),
-                clientAuthentication
+            response.createTokenExchangeRequest(),
+            clientAuthentication
         ) { tokenResponse, authException ->
             mAuthStateManager.updateAfterTokenResponse(tokenResponse, authException)
             MozoTokenService.instance().reportToken()
@@ -334,23 +352,26 @@ internal class MozoAuthActivity : FragmentActivity() {
 
     private fun finishAuth(exception: Exception? = null) = MainScope().launch {
         if (
-                exception is AuthorizationException
-                && exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code
-                && (exception.cause?.message?.contains("Issued at time", ignoreCase = true) == true
-                        || exception.cause?.message?.contains("ID Token expired", ignoreCase = true) == true)
+            exception is AuthorizationException
+            && exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code
+            && (exception.cause?.message?.contains("Issued at time", ignoreCase = true) == true
+                    || exception.cause?.message?.contains(
+                "ID Token expired",
+                ignoreCase = true
+            ) == true)
         ) {
             AlertDialog.Builder(this@MozoAuthActivity, R.style.PermissionTheme)
-                    .setTitle(R.string.mozo_dialog_error_system_time_msg)
-                    .setMessage(R.string.mozo_dialog_error_system_time_msg_sub)
-                    .setPositiveButton(R.string.mozo_settings_title) { dialog, _ ->
-                        dialog.dismiss()
-                        this@MozoAuthActivity.startActivity(Intent(Settings.ACTION_DATE_SETTINGS))
-                    }
-                    .setOnDismissListener {
-                        cancelAuth()
-                    }
-                    .create()
-                    .show()
+                .setTitle(R.string.mozo_dialog_error_system_time_msg)
+                .setMessage(R.string.mozo_dialog_error_system_time_msg_sub)
+                .setPositiveButton(R.string.mozo_settings_title) { dialog, _ ->
+                    dialog.dismiss()
+                    this@MozoAuthActivity.startActivity(Intent(Settings.ACTION_DATE_SETTINGS))
+                }
+                .setOnDismissListener {
+                    cancelAuth()
+                }
+                .create()
+                .show()
         } else {
             EventBus.getDefault().post(MessageEvent.Auth(exception))
             finish()
