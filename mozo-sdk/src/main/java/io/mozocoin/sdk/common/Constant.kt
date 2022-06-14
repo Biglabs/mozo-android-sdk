@@ -39,13 +39,13 @@ class Constant {
         internal const val CURRENCY_SYMBOL_KRW = "₩"
         internal const val CURRENCY_SYMBOL_VND = "₫"
 
-        internal const val DOMAIN_API_DEV = "gateway.cng.mozocoin.io"
-        internal const val DOMAIN_API_STAGING = "staging.gateway.mozocoin.io"
-        internal const val DOMAIN_API_PRODUCTION = "gateway.mozocoin.io"
+        internal const val DOMAIN_API_DEV = "gateway.cng.mozotoken.com"
+        internal const val DOMAIN_API_STAGING = "staging.gateway.mozotoken.com"
+        internal const val DOMAIN_API_PRODUCTION = "gateway.mozotoken.com"
 
-        internal const val DOMAIN_AUTH_DEV = "login.cng.mozocoin.io"
-        internal const val DOMAIN_AUTH_STAGING = "staging.login.mozocoin.io"
-        internal const val DOMAIN_AUTH_PRODUCTION = "login.mozocoin.io"
+        internal const val DOMAIN_AUTH_DEV = "login.cng.mozotoken.com"
+        internal const val DOMAIN_AUTH_STAGING = "staging.login.mozotoken.com"
+        internal const val DOMAIN_AUTH_PRODUCTION = "login.mozotoken.com"
 
         internal const val DOMAIN_SOCKET_DEV = "noti.cng.mozocoin.io"
         internal const val DOMAIN_SOCKET_STAGING = "staging.noti.mozocoin.io"
