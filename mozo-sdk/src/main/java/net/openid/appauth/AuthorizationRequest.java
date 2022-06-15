@@ -780,7 +780,7 @@ public class AuthorizationRequest {
          */
         @NonNull
         public Builder setState(@Nullable String state) {
-            mState = checkNullOrNotEmpty(state, "state cannot be empty if defined");
+            mState = state;//checkNullOrNotEmpty(state, "state cannot be empty if defined");
             return this;
         }
 

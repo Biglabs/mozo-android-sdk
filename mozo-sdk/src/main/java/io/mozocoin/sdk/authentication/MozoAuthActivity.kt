@@ -148,6 +148,7 @@ internal class MozoAuthActivity : FragmentActivity() {
                 ResponseTypeValues.CODE,
                 Uri.parse(appScheme)
             )
+                .setState(null)
                 .setPrompt("consent")
                 .setScope("openid profile phone")
                 .setAdditionalParameters(
