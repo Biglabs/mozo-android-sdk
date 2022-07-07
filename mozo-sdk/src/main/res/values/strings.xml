@@ -136,6 +136,9 @@
     <string name="mozo_create_wallet_hint_explain">Recovery Phrase are random set of words used to secure your digital wallet. You should write down these words in order so that in the event you lose your digital wallet of forget your PIN, you can recover your wallet and/or reset your PIN.</string>
     <string name="mozo_create_wallet_creating">Creating your Mozo wallet…</string>
 
+    <string name="mozo_clear_cache">Clear Cache: %s</string>
+    <string name="mozo_languages">Languages</string>
+
     <string name="mozo_pin_title">Create Security PIN</string>
     <string name="mozo_pin_title_restore">Restore Wallet</string>
     <string name="mozo_pin_title_verify">Security PIN Confirmation</string>

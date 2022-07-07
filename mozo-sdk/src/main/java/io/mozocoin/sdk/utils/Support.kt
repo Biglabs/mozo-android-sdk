@@ -269,4 +269,29 @@ object Support {
 
         return bitmap
     }
+
+    fun fileSize(dir: File): Long {
+        var dirSize: Long = 0
+        if (dir.isDirectory) {
+            for (f in Objects.requireNonNull(dir.listFiles())) {
+                dirSize += if (f.isFile) {
+                    f.length()
+                } else fileSize(f)
+            }
+        } else if (dir.isFile) {
+            dirSize += dir.length()
+        }
+        return dirSize
+    }
+
+    fun cleanDir(dir: File) {
+        if (!dir.exists()) return
+        if (dir.isDirectory) {
+            for (f in Objects.requireNonNull(dir.listFiles())) {
+                f.delete()
+            }
+        } else {
+            dir.delete()
+        }
+    }
 }

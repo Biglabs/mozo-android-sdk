@@ -1,7 +1,7 @@
 package io.mozocoin.tools;
 
 import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.crypto.HDUtils;
+import org.bitcoinj.crypto.HDPath;
 import org.bitcoinj.wallet.DeterministicKeyChain;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.UnreadableWalletException;
@@ -35,7 +35,7 @@ public class SignMessages {
                 String signature = serializeSignature(signatureData);
                 System.out.println("\n\nToSign: " + toSign + "\nsignature: " + signature + "\npublicKey: " + publicKey);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -48,7 +48,7 @@ public class SignMessages {
                 .builder()
                 .seed(new DeterministicSeed(mnemonic, null, "", System.nanoTime()))
                 .build()
-                .getKeyByPath(HDUtils.parsePath("M/44H/60H/0H/0/" + derived), true);
+                .getKeyByPath(HDPath.parsePath("M/44H/60H/0H/0/" + derived), true);
         return key.getPrivKey().toString(16);
     }
 

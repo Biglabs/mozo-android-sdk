@@ -131,6 +131,9 @@
     <string name="mozo_create_wallet_hint_explain">Cụm từ khôi phục là một tập các từ được phát sinh ngẫu nhiên bởi thuật toán. Bạn phải ghi lại những từ này phòng trường hợp mất thiết bị hoặc quên mã PIN, bạn có thể dùng nó để phục hồi ví hoặc tạo PIN mới.</string>
     <string name="mozo_create_wallet_creating">Đang tạo ví Mozo…</string>
 
+    <string name="mozo_clear_cache">Xoá dữ liệu tạm: %s</string>
+    <string name="mozo_languages">Ngôn ngữ</string>
+
     <string name="mozo_pin_title">Tạo mã PIN</string>
     <string name="mozo_pin_title_restore">Khôi phục lại ví</string>
     <string name="mozo_pin_title_verify">Xác nhận mã PIN</string>

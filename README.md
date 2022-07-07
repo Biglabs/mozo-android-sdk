@@ -1,7 +1,7 @@
 # Mozo Android SDK
 [![Maven Central](https://img.shields.io/maven-central/v/io.mozocoin/mozo-sdk.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.mozocoin%22%20AND%20a:%22mozo-sdk%22)
-[ ![Android min version](https://img.shields.io/badge/Android-21+-brightgreen) ](#)
-[ ![Kotlin version](https://img.shields.io/badge/Kotlin-1.6.10-blue) ](#)
+[ ![Android min version](https://img.shields.io/badge/Android-22+-brightgreen) ](#)
+[ ![Kotlin version](https://img.shields.io/badge/Kotlin-1.7.0-blue) ](#)
 
 MozoSDK for Android by MozoX Pte. Ltd.
 For more information please see [the website][1].

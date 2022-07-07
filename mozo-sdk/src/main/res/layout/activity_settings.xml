@@ -92,5 +92,29 @@
             android:padding="@dimen/mozo_list_padding"
             android:text="@string/mozo_backup_title"
             app:drawableSize="24dp" />
+
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:id="@+id/button_change_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:drawableStart="@drawable/ic_setting_change_language"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:padding="@dimen/mozo_list_padding"
+            android:text="@string/mozo_languages"
+            app:drawableSize="24dp" />
+
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:id="@+id/button_clear_cache"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:drawableStart="@drawable/ic_setting_clear_cache"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:padding="@dimen/mozo_list_padding"
+            android:text="@string/mozo_clear_cache"
+            app:drawableSize="24dp" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

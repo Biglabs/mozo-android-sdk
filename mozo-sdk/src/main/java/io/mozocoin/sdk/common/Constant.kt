@@ -42,27 +42,27 @@ class Constant {
         private const val BASE_DOMAIN = "mozotoken.com"
 
         internal const val DOMAIN_API_DEV = "gateway.cng.$BASE_DOMAIN"
-        internal const val DOMAIN_API_STAGING = "staging.gateway.$BASE_DOMAIN"
+        internal const val DOMAIN_API_STAGING = "gateway.staging.$BASE_DOMAIN"
         internal const val DOMAIN_API_PRODUCTION = "gateway.$BASE_DOMAIN"
 
         internal const val DOMAIN_AUTH_DEV = "login.cng.$BASE_DOMAIN"
-        internal const val DOMAIN_AUTH_STAGING = "staging.login.$BASE_DOMAIN"
+        internal const val DOMAIN_AUTH_STAGING = "login.staging.$BASE_DOMAIN"
         internal const val DOMAIN_AUTH_PRODUCTION = "login.$BASE_DOMAIN"
 
         internal const val DOMAIN_SOCKET_DEV = "noti.cng.$BASE_DOMAIN"
-        internal const val DOMAIN_SOCKET_STAGING = "staging.noti.$BASE_DOMAIN"
+        internal const val DOMAIN_SOCKET_STAGING = "noti.staging.$BASE_DOMAIN"
         internal const val DOMAIN_SOCKET_PRODUCTION = "noti.$BASE_DOMAIN"
 
         internal const val DOMAIN_ETHER_SCAN_DEV = "ropsten.etherscan.io"
         internal const val DOMAIN_ETHER_SCAN_STAGING = "ropsten.etherscan.io"
         internal const val DOMAIN_ETHER_SCAN_PRODUCTION = "etherscan.io"
 
-        internal const val DOMAIN_LANDING_PAGE_DEV = "cng.mozocoin.io"
-        internal const val DOMAIN_LANDING_PAGE_STAGING = "staging.mozocoin.io"
-        internal const val DOMAIN_LANDING_PAGE_PRODUCTION = "mozocoin.io"
+        internal const val DOMAIN_LANDING_PAGE_DEV = "cng.$BASE_DOMAIN"
+        internal const val DOMAIN_LANDING_PAGE_STAGING = "staging.$BASE_DOMAIN"
+        internal const val DOMAIN_LANDING_PAGE_PRODUCTION = BASE_DOMAIN
 
         internal const val DOMAIN_IMAGE_DEV = "image.cng.$BASE_DOMAIN"
-        internal const val DOMAIN_IMAGE_STAGING = "staging.image.$BASE_DOMAIN"
+        internal const val DOMAIN_IMAGE_STAGING = "image.staging.$BASE_DOMAIN"
         internal const val DOMAIN_IMAGE_PRODUCTION = "image.$BASE_DOMAIN"
 
         internal const val SOCKET_CHANNEL_SHOPPER = "shopper"

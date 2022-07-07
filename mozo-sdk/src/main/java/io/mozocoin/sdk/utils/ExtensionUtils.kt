@@ -64,16 +64,17 @@ fun Fragment.replace(@IdRes id: Int, fragment: Fragment, backStackName: String? 
 }
 
 fun Context?.isLocationPermissionGranted() = this != null && ContextCompat.checkSelfPermission(
-        this,
-        android.Manifest.permission.ACCESS_FINE_LOCATION
+    this,
+    android.Manifest.permission.ACCESS_FINE_LOCATION
 ) == PackageManager.PERMISSION_GRANTED
 
 fun Context?.isStoragePermissionGranted() = this != null && ContextCompat.checkSelfPermission(
-        this,
-        android.Manifest.permission.READ_EXTERNAL_STORAGE
+    this,
+    android.Manifest.permission.READ_EXTERNAL_STORAGE
 ) == PackageManager.PERMISSION_GRANTED
 
-internal fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+internal fun Context.clipboard(): ClipboardManager =
+    this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
 fun Context.copyText(text: String?) {
     if (!text.isNullOrEmpty()) {
@@ -112,7 +113,9 @@ fun Context.openTab(url: String) {
 
         val uri = Uri.parse(finalUrl)
         if (uri.getQueryParameter(langParam).isNullOrEmpty()) {
-            finalUrl = uri.buildUpon().appendQueryParameter(langParam, Locale.getDefault().toLanguageTag()).build().toString()
+            finalUrl =
+                uri.buildUpon().appendQueryParameter(langParam, Locale.getDefault().toLanguageTag())
+                    .build().toString()
         }
     }
 
@@ -121,12 +124,12 @@ fun Context.openTab(url: String) {
     }
 
     val colorParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(color(R.color.mozo_color_primary))
-            .build()
+        .setToolbarColor(color(R.color.mozo_color_primary))
+        .build()
     val customTabsIntent = CustomTabsIntent.Builder()
-            .setShowTitle(true)
-            .setDefaultColorSchemeParams(colorParams)
-            .build()
+        .setShowTitle(true)
+        .setDefaultColorSchemeParams(colorParams)
+        .build()
 
     //to be used if Custom Tabs is not available
     val fallback = object : CustomTabsHelper.CustomTabFallback {
@@ -168,6 +171,15 @@ fun Context.openAppInStore() {
     }
 }
 
+fun Context.setAppLocale(language: String): Context {
+    val locale = Locale(language)
+    Locale.setDefault(locale)
+    val config = resources.configuration
+    config.setLocale(locale)
+    config.setLayoutDirection(locale)
+    return createConfigurationContext(config)
+}
+
 fun visibility(visible: Boolean, vararg views: View?) {
     if (visible) visible(*views)
     else gone(*views)
@@ -200,7 +212,8 @@ fun View.showKeyboard() {
  */
 fun View.hideKeyboard(): Boolean {
     try {
-        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         return inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
     } catch (ignored: RuntimeException) {
     }
@@ -255,10 +268,18 @@ fun EditText.onTextChanged(block: (s: CharSequence?) -> Unit) {
     })
 }
 
-fun EditText.onAmountInputChanged(textChanged: ((String?) -> Unit)? = null, amountChanged: (BigDecimal) -> Unit) {
+fun EditText.onAmountInputChanged(
+    textChanged: ((String?) -> Unit)? = null,
+    amountChanged: (BigDecimal) -> Unit
+) {
     inputType = InputType.TYPE_CLASS_NUMBER
     keyListener = DigitsKeyListener.getInstance("0123456789.,")
-    filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(12, MozoTx.getInstance().mozoDecimal().toInt()))
+    filters = arrayOf<InputFilter>(
+        DecimalDigitsInputFilter(
+            12,
+            MozoTx.getInstance().mozoDecimal().toInt()
+        )
+    )
 
     onTextChanged {
         textChanged?.invoke(it?.toString())
@@ -280,13 +301,14 @@ fun EditText.onAmountInputChanged(textChanged: ((String?) -> Unit)? = null, amou
 
         var rawAmount = it.replace(Regex("\\D+"), "")
         if (separatorIndex > 0) {
-            rawAmount = StringBuilder(rawAmount).insert(rawAmount.length - separatorIndex, ".").toString()
+            rawAmount =
+                StringBuilder(rawAmount).insert(rawAmount.length - separatorIndex, ".").toString()
         }
 
         val amount = BigDecimal(rawAmount)
         if (
-                !it.endsWith(DecimalFormatSymbols.getInstance().decimalSeparator) &&
-                !it.endsWith("${DecimalFormatSymbols.getInstance().decimalSeparator}0")
+            !it.endsWith(DecimalFormatSymbols.getInstance().decimalSeparator) &&
+            !it.endsWith("${DecimalFormatSymbols.getInstance().decimalSeparator}0")
         ) {
             val amountDisplay = NumberFormat.getNumberInstance().format(amount)
             setText(amountDisplay)

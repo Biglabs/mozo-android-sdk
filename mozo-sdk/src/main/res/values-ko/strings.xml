@@ -131,6 +131,9 @@
     <string name="mozo_create_wallet_hint_explain">복구 문구는 전자 지갑 보안을 위한 임의 글자 세트입니다. 전자 지갑 분실이나 PIN을 잊어버릴 경우, 자기 전자 지갑을 복구하거나 PIN을 재설정하기 위해 이 글자들을 꼭 써 놓아야 합니다.</string>
     <string name="mozo_create_wallet_creating">당신의 Mozo 지갑 만드는 중…</string>
 
+    <string name="mozo_clear_cache">캐시 지우기: %s</string>
+    <string name="mozo_languages">언어</string>
+
     <string name="mozo_pin_title">보안 PIN 생성</string>
     <string name="mozo_pin_title_restore">월렛 복구</string>
     <string name="mozo_pin_title_verify">PIN 코드 확인</string>
