@@ -26,19 +26,18 @@ import io.mozocoin.sdk.utils.launchActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.greenrobot.eventbus.EventBus
-import java.util.*
 
 class MozoSDK private constructor(internal val context: Context) : ViewModelStoreOwner {
 
     private val mViewModelStore: ViewModelStore by lazy { ViewModelStore() }
     internal val profileViewModel: ViewModels.ProfileViewModel by lazy {
         ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
-                .get(ViewModels.ProfileViewModel::class.java)
+            .get(ViewModels.ProfileViewModel::class.java)
     }
 
     internal val contactViewModel: ViewModels.ContactViewModel by lazy {
         ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
-                .get(ViewModels.ContactViewModel::class.java)
+            .get(ViewModels.ContactViewModel::class.java)
     }
 
     internal var ignoreInternetErrActivities: ArrayList<Class<out Activity>>? = null
@@ -51,11 +50,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     private fun registerNetworkCallback() {
         val myJob = JobInfo.Builder(0, ComponentName(context, ConnectionService::class.java))
-                .setMinimumLatency(2000)
-                .setOverrideDeadline(2000)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                //.setPersisted(true)
-                .build()
+            .setMinimumLatency(2000)
+            .setOverrideDeadline(2000)
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            //.setPersisted(true)
+            .build()
 
         val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         jobScheduler.schedule(myJob)
@@ -102,7 +101,11 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @JvmStatic
         @Synchronized
-        fun initialize(context: Context, @Environment environment: Int = ENVIRONMENT_STAGING, useForBusiness: Boolean = false) {
+        fun initialize(
+            context: Context,
+            @Environment environment: Int = ENVIRONMENT_STAGING,
+            useForBusiness: Boolean = false
+        ) {
             if (instance == null) {
                 hostName = context.packageName
                 serviceEnvironment = environment
@@ -155,20 +158,34 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
         @JvmStatic
         fun contactTelegram(context: Context) {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(
-                    if (isRetailerApp) "https://t.me/MozoXRetailerApp"
-                    else "https://t.me/MozoXApp"
-            )))
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW, Uri.parse(
+                        if (isRetailerApp) "https://t.me/MozoXRetailerApp"
+                        else "https://t.me/MozoXApp"
+                    )
+                )
+            )
         }
 
         @JvmStatic
         fun contactZalo(context: Context) {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://zalo.me/4501855982660092369")))
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://zalo.me/4501855982660092369")
+                )
+            )
         }
 
         @JvmStatic
         fun contactKaKaoTalk(context: Context) {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://open.kakao.com/o/g6tvra5")))
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://open.kakao.com/o/g6tvra5")
+                )
+            )
         }
 
         @JvmStatic
