@@ -50,10 +50,10 @@ android {
 }
 
 dependencies {
-    def kotlin_x_version = '1.6.0'
+    def kotlin_x_version = '1.6.3'
     def retrofit_version = '2.9.0'
     def room_version = '2.4.2'
-    def lifecycle_version = '2.4.1'
+    def lifecycle_version = '2.5.0'
     def camera2_version = '1.1.0-rc02'
 
     api fileTree(include: ['*.jar'], dir: 'libs')
@@ -66,7 +66,7 @@ dependencies {
     api "androidx.preference:preference-ktx:1.2.0"
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'androidx.annotation:annotation:1.3.0'
+    implementation 'androidx.annotation:annotation:1.4.0'
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
@@ -88,14 +88,14 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-android'
     implementation 'org.bitcoinj:bitcoinj-core:0.16.1'
     implementation 'org.cryptonode.jncryptor:jncryptor:1.2.0'
-    implementation("org.web3j:core:4.8.8-android") {
+    implementation("org.web3j:core:5.0.0") {
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
     }
     // To prevent Polymorphic Typing issue in FasterXML jackson-databind
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 
     // Barcode scanning
-    implementation 'com.google.zxing:core:3.4.1'
+    implementation 'com.google.zxing:core:3.5.0'
     implementation 'com.google.mlkit:barcode-scanning:17.0.2'
     implementation "androidx.camera:camera-camera2:${camera2_version}"
     implementation "androidx.camera:camera-lifecycle:${camera2_version}"
@@ -105,7 +105,7 @@ dependencies {
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
-    api 'io.michaelrocks:libphonenumber-android:8.12.48'
+    api 'io.michaelrocks:libphonenumber-android:8.12.50'
     api 'io.coil-kt:coil:2.1.0'
 
     // test

@@ -2,7 +2,7 @@ package io.mozocoin.sdk.utils
 
 import android.util.Base64
 import androidx.annotation.IntRange
-import org.bitcoinj.crypto.HDUtils
+import org.bitcoinj.crypto.HDPath
 import org.bitcoinj.wallet.DeterministicKeyChain
 import org.bitcoinj.wallet.DeterministicSeed
 import org.cryptonode.jncryptor.AES256JNCryptor
@@ -19,38 +19,43 @@ class CryptoUtils {
         internal const val SECOND_ADDRESS = 1
 
         @JvmStatic
-        fun getAddressPrivateKey(@IntRange(from = 0, to = 1000) derived: Int, mnemonic: String): String {
+        fun getAddressPrivateKey(
+            @IntRange(from = 0, to = 1000) derived: Int,
+            mnemonic: String
+        ): String {
             if (derived < 0) {
                 throw InvalidParameterException("Invalid derived")
             }
             val key = DeterministicKeyChain
-                    .builder()
-                    .seed(DeterministicSeed(mnemonic, null, "", System.nanoTime()))
-                    .build()
-                    .getKeyByPath(HDUtils.parsePath(ETH_DERIVATION_PATH + derived), true)
+                .builder()
+                .seed(DeterministicSeed(mnemonic, null, "", System.nanoTime()))
+                .build()
+                .getKeyByPath(HDPath.parsePath(ETH_DERIVATION_PATH + derived), true)
             return key.privKey.toString(16)
         }
 
         @JvmStatic
         @Throws(Throwable::class)
         fun encrypt(value: String, password: String): String {
-            return Base64.encodeToString(AES256JNCryptor().encryptData(
+            return Base64.encodeToString(
+                AES256JNCryptor().encryptData(
                     value.toByteArray(),
                     password.toCharArray()
-            ), Base64.DEFAULT).replace("\n", "")
+                ), Base64.DEFAULT
+            ).replace("\n", "")
         }
 
         @JvmStatic
         @Throws(Throwable::class)
         fun decrypt(value: String, password: String): String {
             return String(
-                    AES256JNCryptor().decryptData(
-                            Base64.decode(
-                                    value.replace("\n", ""),
-                                    Base64.DEFAULT
-                            ),
-                            password.toCharArray()
-                    )
+                AES256JNCryptor().decryptData(
+                    Base64.decode(
+                        value.replace("\n", ""),
+                        Base64.DEFAULT
+                    ),
+                    password.toCharArray()
+                )
             )
         }
 
