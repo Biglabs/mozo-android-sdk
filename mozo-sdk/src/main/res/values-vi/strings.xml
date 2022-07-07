@@ -132,6 +132,7 @@
     <string name="mozo_create_wallet_creating">Đang tạo ví Mozo…</string>
 
     <string name="mozo_clear_cache">Xoá dữ liệu tạm: %s</string>
+    <string name="mozo_languages">Ngôn ngữ</string>
 
     <string name="mozo_pin_title">Tạo mã PIN</string>
     <string name="mozo_pin_title_restore">Khôi phục lại ví</string>

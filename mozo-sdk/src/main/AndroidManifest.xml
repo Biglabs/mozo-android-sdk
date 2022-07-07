@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -106,6 +107,7 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".ui.SettingsActivity"
+            android:configChanges="locale"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask"
@@ -204,6 +206,7 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".ui.UpdateRequiredActivity"
+            android:configChanges="locale"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask"

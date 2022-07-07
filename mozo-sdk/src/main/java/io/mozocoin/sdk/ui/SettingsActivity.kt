@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.databinding.ActivitySettingsBinding
 import io.mozocoin.sdk.ui.dialog.MessageDialog
+import io.mozocoin.sdk.utils.MyContextWrapper
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.wallet.ChangePinActivity
@@ -43,6 +44,14 @@ class SettingsActivity : AppCompatActivity() {
         binding.buttonClearCache.click {
             Support.cleanDir(cacheDir)
             calculateCache()
+        }
+
+        binding.buttonChangeLanguage.click {
+            val context = MyContextWrapper.wrap(this, "ko")
+            baseContext.resources.updateConfiguration(
+                context.resources.configuration,
+                context.resources.displayMetrics
+            )
         }
     }
 

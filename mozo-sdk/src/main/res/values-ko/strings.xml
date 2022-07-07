@@ -132,6 +132,7 @@
     <string name="mozo_create_wallet_creating">당신의 Mozo 지갑 만드는 중…</string>
 
     <string name="mozo_clear_cache">캐시 지우기: %s</string>
+    <string name="mozo_languages">언어</string>
 
     <string name="mozo_pin_title">보안 PIN 생성</string>
     <string name="mozo_pin_title_restore">월렛 복구</string>
