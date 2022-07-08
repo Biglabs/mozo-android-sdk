@@ -3,17 +3,20 @@ package io.mozocoin.sdk.ui
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.databinding.ActivitySettingsBinding
 import io.mozocoin.sdk.ui.dialog.MessageDialog
-import io.mozocoin.sdk.utils.MyContextWrapper
+import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.wallet.ChangePinActivity
 import io.mozocoin.sdk.wallet.backup.BackupWalletActivity
+import java.util.*
+import kotlin.math.max
 
-class SettingsActivity : AppCompatActivity() {
+
+class SettingsActivity : LocalizationBaseActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
 
@@ -47,11 +50,16 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.buttonChangeLanguage.click {
-            val context = MyContextWrapper.wrap(this, "ko")
-            baseContext.resources.updateConfiguration(
-                context.resources.configuration,
-                context.resources.displayMetrics
-            )
+            val lastLocale: Locale = SharedPrefsUtils.language
+            val locales = arrayOf(Locale.ENGLISH, Locale.KOREAN, Locale("vi"))
+            val lastIndex = max(locales.indexOf(lastLocale), 0)
+            AlertDialog.Builder(this)
+                .setTitle(R.string.mozo_languages)
+                .setSingleChoiceItems(R.array.languages, lastIndex) { dialog, which ->
+                    dialog.dismiss()
+                    SharedPrefsUtils.language = locales[which]
+                    restartApplication()
+                }.create().show()
         }
     }
 
@@ -59,5 +67,14 @@ class SettingsActivity : AppCompatActivity() {
         val cacheSize = Support.fileSize(cacheDir)
         val sizeDisplay = Formatter.formatFileSize(this, cacheSize)
         binding.buttonClearCache.text = getString(R.string.mozo_clear_cache, sizeDisplay)
+    }
+
+    private fun restartApplication() {
+        packageManager.getLaunchIntentForPackage(packageName)?.let {
+            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            finishAffinity() // Finishes all activities.
+            overridePendingTransition(0, 0)
+            startActivity(it)
+        }
     }
 }

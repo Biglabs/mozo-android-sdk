@@ -64,7 +64,7 @@ internal class SecurityActivity : BaseActivity() {
             KEY_VERIFY_PIN_FOR_SEND,
             KEY_VERIFY_PIN_FOR_BACKUP -> {
                 if (MozoWallet.getInstance().getWallet()?.isUnlocked() == true) {
-                    if (SharedPrefsUtils.getShowAutoPinNotice()) showMsg4AutoPin()
+                    if (SharedPrefsUtils.showAutoPinNotice) showMsg4AutoPin()
                     else executeAutoPin()
 
                 } else showPinVerifyUI()
@@ -115,12 +115,15 @@ internal class SecurityActivity : BaseActivity() {
 
         val words = MozoWallet.getInstance().getWallet(true)?.mnemonicPhrases()?.toMutableList()
         bindingDisplay.seedView.adapter = SeedWordAdapter(words ?: mutableListOf())
-        bindingDisplay.txtWarning.text = SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
-            setSpan(ImageSpan(this@SecurityActivity, R.drawable.ic_warning),
+        bindingDisplay.txtWarning.text =
+            SpannableString("  " + getString(R.string.mozo_backup_warning)).apply {
+                setSpan(
+                    ImageSpan(this@SecurityActivity, R.drawable.ic_warning),
                     0,
                     1,
-                    Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-        }
+                    Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                )
+            }
 
         bindingDisplay.buttonStoredConfirm.click {
             it.isSelected = !it.isSelected
@@ -146,10 +149,10 @@ internal class SecurityActivity : BaseActivity() {
         bindingConfirm.txtIndex4.text = (randoms[3] + 1).toString()
 
         val edits = listOf(
-                bindingConfirm.editVerifySeed1,
-                bindingConfirm.editVerifySeed2,
-                bindingConfirm.editVerifySeed3,
-                bindingConfirm.editVerifySeed4
+            bindingConfirm.editVerifySeed1,
+            bindingConfirm.editVerifySeed2,
+            bindingConfirm.editVerifySeed3,
+            bindingConfirm.editVerifySeed4
         )
 
         edits.forEach { edit ->
@@ -183,8 +186,10 @@ internal class SecurityActivity : BaseActivity() {
 
         bindingConfirm.buttonFinish.click {
             if (!validWords())
-                return@click MessageDialog.show(this,
-                        getString(R.string.mozo_backup_confirm_failed))
+                return@click MessageDialog.show(
+                    this,
+                    getString(R.string.mozo_backup_confirm_failed)
+                )
 
             showPinInputUI()
         }
@@ -209,10 +214,18 @@ internal class SecurityActivity : BaseActivity() {
     private fun validWords(): Boolean {
         val words = MozoWallet.getInstance().getWallet(false)?.mnemonicPhrases()?.toMutableList()
         return !words.isNullOrEmpty()
-                && bindingConfirm.editVerifySeed1.text.toString() == words.getOrNull(bindingConfirm.txtIndex1.text.toString().toInt() - 1)
-                && bindingConfirm.editVerifySeed2.text.toString() == words.getOrNull(bindingConfirm.txtIndex2.text.toString().toInt() - 1)
-                && bindingConfirm.editVerifySeed3.text.toString() == words.getOrNull(bindingConfirm.txtIndex3.text.toString().toInt() - 1)
-                && bindingConfirm.editVerifySeed4.text.toString() == words.getOrNull(bindingConfirm.txtIndex4.text.toString().toInt() - 1)
+                && bindingConfirm.editVerifySeed1.text.toString() == words.getOrNull(
+            bindingConfirm.txtIndex1.text.toString().toInt() - 1
+        )
+                && bindingConfirm.editVerifySeed2.text.toString() == words.getOrNull(
+            bindingConfirm.txtIndex2.text.toString().toInt() - 1
+        )
+                && bindingConfirm.editVerifySeed3.text.toString() == words.getOrNull(
+            bindingConfirm.txtIndex3.text.toString().toInt() - 1
+        )
+                && bindingConfirm.editVerifySeed4.text.toString() == words.getOrNull(
+            bindingConfirm.txtIndex4.text.toString().toInt() - 1
+        )
     }
 
     /**
@@ -233,7 +246,7 @@ internal class SecurityActivity : BaseActivity() {
         }
 
         bindingPin.root.postDelayed(Constant.AUTO_PIN_WAITING_TIMER) {
-            SharedPrefsUtils.setShowAutoPinNotice(isShowAutoPinNotice)
+            SharedPrefsUtils.showAutoPinNotice = isShowAutoPinNotice
             executeAutoPin()
         }
     }
@@ -249,7 +262,8 @@ internal class SecurityActivity : BaseActivity() {
         bindingSecurity = ViewWalletSecurityBinding.inflate(layoutInflater)
         setContentView(bindingSecurity.root)
 
-        bindingSecurity.pinToolbar.findViewById<TextView>(R.id.screen_title).setText(R.string.mozo_pin_title)
+        bindingSecurity.pinToolbar.findViewById<TextView>(R.id.screen_title)
+            .setText(R.string.mozo_pin_title)
         bindingSecurity.subTitlePin.setText(R.string.mozo_pin_sub_title)
         bindingSecurity.textContentPin.setText(R.string.mozo_pin_content)
 
@@ -306,7 +320,8 @@ internal class SecurityActivity : BaseActivity() {
     }
 
     private fun initRestoreUI(clearPin: Boolean = false) = MainScope().launch {
-        bindingSecurity.pinToolbar.findViewById<TextView>(R.id.screen_title).setText(R.string.mozo_pin_title_restore)
+        bindingSecurity.pinToolbar.findViewById<TextView>(R.id.screen_title)
+            .setText(R.string.mozo_pin_title_restore)
         bindingSecurity.subTitlePin.setText(R.string.mozo_pin_sub_title_restore)
 
         bindingSecurity.inputPin.apply {
@@ -382,21 +397,21 @@ internal class SecurityActivity : BaseActivity() {
     private fun hidePinInputWrongUI() = MainScope().launch {
         bindingSecurity.inputPinCheckerStatus.isSelected = false
         gone(
-                bindingSecurity.textCorrectPin,
-                bindingSecurity.textIncorrectPin
+            bindingSecurity.textCorrectPin,
+            bindingSecurity.textIncorrectPin
         )
     }
 
     private fun showLoadingUI() = MainScope().launch {
         isAllowBackPress = false
         gone(
-                bindingSecurity.textCorrectPin,
-                bindingSecurity.textIncorrectPin,
-                bindingSecurity.inputPin,
-                bindingSecurity.inputPinCheckerStatus,
-                bindingSecurity.textContentPin,
-                bindingSecurity.errorContainer,
-                bindingSecurity.pinForgotGroup
+            bindingSecurity.textCorrectPin,
+            bindingSecurity.textIncorrectPin,
+            bindingSecurity.inputPin,
+            bindingSecurity.inputPinCheckerStatus,
+            bindingSecurity.textContentPin,
+            bindingSecurity.errorContainer,
+            bindingSecurity.pinForgotGroup
         )
 
         visible(bindingSecurity.inputLoadingIndicator)
@@ -491,9 +506,9 @@ internal class SecurityActivity : BaseActivity() {
         const val KEY_DATA = "KEY_DATA"
 
         fun isNeedCallbackForSign(requestCode: Int) =
-                requestCode == KEY_ENTER_PIN_FOR_SEND
-                        || requestCode == KEY_VERIFY_PIN
-                        || requestCode == KEY_VERIFY_PIN_FOR_SEND
+            requestCode == KEY_ENTER_PIN_FOR_SEND
+                    || requestCode == KEY_VERIFY_PIN
+                    || requestCode == KEY_VERIFY_PIN_FOR_SEND
 
         fun start(activity: Activity, mode: Int, requestCode: Int) {
             Intent(activity, SecurityActivity::class.java).apply {
@@ -512,12 +527,12 @@ internal class SecurityActivity : BaseActivity() {
 
         fun startVerify(context: Context, enter4Send: Boolean = false) {
             start(
-                    context,
-                    when {
-                        context is TransactionFormActivity -> KEY_VERIFY_PIN_FOR_SEND
-                        enter4Send -> KEY_ENTER_PIN_FOR_SEND
-                        else -> KEY_VERIFY_PIN
-                    }
+                context,
+                when {
+                    context is TransactionFormActivity -> KEY_VERIFY_PIN_FOR_SEND
+                    enter4Send -> KEY_ENTER_PIN_FOR_SEND
+                    else -> KEY_VERIFY_PIN
+                }
             )
         }
     }

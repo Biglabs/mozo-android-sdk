@@ -1,9 +1,9 @@
 package com.biglabs.mozo.example.shopper
 
-import android.app.Application
+import io.mozocoin.sdk.MozoApp
 import io.mozocoin.sdk.MozoSDK
 
-class MyApplication : Application() {
+class MyApplication : MozoApp() {
 
     override fun onCreate() {
         super.onCreate()

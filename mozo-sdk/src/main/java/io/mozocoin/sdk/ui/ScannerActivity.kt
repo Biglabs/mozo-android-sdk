@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
@@ -27,7 +26,7 @@ import io.mozocoin.sdk.utils.gone
 import io.mozocoin.sdk.utils.visible
 import java.util.concurrent.Executors
 
-class ScannerActivity : AppCompatActivity() {
+class ScannerActivity : LocalizationBaseActivity() {
     private lateinit var binding: ActivityScannerBinding
     private var isBindCamera = false
     private var cameraInfoArr = listOf<CameraInfo>()

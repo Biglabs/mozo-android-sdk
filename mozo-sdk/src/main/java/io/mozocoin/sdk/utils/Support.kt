@@ -169,7 +169,7 @@ object Support {
         }
     }
 
-    internal fun domainAPI() = when (MozoSDK.serviceEnvironment) {
+    fun domainAPI() = when (MozoSDK.serviceEnvironment) {
         MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_API_DEV
         MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_API_STAGING
         else -> Constant.DOMAIN_API_PRODUCTION
@@ -199,7 +199,7 @@ object Support {
         else -> Constant.DOMAIN_LANDING_PAGE_PRODUCTION
     }
 
-    internal fun domainImage() = when (MozoSDK.serviceEnvironment) {
+    fun domainImage() = when (MozoSDK.serviceEnvironment) {
         MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_IMAGE_DEV
         MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_IMAGE_STAGING
         else -> Constant.DOMAIN_IMAGE_PRODUCTION
