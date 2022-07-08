@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="languages">
+        <item>🇺🇸 Tiếng Anh(Mỹ) - English</item>
+        <item>🇰🇷 Tiếng Hàn Quốc - 한국어</item>
+        <item>🇻🇳 Tiếng Việt - Tiếng Việt</item>
+    </string-array>
+</resources>

@@ -16,10 +16,8 @@ import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.databinding.ActivityCreateWalletBinding
 import io.mozocoin.sdk.ui.BaseActivity
-import io.mozocoin.sdk.ui.SecurityActivity
 import io.mozocoin.sdk.utils.click
 import io.mozocoin.sdk.utils.visible
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
@@ -53,32 +51,33 @@ internal class CreateWalletActivity : BaseActivity() {
             doCreateWallet()
             /**
             when (binding.buttonCreateManual.isSelected) {
-                true -> {
-                    SecurityActivity.start(this, SecurityActivity.KEY_CREATE_PIN, KEY_CREATE_WALLET_MANUAL)
+            true -> {
+            SecurityActivity.start(this, SecurityActivity.KEY_CREATE_PIN, KEY_CREATE_WALLET_MANUAL)
 
-                }
-                else -> {
-                    showCreatingUI()
-                    doCreateWallet()
-                }
             }
-            */
+            else -> {
+            showCreatingUI()
+            doCreateWallet()
+            }
+            }
+             */
         }
 
         val actionText = getString(R.string.mozo_button_logout_short)
-        val spannable = SpannableString(getString(R.string.mozo_create_wallet_have_another_account, actionText))
+        val spannable =
+            SpannableString(getString(R.string.mozo_create_wallet_have_another_account, actionText))
         spannable.setSpan(
-                object : ClickableSpan() {
-                    override fun onClick(widget: View) {
-                        EventBus.getDefault().post(MessageEvent.CloseActivities())
-                        widget.postDelayed(1000) {
-                            MozoAuth.getInstance().signOut()
-                        }
+            object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    EventBus.getDefault().post(MessageEvent.CloseActivities())
+                    widget.postDelayed(1000) {
+                        MozoAuth.getInstance().signOut()
                     }
-                },
-                spannable.length - actionText.length,
-                spannable.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                }
+            },
+            spannable.length - actionText.length,
+            spannable.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         binding.createWalletHaveOtherAccountHint.apply {
             text = spannable

@@ -9,12 +9,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import androidx.core.os.ConfigurationCompat
-import androidx.fragment.app.FragmentActivity
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.service.MozoTokenService
+import io.mozocoin.sdk.ui.LocalizationBaseActivity
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.UserCancelException
 import io.mozocoin.sdk.utils.logAsError
@@ -33,7 +33,7 @@ import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
-internal class MozoAuthActivity : FragmentActivity() {
+internal class MozoAuthActivity : LocalizationBaseActivity() {
 
     private var mAuthService: AuthorizationService? = null
     private val mAuthStateManager: AuthStateManager by lazy {

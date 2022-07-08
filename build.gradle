@@ -3,14 +3,14 @@ buildscript {
         COMPILE_VERSION = 32
         TARGET_VERSION = 32
         MIN_VERSION = 22
-        KOTLIN_VERSION = '1.7.0'
+        KOTLIN_VERSION = '1.7.10'
 
         /**
          * MozoSDK publication information
          * */
         PUBLISH_ARTIFACT_ID = 'mozo-sdk'
         PUBLISH_GROUP_ID = 'io.mozocoin'
-        PUBLISH_VERSION = '0.2.5-beta039'
+        PUBLISH_VERSION = '0.2.5-beta040'
         PUBLISH_DESCRIPTION = 'MozoSDK for Android'
         PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
     }

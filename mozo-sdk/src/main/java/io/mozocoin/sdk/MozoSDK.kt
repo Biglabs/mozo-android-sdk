@@ -2,7 +2,6 @@ package io.mozocoin.sdk
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Application
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
@@ -102,7 +101,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @JvmStatic
         @Synchronized
         fun initialize(
-            context: Context,
+            context: MozoApp,
             @Environment environment: Int = ENVIRONMENT_STAGING,
             useForBusiness: Boolean = false
         ) {
@@ -119,9 +118,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 MozoTokenService.instance().reportToken()
 
                 // Preload custom tabs service for improved performance
-                if (context is Application) {
-                    context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
-                }
+                context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
 
                 /**
                  * Initialize Authentication Service

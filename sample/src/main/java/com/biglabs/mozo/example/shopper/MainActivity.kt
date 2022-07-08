@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -14,11 +13,12 @@ import com.biglabs.mozo.example.shopper.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import io.mozocoin.sdk.*
 import io.mozocoin.sdk.authentication.AuthStateListener
+import io.mozocoin.sdk.ui.LocalizationBaseActivity
 import io.mozocoin.sdk.ui.MozoWalletFragment
 import io.mozocoin.sdk.ui.SettingsActivity
 import io.mozocoin.sdk.utils.adjustFontScale
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : LocalizationBaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val tabsPagerAdapter: TabsPagerAdapter by lazy { TabsPagerAdapter(this) }
@@ -57,7 +57,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onAuthFailed() {
-                Toast.makeText(this@MainActivity, "Authentication failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Authentication failed", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
 
@@ -98,15 +99,15 @@ class MainActivity : AppCompatActivity() {
     class TabsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
         private val fragments = arrayOf(
-                HomeFragment(),
-                MozoWalletFragment.getInstance(),
-                NotificationFragment()
+            HomeFragment(),
+            MozoWalletFragment.getInstance(),
+            NotificationFragment()
         )
 
         private val titles = arrayOf(
-                "Home",
-                "Wallet",
-                "Notification"
+            "Home",
+            "Wallet",
+            "Notification"
         )
 
         override fun getItemCount(): Int = fragments.size

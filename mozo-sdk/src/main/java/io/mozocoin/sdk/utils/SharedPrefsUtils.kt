@@ -1,20 +1,35 @@
 package io.mozocoin.sdk.utils
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.common.Constant
 import java.math.BigDecimal
+import java.util.*
 
-class SharedPrefsUtils private constructor() {
+internal class SharedPrefsUtils private constructor() {
     companion object {
         private const val KEY_CURRENCY_RATE = "KEY_CURRENCY_RATE"
+        private const val KEY_LANGUAGE = "KEY_LANGUAGE"
         private const val KEY_SHOW_AUTO_PIN_NOTICE = "KEY_SHOW_AUTO_PIN_NOTICE"
 
-        private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX = "KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX"
-        private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT = "KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT"
+        private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX =
+            "KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX"
+        private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT =
+            "KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT"
+
+        private var instance: SharedPreferences? = null
 
         @JvmStatic
-        private fun manager() = PreferenceManager.getDefaultSharedPreferences(MozoSDK.getInstance().context.applicationContext)
+        internal fun manager(ctx: Context? = null): SharedPreferences {
+            if (instance == null) {
+                instance = PreferenceManager.getDefaultSharedPreferences(
+                    ctx ?: MozoSDK.getInstance().context
+                )
+            }
+            return instance!!
+        }
 
         @JvmStatic
         fun getDefaultCurrencyRate(): BigDecimal {
@@ -33,9 +48,9 @@ class SharedPrefsUtils private constructor() {
         @JvmStatic
         fun setLastInfoConvertOnChainInOffChain(txHash: String?, amount: String?) {
             manager().edit()
-                    .putString(KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX, txHash)
-                    .putString(KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT, amount)
-                    .apply()
+                .putString(KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX, txHash)
+                .putString(KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT, amount)
+                .apply()
         }
 
         @JvmStatic
@@ -49,13 +64,21 @@ class SharedPrefsUtils private constructor() {
         }
 
         @JvmStatic
-        fun getShowAutoPinNotice(): Boolean {
-            return manager().getBoolean(KEY_SHOW_AUTO_PIN_NOTICE, true)
-        }
+        var showAutoPinNotice: Boolean = true
+            get() = manager().getBoolean(KEY_SHOW_AUTO_PIN_NOTICE, true)
+            set(value) {
+                field = value
+                manager().edit().putBoolean(KEY_SHOW_AUTO_PIN_NOTICE, value).apply()
+            }
 
         @JvmStatic
-        fun setShowAutoPinNotice(isShow: Boolean) {
-            manager().edit().putBoolean(KEY_SHOW_AUTO_PIN_NOTICE, isShow).apply()
-        }
+        var language: Locale = Locale.getDefault()
+            get() = manager().getString(KEY_LANGUAGE, Locale.getDefault().language)
+                ?.run { Locale(this) }
+                ?: Locale.getDefault()
+            set(value) {
+                field = value
+                manager().edit().putString(KEY_LANGUAGE, value.language).apply()
+            }
     }
 }
