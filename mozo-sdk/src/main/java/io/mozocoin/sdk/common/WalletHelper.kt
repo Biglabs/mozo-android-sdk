@@ -96,12 +96,10 @@ internal class WalletHelper {
 
     fun decrypt(pin: String? = null): WalletHelper {
         if (mnemonic.isNullOrEmpty() && !mnemonicEncrypted.isNullOrEmpty()) {
-
-            val pinRaw = pin ?: MozoAuth.getInstance().getPinSecret()?.let { secret ->
-                if (pinEncrypted != null) CryptoUtils.decrypt(pinEncrypted!!, secret) else null
-            }
-
             try {
+                val pinRaw = pin ?: MozoAuth.getInstance().getPinSecret()?.let { secret ->
+                    if (pinEncrypted != null) CryptoUtils.decrypt(pinEncrypted!!, secret) else null
+                }
                 mnemonic = CryptoUtils.decrypt(mnemonicEncrypted!!, pinRaw!!)
                 if (mnemonic != null && MnemonicUtils.validateMnemonic(mnemonic)) {
                     initAddresses()
