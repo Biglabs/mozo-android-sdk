@@ -126,6 +126,7 @@ class MozoWallet private constructor() {
 
         MozoSDK.scope.launch {
             mWallet = walletHelper ?: WalletHelper.initWithWalletInfo(profile.walletInfo)
+            // TODO: check it Wallet is AutoPin but the 'pin_secret' be changed
             val flag =
                 if (profile.walletInfo?.onchainAddress.isNullOrEmpty() || mWallet?.isUnlocked() == false) {
                     /* Local wallet is existing but no private Key */
