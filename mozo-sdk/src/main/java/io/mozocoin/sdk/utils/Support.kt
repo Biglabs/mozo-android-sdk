@@ -288,7 +288,7 @@ object Support {
         if (!dir.exists()) return
         if (dir.isDirectory) {
             for (f in Objects.requireNonNull(dir.listFiles())) {
-                f.delete()
+                if (f.isDirectory) cleanDir(f) else f.delete()
             }
         } else {
             dir.delete()
