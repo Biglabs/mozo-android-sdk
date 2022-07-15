@@ -51,7 +51,7 @@ class SettingsActivity : LocalizationBaseActivity() {
 
         binding.buttonChangeLanguage.click {
             val lastLocale: Locale = SharedPrefsUtils.language
-            val locales = arrayOf(Locale.ENGLISH, Locale.KOREAN, Locale("vi"))
+            val locales = arrayOf(Locale.US, Locale.KOREA, Locale("vi", "VN"))
             val lastIndex = max(locales.indexOf(lastLocale), 0)
             AlertDialog.Builder(this)
                 .setTitle(R.string.mozo_languages)

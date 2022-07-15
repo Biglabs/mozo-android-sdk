@@ -12,6 +12,7 @@ internal class SharedPrefsUtils private constructor() {
     companion object {
         private const val KEY_CURRENCY_RATE = "KEY_CURRENCY_RATE"
         private const val KEY_LANGUAGE = "KEY_LANGUAGE"
+        private const val KEY_COUNTRY = "KEY_COUNTRY"
         private const val KEY_SHOW_AUTO_PIN_NOTICE = "KEY_SHOW_AUTO_PIN_NOTICE"
 
         private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX =
@@ -73,12 +74,19 @@ internal class SharedPrefsUtils private constructor() {
 
         @JvmStatic
         var language: Locale = Locale.getDefault()
-            get() = manager().getString(KEY_LANGUAGE, Locale.getDefault().language)
-                ?.run { Locale(this) }
-                ?: Locale.getDefault()
+            get() {
+                val default = Locale.getDefault()
+                val language = manager().getString(KEY_LANGUAGE, default.language)
+                val country = manager().getString(KEY_COUNTRY, default.country)
+                return if (!language.isNullOrEmpty() && !country.isNullOrEmpty())
+                    Locale(language, country) else default
+            }
             set(value) {
                 field = value
-                manager().edit().putString(KEY_LANGUAGE, value.language).apply()
+                manager().edit()
+                    .putString(KEY_LANGUAGE, value.language)
+                    .putString(KEY_COUNTRY, value.country)
+                    .apply()
             }
     }
 }
