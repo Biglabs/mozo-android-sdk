@@ -45,10 +45,6 @@ internal class TodoActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListen
         binding = ActivityTodoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply {
-            setDisplayShowHomeEnabled(false)
-            setDisplayHomeAsUpEnabled(false)
-        }
 
         binding.todoRecyclerRefresh.setOnRefreshListener(this@TodoActivity)
         binding.todoRecycler.apply {

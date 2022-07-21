@@ -54,7 +54,7 @@ dependencies {
     def retrofit_version = '2.9.0'
     def room_version = '2.4.2'
     def lifecycle_version = '2.5.0'
-    def camera2_version = '1.1.0-rc02'
+    def camera2_version = '1.1.0'
 
     api fileTree(include: ['*.jar'], dir: 'libs')
     // Android X
@@ -105,7 +105,7 @@ dependencies {
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
-    api 'io.michaelrocks:libphonenumber-android:8.12.50'
+    api 'io.michaelrocks:libphonenumber-android:8.12.51'
     api 'io.coil-kt:coil:2.1.0'
 
     // test

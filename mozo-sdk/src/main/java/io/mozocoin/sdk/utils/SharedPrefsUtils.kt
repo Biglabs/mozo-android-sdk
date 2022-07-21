@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.common.Constant
+import io.mozocoin.sdk.common.model.TokenInfo
 import java.math.BigDecimal
 import java.util.*
 
@@ -19,6 +20,7 @@ internal class SharedPrefsUtils private constructor() {
             "KEY_CONVERT_ON_IN_OFF_ADDRESS_LAST_TX"
         private const val KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT =
             "KEY_CONVERT_ON_IN_OFF_ADDRESS_AMOUNT"
+        private const val KEY_TOKEN = "KEY_TOKEN"
 
         private var instance: SharedPreferences? = null
 
@@ -86,6 +88,19 @@ internal class SharedPrefsUtils private constructor() {
                 manager().edit()
                     .putString(KEY_LANGUAGE, value.language)
                     .putString(KEY_COUNTRY, value.country)
+                    .apply()
+            }
+
+        @JvmStatic
+        var tokenInfo: TokenInfo? = null
+            get() {
+                val info = manager().getString(KEY_TOKEN, null)
+                return TokenInfo.fromJson(info)
+            }
+            set(value) {
+                field = value
+                manager().edit()
+                    .putString(KEY_TOKEN, value?.toString())
                     .apply()
             }
     }

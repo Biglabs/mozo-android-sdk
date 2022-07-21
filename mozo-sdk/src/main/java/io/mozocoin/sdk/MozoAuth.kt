@@ -3,9 +3,7 @@ package io.mozocoin.sdk
 import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.res.Configuration
-import android.util.Base64
 import io.mozocoin.sdk.authentication.AuthStateListener
-import io.mozocoin.sdk.authentication.AuthStateManager
 import io.mozocoin.sdk.authentication.MozoAuthActivity
 import io.mozocoin.sdk.authentication.ProfileChangeListener
 import io.mozocoin.sdk.common.Constant
@@ -25,8 +23,6 @@ import kotlinx.coroutines.*
 import net.openid.appauth.AuthorizationException
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.json.JSONObject
-import java.nio.charset.Charset
 import java.util.*
 
 @Suppress("RedundantSuspendModifier", "unused")
@@ -36,7 +32,6 @@ class MozoAuth private constructor() {
     private val mozoAPIs: MozoAPIsService by lazy { MozoAPIsService.getInstance() }
     private val walletService: MozoWallet by lazy { MozoWallet.getInstance() }
 
-    private val authStateManager: AuthStateManager by lazy { AuthStateManager.getInstance(MozoSDK.getInstance().context) }
     private var mAuthListeners: MutableList<AuthStateListener> = mutableListOf()
     private var mProfileChangeListeners: MutableList<ProfileChangeListener>? = null
 
@@ -46,8 +41,8 @@ class MozoAuth private constructor() {
             override fun onLowMemory() {}
             override fun onConfigurationChanged(newConfig: Configuration) {
                 val symbol = MozoSDK.getInstance().profileViewModel
-                        .exchangeRateLiveData.value?.token?.currencySymbol
-                        ?: Constant.DEFAULT_CURRENCY_SYMBOL
+                    .exchangeRateLiveData.value?.token?.currencySymbol
+                    ?: Constant.DEFAULT_CURRENCY_SYMBOL
                 if (symbol != Currency.getInstance(Locale.getDefault()).symbol) {
                     MozoSDK.getInstance().profileViewModel.fetchExchangeRate(MozoSDK.getInstance().context)
                 }
@@ -78,7 +73,9 @@ class MozoAuth private constructor() {
                             mAuthListeners.forEach { l -> l.onAuthStateChanged(isSuccess) }
                             if (isSuccess) {
                                 MozoSocketClient.connect()
-                                MozoSDK.getInstance().context.registerComponentCallbacks(mComponentCallbacks)
+                                MozoSDK.getInstance().context.registerComponentCallbacks(
+                                    mComponentCallbacks
+                                )
                             }
                         }
                     } else {
@@ -106,22 +103,14 @@ class MozoAuth private constructor() {
 
     private fun initialize() {
         if (isInitialized) return
-        if (isSignedIn() && authStateManager.current.accessTokenExpirationTime ?: 0 > 0) {
-            val expirationTime = Calendar.getInstance()
-            expirationTime.timeInMillis = authStateManager.current.accessTokenExpirationTime ?: 0
-
-            val expireAt = expirationTime.time
-            expirationTime.add(Calendar.DAY_OF_MONTH, -2)
-
-            "Access Token expire at: $expireAt\nWill be refresh at: ${expirationTime.time}".logPublic()
-
-            if (Calendar.getInstance().after(expirationTime)) {
-                MozoTokenService.instance().refreshToken {
-                    onAuthorizeChanged(MessageEvent.Auth())
-                }
-            } else onAuthorizeChanged(MessageEvent.Auth())
-        } else
+        if (isSignedIn() && MozoTokenService.instance().shouldRefreshToken()) {
+            MozoTokenService.instance().refreshToken {
+                onAuthorizeChanged(MessageEvent.Auth())
+            }
+        } else {
             onAuthorizeChanged(MessageEvent.Auth())
+            MozoTokenService.instance().reportToken()
+        }
 
         isInitialized = true
     }
@@ -143,9 +132,9 @@ class MozoAuth private constructor() {
             MozoAuthActivity.signIn(MozoSDK.getInstance().context)
         } else {
             ErrorDialog.networkError(
-                    MozoSDK.getInstance().remindAnchorView?.context
-                            ?: MozoSDK.getInstance().context,
-                    ::signIn
+                MozoSDK.getInstance().remindAnchorView?.context
+                    ?: MozoSDK.getInstance().context,
+                ::signIn
             )
         }
     }
@@ -156,7 +145,7 @@ class MozoAuth private constructor() {
         Support.logStackTrace()
 
         MessageDialog.dismiss()
-        authStateManager.clearSession()
+        MozoTokenService.clear()
 
         walletService.clear()
         mozoDB.clear()
@@ -169,20 +158,20 @@ class MozoAuth private constructor() {
         }
     }
 
-    fun isSignedIn() = authStateManager.current.isAuthorized
+    fun isSignedIn() = MozoTokenService.instance().isAuthorized()
 
     fun isSignUpCompleted(context: Context, callback: (isCompleted: Boolean) -> Unit) {
         MozoSDK.getInstance().profileViewModel.fetchData(context) {
             if (it == null) {
                 syncProfile(context) { isSuccess ->
-                    callback.invoke(authStateManager.current.isAuthorized && isSuccess)
+                    callback.invoke(isSignedIn() && isSuccess)
                 }
-            } else callback.invoke(authStateManager.current.isAuthorized && MozoSDK.getInstance().profileViewModel.hasWallet())
+            } else callback.invoke(isSignedIn() && MozoSDK.getInstance().profileViewModel.hasWallet())
         }
     }
 
     fun getAccessToken(): String? {
-        val token = authStateManager.current.accessToken
+        val token = MozoTokenService.instance().tokenInfo?.access_token
         if (token.isNullOrEmpty()) {
             "Access token is NULL or empty".logPublic()
         }
@@ -190,24 +179,15 @@ class MozoAuth private constructor() {
     }
 
     /**
-     * Get pin_secret from token
-     */
-    internal fun getPinSecret(): String? = try {
-        authStateManager.current.accessToken?.split(".")?.getOrNull(1)?.let { payload ->
-            JSONObject(
-                    String(Base64.decode(payload, Base64.URL_SAFE), Charset.forName("utf-8"))
-            ).getString("pin_secret")
-        }
-    } catch (ignored: Exception) {
-        null
-    }
-
-    /**
      *  Get current user information
      * @param  fromCache    If true the result will be returns from cache immediately if it
      * available, otherwise the value will be reloaded from network before returns. Default is true
      */
-    fun getUserInfo(context: Context, fromCache: Boolean = true, callback: (userInfo: UserInfo?) -> Unit) {
+    fun getUserInfo(
+        context: Context,
+        fromCache: Boolean = true,
+        callback: (userInfo: UserInfo?) -> Unit
+    ) {
         if (fromCache) {
             callback.invoke(MozoSDK.getInstance().profileViewModel.userInfoLiveData.value)
             return
@@ -218,46 +198,52 @@ class MozoAuth private constructor() {
     }
 
     fun updateUserInfo(
-            context: Context,
-            avatar: String? = null,
-            fullName: String? = null,
-            birthday: Long? = null,
-            email: String? = null,
-            gender: Gender? = null,
-            callback: (userInfo: UserInfo?) -> Unit
+        context: Context,
+        avatar: String? = null,
+        fullName: String? = null,
+        birthday: Long? = null,
+        email: String? = null,
+        gender: Gender? = null,
+        callback: (userInfo: UserInfo?) -> Unit
     ) {
         val finalEmail = if (email.isNullOrEmpty()) null else email
         mozoAPIs.updateProfile(
-                context,
-                Profile(avatarUrl = avatar, fullName = fullName, birthday = birthday, email = finalEmail, gender = gender?.key),
-                { data, _ ->
+            context,
+            Profile(
+                avatarUrl = avatar,
+                fullName = fullName,
+                birthday = birthday,
+                email = finalEmail,
+                gender = gender?.key
+            ),
+            { data, _ ->
 
-                    if (data == null) {
-                        callback.invoke(null)
-                        return@updateProfile
-                    }
+                if (data == null) {
+                    callback.invoke(null)
+                    return@updateProfile
+                }
 
-                    val userInfo = UserInfo(
-                            userId = data.userId ?: "",
-                            avatarUrl = data.avatarUrl,
-                            fullName = data.fullName,
-                            phoneNumber = data.phoneNumber,
-                            birthday = data.birthday ?: 0L,
-                            email = data.email,
-                            gender = data.gender
-                    )
-                    callback.invoke(userInfo)
+                val userInfo = UserInfo(
+                    userId = data.userId ?: "",
+                    avatarUrl = data.avatarUrl,
+                    fullName = data.fullName,
+                    phoneNumber = data.phoneNumber,
+                    birthday = data.birthday ?: 0L,
+                    email = data.email,
+                    gender = data.gender
+                )
+                callback.invoke(userInfo)
 
-                    MozoSDK.scope.launch {
-                        /* save User info first */
-                        mozoDB.userInfo().deleteAll()
-                        mozoDB.userInfo().save(userInfo)
-                        MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
-                    }
-                },
-                {
-                    updateUserInfo(context, avatar, fullName, birthday, email, gender, callback)
-                })
+                MozoSDK.scope.launch {
+                    /* save User info first */
+                    mozoDB.userInfo().deleteAll()
+                    mozoDB.userInfo().save(userInfo)
+                    MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
+                }
+            },
+            {
+                updateUserInfo(context, avatar, fullName, birthday, email, gender, callback)
+            })
     }
 
     fun checkSession(context: Context, callback: (isExpired: Boolean) -> Unit) {
@@ -269,7 +255,7 @@ class MozoAuth private constructor() {
             if (isExpired) {
                 /* Token has expired, try to request the new token */
                 tokenService.refreshToken { token ->
-                    callback.invoke(token.isNullOrEmpty())
+                    callback.invoke(token == null)
                 }
             } else /* Token is working */
                 callback.invoke(false)
@@ -306,9 +292,15 @@ class MozoAuth private constructor() {
                 doSaveUserInfoAsync(data)
                 MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
                     if (
-                            it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
-                            it?.walletInfo?.offchainAddress?.equals(data.walletInfo?.offchainAddress, ignoreCase = true) == true &&
-                            it.walletInfo?.onchainAddress?.equals(data.walletInfo?.onchainAddress, ignoreCase = true) == true
+                        it?.walletInfo?.encryptSeedPhrase == data.walletInfo?.encryptSeedPhrase &&
+                        it?.walletInfo?.offchainAddress?.equals(
+                            data.walletInfo?.offchainAddress,
+                            ignoreCase = true
+                        ) == true &&
+                        it.walletInfo?.onchainAddress?.equals(
+                            data.walletInfo?.onchainAddress,
+                            ignoreCase = true
+                        ) == true
                     ) {
                         callback?.invoke(true) // No need recover wallet
                     } else {
@@ -322,10 +314,10 @@ class MozoAuth private constructor() {
     }
 
     internal fun saveUserInfo(
-            context: Context,
-            profile: Profile,
-            walletHelper: WalletHelper? = null,
-            callback: ((success: Boolean) -> Unit)? = null
+        context: Context,
+        profile: Profile,
+        walletHelper: WalletHelper? = null,
+        callback: ((success: Boolean) -> Unit)? = null
     ) {
         if (MozoSDK.isInternalApps) {
             /**
@@ -348,7 +340,9 @@ class MozoAuth private constructor() {
             MozoSDK.scope.launch {
                 if (it) {
                     /* update local profile to match with server profile */
-                    profile.apply { walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo() }
+                    profile.apply {
+                        walletInfo = MozoWallet.getInstance().getWallet()?.buildWalletInfo()
+                    }
                     mozoDB.profile().save(profile)
                     /* save User info first */
                     doSaveUserInfoAsync(profile)
@@ -366,13 +360,13 @@ class MozoAuth private constructor() {
         mozoDB.userInfo().deleteAll()
 
         val userInfo = UserInfo(
-                userId = profile.userId ?: "",
-                avatarUrl = profile.avatarUrl,
-                fullName = profile.fullName,
-                phoneNumber = profile.phoneNumber,
-                birthday = profile.birthday ?: 0L,
-                email = profile.email,
-                gender = profile.gender
+            userId = profile.userId ?: "",
+            avatarUrl = profile.avatarUrl,
+            fullName = profile.fullName,
+            phoneNumber = profile.phoneNumber,
+            birthday = profile.birthday ?: 0L,
+            email = profile.email,
+            gender = profile.gender
         )
         mozoDB.userInfo().save(userInfo)
         MozoSDK.getInstance().profileViewModel.updateUserInfo(userInfo)
@@ -407,10 +401,10 @@ class MozoAuth private constructor() {
 
         @JvmStatic
         fun getInstance(): MozoAuth =
-                instance ?: synchronized(this) {
-                    instance = MozoAuth()
-                    instance!!
-                }
+            instance ?: synchronized(this) {
+                instance = MozoAuth()
+                instance!!
+            }
 
         internal fun invokeProfileChangeListener(userInfo: UserInfo) {
             instance?.mProfileChangeListeners?.forEach { it.onProfileChanged(userInfo) }

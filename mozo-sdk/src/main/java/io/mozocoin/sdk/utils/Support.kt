@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.widget.TextView
@@ -17,6 +18,7 @@ import androidx.core.view.isVisible
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+import io.mozocoin.sdk.BuildConfig
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.Constant
@@ -198,6 +200,8 @@ object Support {
         MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_LANDING_PAGE_STAGING
         else -> Constant.DOMAIN_LANDING_PAGE_PRODUCTION
     }
+
+    internal fun userAgent() = "MozoSDK/${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.SDK_INT}) ${MozoSDK.hostName}"
 
     fun domainImage() = when (MozoSDK.serviceEnvironment) {
         MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_IMAGE_DEV

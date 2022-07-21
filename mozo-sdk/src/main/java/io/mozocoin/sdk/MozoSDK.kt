@@ -112,11 +112,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 isInternalApps = Support.isInternalApps(context)
                 instance = MozoSDK(context.applicationContext)
 
-                /**
-                 * Report token
-                 */
-                MozoTokenService.instance().reportToken()
-
                 // Preload custom tabs service for improved performance
                 context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
 

@@ -1,8 +1,8 @@
 package io.mozocoin.sdk.common
 
 import io.mozocoin.sdk.BuildConfig
-import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.common.model.WalletInfo
+import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.utils.CryptoUtils
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.MnemonicUtils
@@ -41,10 +41,12 @@ internal class WalletHelper {
 
     private fun initAddresses() {
         mnemonic ?: return
-        this.offChainPrivateKey = CryptoUtils.getAddressPrivateKey(CryptoUtils.FIRST_ADDRESS, mnemonic!!)
+        this.offChainPrivateKey =
+            CryptoUtils.getAddressPrivateKey(CryptoUtils.FIRST_ADDRESS, mnemonic!!)
         this.offChainAddress = Credentials.create(offChainPrivateKey).address
 
-        this.onChainPrivateKey = CryptoUtils.getAddressPrivateKey(CryptoUtils.SECOND_ADDRESS, mnemonic!!)
+        this.onChainPrivateKey =
+            CryptoUtils.getAddressPrivateKey(CryptoUtils.SECOND_ADDRESS, mnemonic!!)
         this.onChainAddress = Credentials.create(onChainPrivateKey).address
     }
 
@@ -70,14 +72,14 @@ internal class WalletHelper {
     fun encrypt(pin: String? = null): WalletHelper {
         if (!mnemonic.isNullOrEmpty() && mnemonicEncrypted.isNullOrEmpty()) {
             val pinRaw = pin ?: ByteArray(6)
-                    .apply { SecureRandom().nextBytes(this) }
-                    .joinToString(separator = "", transform = {
-                        it.toString().replace("-", "")[0].toString()
-                    })
+                .apply { SecureRandom().nextBytes(this) }
+                .joinToString(separator = "", transform = {
+                    it.toString().replace("-", "")[0].toString()
+                })
 
             if (pin.isNullOrEmpty()) {
                 isAutoWallet = true
-                MozoAuth.getInstance().getPinSecret()?.let { secret ->
+                MozoTokenService.instance().tokenInfo?.pinSecret?.let { secret ->
                     pinEncrypted = CryptoUtils.encrypt(pinRaw, secret)
                 }
             } else {
@@ -97,9 +99,13 @@ internal class WalletHelper {
     fun decrypt(pin: String? = null): WalletHelper {
         if (mnemonic.isNullOrEmpty() && !mnemonicEncrypted.isNullOrEmpty()) {
             try {
-                val pinRaw = pin ?: MozoAuth.getInstance().getPinSecret()?.let { secret ->
-                    if (pinEncrypted != null) CryptoUtils.decrypt(pinEncrypted!!, secret) else null
-                }
+                val pinRaw =
+                    pin ?: MozoTokenService.instance().tokenInfo?.pinSecret?.let { secret ->
+                        if (pinEncrypted != null) CryptoUtils.decrypt(
+                            pinEncrypted!!,
+                            secret
+                        ) else null
+                    }
                 mnemonic = CryptoUtils.decrypt(mnemonicEncrypted!!, pinRaw!!)
                 if (mnemonic != null && MnemonicUtils.validateMnemonic(mnemonic)) {
                     initAddresses()
@@ -128,13 +134,14 @@ internal class WalletHelper {
         mnemonicEncrypted ?: return false
         return try {
             val raw = CryptoUtils.decrypt(mnemonicEncrypted!!, pin)
-            !raw.isNullOrEmpty() && MnemonicUtils.validateMnemonic(raw)
+            raw.isNotEmpty() && MnemonicUtils.validateMnemonic(raw)
         } catch (ignore: Exception) {
             false
         }
     }
 
-    fun buildWalletInfo() = WalletInfo(mnemonicEncrypted, offChainAddress, onChainAddress, pinEncrypted)
+    fun buildWalletInfo() =
+        WalletInfo(mnemonicEncrypted, offChainAddress, onChainAddress, pinEncrypted)
 
     fun buildOffChainCredentials() = if (isUnlocked() && !offChainPrivateKey.isNullOrEmpty())
         Credentials.create(offChainPrivateKey)
@@ -162,12 +169,15 @@ internal class WalletHelper {
 
     companion object {
         fun create(): WalletHelper = WalletHelper(
-                MnemonicUtils.generateMnemonic(
-                        SecureRandom().generateSeed(16)
-                )
+            MnemonicUtils.generateMnemonic(
+                SecureRandom().generateSeed(16)
+            )
         )
 
-        fun initWithWalletInfo(walletInfo: WalletInfo?, lastHelper: WalletHelper? = null): WalletHelper? {
+        fun initWithWalletInfo(
+            walletInfo: WalletInfo?,
+            lastHelper: WalletHelper? = null
+        ): WalletHelper? {
             if (lastHelper != null && lastHelper.buildWalletInfo() == walletInfo) {
                 return lastHelper
             }
