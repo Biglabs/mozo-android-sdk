@@ -58,7 +58,6 @@ internal class MozoAuthActivity : BaseActivity() {
     private var modeSignIn = true
 
     private var handleJob: Job? = null
-    private var isAuthInProgress = false
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,13 +124,11 @@ internal class MozoAuthActivity : BaseActivity() {
     override fun onDestroy() {
         mAuthService?.dispose()
         mAuthService = null
-        authenticationInProgress = false
-        super.onDestroy()
-
-        if (isAuthInProgress) {
-            isAuthInProgress = false
+        if (authenticationInProgress) {
+            authenticationInProgress = false
             EventBus.getDefault().post(MessageEvent.Auth(UserCancelException()))
         }
+        super.onDestroy()
     }
 
     override fun onBackPressed() = cancelAuth()
@@ -233,7 +230,6 @@ internal class MozoAuthActivity : BaseActivity() {
         val authRequest = authRequestBuilder.build()
         mAuthRequest.set(authRequest)
 
-        isAuthInProgress = true
         withContext(Dispatchers.Main) {
             binding.webView.loadUrl(authRequest.toUri().toString())
         }
@@ -305,13 +301,13 @@ internal class MozoAuthActivity : BaseActivity() {
                 .show()
         } else {
             EventBus.getDefault().post(MessageEvent.Auth(exception))
-            finish()
             authenticationInProgress = false
+            finish()
         }
     }
 
     private fun cancelAuth() {
-        isAuthInProgress = false
+        authenticationInProgress = false
         finishAuth(UserCancelException())
     }
 
