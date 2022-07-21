@@ -1,10 +1,16 @@
 package io.mozocoin.sdk.authentication
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
@@ -14,53 +20,103 @@ import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.service.MozoTokenService
-import io.mozocoin.sdk.ui.LocalizationBaseActivity
-import io.mozocoin.sdk.utils.Support
-import io.mozocoin.sdk.utils.UserCancelException
-import io.mozocoin.sdk.utils.logAsError
-import io.mozocoin.sdk.utils.setMatchParent
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import io.mozocoin.sdk.databinding.ActivityAuthBinding
+import io.mozocoin.sdk.ui.BaseActivity
+import io.mozocoin.sdk.utils.*
+import kotlinx.coroutines.*
 import net.openid.appauth.*
-import net.openid.appauth.browser.BrowserBlacklist
-import net.openid.appauth.browser.Browsers
-import net.openid.appauth.browser.VersionRange
-import net.openid.appauth.browser.VersionedBrowserMatcher
 import org.greenrobot.eventbus.EventBus
-import org.json.JSONObject
 import java.util.*
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
-internal class MozoAuthActivity : LocalizationBaseActivity() {
+internal class MozoAuthActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityAuthBinding
     private var mAuthService: AuthorizationService? = null
     private val mAuthStateManager: AuthStateManager by lazy {
         AuthStateManager.getInstance(applicationContext)
     }
+    private val mAppScheme: String by lazy {
+        getString(
+            R.string.auth_redirect_uri,
+            "com.biglabs.mozosdk.${applicationInfo.packageName}"
+        )
+    }
+    private val mClientId: String by lazy {
+        getString(
+            when {
+                MozoSDK.isInternalApps -> R.string.auth_client_id_operation
+                MozoSDK.isRetailerApp -> R.string.auth_client_id_retailer
+                else -> R.string.auth_client_id_shopper
+            }
+        )
+    }
 
     private val mAuthRequest = AtomicReference<AuthorizationRequest>()
     private val mAuthIntent = AtomicReference<CustomTabsIntent>()
-    private var mAuthIntentLatch = CountDownLatch(1)
 
     private var modeSignIn = true
-    private var isSignOutBeforeIn = false
-    private var isSignOutWhenError = false
 
     private var handleJob: Job? = null
     private var isAuthInProgress = false
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.view_loading)
-        setMatchParent()
+        binding = ActivityAuthBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.buttonClose.click { cancelAuth() }
+        binding.webView.apply {
+            settings.javaScriptEnabled = true
+            settings.builtInZoomControls = false
+            settings.displayZoomControls = false
+            settings.javaScriptCanOpenWindowsAutomatically = false
+            settings.setSupportZoom(false)
+            settings.userAgentString = Support.userAgent()
+        }
+        binding.buttonRefresh.click {
+            binding.webView.reload()
+        }
 
         modeSignIn = intent.getBooleanExtra(FLAG_MODE_SIGN_IN, modeSignIn)
 
-        if (modeSignIn && mAuthStateManager.current.isAuthorized) {
+        if (modeSignIn && MozoTokenService.instance().isAuthorized()) {
             handleResult()
             return
+        }
+
+        binding.webView.webViewClient = object : WebViewClient() {
+            override fun onLoadResource(view: WebView?, url: String?) {
+                if (url?.startsWith(mAppScheme) == true) {
+                    handleAuthResult(url)
+                    return
+                }
+                super.onLoadResource(view, url)
+            }
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                binding.errorContainer.gone()
+                binding.webView.visible()
+                binding.progressIndicator.visible()
+            }
+
+            override fun onPageFinished(view: WebView, url: String) {
+                binding.progressIndicator.gone()
+            }
+
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                binding.webView.gone()
+
+                if (request?.url.toString().startsWith(mAppScheme)) {
+                    binding.progressIndicator.visible()
+                    return
+                }
+                binding.errorContainer.visible()
+            }
         }
 
         initializeAppAuth()
@@ -78,9 +134,11 @@ internal class MozoAuthActivity : LocalizationBaseActivity() {
         }
     }
 
+    override fun onBackPressed() = cancelAuth()
+
     override fun finish() {
-        super.finish()
         overridePendingTransition(R.anim.no_anim, R.anim.fade_out_short)
+        super.finish()
     }
 
     /**
@@ -103,34 +161,18 @@ internal class MozoAuthActivity : LocalizationBaseActivity() {
             )
         )
 
-        initializeAuthRequest()
-    }
-
-    private fun initializeAuthRequest() {
-        val appScheme = getString(
-            R.string.auth_redirect_uri,
-            "com.biglabs.mozosdk.${applicationInfo.packageName}"
-        )
-        val clientId = getString(
-            when {
-                MozoSDK.isInternalApps -> R.string.auth_client_id_operation
-                MozoSDK.isRetailerApp -> R.string.auth_client_id_retailer
-                else -> R.string.auth_client_id_shopper
-            }
-        )
-
         if (mAuthStateManager.current.authorizationServiceConfiguration == null) {
             cancelAuth()
-            return
+            return@launch
         }
 
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.ENGLISH
         val authRequestBuilder = if (modeSignIn) {
             AuthorizationRequest.Builder(
                 mAuthStateManager.current.authorizationServiceConfiguration!!,
-                clientId,
+                mClientId,
                 ResponseTypeValues.CODE,
-                Uri.parse(appScheme)
+                Uri.parse(mAppScheme)
             )
                 .setPrompt("consent")
                 .setScope("openid profile phone")
@@ -144,9 +186,9 @@ internal class MozoAuthActivity : LocalizationBaseActivity() {
         } else /* SIGN OUT */ {
             val signInRequest = AuthorizationRequest.Builder(
                 mAuthStateManager.current.authorizationServiceConfiguration!!,
-                clientId,
+                mClientId,
                 ResponseTypeValues.CODE,
-                Uri.parse(appScheme)
+                Uri.parse(mAppScheme)
             )
                 .setState(null)
                 .setPrompt("consent")
@@ -167,7 +209,7 @@ internal class MozoAuthActivity : LocalizationBaseActivity() {
                     signOutEndpoint,
                     tokenEndpoint
                 ),
-                clientId,
+                mClientId,
                 ResponseTypeValues.CODE,
                 signInRequest.toUri()
             )
@@ -188,150 +230,38 @@ internal class MozoAuthActivity : LocalizationBaseActivity() {
                 )
         }
 
-        mAuthRequest.set(authRequestBuilder.build())
-
-        warmUpBrowser()
-        doAuth()
-    }
-
-    private fun getAuthService(): AuthorizationService {
-        return if (mAuthService == null || mAuthService?.isDisposed == true) {
-            val appAuthConfig = AppAuthConfiguration.Builder()
-                .setBrowserMatcher(
-                    BrowserBlacklist(
-                        VersionedBrowserMatcher(
-                            Browsers.SBrowser.PACKAGE_NAME,
-                            Browsers.SBrowser.SIGNATURE_SET,
-                            true, // when this browser is used via a custom tab
-                            VersionRange.atMost("5.3")
-                        ),
-                        VersionedBrowserMatcher(
-                            Browsers.Chrome.PACKAGE_NAME,
-                            Browsers.Chrome.SIGNATURE_SET,
-                            true, // when this browser is used via a custom tab
-                            VersionRange.atMost("53.0.2785.124")
-                        )
-                    )
-                )
-                .build()
-            AuthorizationService(MozoSDK.getInstance().context, appAuthConfig)
-
-        } else mAuthService!!
-    }
-
-    private fun warmUpBrowser() {
-        mAuthIntentLatch = CountDownLatch(1)
-        val customTabs = getAuthService().createCustomTabsIntentBuilder(mAuthRequest.get().toUri())
-            .setShowTitle(true)
-            .setInstantAppsEnabled(false)
-            .build()
-
-        val extras = Bundle()
-        extras.putBinder(CustomTabsIntent.EXTRA_SESSION, null)
-        extras.putInt(CustomTabsIntent.EXTRA_SHARE_STATE, CustomTabsIntent.SHARE_STATE_OFF)
-        extras.putParcelableArrayList(CustomTabsIntent.EXTRA_MENU_ITEMS, null)
-        customTabs.intent.putExtras(extras)
-
-        mAuthIntent.set(customTabs)
-        mAuthIntentLatch.countDown()
-    }
-
-    /**
-     * Performs the authorization request, using the browser selected in the spinner,
-     * and a user-provided `login_hint` if available.
-     */
-    private fun doAuth() = MainScope().launch {
-        try {
-            mAuthIntentLatch.await()
-        } catch (ex: Exception) {
-            finishAuth(ex)
-        }
+        val authRequest = authRequestBuilder.build()
+        mAuthRequest.set(authRequest)
 
         isAuthInProgress = true
-        val intent = getAuthService().getAuthorizationRequestIntent(
-            mAuthRequest.get(),
-            mAuthIntent.get()
-        )
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-
-        startActivityForResult(intent, KEY_DO_AUTHENTICATION)
+        withContext(Dispatchers.Main) {
+            binding.webView.loadUrl(authRequest.toUri().toString())
+        }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        isAuthInProgress = isAuthInProgress && resultCode == RESULT_CANCELED
+    private fun handleAuthResult(data: String) {
         when {
-            requestCode == KEY_DO_AUTHENTICATION -> {
-                if (isSignOutWhenError) {
-                    mAuthStateManager.clearSession()
-                    finishAuth()
+            data.isNotEmpty() -> {
+                val uri = Uri.parse(data)
+                val code = uri.getQueryParameter("code")
+                if (code.isNullOrEmpty()) {
+                    handleResult(Exception("No Result"))
                     return
                 }
-                if (isSignOutBeforeIn) {
-                    isSignOutBeforeIn = false
-                    initializeAuthRequest()
-                    return
-                }
-                if (data == null) return
-                val dataJson = data.getStringExtra(AuthorizationResponse.EXTRA_RESPONSE)
 
-                if (!modeSignIn && !dataJson.isNullOrEmpty()) {
-                    val appScheme = getString(
-                        R.string.auth_redirect_uri,
-                        "com.biglabs.mozosdk.${applicationInfo.packageName}"
-                    )
-
-                    val dataJsonObj = JSONObject(dataJson)
-                    (dataJsonObj.get("request") as JSONObject).put("redirectUri", appScheme)
-                    data.putExtra(AuthorizationResponse.EXTRA_RESPONSE, dataJsonObj.toString())
-                }
-
-                val response = AuthorizationResponse.fromIntent(data)
-                val ex = AuthorizationException.fromIntent(data)
-
-                if (response != null || ex != null) {
-                    mAuthStateManager.updateAfterAuthorization(response, ex)
-                }
-
-                when {
-                    response?.authorizationCode != null -> {
-                        // authorization code exchange is required
-                        mAuthStateManager.updateAfterAuthorization(response, ex)
-                        exchangeAuthorizationCode(response)
-                    }
-                    ex != null -> handleResult(ex)
-                    resultCode == RESULT_CANCELED -> cancelAuth()
-                    else -> {
-                        finish()
-                    }
+                MozoTokenService.instance().requestToken(
+                    code,
+                    codeVerifier = mAuthRequest.get().codeVerifier ?: "",
+                    redirectUri = mAppScheme
+                ) { t, e ->
+                    if (t == null) finishAuth(e)
+                    else handleResult()
                 }
             }
             !modeSignIn -> {
                 handleResult()
             }
             else -> handleResult(Exception("No Result"))
-        }
-    }
-
-    private fun exchangeAuthorizationCode(response: AuthorizationResponse) {
-        val clientAuthentication: ClientAuthentication
-        try {
-            clientAuthentication = mAuthStateManager.current.clientAuthentication
-        } catch (ex: ClientAuthentication.UnsupportedAuthenticationMethod) {
-            handleResult(exception = ex)
-            return
-        }
-
-        getAuthService().performTokenRequest(
-            response.createTokenExchangeRequest(),
-            clientAuthentication
-        ) { tokenResponse, authException ->
-            mAuthStateManager.updateAfterTokenResponse(tokenResponse, authException)
-            MozoTokenService.instance().reportToken()
-            handleResult(exception = authException)
         }
     }
 
@@ -381,12 +311,12 @@ internal class MozoAuthActivity : LocalizationBaseActivity() {
     }
 
     private fun cancelAuth() {
+        isAuthInProgress = false
         finishAuth(UserCancelException())
     }
 
     companion object {
         private const val FLAG_MODE_SIGN_IN = "FLAG_MODE_SIGN_IN"
-        private const val KEY_DO_AUTHENTICATION = 100
 
         @Volatile
         private var authenticationInProgress = false
