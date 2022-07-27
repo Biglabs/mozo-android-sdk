@@ -12,6 +12,7 @@ import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.util.DebugLogger
+import com.google.android.play.core.splitcompat.SplitCompat
 import io.mozocoin.sdk.utils.RuntimeLocaleChanger
 import okhttp3.OkHttpClient
 
@@ -27,6 +28,7 @@ open class MozoApp : Application(), ViewModelStoreOwner, ImageLoaderFactory {
     @CallSuper
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(RuntimeLocaleChanger.wrapContext(base))
+        SplitCompat.install(this)
     }
 
     @CallSuper

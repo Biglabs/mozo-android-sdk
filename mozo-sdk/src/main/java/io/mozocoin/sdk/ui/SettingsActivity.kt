@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
 import androidx.appcompat.app.AlertDialog
+import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.databinding.ActivitySettingsBinding
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
+import io.mozocoin.sdk.utils.logAsError
 import io.mozocoin.sdk.wallet.ChangePinActivity
 import io.mozocoin.sdk.wallet.backup.BackupWalletActivity
 import java.util.*
@@ -61,6 +63,10 @@ class SettingsActivity : LocalizationBaseActivity() {
                     restartApplication()
                 }.create().show()
         }
+
+        val splitInstallManager = SplitInstallManagerFactory.create(this)
+        val langs: Set<String> = splitInstallManager.installedLanguages
+        langs.joinToString().logAsError("vuu")
     }
 
     private fun calculateCache() {
