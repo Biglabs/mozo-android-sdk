@@ -3,24 +3,27 @@ package io.mozocoin.sdk.ui
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
-import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+import com.google.android.play.core.splitinstall.*
+import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.databinding.ActivitySettingsBinding
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.utils.Support
 import io.mozocoin.sdk.utils.click
-import io.mozocoin.sdk.utils.logAsError
 import io.mozocoin.sdk.wallet.ChangePinActivity
 import io.mozocoin.sdk.wallet.backup.BackupWalletActivity
 import java.util.*
 import kotlin.math.max
 
-
-class SettingsActivity : LocalizationBaseActivity() {
+class SettingsActivity : LocalizationBaseActivity(), SplitInstallStateUpdatedListener {
 
     private lateinit var binding: ActivitySettingsBinding
+    private val splitInstallManager: SplitInstallManager by lazy {
+        SplitInstallManagerFactory.create(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,19 +63,27 @@ class SettingsActivity : LocalizationBaseActivity() {
                 .setSingleChoiceItems(R.array.languages, lastIndex) { dialog, which ->
                     dialog.dismiss()
                     SharedPrefsUtils.language = locales[which]
+                    checkLanguageResource()
                     restartApplication()
                 }.create().show()
         }
 
-        val splitInstallManager = SplitInstallManagerFactory.create(this)
         val langs: Set<String> = splitInstallManager.installedLanguages
-        langs.joinToString().logAsError("vuu")
+        Log.i("MozoSDK", langs.joinToString())
     }
 
     private fun calculateCache() {
         val cacheSize = Support.fileSize(cacheDir)
         val sizeDisplay = Formatter.formatFileSize(this, cacheSize)
         binding.buttonClearCache.text = getString(R.string.mozo_clear_cache, sizeDisplay)
+    }
+
+    private fun checkLanguageResource() {
+        val request = SplitInstallRequest.newBuilder()
+            .addLanguage(SharedPrefsUtils.language)
+            .build()
+        splitInstallManager.registerListener(this)
+        splitInstallManager.startInstall(request)
     }
 
     private fun restartApplication() {
@@ -82,5 +93,20 @@ class SettingsActivity : LocalizationBaseActivity() {
             overridePendingTransition(0, 0)
             startActivity(it)
         }
+    }
+
+    override fun onStateUpdate(state: SplitInstallSessionState) {
+        Log.i("MozoSDK", "SplitInstall state: ${state.status()}")
+        when (state.status()) {
+            SplitInstallSessionStatus.INSTALLED -> {}
+            else -> {
+
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        splitInstallManager.unregisterListener(this)
     }
 }
