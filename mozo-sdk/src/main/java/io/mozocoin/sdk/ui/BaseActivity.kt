@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.Subscribe
 
 internal open class BaseActivity : LocalizationBaseActivity() {
 
+    @CallSuper
     override fun onAttachedToWindow() {
         adjustFontScale()
         super.onAttachedToWindow()
