@@ -85,7 +85,7 @@ class SettingsActivity : LocalizationBaseActivity(), SplitInstallStateUpdatedLis
                 .setMessage(R.string.mozo_dialog_del_account_confirm_msg)
                 .setCancelable(false)
                 .setNeutralButton(R.string.mozo_button_cancel, null)
-                .setNegativeButton(R.string.mozo_delete_account) { d, _ ->
+                .setNegativeButton(R.string.mozo_button_delete_everything) { d, _ ->
                     d.dismiss()
                     doDeleteAccount()
                 }

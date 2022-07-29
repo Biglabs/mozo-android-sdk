@@ -91,6 +91,7 @@
     <string name="mozo_button_synchronize">Đồng bộ</string>
     <string name="mozo_button_synchronizing">Đang đồng bộ…</string>
     <string name="mozo_button_update">Cập nhật</string>
+    <string name="mozo_button_delete_everything">Xoá tất cả</string>
 
     <string name="mozo_backup_title">Sao lưu ví</string>
     <string name="mozo_backup_sub_title">Cụm từ khôi phục</string>

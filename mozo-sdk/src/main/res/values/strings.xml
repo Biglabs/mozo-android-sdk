@@ -94,6 +94,7 @@
     <string name="mozo_button_synchronize">Synchronize</string>
     <string name="mozo_button_synchronizing">Synchronizing…</string>
     <string name="mozo_button_update">Update</string>
+    <string name="mozo_button_delete_everything">Delete everything</string>
 
     <string name="mozo_backup_title">Backup Wallet</string>
     <string name="mozo_backup_sub_title">This is your Recovery Phrase</string>
