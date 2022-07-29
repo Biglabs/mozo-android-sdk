@@ -39,11 +39,16 @@
     <string name="mozo_dialog_error_not_enough_msg">Your balance is not insufficient for this transfer amount.</string>
     <string name="mozo_dialog_error_system_time_msg">The time on your device is incorrect.</string>
     <string name="mozo_dialog_error_system_time_msg_sub">Please update the date and time, then try again.</string>
+    <string name="mozo_dialog_del_account_confirm_title">Are you sure you want to delete your whole account?</string>
+    <string name="mozo_dialog_del_account_confirm_msg">You’ll lose everything, your Mozo wallet including the token, purchased vouchers, friend list, liked and shared forever.</string>
+    <string name="mozo_dialog_del_account_remind_title">Your account has been scheduled for deletion.</string>
+    <string name="mozo_dialog_del_account_remind_msg">Please login with in the <b>next 30 days</b> to cancel the schedule.</string>
 
     <string name="mozo_button_deposit">Deposit</string>
     <string name="mozo_button_login">Sign In to Mozo</string>
     <string name="mozo_button_logout">Log Out Mozo</string>
     <string name="mozo_button_logout_short">Log Out</string>
+    <string name="mozo_button_close_app">Close App</string>
     <string name="mozo_button_send_mozo">Send Mozo</string>
     <string name="mozo_button_transfer">Send</string>
     <string name="mozo_button_transaction_history">Transaction History</string>
@@ -138,6 +143,7 @@
 
     <string name="mozo_clear_cache">Clear Cache: %s</string>
     <string name="mozo_languages">Languages</string>
+    <string name="mozo_delete_account">Delete account</string>
 
     <string name="mozo_pin_title">Create Security PIN</string>
     <string name="mozo_pin_title_restore">Restore Wallet</string>

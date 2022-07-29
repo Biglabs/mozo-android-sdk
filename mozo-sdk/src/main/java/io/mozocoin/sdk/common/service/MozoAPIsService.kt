@@ -120,6 +120,13 @@ internal class MozoAPIsService private constructor() {
         }
     }
 
+    fun deleteAccount(
+        context: Context,
+        callback: ((result: Any?, errorCode: String?) -> Unit)? = null
+    ) = MozoSDK.scope.launch {
+        execute(context, mozoAPIs.deleteAccount(), callback, null, handleError = false)
+    }
+
     fun getBalance(
         context: Context,
         address: String,
