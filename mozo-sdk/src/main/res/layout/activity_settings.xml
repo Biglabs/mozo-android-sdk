@@ -116,5 +116,21 @@
             android:padding="@dimen/mozo_list_padding"
             android:text="@string/mozo_clear_cache"
             app:drawableSize="24dp" />
+
+        <io.mozocoin.sdk.ui.view.MozoIconTextView
+            android:id="@+id/button_delete_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:drawableStart="@drawable/ic_setting_del_account"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:paddingVertical="@dimen/mozo_list_padding"
+            android:paddingStart="22dp"
+            android:paddingEnd="@dimen/mozo_list_padding"
+            android:text="@string/mozo_delete_account"
+            android:textColor="@color/mozo_color_error"
+            android:textStyle="bold"
+            app:drawableSize="24dp" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
