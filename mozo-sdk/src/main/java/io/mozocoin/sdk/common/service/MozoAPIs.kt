@@ -64,6 +64,9 @@ internal interface MozoAPIs {
     @PUT("${MozoAPIsService.APIS_STORE}/user-profile/wallet/reset-pin")
     fun resetWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>
 
+    @POST("${MozoAPIsService.APIS_STORE}/accountDeleted/deletedUserInShopperApp")
+    fun deleteAccount(): Call<Base<Any>>
+
     /**
      * Transaction APIs
      */

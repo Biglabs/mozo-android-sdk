@@ -39,11 +39,16 @@
     <string name="mozo_dialog_error_not_enough_msg">Số dư không đủ để gửi</string>
     <string name="mozo_dialog_error_system_time_msg">Đồng hồ của bạn không chính xác.</string>
     <string name="mozo_dialog_error_system_time_msg_sub">Xin vui lòng cập nhật ngày giờ và thử lại sau.</string>
+    <string name="mozo_dialog_del_account_confirm_title">Bạn chắc chắn muốn xoá tài khoản của mình không?</string>
+    <string name="mozo_dialog_del_account_confirm_msg">Bạn sẽ mất tất cả bao gồm ví Mozo và toàn bộ điểm thưởng, khuyến mãi đã mua, danh sách bạn bè, lượt thích hoặc bất kỳ dữ liệu đã chia sẻ.</string>
+    <string name="mozo_dialog_del_account_remind_title">Tài khoản của bạn đã được đặt lịch hẹn để xoá.</string>
+    <string name="mozo_dialog_del_account_remind_msg">Hãy đăng nhập trong vòng <b>30 ngày tiếp theo</b> để huỷ lịch hẹn xoá.</string>
 
     <string name="mozo_button_deposit">Gửi vào</string>
     <string name="mozo_button_login">Đăng nhập Mozo</string>
     <string name="mozo_button_logout">Đăng xuất Mozo</string>
     <string name="mozo_button_logout_short">Đăng xuất</string>
+    <string name="mozo_button_close_app">Thoát ứng dụng</string>
     <string name="mozo_button_send_mozo">Gửi Mozo</string>
     <string name="mozo_button_transfer">Gửi</string>
     <string name="mozo_button_transaction_history">Lịch sử giao dịch</string>
@@ -133,6 +138,7 @@
 
     <string name="mozo_clear_cache">Xoá dữ liệu tạm: %s</string>
     <string name="mozo_languages">Ngôn ngữ</string>
+    <string name="mozo_delete_account">Xoá tài khoản</string>
 
     <string name="mozo_pin_title">Tạo mã PIN</string>
     <string name="mozo_pin_title_restore">Khôi phục lại ví</string>
