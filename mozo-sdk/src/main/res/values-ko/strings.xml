@@ -39,11 +39,16 @@
     <string name="mozo_dialog_error_not_enough_msg">금액을 이송하도록 밸런스가 부족되어있습니다.</string>
     <string name="mozo_dialog_error_system_time_msg">시간이 정확하지 않습니다.</string>
     <string name="mozo_dialog_error_system_time_msg_sub">시간 업데이트 하시고 다시 시도해보세요.</string>
+    <string name="mozo_dialog_del_account_confirm_title">전체 계정을 삭제하시겠습니까?</string>
+    <string name="mozo_dialog_del_account_confirm_msg">Mozo 지갑, 토큰, 구매한 바우처, 친구 목록, 좋아하고 공유한 모든 것을 영원히 잃게 될 것입니다.</string>
+    <string name="mozo_dialog_del_account_remind_title">계정이 삭제되도록 예약되었습니다.</string>
+    <string name="mozo_dialog_del_account_remind_msg">일정을 취소하려면 <b>다음 30일</b> 내에 로그인하십시오.</string>
 
     <string name="mozo_button_deposit">예금</string>
     <string name="mozo_button_login">Mozo에 로그인</string>
     <string name="mozo_button_logout">Mozo 로그 아웃</string>
     <string name="mozo_button_logout_short">로그아웃</string>
+    <string name="mozo_button_close_app">앱 닫기</string>
     <string name="mozo_button_send_mozo">Mozo 보내기</string>
     <string name="mozo_button_transfer">전송하기</string>
     <string name="mozo_button_transaction_history">거래 내역</string>
@@ -86,6 +91,7 @@
     <string name="mozo_button_synchronize">동기화</string>
     <string name="mozo_button_synchronizing">동기화 중…</string>
     <string name="mozo_button_update">업데이트</string>
+    <string name="mozo_button_delete_everything">모두 삭제</string>
 
     <string name="mozo_backup_title">지갑 백업하기</string>
     <string name="mozo_backup_sub_title">당신의 복구 문구입니다.</string>
