@@ -133,4 +133,25 @@
             android:textStyle="bold"
             app:drawableSize="24dp" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/loading_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:ignore="KeyboardInaccessibleWidget">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="@dimen/mozo_background_dim_amount"
+            android:background="@android:color/black" />
+
+        <include layout="@layout/view_loading" />
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
