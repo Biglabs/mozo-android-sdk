@@ -10,7 +10,7 @@ buildscript {
          * */
         PUBLISH_ARTIFACT_ID = 'mozo-sdk'
         PUBLISH_GROUP_ID = 'io.mozocoin'
-        PUBLISH_VERSION = '0.2.5-beta048'
+        PUBLISH_VERSION = '0.2.5-beta049'
         PUBLISH_DESCRIPTION = 'MozoSDK for Android'
         PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
     }
@@ -20,7 +20,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'com.android.tools.build:gradle:7.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     }
 }
