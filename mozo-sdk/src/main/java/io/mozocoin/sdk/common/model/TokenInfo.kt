@@ -29,10 +29,14 @@ internal data class TokenInfo(
                 /**
                  * Get pin_secret from token
                  */
-                pinSecret = json.getString("pin_secret")
-                val issueTime = json.getLong("iat")
-                accessExpireAt = issueTime + (expires_in ?: 0)
-                refreshExpireAt = issueTime + (refresh_expires_in ?: 0)
+                if (json.has(paramPinSecret)) {
+                    pinSecret = json.getString(paramPinSecret)
+                }
+                if (json.has(paramIat)) {
+                    val issueTime = json.getLong(paramIat)
+                    accessExpireAt = issueTime + (expires_in ?: 0)
+                    refreshExpireAt = issueTime + (refresh_expires_in ?: 0)
+                }
             }
         } catch (ignored: Exception) {
         }
@@ -42,6 +46,9 @@ internal data class TokenInfo(
     override fun toString(): String = Gson().toJson(this)
 
     companion object {
+        const val paramPinSecret = "pin_secret"
+        const val paramIat = "iat"
+
         fun fromJson(str: String?): TokenInfo? {
             if (str.isNullOrEmpty()) return null
             return Gson().fromJson(str, TokenInfo::class.java)?.initialize()
