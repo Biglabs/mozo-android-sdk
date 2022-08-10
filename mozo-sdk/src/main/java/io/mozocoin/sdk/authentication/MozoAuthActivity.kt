@@ -12,7 +12,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import androidx.core.os.ConfigurationCompat
 import io.mozocoin.sdk.MozoAuth
@@ -24,7 +23,10 @@ import io.mozocoin.sdk.databinding.ActivityAuthBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
-import net.openid.appauth.*
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationServiceConfiguration
+import net.openid.appauth.ResponseTypeValues
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
@@ -32,10 +34,6 @@ import java.util.concurrent.atomic.AtomicReference
 internal class MozoAuthActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAuthBinding
-    private var mAuthService: AuthorizationService? = null
-    private val mAuthStateManager: AuthStateManager by lazy {
-        AuthStateManager.getInstance(applicationContext)
-    }
     private val mAppScheme: String by lazy {
         getString(
             R.string.auth_redirect_uri,
@@ -53,10 +51,7 @@ internal class MozoAuthActivity : BaseActivity() {
     }
 
     private val mAuthRequest = AtomicReference<AuthorizationRequest>()
-    private val mAuthIntent = AtomicReference<CustomTabsIntent>()
-
     private var modeSignIn = true
-
     private var handleJob: Job? = null
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -122,8 +117,6 @@ internal class MozoAuthActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        mAuthService?.dispose()
-        mAuthService = null
         if (authenticationInProgress) {
             authenticationInProgress = false
             EventBus.getDefault().post(MessageEvent.Auth(UserCancelException()))
@@ -144,64 +137,35 @@ internal class MozoAuthActivity : BaseActivity() {
      */
     private fun initializeAppAuth() = MozoSDK.scope.launch {
         mAuthRequest.set(null)
-        mAuthIntent.set(null)
 
         val signInEndPoint =
             getString(R.string.auth_end_point_authorization, Support.domainAuth()).toUri()
         val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
-        mAuthStateManager.replace(
-            AuthState(
-                AuthorizationServiceConfiguration(
-                    signInEndPoint,
-                    tokenEndpoint
-                )
-            )
-        )
-
-        if (mAuthStateManager.current.authorizationServiceConfiguration == null) {
-            cancelAuth()
-            return@launch
-        }
 
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.ENGLISH
-        val authRequestBuilder = if (modeSignIn) {
-            AuthorizationRequest.Builder(
-                mAuthStateManager.current.authorizationServiceConfiguration!!,
-                mClientId,
-                ResponseTypeValues.CODE,
-                Uri.parse(mAppScheme)
-            )
-                .setPrompt("consent")
-                .setScope("openid profile phone")
-                .setAdditionalParameters(
-                    mutableMapOf(
-                        "kc_locale" to locale.toLanguageTag(),
-                        "application_type" to "native"
-                    )
+        var authRequestBuilder = AuthorizationRequest.Builder(
+            AuthorizationServiceConfiguration(
+                signInEndPoint,
+                tokenEndpoint
+            ),
+            mClientId,
+            ResponseTypeValues.CODE,
+            Uri.parse(mAppScheme)
+        )
+            .setPrompt("consent")
+            .setScope("openid profile phone")
+            .setAdditionalParameters(
+                mutableMapOf(
+                    "kc_locale" to locale.toLanguageTag(),
+                    "application_type" to "native"
                 )
-
-        } else /* SIGN OUT */ {
-            val signInRequest = AuthorizationRequest.Builder(
-                mAuthStateManager.current.authorizationServiceConfiguration!!,
-                mClientId,
-                ResponseTypeValues.CODE,
-                Uri.parse(mAppScheme)
             )
-                .setState(null)
-                .setPrompt("consent")
-                .setScope("openid profile phone")
-                .setAdditionalParameters(
-                    mutableMapOf(
-                        "kc_locale" to locale.toLanguageTag(),
-                        "application_type" to "native"
-                    )
-                )
-                .build()
 
+        if (!modeSignIn) {
+            /** SIGN OUT configuration */
+            val signInRequest = authRequestBuilder.setState(null).build()
             val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
-            val tokenEndpoint =
-                getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
-            AuthorizationRequest.Builder(
+            authRequestBuilder = AuthorizationRequest.Builder(
                 AuthorizationServiceConfiguration(
                     signOutEndpoint,
                     tokenEndpoint

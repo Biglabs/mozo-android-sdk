@@ -42,7 +42,7 @@ class AdditionalParamsProcessor {
             return Collections.emptySet();
         }
 
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(params)));
+        return Set.of(params);
     }
 
     static Map<String, String> checkAdditionalParams(
