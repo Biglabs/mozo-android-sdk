@@ -152,10 +152,7 @@ class MozoAuth private constructor() {
 
         MozoSocketClient.disconnect()
         onAuthorizeChanged(MessageEvent.Auth())
-
-        if (!silent) {
-            MozoAuthActivity.signOut(MozoSDK.getInstance().context)
-        }
+        MozoAuthActivity.signOut(MozoSDK.getInstance().context, silent = silent)
     }
 
     fun isSignedIn() = MozoTokenService.instance().isAuthorized()

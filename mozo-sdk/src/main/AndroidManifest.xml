@@ -57,7 +57,7 @@
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MozoTheme"
+            android:theme="@style/MozoTheme.Transparent"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".ui.SecurityActivity"
@@ -174,20 +174,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-        <activity
-            android:name="net.openid.appauth.RedirectUriReceiverActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="com.biglabs.mozosdk.${applicationId}" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.MaintenanceActivity"
             android:excludeFromRecents="true"

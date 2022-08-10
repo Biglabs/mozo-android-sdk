@@ -100,12 +100,12 @@ import io.mozocoin.sdk.ui.LocalizationBaseActivity;
  * <p>
  * - Completion (S) flow:
  * - Step S1: The authorization activity completes with a success or failure, and sends this
- * result to {@link RedirectUriReceiverActivity}.
+ * result to RedirectUriReceiverActivity.
  * <p>
- * - Step S2: {@link RedirectUriReceiverActivity} extracts the forwarded data, and invokes
+ * - Step S2: RedirectUriReceiverActivity extracts the forwarded data, and invokes
  * AuthorizationManagementActivity using an intent derived from
  * {@link #createResponseHandlingIntent}. This intent has flag CLEAR_TOP set, which will
- * result in both the authorization activity and {@link RedirectUriReceiverActivity} being
+ * result in both the authorization activity and RedirectUriReceiverActivity being
  * destroyed, if necessary, such that AuthorizationManagementActivity is once again at the
  * top of the back stack.
  * <p>

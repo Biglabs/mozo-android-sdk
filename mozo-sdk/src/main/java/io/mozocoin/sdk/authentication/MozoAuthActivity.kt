@@ -12,9 +12,9 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import androidx.core.os.ConfigurationCompat
+import androidx.core.view.isVisible
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
@@ -24,7 +24,10 @@ import io.mozocoin.sdk.databinding.ActivityAuthBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.utils.*
 import kotlinx.coroutines.*
-import net.openid.appauth.*
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationServiceConfiguration
+import net.openid.appauth.ResponseTypeValues
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
@@ -32,10 +35,6 @@ import java.util.concurrent.atomic.AtomicReference
 internal class MozoAuthActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAuthBinding
-    private var mAuthService: AuthorizationService? = null
-    private val mAuthStateManager: AuthStateManager by lazy {
-        AuthStateManager.getInstance(applicationContext)
-    }
     private val mAppScheme: String by lazy {
         getString(
             R.string.auth_redirect_uri,
@@ -53,16 +52,18 @@ internal class MozoAuthActivity : BaseActivity() {
     }
 
     private val mAuthRequest = AtomicReference<AuthorizationRequest>()
-    private val mAuthIntent = AtomicReference<CustomTabsIntent>()
-
     private var modeSignIn = true
-
+    private var isSilent = false
     private var handleJob: Job? = null
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        modeSignIn = intent.getBooleanExtra(FLAG_MODE_SIGN_IN, modeSignIn)
+        isSilent = intent.getBooleanExtra(FLAG_AUTH_SILENT, isSilent)
+
         binding = ActivityAuthBinding.inflate(layoutInflater)
+        binding.root.isVisible = !isSilent
         setContentView(binding.root)
         binding.buttonClose.click { cancelAuth() }
         binding.webView.apply {
@@ -77,8 +78,6 @@ internal class MozoAuthActivity : BaseActivity() {
             binding.webView.reload()
         }
 
-        modeSignIn = intent.getBooleanExtra(FLAG_MODE_SIGN_IN, modeSignIn)
-
         if (modeSignIn && MozoTokenService.instance().isAuthorized()) {
             handleResult()
             return
@@ -87,19 +86,22 @@ internal class MozoAuthActivity : BaseActivity() {
         binding.webView.webViewClient = object : WebViewClient() {
             override fun onLoadResource(view: WebView?, url: String?) {
                 if (url?.startsWith(mAppScheme) == true) {
-                    handleAuthResult(url)
+                    if (isSilent) finishAuth(null)
+                    else handleAuthResult(url)
                     return
                 }
                 super.onLoadResource(view, url)
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                if (isSilent) return
                 binding.errorContainer.gone()
                 binding.webView.visible()
                 binding.progressIndicator.visible()
             }
 
             override fun onPageFinished(view: WebView, url: String) {
+                if (isSilent) return
                 binding.progressIndicator.gone()
             }
 
@@ -108,6 +110,7 @@ internal class MozoAuthActivity : BaseActivity() {
                 request: WebResourceRequest?,
                 error: WebResourceError?
             ) {
+                if (isSilent) return
                 binding.webView.gone()
 
                 if (request?.url.toString().startsWith(mAppScheme)) {
@@ -117,14 +120,15 @@ internal class MozoAuthActivity : BaseActivity() {
                 binding.errorContainer.visible()
             }
         }
-
-        initializeAppAuth()
+        if (isSilent) {
+            initializeSilentOut()
+        } else {
+            initializeAppAuth()
+        }
     }
 
     override fun onDestroy() {
-        mAuthService?.dispose()
-        mAuthService = null
-        if (authenticationInProgress) {
+        if (authenticationInProgress && !isSilent) {
             authenticationInProgress = false
             EventBus.getDefault().post(MessageEvent.Auth(UserCancelException()))
         }
@@ -134,7 +138,10 @@ internal class MozoAuthActivity : BaseActivity() {
     override fun onBackPressed() = cancelAuth()
 
     override fun finish() {
-        overridePendingTransition(R.anim.no_anim, R.anim.fade_out_short)
+        overridePendingTransition(
+            R.anim.no_anim,
+            if (isSilent) 0 else R.anim.fade_out_short
+        )
         super.finish()
     }
 
@@ -144,64 +151,35 @@ internal class MozoAuthActivity : BaseActivity() {
      */
     private fun initializeAppAuth() = MozoSDK.scope.launch {
         mAuthRequest.set(null)
-        mAuthIntent.set(null)
 
         val signInEndPoint =
             getString(R.string.auth_end_point_authorization, Support.domainAuth()).toUri()
         val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
-        mAuthStateManager.replace(
-            AuthState(
-                AuthorizationServiceConfiguration(
-                    signInEndPoint,
-                    tokenEndpoint
-                )
-            )
-        )
-
-        if (mAuthStateManager.current.authorizationServiceConfiguration == null) {
-            cancelAuth()
-            return@launch
-        }
 
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.ENGLISH
-        val authRequestBuilder = if (modeSignIn) {
-            AuthorizationRequest.Builder(
-                mAuthStateManager.current.authorizationServiceConfiguration!!,
-                mClientId,
-                ResponseTypeValues.CODE,
-                Uri.parse(mAppScheme)
-            )
-                .setPrompt("consent")
-                .setScope("openid profile phone")
-                .setAdditionalParameters(
-                    mutableMapOf(
-                        "kc_locale" to locale.toLanguageTag(),
-                        "application_type" to "native"
-                    )
+        var authRequestBuilder = AuthorizationRequest.Builder(
+            AuthorizationServiceConfiguration(
+                signInEndPoint,
+                tokenEndpoint
+            ),
+            mClientId,
+            ResponseTypeValues.CODE,
+            Uri.parse(mAppScheme)
+        )
+            .setPrompt("consent")
+            .setScope("openid profile phone")
+            .setAdditionalParameters(
+                mutableMapOf(
+                    "kc_locale" to locale.toLanguageTag(),
+                    "application_type" to "native"
                 )
-
-        } else /* SIGN OUT */ {
-            val signInRequest = AuthorizationRequest.Builder(
-                mAuthStateManager.current.authorizationServiceConfiguration!!,
-                mClientId,
-                ResponseTypeValues.CODE,
-                Uri.parse(mAppScheme)
             )
-                .setState(null)
-                .setPrompt("consent")
-                .setScope("openid profile phone")
-                .setAdditionalParameters(
-                    mutableMapOf(
-                        "kc_locale" to locale.toLanguageTag(),
-                        "application_type" to "native"
-                    )
-                )
-                .build()
 
+        if (!modeSignIn) {
+            /** SIGN OUT configuration */
+            val signInRequest = authRequestBuilder.setState(null).build()
             val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
-            val tokenEndpoint =
-                getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
-            AuthorizationRequest.Builder(
+            authRequestBuilder = AuthorizationRequest.Builder(
                 AuthorizationServiceConfiguration(
                     signOutEndpoint,
                     tokenEndpoint
@@ -229,6 +207,25 @@ internal class MozoAuthActivity : BaseActivity() {
 
         val authRequest = authRequestBuilder.build()
         mAuthRequest.set(authRequest)
+
+        withContext(Dispatchers.Main) {
+            binding.webView.loadUrl(authRequest.toUri().toString())
+        }
+    }
+
+    private fun initializeSilentOut() = MozoSDK.scope.launch {
+        mAuthRequest.set(null)
+        val signOutEndpoint = getString(R.string.auth_logout_uri, Support.domainAuth()).toUri()
+        val tokenEndpoint = getString(R.string.auth_end_point_token, Support.domainAuth()).toUri()
+        val authRequest = AuthorizationRequest.Builder(
+            AuthorizationServiceConfiguration(
+                signOutEndpoint,
+                tokenEndpoint
+            ),
+            mClientId,
+            ResponseTypeValues.CODE,
+            Uri.parse(mAppScheme)
+        ).build()
 
         withContext(Dispatchers.Main) {
             binding.webView.loadUrl(authRequest.toUri().toString())
@@ -313,16 +310,18 @@ internal class MozoAuthActivity : BaseActivity() {
 
     companion object {
         private const val FLAG_MODE_SIGN_IN = "FLAG_MODE_SIGN_IN"
+        private const val FLAG_AUTH_SILENT = "FLAG_AUTH_SILENT"
 
         @Volatile
         private var authenticationInProgress = false
 
-        private fun start(context: Context, signIn: Boolean = true) {
+        private fun start(context: Context, signIn: Boolean = true, silent: Boolean = false) {
             if (authenticationInProgress) return
             Intent(context, MozoAuthActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 putExtra(FLAG_MODE_SIGN_IN, signIn)
+                putExtra(FLAG_AUTH_SILENT, silent)
                 context.startActivity(this)
             }
             authenticationInProgress = true
@@ -332,9 +331,9 @@ internal class MozoAuthActivity : BaseActivity() {
             start(context)
         }
 
-        fun signOut(context: Context) {
+        fun signOut(context: Context, silent: Boolean = false) {
             authenticationInProgress = false
-            start(context, signIn = false)
+            start(context, signIn = false, silent = silent)
         }
     }
 }
