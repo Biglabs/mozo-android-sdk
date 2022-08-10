@@ -57,7 +57,7 @@
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MozoTheme"
+            android:theme="@style/MozoTheme.Transparent"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".ui.SecurityActivity"
