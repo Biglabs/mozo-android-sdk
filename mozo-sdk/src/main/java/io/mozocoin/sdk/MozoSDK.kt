@@ -17,7 +17,6 @@ import io.mozocoin.sdk.common.ActivityLifecycleCallbacks
 import io.mozocoin.sdk.common.MessageEvent
 import io.mozocoin.sdk.common.ViewModels
 import io.mozocoin.sdk.common.service.ConnectionService
-import io.mozocoin.sdk.common.service.MozoTokenService
 import io.mozocoin.sdk.ui.MaintenanceActivity
 import io.mozocoin.sdk.ui.UpdateRequiredActivity
 import io.mozocoin.sdk.utils.Support
@@ -30,13 +29,17 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     private val mViewModelStore: ViewModelStore by lazy { ViewModelStore() }
     internal val profileViewModel: ViewModels.ProfileViewModel by lazy {
-        ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
-            .get(ViewModels.ProfileViewModel::class.java)
+        ViewModelProvider(
+            this,
+            ViewModelProvider.NewInstanceFactory()
+        )[ViewModels.ProfileViewModel::class.java]
     }
 
     internal val contactViewModel: ViewModels.ContactViewModel by lazy {
-        ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
-            .get(ViewModels.ContactViewModel::class.java)
+        ViewModelProvider(
+            this,
+            ViewModelProvider.NewInstanceFactory()
+        )[ViewModels.ContactViewModel::class.java]
     }
 
     internal var ignoreInternetErrActivities: ArrayList<Class<out Activity>>? = null
