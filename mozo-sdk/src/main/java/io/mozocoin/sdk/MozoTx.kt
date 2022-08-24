@@ -32,6 +32,8 @@ class MozoTx private constructor() {
     private var messagesToSign: Array<out String>? = null
     private var callbackToSign: ((result: List<Triple<String, String, String>>) -> Unit)? = null
     private var isOnChainMessageSigning = false
+    internal var payCallback: ((txHash: String?, errorCode: String?) -> Unit)? = null
+
     internal var listeners: ArrayList<TransactionListener> = arrayListOf()
 
     private val balanceAndRateObserver = Observer<ViewModels.BalanceAndRate?> {
@@ -76,6 +78,7 @@ class MozoTx private constructor() {
         context: Context,
         output: String,
         amount: String,
+        customData: String? = null,
         callback: (response: TransactionResponse?, doRetry: Boolean) -> Unit
     ) {
         val myAddress = MozoWallet.getInstance().getAddress()
@@ -112,6 +115,7 @@ class MozoTx private constructor() {
 
                     data.signatures = arrayListOf(signature)
                     data.publicKeys = arrayListOf(publicKey)
+                    data.additionalData = customData
 
                     MozoAPIsService.getInstance().sendTransaction(context, data, { txResponse, _ ->
                         callback.invoke(txResponse, false)
@@ -120,7 +124,7 @@ class MozoTx private constructor() {
                     })
                 }
             }, {
-                createTransaction(context, output, amount, callback)
+                createTransaction(context, output, amount, customData, callback)
             })
     }
 
@@ -263,6 +267,26 @@ class MozoTx private constructor() {
             EventBus.getDefault().register(this)
         }
         SecurityActivity.startVerify(context, enterPinForSend)
+    }
+
+    fun pay(
+        context: Context,
+        receiver: String,
+        amount: String,
+        optionalData: String?,
+        callback: ((txHash: String?, errorCode: String?) -> Unit)?
+    ) {
+        if (receiver.isEmpty()) {
+            callback?.invoke(null, ErrorCode.ERROR_TX_INVALID_ADDRESS.key)
+            return
+        }
+        TransactionFormActivity.start(
+            context,
+            address = receiver,
+            amount = amount,
+            optionalData = optionalData,
+            performSend = false
+        )
     }
 
     fun transfer() {

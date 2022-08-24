@@ -28,10 +28,7 @@ import io.mozocoin.sdk.databinding.ViewTransactionSentBinding
 import io.mozocoin.sdk.ui.BaseActivity
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.web3j.crypto.WalletUtils
 import java.math.BigDecimal
 import java.util.*
@@ -90,6 +87,7 @@ internal class TransactionFormActivity : BaseActivity() {
 
         val address = intent?.getStringExtra(KEY_DATA_ADDRESS)
         val amount = intent?.getStringExtra(KEY_DATA_AMOUNT)
+        val performSend = intent?.getBooleanExtra(KEY_PERFORM_SEND, true) == true
         if (address != null && amount != null) {
             isViewOnlyMode = true
             selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
@@ -99,7 +97,9 @@ internal class TransactionFormActivity : BaseActivity() {
 
             showContactInfoUI()
             showConfirmationUI()
-            bindingForm.buttonSubmit.performClick()
+            if (performSend) {
+                bindingForm.buttonSubmit.performClick()
+            }
         }
     }
 
@@ -111,6 +111,7 @@ internal class TransactionFormActivity : BaseActivity() {
         mPhoneContactUtils = null
         selectedContact = null
         updateTxStatusJob?.cancel()
+        MozoTx.getInstance().payCallback?.invoke(null, "CANCELED_BY_USER")
         super.onDestroy()
     }
 
@@ -130,10 +131,10 @@ internal class TransactionFormActivity : BaseActivity() {
     private fun sendTx() {
         val address = selectedContact?.soloAddress
             ?: bindingForm.outputReceiverAddress.text.toString()
-
+        val customData = intent?.getStringExtra(KEY_DATA_CUSTOM)
         showLoading()
         MozoTx.getInstance()
-            .createTransaction(this, address, mInputAmount.toString()) { response, doRetry ->
+            .createTransaction(this, address, mInputAmount.toString(), customData) { response, doRetry ->
                 if (doRetry) {
                     showLoading()
                     sendTx()
@@ -381,8 +382,8 @@ internal class TransactionFormActivity : BaseActivity() {
         updateContactUI()
     }
 
-    private fun showResultUI(txResponse: TransactionResponse?) = MainScope().launch {
-        if (txResponse != null) {
+    private fun showResultUI(txResponse: TransactionResponse?) =
+        MozoSDK.scope.launch(Dispatchers.Main) {
             MozoSDK.getInstance().contactViewModel.usersLiveData.observe(
                 this@TransactionFormActivity,
                 userContactsObserver
@@ -405,7 +406,7 @@ internal class TransactionFormActivity : BaseActivity() {
                 }
             }
 
-            history.txHash = txResponse.tx.hash ?: ""
+            history.txHash = txResponse?.tx?.hash ?: ""
 
             bindingSent.buttonTransactionDetail.apply {
                 gone()
@@ -413,11 +414,11 @@ internal class TransactionFormActivity : BaseActivity() {
                     TransactionDetailsActivity.start(this@TransactionFormActivity, history)
                 }
             }
-
+            MozoTx.getInstance().payCallback?.invoke(txResponse?.tx?.hash, null)
+            MozoTx.getInstance().payCallback = null
             updateContactUI()
             updateTxStatus()
         }
-    }
 
     private fun updateContactUI() {
         bindingSent.buttonSaveAddress.isVisible = selectedContact == null
@@ -579,6 +580,8 @@ internal class TransactionFormActivity : BaseActivity() {
         private const val KEY_PICK_ADDRESS = 0x0021
         private const val KEY_DATA_ADDRESS = "key_data_address"
         private const val KEY_DATA_AMOUNT = "key_data_amount"
+        private const val KEY_DATA_CUSTOM = "key_data_custom"
+        private const val KEY_PERFORM_SEND = "key_perform_send"
 
         fun start(context: Context) {
             Intent(context, TransactionFormActivity::class.java).apply {
@@ -587,10 +590,18 @@ internal class TransactionFormActivity : BaseActivity() {
             }
         }
 
-        fun start(context: Context, address: String?, amount: String?) {
+        fun start(
+            context: Context,
+            address: String?,
+            amount: String?,
+            optionalData: String? = null,
+            performSend: Boolean = true
+        ) {
             Intent(context, TransactionFormActivity::class.java).apply {
                 putExtra(KEY_DATA_ADDRESS, address)
                 putExtra(KEY_DATA_AMOUNT, amount)
+                putExtra(KEY_DATA_CUSTOM, optionalData)
+                putExtra(KEY_PERFORM_SEND, performSend)
                 context.startActivity(this)
             }
         }

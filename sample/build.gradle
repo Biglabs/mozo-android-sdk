@@ -26,13 +26,11 @@ android {
             excludes += ['META-INF/rxjava.properties', 'lib/x86_64/darwin/libscrypt.dylib']
         }
     }
-
-
+    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
 
     buildFeatures {
         viewBinding true
