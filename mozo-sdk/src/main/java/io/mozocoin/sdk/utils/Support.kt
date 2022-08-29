@@ -203,6 +203,12 @@ object Support {
 
     internal fun userAgent() = "MozoSDK/${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.SDK_INT}) ${MozoSDK.hostName}"
 
+    internal fun incorporateDomains() = arrayListOf(
+        "2world.io",
+        "mozoback.com",
+        "mozotoken.com"
+    )
+
     fun domainImage() = when (MozoSDK.serviceEnvironment) {
         MozoSDK.ENVIRONMENT_DEVELOP -> Constant.DOMAIN_IMAGE_DEV
         MozoSDK.ENVIRONMENT_STAGING -> Constant.DOMAIN_IMAGE_STAGING

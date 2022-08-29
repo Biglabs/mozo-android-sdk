@@ -31,6 +31,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.R
 import io.mozocoin.sdk.ui.widget.PinEntryEditText
@@ -107,20 +108,27 @@ fun Context.dimen(@DimenRes id: Int): Int = resources.getDimensionPixelSize(id)
 fun Context.bitmap(@DrawableRes icon: Int) = AppCompatResources.getDrawable(this, icon)?.toBitmap()
 
 fun Context.openTab(url: String) {
-    var finalUrl = url
-    if (finalUrl.contains(Support.domainHomePage(), ignoreCase = true)) {
-        val langParam = "language"
+    var tmp = url
+    if (!tmp.startsWith("http", ignoreCase = true)) {
+        tmp = "https://".plus(tmp)
+    }
 
-        val uri = Uri.parse(finalUrl)
-        if (uri.getQueryParameter(langParam).isNullOrEmpty()) {
-            finalUrl =
-                uri.buildUpon().appendQueryParameter(langParam, Locale.getDefault().toLanguageTag())
-                    .build().toString()
+    var finalUri = Uri.parse(tmp)
+    if (tmp.contains(Support.domainHomePage(), ignoreCase = true)) {
+        val langParam = "language"
+        if (finalUri.getQueryParameter(langParam).isNullOrEmpty()) {
+            finalUri = finalUri.buildUpon().appendQueryParameter(
+                langParam,
+                Locale.getDefault().toLanguageTag()
+            ).build()
         }
     }
 
-    if (finalUrl.startsWith(Support.domainHomePage(), ignoreCase = true)) {
-        finalUrl = "https://".plus(finalUrl)
+    Support.incorporateDomains().find { tmp.contains(it, ignoreCase = true) }?.run {
+        val token = MozoAuth.getInstance().getAccessToken()
+        if (!token.isNullOrEmpty()) {
+            finalUri = finalUri.buildUpon().appendQueryParameter("token", token).build()
+        }
     }
 
     val colorParams = CustomTabColorSchemeParams.Builder()
@@ -143,16 +151,15 @@ fun Context.openTab(url: String) {
         }
     }
 
-    val targetUri = Uri.parse(finalUrl)
     try {
         CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
-        CustomTabsHelper.openCustomTab(this, customTabsIntent, targetUri, fallback)
+        CustomTabsHelper.openCustomTab(this, customTabsIntent, finalUri, fallback)
     } catch (e: Exception) {
         if (e !is ActivityNotFoundException) {
             /**
              * Try to open link by external browser
              */
-            fallback.openUri(this, targetUri)
+            fallback.openUri(this, finalUri)
         }
         e.printStackTrace()
     }
