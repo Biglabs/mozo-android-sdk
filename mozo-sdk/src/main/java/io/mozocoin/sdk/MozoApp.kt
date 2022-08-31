@@ -46,21 +46,21 @@ open class MozoApp : Application(), ViewModelStoreOwner, ImageLoaderFactory {
     override fun getViewModelStore(): ViewModelStore = appVMS
 
     override fun newImageLoader(): ImageLoader {
-        return ImageLoader.Builder(applicationContext)
+        return ImageLoader.Builder(this)
             .allowHardware(true)
             .allowRgb565(true)
             .crossfade(true)
             .memoryCache {
-                MemoryCache.Builder(applicationContext).maxSizePercent(0.3).build()
+                MemoryCache.Builder(this).maxSizePercent(0.3).build()
             }
             .diskCache {
                 DiskCache.Builder()
-                    .directory(applicationContext.cacheDir.resolve("image_cache"))
-                    .maxSizePercent(0.2)
+                    .directory(cacheDir.resolve("image_cache"))
+                    .maxSizePercent(0.4)
                     .build()
             }
             .logger(
-                if (MozoSDK.isEnableDebugLogging) DebugLogger(Log.ERROR) else null
+                if (MozoSDK.isEnableDebugLogging) DebugLogger(Log.INFO) else null
             )
             .okHttpClient {
                 OkHttpClient.Builder().build()
