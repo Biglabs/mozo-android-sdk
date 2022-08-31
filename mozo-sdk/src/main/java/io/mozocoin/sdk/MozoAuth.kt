@@ -60,7 +60,9 @@ class MozoAuth private constructor() {
     internal fun onAuthorizeChanged(auth: MessageEvent.Auth) {
         if (auth.exception is UserCancelException) {
             MozoSDK.getInstance().profileViewModel.clear()
-            mAuthListeners.forEach { it.onAuthCanceled() }
+            synchronized(mAuthListeners) {
+                mAuthListeners.forEach { it.onAuthCanceled() }
+            }
             return
         }
 
@@ -70,7 +72,9 @@ class MozoAuth private constructor() {
                 MozoSDK.getInstance().profileViewModel.fetchData(MozoSDK.getInstance().context) {
                     if (it == null || it.walletInfo?.onchainAddress.isNullOrEmpty()) {
                         syncProfile(MozoSDK.getInstance().context) { isSuccess ->
-                            mAuthListeners.forEach { l -> l.onAuthStateChanged(isSuccess) }
+                            synchronized(mAuthListeners) {
+                                mAuthListeners.forEach { l -> l.onAuthStateChanged(isSuccess) }
+                            }
                             if (isSuccess) {
                                 MozoSocketClient.connect()
                                 MozoSDK.getInstance().context.registerComponentCallbacks(
@@ -79,7 +83,9 @@ class MozoAuth private constructor() {
                             }
                         }
                     } else {
-                        mAuthListeners.forEach { l -> l.onAuthStateChanged(true) }
+                        synchronized(mAuthListeners) {
+                            mAuthListeners.forEach { l -> l.onAuthStateChanged(true) }
+                        }
                         MozoSocketClient.connect()
                         MozoSDK.getInstance().context.registerComponentCallbacks(mComponentCallbacks)
                     }
@@ -94,8 +100,10 @@ class MozoAuth private constructor() {
             }
             else -> {
                 MozoSDK.getInstance().profileViewModel.clear()
-                /* notify for caller */
-                mAuthListeners.forEach { l -> l.onAuthStateChanged(false) }
+                synchronized(mAuthListeners) {
+                    /* notify for caller */
+                    mAuthListeners.forEach { l -> l.onAuthStateChanged(false) }
+                }
                 MozoSDK.getInstance().context.unregisterComponentCallbacks(mComponentCallbacks)
             }
         }
@@ -120,7 +128,9 @@ class MozoAuth private constructor() {
         signedInCallbackJob?.cancel()
         signedInCallbackJob = MainScope().launch {
             delay(2000) // 2s
-            mAuthListeners.forEach { l -> l.onSignedIn() }
+            synchronized(mAuthListeners) {
+                mAuthListeners.forEach { l -> l.onSignedIn() }
+            }
             signedInCallbackJob = null
         }
     }
@@ -271,7 +281,9 @@ class MozoAuth private constructor() {
         mozoAPIs.getProfile(context, { data, _ ->
             if (data == null) {
                 callback?.invoke(false)
-                mAuthListeners.forEach { l -> l.onAuthFailed() }
+                synchronized(mAuthListeners) {
+                    mAuthListeners.forEach { l -> l.onAuthFailed() }
+                }
                 return@getProfile
             }
 
@@ -373,12 +385,16 @@ class MozoAuth private constructor() {
 
 
     fun addAuthStateListener(listener: AuthStateListener) {
-        this.mAuthListeners.add(listener)
-        initialize()
+        synchronized(mAuthListeners) {
+            this.mAuthListeners.add(listener)
+            initialize()
+        }
     }
 
     fun removeAuthStateListener(listener: AuthStateListener) {
-        this.mAuthListeners.remove(listener)
+        synchronized(mAuthListeners) {
+            this.mAuthListeners.remove(listener)
+        }
     }
 
     fun addProfileChangeListener(listener: ProfileChangeListener) {
