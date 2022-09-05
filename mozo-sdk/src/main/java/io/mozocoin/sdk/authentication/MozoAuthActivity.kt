@@ -55,6 +55,7 @@ internal class MozoAuthActivity : BaseActivity() {
     private var modeSignIn = true
     private var isSilent = false
     private var handleJob: Job? = null
+    private var handlingAuthResult = false
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,6 +117,7 @@ internal class MozoAuthActivity : BaseActivity() {
                 val url = request?.url.toString()
                 if (url.startsWith(mAppScheme)) {
                     binding.progressIndicator.visible()
+                    if (handlingAuthResult) return
                     val code = Uri.parse(url).getQueryParameter("code")
                     if (!code.isNullOrEmpty()) {
                         handleAuthResult(url)
@@ -238,6 +240,7 @@ internal class MozoAuthActivity : BaseActivity() {
     }
 
     private fun handleAuthResult(data: String) {
+        handlingAuthResult = true
         when {
             data.isNotEmpty() -> {
                 val uri = Uri.parse(data)
@@ -280,6 +283,7 @@ internal class MozoAuthActivity : BaseActivity() {
     }
 
     private fun finishAuth(exception: Exception? = null) = MainScope().launch {
+        handlingAuthResult = false
         if (
             exception is AuthorizationException
             && exception.code == AuthorizationException.GeneralErrors.ID_TOKEN_VALIDATION_ERROR.code
