@@ -113,9 +113,14 @@ internal class MozoAuthActivity : BaseActivity() {
                 if (isSilent) return
                 binding.webView.gone()
 
-                if (request?.url.toString().startsWith(mAppScheme)) {
+                val url = request?.url.toString()
+                if (url.startsWith(mAppScheme)) {
                     binding.progressIndicator.visible()
-                    return
+                    val code = Uri.parse(url).getQueryParameter("code")
+                    if (!code.isNullOrEmpty()) {
+                        handleAuthResult(url)
+                        return
+                    }
                 }
                 binding.errorContainer.visible()
             }
