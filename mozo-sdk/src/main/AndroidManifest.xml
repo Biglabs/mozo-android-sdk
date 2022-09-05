@@ -56,7 +56,6 @@
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/MozoTheme.Transparent"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize" />
         <activity
