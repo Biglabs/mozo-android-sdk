@@ -90,7 +90,7 @@ internal interface MozoAPIs {
         @Query("size") size: Int
     ): Call<Base<BaseData<TransactionHistory>>>
 
-    @GET("${MozoAPIsService.APIS_SOLOMON}/eth/solo/txs/{hash}/status")
+    @GET("${MozoAPIsService.APIS_STORE}/txs/{hash}/status")
     fun getTxStatus(@Path("hash") hash: String): Call<Base<TransactionStatus>>
 
     @GET("${MozoAPIsService.APIS_STORE}/payment-request")
