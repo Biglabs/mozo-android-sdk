@@ -25,8 +25,8 @@
         <item>Mozo là điểm thưởng dùng công nghệ blockchain mà người bán hàng có thể lì xì cho khách hàng khi họ đến cửa hàng. Người nhận được lì xì có thể dùng nó để được hưởng khuyến mãi do người bán hàng tạo ra.</item>
         <item>Khách hàng sẽ phải tích lũy đủ điểm thưởng Mozo để có thể quy đổi các chương trình hậu mãi, giảm giá và khuyến mãi trong các chương trình dành riêng cho khách hàng thân thiết. Do đó họ có động lực để đi đến những nơi đã được thiết lập chương trình lì xì bởi người bán hàng và nhà điều hành dịch vụ. Ứng dụng công nghệ mới blockchain, Mozo bảo bảo tính an toàn hơn hẳn tất cả các ứng dụng cổ điển trong lĩnh vực này. Ngoài ra, kết hợp với công nghệ định vị, Mozo bảo đảm lượt khách đến đúng vị trí mong muốn.&lt;br/>
             Người bán hàng và nhà điều hành dịch vụ sẽ dùng ứng dụng Mozo Kinh doanh để thiết lập các chương trình lì xì gắn với beacon, loại thiết bị định vị bảo đảm khách hàng phải đến nơi cần đến. Công cụ này giúp họ có thể làm chủ được cách bố trí lượt khách. Hơn nữa, họ có thể thiết lập các chương trình hậu mãi, giảm giá và khuyến mãi với ứng dụng Mozo Kinh doanh.&lt;br/>
-            Khách hàng sẽ dùng ứng dụng Mozo Người dùng để duyệt, tìm kiếm và khám phá tất cả các chương trình lì xì, hậu mãi, giảm giá và khuyến mãi được thiết lập bởi người bán hàng và nhà điều hành dịch vụ.&lt;br/>
-            Ứng dụng Mozo Người dùng và Mozo Kinh doanh còn hỗ trợ việc thực hiện các giao dịch hậu mãi, giảm giá và khuyến mãi một cách hiệu quả.
+            Khách hàng sẽ dùng ứng dụng Mozo để duyệt, tìm kiếm và khám phá tất cả các chương trình lì xì, hậu mãi, giảm giá và khuyến mãi được thiết lập bởi người bán hàng và nhà điều hành dịch vụ.&lt;br/>
+            Ứng dụng Mozo và Mozo Kinh doanh còn hỗ trợ việc thực hiện các giao dịch hậu mãi, giảm giá và khuyến mãi một cách hiệu quả.
         </item>
         <item>Người bán hàng một khi trở thành thành viên của Mozo sẽ được nhận một số điểm thưởng để dùng thử. Sau khi dùng hết, người bán hàng có thể mua trực tiếp với Mozo.</item>
         <item>Khách hàng sẽ dùng điểm thưởng đổi khuyến mãi do người bán hàng tạo ra nên có động lực đi đến cửa hàng để thu thập điểm thưởng.</item>
@@ -58,7 +58,7 @@
             Bạn phải chắc mình đã có \"Ví\" trên ứng dụng Mozo trước khi MUA.&lt;br/>
             Nếu bạn chưa có \"Ví\", xin vui lòng theo hướng dẫn tại:&lt;br/>
             - &lt;a href=\"https://mozotoken.com/help-center?section=faq-retailer#how-to-sign-up-on-mozox-retailer-app\">Ứng dụng Mozo Kinh doanh&lt;/a>&lt;br/>
-            - &lt;a href=\"https://mozotoken.com/help-center?section=faq-shopper#home-faq-shopper-6\">Ứng dụng Mozo Người dùng&lt;/a>&lt;br/>
+            - &lt;a href=\"https://mozotoken.com/help-center?section=faq-shopper#home-faq-shopper-6\">Ứng dụng Mozo&lt;/a>&lt;br/>
             &lt;br/>
             Sau khi đăng nhập hoàn tất, quay trở lại để mua.&lt;br/>
             &lt;br/>
@@ -87,7 +87,7 @@
 
     <string-array name="tips_shopper_answer">
         <item>Mozo là điểm thưởng dùng công nghệ blockchain mà người bán hàng có thể lì xì cho khách hàng khi họ đến cửa hàng. Người nhận được lì xì có thể dùng nó để được hưởng khuyến mãi do người bán hàng tạo ra.</item>
-        <item>Ứng dụng Mozo Người dùng cung cấp khá nhiều công cụ để bạn khám phá những địa điểm có lì xì như bản đồ, danh sách, tìm kiếm… Chọn thời gian thích hợp và đi đến cửa hàng. Nhớ bật bluetooth để nhận Mozo.</item>
+        <item>Ứng dụng Mozo cung cấp khá nhiều công cụ để bạn khám phá những địa điểm có lì xì như bản đồ, danh sách, tìm kiếm… Chọn thời gian thích hợp và đi đến cửa hàng. Nhớ bật bluetooth để nhận Mozo.</item>
         <item>Sử dụng tính năng \"Gởi\" trên màn hình \"Ví\" của bạn và gởi Mozo tới địa chỉ ví người bạn muốn gởi.&lt;br/>
             Bạn có thể chuyển cho bạn bè bắng cách dùng số điện thoại.&lt;br/>
             Mẹo:&lt;br/>

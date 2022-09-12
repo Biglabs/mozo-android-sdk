@@ -133,19 +133,23 @@ internal class TransactionFormActivity : BaseActivity() {
             ?: bindingForm.outputReceiverAddress.text.toString()
         val customData = intent?.getStringExtra(KEY_DATA_CUSTOM)
         showLoading()
-        MozoTx.getInstance()
-            .createTransaction(this, address, mInputAmount.toString(), customData) { response, doRetry ->
-                if (doRetry) {
-                    showLoading()
-                    sendTx()
-                } else {
-                    hideLoading()
-                    history.addressTo = address
-                    history.amount = MozoTx.getInstance().amountWithDecimal(mInputAmount)
-                    history.time = Calendar.getInstance().timeInMillis / 1000L
-                    showResultUI(response)
-                }
+        MozoTx.getInstance().createTransaction(
+            this,
+            address,
+            mInputAmount.toString(),
+            customData
+        ) { response, doRetry ->
+            if (doRetry) {
+                showLoading()
+                sendTx()
+            } else {
+                hideLoading()
+                history.addressTo = address
+                history.amount = MozoTx.getInstance().amountWithDecimal(mInputAmount)
+                history.time = Calendar.getInstance().timeInMillis / 1000L
+                showResultUI(response)
             }
+        }
     }
 
     override fun onBackPressed() {
@@ -249,29 +253,18 @@ internal class TransactionFormActivity : BaseActivity() {
             Support.scanQRCode(this, ::onScanSuccess)
         }
         bindingForm.buttonSubmit.click {
-            if (bindingForm.outputReceiverAddress.isEnabled) {
-                if (validateInput()) {
-                    val output = selectedContact?.soloAddress
-                        ?: bindingForm.outputReceiverAddress.text.toString()
-                    when (output) {
-                        MozoWallet.getInstance().getAddress() -> {
-                            MessageDialog.show(
-                                it.context,
-                                R.string.mozo_transfer_err_send_to_own_wallet
-                            )
-                        }
-                        else -> MozoTx.getInstance().verifyAddress(it.context, output) { isValid ->
-                            if (isValid) showConfirmationUI()
-                        }
-                    }
+            validateInput { valid ->
+                if (!valid) return@validateInput
+                if (bindingForm.outputReceiverAddress.isEnabled) {
+                    showConfirmationUI()
+                } else {
+                    MozoAPIsService.getInstance().checkNetworkStatus(this, { status, _ ->
+                        status ?: return@checkNetworkStatus
+                        sendTx()
+                    }, {
+                        bindingForm.buttonSubmit.performClick()
+                    })
                 }
-            } else {
-                MozoAPIsService.getInstance().checkNetworkStatus(this, { status, _ ->
-                    status ?: return@checkNetworkStatus
-                    sendTx()
-                }, {
-                    bindingForm.buttonSubmit.performClick()
-                })
             }
         }
     }
@@ -491,13 +484,17 @@ internal class TransactionFormActivity : BaseActivity() {
         fromScan: Boolean = false,
         @StringRes errorId: Int = R.string.mozo_transfer_receiver_address_error
     ) {
-        val errorColor = color(R.color.mozo_color_error)
-        bindingForm.outputReceiverAddressLabel.setTextColor(errorColor)
-        bindingForm.outputReceiverAddressUnderline.setBackgroundColor(errorColor)
-        bindingForm.outputReceiverAddressErrorMsg.visible()
-        bindingForm.outputReceiverAddressErrorMsg.setText(
-            if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
-        )
+        if (isViewOnlyMode) {
+            MessageDialog.show(this, errorId)
+        } else {
+            val errorColor = color(R.color.mozo_color_error)
+            bindingForm.outputReceiverAddressLabel.setTextColor(errorColor)
+            bindingForm.outputReceiverAddressUnderline.setBackgroundColor(errorColor)
+            bindingForm.outputReceiverAddressErrorMsg.visible()
+            bindingForm.outputReceiverAddressErrorMsg.setText(
+                if (fromScan) R.string.mozo_dialog_error_scan_invalid_msg else errorId
+            )
+        }
     }
 
     private fun hideErrorAddressUI() {
@@ -512,12 +509,16 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun showErrorAmountUI(@StringRes errorId: Int? = null) {
-        val errorColor = color(R.color.mozo_color_error)
-        bindingForm.outputAmountLabel.setTextColor(errorColor)
-        bindingForm.outputAmountUnderline.setBackgroundColor(errorColor)
-        bindingForm.outputAmountErrorMsg.setText(errorId ?: R.string.mozo_transfer_amount_error)
-        bindingForm.outputAmountErrorMsg.visible()
-        bindingForm.textSpendable.gone()
+        if (isViewOnlyMode) {
+            MessageDialog.show(this, errorId ?: return)
+        } else {
+            val errorColor = color(R.color.mozo_color_error)
+            bindingForm.outputAmountLabel.setTextColor(errorColor)
+            bindingForm.outputAmountUnderline.setBackgroundColor(errorColor)
+            bindingForm.outputAmountErrorMsg.setText(errorId ?: R.string.mozo_transfer_amount_error)
+            bindingForm.outputAmountErrorMsg.visible()
+            bindingForm.textSpendable.gone()
+        }
     }
 
     private fun hideErrorAmountUI() {
@@ -533,35 +534,51 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun validateInput(fromScan: Boolean = false): Boolean {
+    private fun validateInput(fromScan: Boolean = false, callback: ((Boolean) -> Unit)? = null) {
         var isValidAddress = true
-        val address = selectedContact?.soloAddress
-            ?: bindingForm.outputReceiverAddress.text.toString()
-        if (!WalletUtils.isValidAddress(address)) {
+        val out = selectedContact?.soloAddress ?: bindingForm.outputReceiverAddress.text.toString()
+
+        if (!WalletUtils.isValidAddress(out)) {
             if (fromScan) bindingForm.outputReceiverAddress.text = null
             showErrorAddressUI(fromScan)
             isValidAddress = false
+        } else if (out.equalsIgnoreCase(MozoWallet.getInstance().getAddress())) {
+            if (fromScan) bindingForm.outputReceiverAddress.text = null
+            showErrorAddressUI(fromScan, R.string.mozo_transfer_err_send_to_own_wallet)
+            isValidAddress = false
         }
 
-        if (fromScan) return isValidAddress
-
-        if (!isValidAddress) mPhoneContactUtils?.validatePhone(this, address)?.let {
-            if (it > 0) showErrorAddressUI(false, it)
-        }
-
-        var isValidAmount = true
-        when {
-            mInputAmount > currentBalance -> {
-                showErrorAmountUI(R.string.mozo_transfer_amount_error_not_enough)
-                isValidAmount = false
+        if (isValidAddress) {
+            MozoTx.getInstance().verifyAddress(this, out) { isValid ->
+                isValidAddress = isValid
+                if (!isValid) {
+                    mPhoneContactUtils?.validatePhone(this, out)?.let {
+                        if (it > 0) showErrorAddressUI(fromScan, it)
+                        else showErrorAddressUI()
+                    }
+                    callback?.invoke(false)
+                    if (fromScan) {
+                        return@verifyAddress
+                    }
+                } else {
+                    var isValidAmount = true
+                    when {
+                        mInputAmount > currentBalance -> {
+                            showErrorAmountUI(R.string.mozo_transfer_amount_error_not_enough)
+                            isValidAmount = false
+                        }
+                        mInputAmount <= BigDecimal.ZERO -> {
+                            showErrorAmountUI(R.string.mozo_transfer_amount_error_too_low)
+                            isValidAmount = false
+                        }
+                    }
+                    callback?.invoke(isValidAddress && isValidAmount)
+                }
             }
-            mInputAmount <= BigDecimal.ZERO -> {
-                showErrorAmountUI(R.string.mozo_transfer_amount_error_too_low)
-                isValidAmount = false
-            }
+            return
         }
 
-        return isValidAddress && isValidAmount
+        callback?.invoke(isValidAddress)
     }
 
     private fun onScanSuccess(result: String) {
