@@ -65,6 +65,8 @@ class Constant {
         internal const val DOMAIN_IMAGE_STAGING = "image.staging.$BASE_DOMAIN"
         internal const val DOMAIN_IMAGE_PRODUCTION = "image.$BASE_DOMAIN"
 
+        internal const val DOMAIN_DOWNLOAD_APP = "apps.mozotoken.com"
+
         internal const val SOCKET_CHANNEL_SHOPPER = "shopper"
         internal const val SOCKET_CHANNEL_RETAILER = "retailer"
         internal const val SOCKET_RETRY_START_TIME = 5000L

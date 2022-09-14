@@ -3,6 +3,7 @@ package io.mozocoin.sdk.transaction
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -63,6 +64,7 @@ internal class TransactionFormActivity : BaseActivity() {
     private var mInputAmount = BigDecimal.ZERO
 
     private var mPhoneContactUtils: PhoneContactUtils? = null
+    private var attachmentData: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,20 +89,9 @@ internal class TransactionFormActivity : BaseActivity() {
 
         val address = intent?.getStringExtra(KEY_DATA_ADDRESS)
         val amount = intent?.getStringExtra(KEY_DATA_AMOUNT)
+        attachmentData = intent?.getStringExtra(KEY_DATA_CUSTOM)
         val performSend = intent?.getBooleanExtra(KEY_PERFORM_SEND, true) == true
-        if (address != null && amount != null) {
-            isViewOnlyMode = true
-            selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
-            bindingForm.outputReceiverAddress.setText(address)
-            bindingForm.outputAmount.setText(amount)
-            mInputAmount = amount.toBigDecimal()
-
-            showContactInfoUI()
-            showConfirmationUI()
-            if (performSend) {
-                bindingForm.buttonSubmit.performClick()
-            }
-        }
+        fastPayment(address, amount, performSend)
     }
 
     override fun onDestroy() {
@@ -111,6 +102,7 @@ internal class TransactionFormActivity : BaseActivity() {
         mPhoneContactUtils = null
         selectedContact = null
         updateTxStatusJob?.cancel()
+        attachmentData = null
         MozoTx.getInstance().payCallback?.invoke(null, "CANCELED_BY_USER")
         super.onDestroy()
     }
@@ -131,13 +123,12 @@ internal class TransactionFormActivity : BaseActivity() {
     private fun sendTx() {
         val address = selectedContact?.soloAddress
             ?: bindingForm.outputReceiverAddress.text.toString()
-        val customData = intent?.getStringExtra(KEY_DATA_CUSTOM)
         showLoading()
         MozoTx.getInstance().createTransaction(
             this,
             address,
             mInputAmount.toString(),
-            customData
+            attachmentData
         ) { response, doRetry ->
             if (doRetry) {
                 showLoading()
@@ -581,7 +572,32 @@ internal class TransactionFormActivity : BaseActivity() {
         callback?.invoke(isValidAddress)
     }
 
+    private fun fastPayment(address: String?, amount: String?, performSend: Boolean) {
+        if (!address.isNullOrEmpty() && !amount.isNullOrEmpty()) {
+            isViewOnlyMode = true
+            selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(address)
+            bindingForm.outputReceiverAddress.setText(address)
+            bindingForm.outputAmount.setText(amount)
+            mInputAmount = amount.toBigDecimal()
+
+            showContactInfoUI()
+            showConfirmationUI()
+            if (performSend) {
+                bindingForm.buttonSubmit.performClick()
+            }
+        }
+    }
+
     private fun onScanSuccess(result: String) {
+        if (result.contains(Constant.DOMAIN_DOWNLOAD_APP, ignoreCase = true)) {
+            val uri = Uri.parse(result)
+            val receiver = uri.getQueryParameter("receiver")
+            val amount = uri.getQueryParameter("amount")
+            attachmentData = uri.getQueryParameter("data")
+            fastPayment(receiver, amount, false)
+            return
+        }
+
         selectedContact = MozoSDK.getInstance().contactViewModel.findByAddress(result)
 
         showInputUI()
