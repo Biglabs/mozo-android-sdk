@@ -36,28 +36,32 @@ internal class PaymentRequestActivity : BaseActivity(), PaymentRequestInteractio
     override fun onCreateRequestClicked(amount: String) {
         binding.paymentRequestToolbar.showBackButton(true)
         replace(
-                R.id.payment_request_content_frame,
-                PaymentRequestSendFragment.getInstance(amount),
-                "send_step"
+            R.id.payment_request_content_frame,
+            PaymentRequestSendFragment.getInstance(amount),
+            "send_step"
         )
     }
 
     override fun onSendRequestClicked(amount: String, toAddress: String, request: PaymentRequest) {
-        MozoAPIsService.getInstance().sendPaymentRequest(this, toAddress, request, { data, errorCode ->
-            when (errorCode) {
-                ErrorCode.ERROR_WALLET_ADDRESS_NOT_EXIST.key -> {
-                    MessageDialog.show(this, R.string.error_wallet_not_found)
-                    return@sendPaymentRequest
+        MozoAPIsService.getInstance()
+            .sendPaymentRequest(this, toAddress, request, { data, errorCode ->
+                when (errorCode) {
+                    ErrorCode.ERROR_WALLET_ADDRESS_NOT_EXIST.key -> {
+                        MessageDialog.show(this, R.string.error_wallet_not_found)
+                        return@sendPaymentRequest
+                    }
                 }
-            }
-            data?.let {
-                isSendCompleted = true
-                binding.paymentRequestToolbar.showBackButton(false)
-                replace(R.id.payment_request_content_frame, PaymentRequestSentFragment.getInstance(amount, toAddress))
-            }
-        }, {
-            onSendRequestClicked(amount, toAddress, request)
-        })
+                data?.let {
+                    isSendCompleted = true
+                    binding.paymentRequestToolbar.showBackButton(false)
+                    replace(
+                        R.id.payment_request_content_frame,
+                        PaymentRequestSentFragment.getInstance(amount, toAddress)
+                    )
+                }
+            }, {
+                onSendRequestClicked(amount, toAddress, request)
+            })
     }
 
     companion object {

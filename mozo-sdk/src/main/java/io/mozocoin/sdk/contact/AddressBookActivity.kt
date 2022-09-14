@@ -45,7 +45,7 @@ internal class AddressBookActivity : BaseActivity() {
 
         binding.inputSearch.apply {
             onTextChanged {
-                binding.buttonClear.visibility = if (it?.length ?: 0 == 0) View.GONE else View.VISIBLE
+                binding.buttonClear.visibility = if ((it?.length ?: 0) == 0) View.GONE else View.VISIBLE
                 mAdapter.isShowSyncContactsUI = (it?.length ?: 0) == 0
                 searchByName(it.toString())
             }

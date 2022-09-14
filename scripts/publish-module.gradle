@@ -70,7 +70,7 @@ afterEvaluate {
                         developer {
                             id = "vunguyenquang-biglabs"
                             name = "Vu Nguyen"
-                            email = "vu.nguyen.quang@big-labs.com"
+                            email = "vu.nguyen.quang@mozox.com"
                         }
                     }
 
