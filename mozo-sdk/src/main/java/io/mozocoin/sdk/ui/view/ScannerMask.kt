@@ -18,6 +18,8 @@ class ScannerMask : View {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        setWillNotDraw(false)
+        setLayerType(LAYER_TYPE_HARDWARE, mCutPaint)
         mCutPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         paint.color = Color.WHITE
         squareHoleSize = resources.dp2Px(260f)
@@ -31,8 +33,8 @@ class ScannerMask : View {
         canvas ?: return
 
         canvas.drawColor(maskColor)
-        val x = width /2 - squareHoleSize /2
-        val y = height /2 - squareHoleSize * 0.7f
+        val x = width / 2 - squareHoleSize / 2
+        val y = height / 2 - squareHoleSize * 0.7f
         canvas.drawRect(
             x,
             y,
