@@ -41,7 +41,7 @@ class ScannerActivity : LocalizationBaseActivity() {
         setContentView(binding.root)
 
         binding.buttonBack.click {
-            onBackPressed()
+            finish()
         }
         binding.scannerPermissionProblem.text = getString(
             R.string.error_camera_permission, getString(R.string.error_camera_action)
@@ -74,12 +74,27 @@ class ScannerActivity : LocalizationBaseActivity() {
         super.onResume()
         if (isBindCamera) return
 
-        if (hasCameraPermission()) {
-            binding.scannerMask.visible()
-            binding.scannerPermissionProblem.gone()
-            binding.scannerPermissionAction.gone()
-            bindCameraUseCases()
-        } else requestPermission()
+        when (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)) {
+            PackageManager.PERMISSION_GRANTED -> {
+                binding.scannerMask.visible()
+                binding.scannerPermissionProblem.gone()
+                binding.scannerPermissionAction.gone()
+                bindCameraUseCases()
+            }
+            PackageManager.PERMISSION_DENIED -> {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                    binding.scannerMask.gone()
+                    binding.scannerPermissionProblem.visible()
+                    binding.scannerPermissionAction.visible()
+                } else {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.CAMERA),
+                        CAMERA_PERMISSION_REQUEST_CODE
+                    )
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -88,26 +103,6 @@ class ScannerActivity : LocalizationBaseActivity() {
         cameraProvider?.unbindAll()
         cameraProvider = null
         super.onDestroy()
-    }
-
-    private fun hasCameraPermission() =
-        ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
-
-    private fun requestPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.CAMERA),
-                CAMERA_PERMISSION_REQUEST_CODE
-            )
-        } else {
-            binding.scannerMask.gone()
-            binding.scannerPermissionProblem.visible()
-            binding.scannerPermissionAction.visible()
-        }
     }
 
     override fun onRequestPermissionsResult(

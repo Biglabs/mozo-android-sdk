@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        COMPILE_VERSION = 32
+        COMPILE_VERSION = 33
         TARGET_VERSION = 32
         MIN_VERSION = 22
         KOTLIN_VERSION = '1.7.10'
@@ -10,7 +10,7 @@ buildscript {
          * */
         PUBLISH_ARTIFACT_ID = 'mozo-sdk'
         PUBLISH_GROUP_ID = 'io.mozocoin'
-        PUBLISH_VERSION = '0.2.6-alpha11'
+        PUBLISH_VERSION = '0.2.6-alpha12'
         PUBLISH_DESCRIPTION = 'MozoSDK for Android'
         PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
     }
