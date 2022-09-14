@@ -13,7 +13,8 @@ android {
         targetSdkVersion TARGET_VERSION
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "SDK_VERSION", "\"$PUBLISH_VERSION\""
+        def sdkVersion = project.properties["MOZO_SDK_VERSION"] ?: "local"
+        buildConfigField "String", "SDK_VERSION", "\"$sdkVersion\""
     }
 
     buildTypes {
@@ -109,4 +110,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
-apply from: "${rootDir}/scripts/publish-module.gradle"
+if (project.hasProperty("MOZO_SDK_VERSION")) {
+    apply from: "../scripts/publish-module.gradle"
+}
