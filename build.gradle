@@ -10,7 +10,7 @@ buildscript {
          * */
         PUBLISH_ARTIFACT_ID = 'mozo-sdk'
         PUBLISH_GROUP_ID = 'io.mozocoin'
-        PUBLISH_VERSION = '0.2.6-alpha11'
+        PUBLISH_VERSION = '0.2.6-alpha12'
         PUBLISH_DESCRIPTION = 'MozoSDK for Android'
         PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
     }
