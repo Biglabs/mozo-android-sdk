@@ -11,7 +11,6 @@ import android.os.Build
 import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.toBitmap
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -41,7 +40,7 @@ class MozoNotification private constructor() {
 
     private var mShowGroupNotifyJob: Job? = null
 
-    internal fun showNotification(message: BroadcastDataContent) = MainScope().launch {
+    internal fun showNotification(message: BroadcastDataContent) = MozoSDK.scope.launch {
         notifyActivityClass ?: return@launch
 
         val context = MozoSDK.getInstance().context
@@ -82,8 +81,10 @@ class MozoNotification private constructor() {
                 }
             }
 
+        /** Replaced by Push Notification
         val id = atomicInteger.incrementAndGet()
         NotificationManagerCompat.from(context).notify(id, singleNotify.build())
+         */
 
         if (notification.type != Constant.NOTIFY_EVENT_GROUP_BROADCAST) {
             return@launch doGroupNotificationDelayed(
@@ -105,7 +106,9 @@ class MozoNotification private constructor() {
                             .bigLargeIcon(null)
                     )
                 }
+                /** Replaced by Push Notification
                 NotificationManagerCompat.from(context).notify(id, singleNotify.build())
+                 */
             }
         }
     }
@@ -158,7 +161,9 @@ class MozoNotification private constructor() {
                     setSmallIcon(R.drawable.ic_mozo_notification)
                     setSubText(totalText)
                 }
+            /** Replaced by Push Notification
             NotificationManagerCompat.from(context).notify(notifyGroup.id, group.build())
+             */
         }
     }
 
