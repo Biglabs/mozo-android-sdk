@@ -102,7 +102,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     api 'io.michaelrocks:libphonenumber-android:8.12.52'
-    api 'io.coil-kt:coil:2.2.0'
+    api 'io.coil-kt:coil:2.2.1'
 
     // test
     testImplementation 'junit:junit:4.13.2'
