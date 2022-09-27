@@ -1,6 +1,16 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
+ext {
+    /**
+     * MozoSDK publication information
+     * */
+    PUBLISH_ARTIFACT_ID = 'mozo-sdk'
+    PUBLISH_GROUP_ID = 'io.mozocoin'
+    PUBLISH_DESCRIPTION = 'MozoSDK for Android'
+    PUBLISH_URL = 'https://github.com/Biglabs/mozo-android-sdk'
+}
+
 task androidSourcesJar(type: Jar) {
     archiveClassifier.set('sources')
     if (project.plugins.findPlugin("com.android.library")) {
@@ -30,7 +40,7 @@ artifacts {
 }
 
 group = PUBLISH_GROUP_ID
-version = PUBLISH_VERSION
+version = MOZO_SDK_VERSION
 
 afterEvaluate {
     publishing {
@@ -38,7 +48,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId PUBLISH_GROUP_ID
                 artifactId PUBLISH_ARTIFACT_ID
-                version PUBLISH_VERSION
+                version MOZO_SDK_VERSION
 
                 // Two artifacts, the `aar` (or `jar`) and the sources
                 if (project.plugins.findPlugin("com.android.library")) {
@@ -93,5 +103,5 @@ signing {
     sign publishing.publications
 }
 
-def versionDecs = "MozoSDK v$PUBLISH_VERSION released: " + new Date()
+def versionDecs = "MozoSDK v$MOZO_SDK_VERSION released: " + new Date()
 logger.quiet(versionDecs)

@@ -174,7 +174,7 @@ internal class MozoAuthActivity : BaseActivity() {
             Uri.parse(mAppScheme)
         )
             .setPrompt("consent")
-            .setScope("openid profile phone")
+            .setScope("openid profile phone email offline_access")
             .setAdditionalParameters(
                 mutableMapOf(
                     "kc_locale" to locale.toLanguageTag(),

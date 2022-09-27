@@ -113,11 +113,13 @@ internal class MozoSocketClient(
         doRetryConnect()
     }
 
+    /** Should use Java-WebSocket ver 1.5.3
     override fun onSetSSLParameters(sslParameters: SSLParameters?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             super.onSetSSLParameters(sslParameters)
         }
     }
+    */
 
     companion object {
         private const val TAG = "Socket"
@@ -140,6 +142,7 @@ internal class MozoSocketClient(
 
         @Synchronized
         fun connect() {
+            /** Replaced by Push Notification
             MozoTokenService.instance().checkSession(MozoSDK.getInstance().context, { isExpired ->
                 "Check session result: isExpired = $isExpired".logAsInfo(TAG)
                 val accessToken = MozoAuth.getInstance().getAccessToken()
@@ -183,10 +186,12 @@ internal class MozoSocketClient(
                     }
                 }
             })
+            */
         }
 
         @JvmStatic
-        fun disconnect() = MozoSDK.scope.launch {
+        fun disconnect() {
+            /** Replaced by Push Notification
             try {
                 isDoDisconnect = true
                 instance?.closeBlocking()
@@ -194,6 +199,7 @@ internal class MozoSocketClient(
             } finally {
                 instance = null
             }
+            */
         }
 
         private fun doRetryConnect() {

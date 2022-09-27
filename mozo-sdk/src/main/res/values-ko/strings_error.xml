@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_common">오류가 발생했습니다. 다시 시도하십시오.</string>
+    <string name="error_common">오류가 발생했습니다. 다시 시도하십시오!</string>
     <string name="error_camera">카메라를 사용할 수 없습니다.</string>
     <string name="error_camera_permission">앱에서 이미지를 캡처하려면 카메라에 액세스 할 수있는 권한이 필요합니다.\n\"%s\"을 선택하고  \"권한\"으로 이동하여 권한을 부여하십시오.</string>
     <string name="error_camera_action">앱 설정</string>

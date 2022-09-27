@@ -13,7 +13,8 @@ android {
         targetSdkVersion TARGET_VERSION
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "SDK_VERSION", "\"$PUBLISH_VERSION\""
+        def sdkVersion = project.properties["MOZO_SDK_VERSION"] ?: "local"
+        buildConfigField "String", "SDK_VERSION", "\"$sdkVersion\""
     }
 
     buildTypes {
@@ -99,9 +100,8 @@ dependencies {
     // Other
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
     implementation 'org.greenrobot:eventbus:3.3.1'
-    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     api 'io.michaelrocks:libphonenumber-android:8.12.52'
-    api 'io.coil-kt:coil:2.2.0'
+    api 'io.coil-kt:coil:2.2.1'
 
     // test
     testImplementation 'junit:junit:4.13.2'
@@ -109,4 +109,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
-apply from: "${rootDir}/scripts/publish-module.gradle"
+if (project.hasProperty("MOZO_SDK_VERSION")) {
+    apply from: "../scripts/publish-module.gradle"
+}
