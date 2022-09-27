@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_common">Có lỗi xảy ra. Xin thử lại</string>
+    <string name="error_common">Có lỗi xảy ra. Xin thử lại!</string>
     <string name="error_camera">Máy ảnh không khả dụng</string>
     <string name="error_camera_permission">Ứng dụng cần quyền truy cập Camera để chụp ảnh.\nChọn \"%s\" và chọn \"Quyền\" để cấp quyền truy cập.</string>
     <string name="error_camera_action">Thiết lập ứng dụng</string>
