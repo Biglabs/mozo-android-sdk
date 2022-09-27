@@ -295,8 +295,6 @@ class MozoAuth private constructor() {
                 return@getProfile
             }
 
-
-
             MozoSDK.scope.launch {
                 doSaveUserInfoAsync(data)
                 MozoSDK.getInstance().profileViewModel.fetchData(context, data.userId) {
