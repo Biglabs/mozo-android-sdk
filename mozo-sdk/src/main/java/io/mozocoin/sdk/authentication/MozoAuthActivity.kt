@@ -203,7 +203,7 @@ internal class MozoAuthActivity : BaseActivity() {
                 )
                 .setNonce(signInRequest.nonce)
                 .setPrompt("consent")
-                .setScope("openid profile phone")
+                .setScope("openid profile phone email offline_access")
                 .setAdditionalParameters(
                     mutableMapOf(
                         "kc_locale" to locale.toLanguageTag(),
