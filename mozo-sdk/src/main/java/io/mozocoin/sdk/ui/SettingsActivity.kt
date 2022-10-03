@@ -9,11 +9,11 @@ import com.google.android.play.core.splitinstall.*
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.common.model.ProfileLocale
 import io.mozocoin.sdk.common.service.MozoAPIsService
 import io.mozocoin.sdk.databinding.ActivitySettingsBinding
 import io.mozocoin.sdk.ui.dialog.MessageDialog
 import io.mozocoin.sdk.utils.*
-import io.mozocoin.sdk.utils.SharedPrefsUtils
 import io.mozocoin.sdk.wallet.ChangePinActivity
 import io.mozocoin.sdk.wallet.backup.BackupWalletActivity
 import java.util.*
@@ -140,18 +140,25 @@ class SettingsActivity : LocalizationBaseActivity(), SplitInstallStateUpdatedLis
         }
     }
 
+    private fun updateProfileLocale(locale: Locale) {
+        val newLocale = ProfileLocale(locale.toLanguageTag(), "", "")
+        MozoAPIsService.getInstance().updateLocale(this, newLocale)
+    }
+
     override fun onStateUpdate(state: SplitInstallSessionState) {
-        lastSelectLocale ?: return
+        val locale = lastSelectLocale ?: return
         when (state.status()) {
             SplitInstallSessionStatus.INSTALLED -> {
                 binding.loadingContainer.gone()
-                SharedPrefsUtils.language = lastSelectLocale!!
+                SharedPrefsUtils.language = locale
+                updateProfileLocale(locale)
                 restartApplication()
                 lastSelectLocale = null
             }
             SplitInstallSessionStatus.FAILED, SplitInstallSessionStatus.CANCELED -> {
                 binding.loadingContainer.gone()
                 lastSelectLocale = null
+                MessageDialog.show(this, R.string.error_common)
             }
             else -> {
 

@@ -49,8 +49,8 @@ internal interface MozoAPIs {
     @PUT("${MozoAPIsService.APIS_STORE}/user-profile")
     fun updateProfile(@Body profile: Profile): Call<Base<Profile>>
 
-    @PUT("${MozoAPIsService.APIS_STORE}/user-profile/settings")
-    fun saveSettings(notificationThreshold: Int = 0): Call<Base<Profile>>
+    @PUT("${MozoAPIsService.APIS_STORE}/user-profile/v1/locale")
+    fun updateLocale(@Body locale: ProfileLocale): Call<Base<Profile>>
 
     @PUT("${MozoAPIsService.APIS_STORE}/user-profile/v1/walletAll")
     fun saveWallet(@Body walletInfo: WalletInfo): Call<Base<Profile>>

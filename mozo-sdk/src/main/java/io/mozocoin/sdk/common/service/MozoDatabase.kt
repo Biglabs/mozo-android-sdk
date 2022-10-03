@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [UserInfo::class, Profile::class, Notification::class], version = 6, exportSchema = false)
+@Database(entities = [UserInfo::class, Profile::class, Notification::class], version = 7, exportSchema = false)
 internal abstract class MozoDatabase : RoomDatabase() {
 
     abstract fun userInfo(): UserInfoDao
@@ -36,23 +36,6 @@ internal abstract class MozoDatabase : RoomDatabase() {
 
     companion object {
         private var instance: MozoDatabase? = null
-
-        private val MIGRATION_2_3 = object : Migration(2, 3) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE UserInfo ADD COLUMN avatarUrl TEXT")
-                database.execSQL("ALTER TABLE UserInfo ADD COLUMN birthday INTEGER DEFAULT 0 NOT NULL")
-                database.execSQL("ALTER TABLE UserInfo ADD COLUMN email TEXT")
-                database.execSQL("ALTER TABLE UserInfo ADD COLUMN gender TEXT")
-
-                database.execSQL("CREATE TEMPORARY TABLE Profile_backup(id, userId, status, apiKey, depositAddress, exchangeId, exchangePlatform, exchangeSecret, notificationThreshold, encryptSeedPhrase, offchainAddress, privateKey)")
-                database.execSQL("INSERT INTO Profile_backup SELECT * FROM Profile")
-                database.execSQL("DROP TABLE Profile")
-                database.execSQL("CREATE TABLE IF NOT EXISTS `Profile` (`id` INTEGER PRIMARY KEY NOT NULL, `userId` TEXT, `status` TEXT, `apiKey` TEXT, `depositAddress` TEXT, `exchangeId` TEXT, `exchangePlatform` TEXT, `exchangeSecret` TEXT, `notificationThreshold` INTEGER, `encryptSeedPhrase` TEXT, `offchainAddress` TEXT, `privateKey` TEXT)")
-                database.execSQL("CREATE UNIQUE INDEX index_Profile_id_userId ON Profile (id, userId)")
-                database.execSQL("INSERT INTO Profile SELECT * FROM Profile_backup")
-                database.execSQL("DROP TABLE Profile_backup")
-            }
-        }
 
         private val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
@@ -84,12 +67,24 @@ internal abstract class MozoDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TEMPORARY TABLE Profile_backup(id, userId, encryptSeedPhrase, offchainAddress, onchainAddress, pin)")
+                database.execSQL("INSERT INTO Profile_backup SELECT id, userId, encryptSeedPhrase, offchainAddress, onchainAddress, pin FROM Profile")
+                database.execSQL("DROP TABLE Profile")
+                database.execSQL("CREATE TABLE IF NOT EXISTS `Profile` (`id` INTEGER PRIMARY KEY NOT NULL, `userId` TEXT, `encryptSeedPhrase` TEXT, `offchainAddress` TEXT, `onchainAddress` TEXT, `pin` TEXT)")
+                database.execSQL("CREATE UNIQUE INDEX index_Profile_id_userId ON Profile (id, userId)")
+                database.execSQL("INSERT INTO Profile SELECT * FROM Profile_backup")
+                database.execSQL("DROP TABLE Profile_backup")
+            }
+        }
+
         fun getInstance(context: Context) = instance ?: synchronized(this) {
             instance = Room.databaseBuilder(context.applicationContext, MozoDatabase::class.java, "mozo.db")
-                    .addMigrations(MIGRATION_2_3)
                     .addMigrations(MIGRATION_3_4)
                     .addMigrations(MIGRATION_4_5)
                     .addMigrations(MIGRATION_5_6)
+                    .addMigrations(MIGRATION_6_7)
                     .fallbackToDestructiveMigration()
                     .build()
             return@synchronized instance!!

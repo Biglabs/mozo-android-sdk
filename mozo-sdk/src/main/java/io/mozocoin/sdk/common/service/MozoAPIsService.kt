@@ -46,7 +46,6 @@ internal class MozoAPIsService private constructor() {
         retry: (() -> Unit)? = null
     ) = MozoSDK.scope.launch {
         execute(context, mozoAPIs.checkSystemStatus(), callback, retry)
-
     }
 
     fun getProfile(
@@ -55,7 +54,6 @@ internal class MozoAPIsService private constructor() {
         retry: (() -> Unit)? = null
     ) = MozoSDK.scope.launch {
         execute(context, mozoAPIs.getProfile(), callback, retry)
-
     }
 
     fun updateProfile(
@@ -65,7 +63,13 @@ internal class MozoAPIsService private constructor() {
         retry: (() -> Unit)? = null
     ) = MozoSDK.scope.launch {
         execute(context, mozoAPIs.updateProfile(profile), callback, retry)
+    }
 
+    fun updateLocale(
+        context: Context,
+        locale: ProfileLocale
+    ) = MozoSDK.scope.launch {
+        execute(context, mozoAPIs.updateLocale(locale), null, null, handleError = false)
     }
 
     /**
