@@ -83,6 +83,13 @@ internal class CreateWalletActivity : BaseActivity() {
             text = spannable
             movementMethod = LinkMovementMethod.getInstance()
         }
+
+        /**
+         * Update Oct 2022
+         * Skip for display Wallet creation options
+         */
+        showCreatingUI()
+        doCreateWallet()
     }
 
     override fun onDestroy() {
