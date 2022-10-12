@@ -50,33 +50,17 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     override fun getViewModelStore(): ViewModelStore = mViewModelStore
 
-    init {
-        /**
-         * Initialize Authentication Service
-         * */
-        MozoAuth.getInstance()
-
-        /**
-         * Initialize Transaction Service
-         * */
-        MozoTx.getInstance()
-        /**
-         * Initialize Wallet Service
-         * */
-        MozoWallet.getInstance()
-
+    private fun registerNetworkCallback(ctx: Context) {
         /**
          * Register network changes
          * */
-        val myJob = JobInfo.Builder(0, ComponentName(context, ConnectionService::class.java))
+        val myJob = JobInfo.Builder(0, ComponentName(ctx, ConnectionService::class.java))
             .setMinimumLatency(2000)
             .setOverrideDeadline(2000)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
             //.setPersisted(true)
             .build()
-
-        val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        jobScheduler.schedule(myJob)
+        (ctx.getSystemService(Context.JOB_SCHEDULER_SERVICE) as? JobScheduler)?.schedule(myJob)
     }
 
     @Suppress("unused")
@@ -131,6 +115,21 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
                 isRetailerApp = useForBusiness
                 isInternalApps = Support.isInternalApps(context)
                 instance = MozoSDK(context.applicationContext)
+                instance?.registerNetworkCallback(context)
+
+                /**
+                 * Initialize Authentication Service
+                 * */
+                MozoAuth.getInstance()
+
+                /**
+                 * Initialize Transaction Service
+                 * */
+                MozoTx.getInstance()
+                /**
+                 * Initialize Wallet Service
+                 * */
+                MozoWallet.getInstance()
 
                 // Preload custom tabs service for improved performance
                 context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
@@ -141,7 +140,7 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
         @Synchronized
         fun getInstance(): MozoSDK {
             checkNotNull(instance) { "MozoSDK is not initialized. Make sure to call MozoSDK.initialize(Context) first." }
-            return instance as MozoSDK
+            return instance!!
         }
 
         @JvmStatic
