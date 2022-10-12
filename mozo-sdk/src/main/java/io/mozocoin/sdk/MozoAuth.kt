@@ -281,8 +281,8 @@ class MozoAuth private constructor() {
         mozoAPIs.getProfile(context, { data, _ ->
             if (data == null) {
                 callback?.invoke(false)
-                synchronized(mAuthListeners) {
-                    mAuthListeners.forEach { l -> l.onAuthFailed() }
+                mAuthListeners.iterator().run {
+                    while (hasNext()) next().onAuthFailed()
                 }
                 return@getProfile
             }
