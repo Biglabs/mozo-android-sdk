@@ -3,8 +3,8 @@ buildscript {
         COMPILE_VERSION = 33
         TARGET_VERSION = 32
         MIN_VERSION = 22
-        KOTLIN_VERSION = '1.7.10'
-        MOZO_SDK_VERSION = '0.2.6-alpha15'
+        KOTLIN_VERSION = '1.7.20'
+        MOZO_SDK_VERSION = '0.2.6-alpha16'
     }
 
     repositories {
