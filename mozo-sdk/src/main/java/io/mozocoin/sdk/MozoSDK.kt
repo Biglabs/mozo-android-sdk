@@ -50,7 +50,24 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
     override fun getViewModelStore(): ViewModelStore = mViewModelStore
 
-    private fun registerNetworkCallback() {
+    init {
+        /**
+         * Initialize Authentication Service
+         * */
+        MozoAuth.getInstance()
+
+        /**
+         * Initialize Transaction Service
+         * */
+        MozoTx.getInstance()
+        /**
+         * Initialize Wallet Service
+         * */
+        MozoWallet.getInstance()
+
+        /**
+         * Register network changes
+         * */
         val myJob = JobInfo.Builder(0, ComponentName(context, ConnectionService::class.java))
             .setMinimumLatency(2000)
             .setOverrideDeadline(2000)
@@ -117,25 +134,6 @@ class MozoSDK private constructor(internal val context: Context) : ViewModelStor
 
                 // Preload custom tabs service for improved performance
                 context.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks())
-
-                /**
-                 * Initialize Authentication Service
-                 * */
-                MozoAuth.getInstance()
-
-                /**
-                 * Initialize Transaction Service
-                 * */
-                MozoTx.getInstance()
-                /**
-                 * Initialize Wallet Service
-                 * */
-                MozoWallet.getInstance()
-
-                /**
-                 * Register network changes
-                 * */
-                instance?.registerNetworkCallback()
             }
         }
 
