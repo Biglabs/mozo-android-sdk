@@ -2,6 +2,7 @@ package io.mozocoin.sdk.ui
 
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
 import io.mozocoin.sdk.MozoSDK
 import io.mozocoin.sdk.R
@@ -41,6 +42,15 @@ internal class MaintenanceActivity : BaseActivity() {
         binding.maintenanceTipsContent.movementMethod = LinkMovementMethod.getInstance()
 
         randomTips()
+
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                /**
+                 * No need to do anything
+                 * Not allowed to back to previous screen during Maintenance mode
+                 */
+            }
+        })
     }
 
     override fun onResume() {
@@ -54,53 +64,50 @@ internal class MaintenanceActivity : BaseActivity() {
         mSystemStatusCheckJob = null
     }
 
-    override fun onBackPressed() {
-        /**
-         * Not allowed to back to previous screen during Maintenance mode
-         * super.onBackPressed()
-         */
-    }
-
     private fun randomTips() {
         tipsQuestion = tipsQuestion ?: resources.getStringArray(
-                if (MozoSDK.isRetailerApp) R.array.tips_retailer_question
-                else R.array.tips_shopper_question
+            if (MozoSDK.isRetailerApp) R.array.tips_retailer_question
+            else R.array.tips_shopper_question
         )
 
         tipsAnswer = tipsAnswer ?: resources.getStringArray(
-                if (MozoSDK.isRetailerApp) R.array.tips_retailer_answer
-                else R.array.tips_shopper_answer
+            if (MozoSDK.isRetailerApp) R.array.tips_retailer_answer
+            else R.array.tips_shopper_answer
         )
 
         tipsUrls = tipsUrls ?: resources.getStringArray(
-                if (MozoSDK.isRetailerApp) R.array.tips_retailer_url
-                else R.array.tips_shopper_url
+            if (MozoSDK.isRetailerApp) R.array.tips_retailer_url
+            else R.array.tips_shopper_url
         )
 
         val index = Random.nextInt(tipsQuestion?.size ?: 0)
 
         binding.maintenanceTipsTitle.text = tipsQuestion?.getOrNull(index)
-        binding.maintenanceTipsContent.text = HtmlCompat.fromHtml(tipsAnswer?.getOrNull(index).safe(), HtmlCompat.FROM_HTML_MODE_COMPACT)
+        binding.maintenanceTipsContent.text = HtmlCompat.fromHtml(
+            tipsAnswer?.getOrNull(index).safe(),
+            HtmlCompat.FROM_HTML_MODE_COMPACT
+        )
         referenceUrl = "https://${Support.domainHomePage()}/${tipsUrls?.getOrNull(index) ?: ""}"
     }
 
     private fun intervalStatusCheck() {
         mSystemStatusCheckJob?.dispose()
         mSystemStatusCheckJob = Observable.interval(
-                1,
-                INTERVAL_DELAY_IN_SECOND,
-                TimeUnit.SECONDS
+            1,
+            INTERVAL_DELAY_IN_SECOND,
+            TimeUnit.SECONDS
         )
-                .subscribeOn(Schedulers.single())
-                .doOnEach {
-                    MozoAPIsService.getInstance().checkSystemStatus(this@MaintenanceActivity) { data, _ ->
+            .subscribeOn(Schedulers.single())
+            .doOnEach {
+                MozoAPIsService.getInstance()
+                    .checkSystemStatus(this@MaintenanceActivity) { data, _ ->
                         if (FLAG_STATUS_GOOD.equals(data?.status, ignoreCase = true)) {
                             finish()
                             return@checkSystemStatus
                         }
                     }
-                }
-                .subscribe()
+            }
+            .subscribe()
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")

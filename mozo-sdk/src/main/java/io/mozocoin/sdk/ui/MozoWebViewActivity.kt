@@ -62,6 +62,12 @@ internal class MozoWebViewActivity : BaseActivity() {
         binding.webView.loadUrl(url)
     }
 
+    override fun onDestroy() {
+        binding.webView.stopLoading()
+        binding.webView.destroy()
+        super.onDestroy()
+    }
+
     companion object {
         private const val KEY_DATA = "url_data"
         fun start(context: Context, url: String) {
