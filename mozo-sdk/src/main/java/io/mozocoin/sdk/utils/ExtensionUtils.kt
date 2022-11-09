@@ -2,7 +2,6 @@
 
 package io.mozocoin.sdk.utils
 
-import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Resources
@@ -21,8 +20,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.doOnNextLayout
@@ -34,8 +31,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.mozocoin.sdk.MozoAuth
 import io.mozocoin.sdk.MozoTx
 import io.mozocoin.sdk.R
+import io.mozocoin.sdk.ui.MozoWebViewActivity
 import io.mozocoin.sdk.ui.widget.PinEntryEditText
-import io.mozocoin.sdk.utils.customtabs.CustomTabsHelper
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormatSymbols
@@ -131,38 +128,7 @@ fun Context.openTab(url: String) {
         }
     }
 
-    val colorParams = CustomTabColorSchemeParams.Builder()
-        .setToolbarColor(color(R.color.mozo_color_primary))
-        .build()
-    val customTabsIntent = CustomTabsIntent.Builder()
-        .setShowTitle(true)
-        .setDefaultColorSchemeParams(colorParams)
-        .build()
-
-    //to be used if Custom Tabs is not available
-    val fallback = object : CustomTabsHelper.CustomTabFallback {
-        override fun openUri(context: Context, uri: Uri) {
-            if (context is Activity && (context.isFinishing || context.isDestroyed)) {
-                return
-            }
-
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            ContextCompat.startActivity(context, intent, null)
-        }
-    }
-
-    try {
-        CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
-        CustomTabsHelper.openCustomTab(this, customTabsIntent, finalUri, fallback)
-    } catch (e: Exception) {
-        if (e !is ActivityNotFoundException) {
-            /**
-             * Try to open link by external browser
-             */
-            fallback.openUri(this, finalUri)
-        }
-        e.printStackTrace()
-    }
+    MozoWebViewActivity.start(this, finalUri.toString())
 }
 
 fun Context.openAppInStore() {
