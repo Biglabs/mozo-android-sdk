@@ -11,6 +11,7 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.core.os.ConfigurationCompat
@@ -132,17 +133,23 @@ internal class MozoAuthActivity : BaseActivity() {
         } else {
             initializeAppAuth()
         }
+
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                cancelAuth()
+            }
+        })
     }
 
     override fun onDestroy() {
+        binding.webView.stopLoading()
+        binding.webView.destroy()
         if (authenticationInProgress && !isSilent) {
             authenticationInProgress = false
             EventBus.getDefault().post(MessageEvent.Auth(UserCancelException()))
         }
         super.onDestroy()
     }
-
-    override fun onBackPressed() = cancelAuth()
 
     override fun finish() {
         overridePendingTransition(

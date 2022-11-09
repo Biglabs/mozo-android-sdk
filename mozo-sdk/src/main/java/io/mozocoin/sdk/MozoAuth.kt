@@ -99,6 +99,7 @@ class MozoAuth private constructor() {
                 }
             }
             else -> {
+                MozoTokenService.clear()
                 MozoSDK.getInstance().profileViewModel.clear()
                 synchronized(mAuthListeners) {
                     /* notify for caller */

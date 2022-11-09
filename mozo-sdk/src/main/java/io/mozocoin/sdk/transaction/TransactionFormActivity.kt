@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -92,6 +93,18 @@ internal class TransactionFormActivity : BaseActivity() {
         attachmentData = intent?.getStringExtra(KEY_DATA_CUSTOM)
         val performSend = intent?.getBooleanExtra(KEY_PERFORM_SEND, true) == true
         fastPayment(address, amount, performSend)
+
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                when {
+                    isNeedBack2Edit && !isViewOnlyMode -> {
+                        showInputUI()
+                        showContactInfoUI()
+                    }
+                    else -> finish()
+                }
+            }
+        })
     }
 
     override fun onDestroy() {
@@ -140,16 +153,6 @@ internal class TransactionFormActivity : BaseActivity() {
                 history.time = Calendar.getInstance().timeInMillis / 1000L
                 showResultUI(response)
             }
-        }
-    }
-
-    override fun onBackPressed() {
-        when {
-            isNeedBack2Edit && !isViewOnlyMode -> {
-                showInputUI()
-                showContactInfoUI()
-            }
-            else -> super.onBackPressed()
         }
     }
 
@@ -233,7 +236,7 @@ internal class TransactionFormActivity : BaseActivity() {
             bindingForm.outputAmountUnderline.isSelected = hasFocus
         }
 
-        bindingForm.transferToolbar.onBackPress = { onBackPressed() }
+        bindingForm.transferToolbar.onBackPress = { onBackPressedDispatcher.onBackPressed() }
         bindingForm.buttonAddressBook.click {
             AddressBookActivity.startForResult(
                 this,
@@ -277,6 +280,7 @@ internal class TransactionFormActivity : BaseActivity() {
     }
 
     private fun showInputUI() {
+        isNeedBack2Edit = false
         bindingForm.outputReceiverAddress.isEnabled = true
         bindingForm.outputAmount.isEnabled = true
         bindingForm.outputAmountRate.isVisible = Constant.SHOW_MOZO_EQUIVALENT_CURRENCY

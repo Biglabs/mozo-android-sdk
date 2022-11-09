@@ -27,17 +27,21 @@
                 android:contentDescription="@string/mozo_button_close"
                 android:src="@drawable/ic_close" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_marginEnd="?attr/actionBarSize"
-                android:ellipsize="middle"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:hint="@string/mozo_view_text_hint"
-                android:singleLine="true"
+                android:lines="1"
                 android:textColor="@color/mozo_color_text_main"
-                android:textStyle="bold" />
+                android:textSize="@dimen/mozo_text_size"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="@dimen/mozo_text_size"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeTextType="uniform" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

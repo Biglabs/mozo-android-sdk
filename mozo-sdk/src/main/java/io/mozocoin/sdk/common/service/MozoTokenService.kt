@@ -55,6 +55,12 @@ internal class MozoTokenService private constructor() {
     }
 
     fun shouldRefreshToken(): Boolean {
+        tokenInfo ?: return false
+        val secondOffset = 5/*minute*/ * 60
+        if (tokenInfo!!.accessExpireAt - secondOffset <= (System.currentTimeMillis() / 1000)) {
+            return true
+        }
+
         val expirationTime = Calendar.getInstance()
         expirationTime.timeInMillis = (tokenInfo?.refreshExpireAt ?: 0) * 1000
 
